@@ -1,0 +1,7 @@
+{
+  "env": {
+    "MONGO_user": "AdminPetr",
+    "MONGO_password": "GraphQL",
+    "MONGO_DB_NAME": "Petrova-Collection"
+  }
+}

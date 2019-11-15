@@ -1,0 +1,21 @@
+{
+  "name": "charlie2.0",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.9.9",
+    "apollo-server-express": "^2.9.9",
+    "express": "^4.17.1",
+    "graphql-tools": "^4.0.6",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.7.11",
+    "nodemon": "^1.19.4"
+  }
+}
