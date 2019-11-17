@@ -7,12 +7,11 @@ const { ApolloServer, gql } = require("apollo-server-express");
 const { PubSub } = require("apollo-server");
 const authMid = require("./Middleware/auth.js");
 //const { resolvers } = require("./resolvers/index");
-import {typeDefs, resolvers} from "./schema.js";
+import { typeDefs, resolvers } from "./schema.js";
 //const resolvers = require("./resolvers.js");
 const app = express();
 
 app.use(express.static(path.join(__dirname, "build")));
-
 
 app.get("/", function(req, res, next) {
   res.sendFile(path.join(__dirname, "build/index.html"));
@@ -110,23 +109,25 @@ server.applyMiddleware({
 const httpServer = http.createServer(app);
 
 server.installSubscriptionHandlers(httpServer);
+//`mongodb+srv://${process.env.MONGO_user}:${process.env.MONGO_password}@cluster0-il454.mongodb.net/${process.env.MONGO_DB_NAME}?retryWrites=true&w=majority`,
+mongoose
+  .connect(
+    `mongodb+srv://${process.env.MONGO_user}:${process.env.MONGO_password}@cluster0-5xb1t.mongodb.net/${process.env.MONGO_DB_NAME}?retryWrites=true&w=majority`,
+    { useNewUrlParser: true }
+  )
+  .then(() => {
+    const PORT = process.env.PORT || 4005;
+    httpServer.listen(PORT, () => {
+      console.log(
+        `Connected: SERVER - POrtfolio VOTING APP na PORTUU ${PORT} `
+      );
+    });
+  })
+  .catch(err => {
+    console.log(err);
+  });
 
-// mongoose
-//   .connect(
-//     `mongodb+srv://${process.env.MONGO_user}:${process.env.MONGO_password}@cluster0-il454.mongodb.net/${process.env.MONGO_DB_NAME}?retryWrites=true&w=majority`,
-//     { useNewUrlParser: true }
-//   )
-//   .then(() => {
-//     const PORT = process.env.PORT || 4005;
-//     httpServer.listen(PORT, () => {
-//       console.log(`SERVER - POrtfolio VOTING APP na PORTUU ${PORT} `);
-//     });
-//   })
-//   .catch(err => {
-//     console.log(err);
-//   });
-
-  const PORT = process.env.PORT || 4005;
-  httpServer.listen(PORT, () => {
-          console.log(`SERVER - POrtfolio VOTING APP na PORTUU ${PORT} `);
-        })
+// const PORT = process.env.PORT || 4005;
+// httpServer.listen(PORT, () => {
+//         console.log(`SERVER - POrtfolio VOTING APP na PORTUU ${PORT} `);
+//       })
