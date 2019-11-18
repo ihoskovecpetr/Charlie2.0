@@ -26,6 +26,7 @@ import { useHistory } from "react-router-dom";
 import { UserContext } from "../userContext";
 import Dropzone from "../Molecules/Dropzone";
 import Spinner from "../Atoms/Spinner";
+import Map from "../Atoms/Hook-map";
 
 const NEW_USER = gql`
   mutation login($email: String!, $password: String!) {
@@ -43,7 +44,6 @@ function Create(props) {
   const classes = useStyles();
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
-  const [signIn, { loading, error, data }] = useMutation(NEW_USER);
   const [selectedDate, setSelectedDate] = useState(
     new Date("2014-08-18T21:11:54")
   );
@@ -125,6 +125,8 @@ function Create(props) {
             autoComplete="name"
             autoFocus
           />
+          <Map onMount={onMapMount} options={MapOptions} />
+
           <TextField
             variant="outlined"
             margin="normal"
@@ -253,6 +255,21 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   }
 }));
+
+function onMapMount(map) {
+  console.log("Print from Create..XX dumb");
+  //document.getElementById("map-create");
+}
+
+const MapOptions = {
+  center: { lat: 50, lng: 14 },
+  zoom: 5,
+  disableDefaultUI: true,
+  zoomControl: true,
+  //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+  clickableIcons: false,
+  gestureHandling: "cooperative"
+};
 
 function Copyright() {
   return (
