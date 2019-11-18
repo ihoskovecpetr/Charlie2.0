@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import "./App.css";
 import {
   Switch,
@@ -49,8 +49,6 @@ function App(props) {
   });
 
   const providerValue = useMemo(() => ({ user, setUser }), [user, setUser]);
-
-  console.log("Props v Ap: ", props);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);

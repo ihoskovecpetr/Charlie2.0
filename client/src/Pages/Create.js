@@ -27,6 +27,7 @@ import { UserContext } from "../userContext";
 import Dropzone from "../Molecules/Dropzone";
 import Spinner from "../Atoms/Spinner";
 import Map from "../Atoms/Hook-map";
+import MapMolecule from "../Molecules/Create-map-hooks";
 
 const NEW_USER = gql`
   mutation login($email: String!, $password: String!) {
@@ -44,10 +45,11 @@ function Create(props) {
   const classes = useStyles();
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
+
   const [selectedDate, setSelectedDate] = useState(
     new Date("2014-08-18T21:11:54")
   );
-  const [capacityMax, setCapacityMax] = useState(10);
+  //const [capacityMax, setCapacityMax] = useState(10);
   const [formValue, setFormValue] = useState({
     startDate: "1990",
     description: "Yatim nic",
@@ -78,30 +80,6 @@ function Create(props) {
     setSelectedDate(date);
   };
 
-  const onImageDrop = files => {
-    console.log("onImageDrop FCE files:");
-    console.log(files);
-
-    // this.setState({
-    //   uploadedFile: files[0],
-    //   isUploading: true,
-    // });
-    // files.map((file) => {
-    //   this.handleImageUpload(file)})
-
-    //   const onDrop = useCallback(acceptedFiles => {
-
-    //   const reader = new FileReader()
-    //   reader.onabort = () => console.log('file reading was aborted')
-    //   reader.onerror = () => console.log('file reading has failed')
-    //   reader.onload = () => {
-    //     // Do whatever you want with the file contents
-    //     const binaryStr = reader.result
-    //     console.log("binaryStr")
-    //     console.log(binaryStr)
-    //   }
-    // })
-  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -125,8 +103,8 @@ function Create(props) {
             autoComplete="name"
             autoFocus
           />
-          <Map onMount={onMapMount} options={MapOptions} />
 
+          <MapMolecule />
           <TextField
             variant="outlined"
             margin="normal"
@@ -255,21 +233,6 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   }
 }));
-
-function onMapMount(map) {
-  console.log("Print from Create..XX dumb");
-  //document.getElementById("map-create");
-}
-
-const MapOptions = {
-  center: { lat: 50, lng: 14 },
-  zoom: 5,
-  disableDefaultUI: true,
-  zoomControl: true,
-  //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
-  clickableIcons: false,
-  gestureHandling: "cooperative"
-};
 
 function Copyright() {
   return (
