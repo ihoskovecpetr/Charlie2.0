@@ -32,7 +32,7 @@ export default function Map({ options, onMount, className }) {
 
   const divStyle = {
     height: "200px",
-    width: "200px"
+    width: "100%"
   };
   return (
     <div

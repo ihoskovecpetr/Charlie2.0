@@ -45,6 +45,7 @@ function Create(props) {
   const classes = useStyles();
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
+  const [customMapParam, setCustomMapParam] = useState();
 
   const [selectedDate, setSelectedDate] = useState(
     new Date("2014-08-18T21:11:54")
@@ -104,7 +105,7 @@ function Create(props) {
             autoFocus
           />
 
-          <MapMolecule />
+          <MapMolecule customMapParam={customMapParam} setCustomMapParam={setCustomMapParam} />
           <TextField
             variant="outlined"
             margin="normal"
