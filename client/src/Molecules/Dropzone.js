@@ -2,6 +2,8 @@ import React, { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import Gallery from "react-grid-gallery";
 import request from "superagent";
+import WallpaperIcon from "@material-ui/icons/Wallpaper";
+import Spinner from "../Atoms/Spinner";
 
 const CLOUDINARY_UPLOAD_PRESET = "simple-preset-1";
 const CLOUDINARY_UPLOAD_URL =
@@ -72,8 +74,6 @@ function MyDropzone(props) {
       }
 
       if (response.body.secure_url !== "") {
-        // console.log("response.body uploaded");
-        // console.log(response.body);
         urlTumb = response.body.secure_url;
       }
 
@@ -97,7 +97,7 @@ function MyDropzone(props) {
             caption: "After Rain (Jeshu John - designerspics.com)"
           });
 
-          setUploadedFiles(uplArr);
+          setUploadedFiles([...uplArr]);
           setIsUploading(false);
           setDisplay(true);
           props.setFormValue(prevValues => {
@@ -113,11 +113,16 @@ function MyDropzone(props) {
       <div {...getRootProps()}>
         <input {...getInputProps()} />
         {isDragActive ? (
-          <p>Drop the files here ...</p>
+          <>
+            <WallpaperIcon fontSize="large" />
+          </>
         ) : (
-          <p>Drag 'n' drop some files here, or click to select files</p>
+          <>
+            <WallpaperIcon fontSize="large" />
+          </>
         )}
       </div>
+      {isUploading ? <Spinner /> : null}
       {display ? (
         <Gallery
           images={uploadedFiles}

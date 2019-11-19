@@ -3,9 +3,14 @@ import Event from "../Models-Mongo/Event.js";
 export const typeDef = newFunction();
 export const resolvers = {
   Query: {
-    events: () => {
-      console.log("Query EVENTS");
-      return { name: "Party ONE" };
+    events: async () => {
+      try {
+        let allEvents = await Event.find({});
+        console.log("allEvents: ", allEvents);
+        return allEvents;
+      } catch (err) {
+        throw err;
+      }
     }
   },
   Mutation: {

@@ -32,6 +32,7 @@ import SignIn from "./Pages/SignIn";
 import SignUp from "./Pages/SignUp";
 import SignOut from "./Pages/SignOut";
 import Create from "./Pages/Create";
+import MapPage from "./Pages/MapPage";
 
 const drawerWidth = 240;
 
@@ -65,13 +66,13 @@ function App(props) {
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
         <SignOut />,
         <Create />, //create
-        <SignOut /> //Map
+        <MapPage /> //Map
       ]
     : [
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
         <SignIn />,
         <Create />,
-        <SignUp />
+        <MapPage />
       ];
   const drawer = (
     <div>
