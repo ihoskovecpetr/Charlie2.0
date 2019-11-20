@@ -12,13 +12,32 @@ export const resolvers = {
         throw err;
       }
     },
-    fewEvents:  () => {
-  
-        let allEvents = [{    
-          _id: '2sdf2sdfs2sfdsdfs2',
+    deleteEvents: async () => {
+      try {
+        let result = await Event.deleteMany({});
+        console.log("allEvents: ", result);
+        return result.deletedCount;
+      } catch (err) {
+        throw err;
+      }
+    },
+    eventGeoDay: async (_, _args, __) => {
+      console.log("Args: ", _args);
+      try {
+        let allEvents = await Event.find({});
+        //console.log("allEvents: ", allEvents);
+        return allEvents;
+      } catch (err) {
+        throw err;
+      }
+    },
+    fewEvents: () => {
+      let allEvents = [
+        {
+          _id: "2sdf2sdfs2sfdsdfs2",
           success: true,
-          author: 'Petr Work',
-          name: 'Event Namm',
+          author: "Petr Work",
+          name: "Event Namm",
           lng: 14.45,
           lat: 50,
           addressGoogle: "addressGoogle",
@@ -31,12 +50,12 @@ export const resolvers = {
           BYO: true,
           //imagesArr: [ImageInput],
           description: "Desc",
-          confirmed: true ,
+          confirmed: true,
           hide: false
-        }]
+        }
+      ];
 
-        return allEvents;
-
+      return allEvents;
     }
   },
   Mutation: {
@@ -55,6 +74,7 @@ export const resolvers = {
             },
             addressGoogle: _args.eventInput.addressGoogle,
             addressCustom: _args.eventInput.addressCustom,
+            address: _args.eventInput.address,
             eventType: _args.eventInput.eventType,
             dateStart: _args.eventInput.dateStart,
             dateEnd: _args.eventInput.dateEnd,
@@ -90,7 +110,9 @@ function newFunction() {
   return `
   extend type Query {
     events(name: String ): [Event]
+    deleteEvents: String
     fewEvents: [Event]
+    eventGeoDay(date: String, geoObj: BoundsInput ): [Event]
   }
 
   extend type Mutation {
@@ -103,6 +125,7 @@ function newFunction() {
     lat: Float
     addressGoogle: String
     addressCustom: String
+    address: String
     eventType: Int
     dateStart: String
     dateEnd: String
@@ -117,6 +140,13 @@ function newFunction() {
     description: String
     confirmed: Boolean 
     hide: Boolean
+  }
+
+  input BoundsInput {
+    ne: Float
+    nw: Float
+    se: Float
+    sw: Float
   }
 
   input ImageInput {
@@ -137,8 +167,10 @@ function newFunction() {
     name: String
     lng: Float
     lat: Float
+    geometry: Geometry
     addressGoogle: String
     addressCustom: String
+    address: String
     eventType: Int
     dateStart: String
     dateEnd: String
@@ -154,6 +186,11 @@ function newFunction() {
     confirmed: Boolean 
     hide: Boolean
   }
+
+  type Geometry{
+    coordinates: [Float]
+  }
+
   type Image {
     caption: String
     src: String

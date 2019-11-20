@@ -1,5 +1,5 @@
 import React, { useContext, useState, useRef } from "react";
-import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -30,14 +30,28 @@ import { usePosition } from "../Hooks/useGoelocation";
 import Dropzone from "../Molecules/Dropzone";
 import Spinner from "../Atoms/Spinner";
 import Map from "../Atoms/Hook-map";
-import InfoWindow from '../Molecules/Infowindow';
+import InfoWindow from "../Molecules/Infowindow";
 
 const FEW_EVENTS = gql`
-query {
-  fewEvents {
-      _id
+  query eventGeoDay(
+    $date: String!
+    $ne: Float
+    $nw: Float
+    $se: Float
+    $sw: Float
+  ) {
+    eventGeoDay(date: $date, geoObj: { ne: $ne, nw: $nw, se: $se, sw: $sw }) {
       name
-      success
+      _id
+      confirmed
+      capacityMax
+      price
+      geometry {
+        coordinates
+      }
+      freeSnack
+      description
+      address
     }
   }
 `;
@@ -45,7 +59,7 @@ query {
 let infoBubble;
 let InfoBevent = false;
 let previousMarker;
-let MarkersArr
+let MarkersArr;
 
 function MapPage(props) {
   const classes = useStyles();
@@ -54,97 +68,115 @@ function MapPage(props) {
   const [customMapParam, setCustomMapParam] = useState();
   const { latitude, longitude, errorPosition } = usePosition();
   //const [createEvent, { loading, error, data }] = useMutation(NEW_EVENT);
-  //const { loading, error, data } = useQuery(FEW_EVENTS);
+  const { loading, error, data } = useQuery(FEW_EVENTS, {
+    variables: { date: "2019-11-11" }
+  });
 
- //console.log("Few events DATA:", data)
+  console.log("Few events DATA:", data);
+  let dataMock;
 
-
-
- const dataMock = [{    
-  _id: '2sdf2sdfs2sfdsdfs2',
-  success: true,
-  author: 'Petr Work',
-  name: 'Event 111',
-  geometry: {coordinates: [50.040112099, 14.428]},
-  lng: 14.45,
-  lat: 50,
-  addressGoogle: "addressGoogle",
-  addressCustom: "addressCustom",
-  address: "address",
-  eventType: 1,
-  dateStart: "2019-10-10",
-  price: 12,
-  capacityMax: 20,
-  BYO: true,
-  imagesArr: [{caption:"No more pictures for this Event",
-              src: "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-              thumbnail:"https://res.cloudinary.com/party-images-app/image/upload/v1551339472/m...",
-              thumbnailHeight:10,
-              thumbnailWidth:10,
-              scaletwidth:100,
-              marginLeft:0,
-              vwidth:100
-            }
-          ],
-  description: "Desc",
-  confirmed: true ,
-  hide: false
-},
-{    
-  _id: '2sdf2sdfs2sfdsdfsdf2',
-  success: true,
-  author: 'Petr Work',
-  name: 'Event 222',
-  geometry: {coordinates: [50.050312099, 14.458]},
-  lng: 14.45,
-  lat: 50,
-  addressGoogle: "addressGoogle",
-  addressCustom: "addressCustom",
-  address: "address",
-  eventType: 1,
-  dateStart: "2019-10-10",
-  price: 12,
-  capacityMax: 20,
-  BYO: true,
-  imagesArr: [{caption:"No more pictures for this Event",
-                src: "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-                thumbnail:"https://res.cloudinary.com/party-images-app/image/upload/v1551339472/m...",
-                thumbnailHeight:10,
-                thumbnailWidth:10,
-                scaletwidth:100,
-                marginLeft:0,
-                vwidth:100
-              }
-              ],
-  description: "Desc",
-  confirmed: true ,
-  hide: false
-}]
+  // dataMock = [
+  //   {
+  //     _id: "2sdf2sdfs2sfdsdfs2",
+  //     success: true,
+  //     author: "Petr Work",
+  //     name: "Event 111",
+  //     geometry: { coordinates: [50.040112099, 14.428] },
+  //     lng: 14.45,
+  //     lat: 50,
+  //     addressGoogle: "addressGoogle",
+  //     addressCustom: "addressCustom",
+  //     address: "address",
+  //     eventType: 1,
+  //     dateStart: "2019-10-10",
+  //     price: 12,
+  //     capacityMax: 20,
+  //     BYO: true,
+  //     imagesArr: [
+  //       {
+  //         caption: "No more pictures for this Event",
+  //         src:
+  //           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+  //         thumbnail:
+  //           "https://res.cloudinary.com/party-images-app/image/upload/v1551339472/m...",
+  //         thumbnailHeight: 10,
+  //         thumbnailWidth: 10,
+  //         scaletwidth: 100,
+  //         marginLeft: 0,
+  //         vwidth: 100
+  //       }
+  //     ],
+  //     description: "Desc",
+  //     confirmed: true,
+  //     hide: false
+  //   },
+  //   {
+  //     _id: "2sdf2sdfs2sfdsdfsdf2",
+  //     success: true,
+  //     author: "Petr Work",
+  //     name: "Event 222",
+  //     geometry: { coordinates: [50.050312099, 14.458] },
+  //     lng: 14.45,
+  //     lat: 50,
+  //     addressGoogle: "addressGoogle",
+  //     addressCustom: "addressCustom",
+  //     address: "address",
+  //     eventType: 1,
+  //     dateStart: "2019-10-10",
+  //     price: 12,
+  //     capacityMax: 20,
+  //     BYO: true,
+  //     imagesArr: [
+  //       {
+  //         caption: "No more pictures for this Event",
+  //         src:
+  //           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+  //         thumbnail:
+  //           "https://res.cloudinary.com/party-images-app/image/upload/v1551339472/m...",
+  //         thumbnailHeight: 10,
+  //         thumbnailWidth: 10,
+  //         scaletwidth: 100,
+  //         marginLeft: 0,
+  //         vwidth: 100
+  //       }
+  //     ],
+  //     description: "Desc",
+  //     confirmed: true,
+  //     hide: false
+  //   }
+  // ];
 
   const onMapMount = map => {
     console.log("onMapMount fce MapPage ");
-    let uniqueArrayOfId = []
-    let UniqArr = []
-
-    if(dataMock){
-      for(var i=0; i<dataMock.length; i++) {
-        console.log("dataMock[i]._id: ", dataMock[i]._id)
-        if (uniqueArrayOfId.indexOf(dataMock[i]._id) == -1 &&  dataMock[i].confirmed == true) {
-          uniqueArrayOfId.push(dataMock[i]._id)
-          UniqArr.push(dataMock[i]) 
+    let uniqueArrayOfId = [];
+    let UniqArr = [];
+    let dataDB;
+    if (dataMock) {
+      dataDB = dataMock;
+    } else {
+      dataDB = data;
+    }
+    // if(dataMock){
+    if (dataDB) {
+      for (var i = 0; i < dataDB.length; i++) {
+        console.log("data[i]._id: ", dataDB[i]._id);
+        if (
+          uniqueArrayOfId.indexOf(dataDB[i]._id) == -1 &&
+          dataDB[i].confirmed == true
+        ) {
+          uniqueArrayOfId.push(dataDB[i]._id);
+          UniqArr.push(dataDB[i]);
         }
-     }
+      }
     }
 
-
-    map.addListener('idle', function() {
-      
-      var bounds =  map.getBounds();
+    map.addListener("idle", function() {
+      var bounds = map.getBounds();
       var center = map.getCenter();
 
-      console.log("ZOOOM: ", map.getZoom())
-      var ne = bounds.getNorthEast();
-      var sw = bounds.getSouthWest();
+      console.log("ZOOOM: ", bounds.getNorthEast());
+      //var ne = bounds.getNorthEast();
+      //var sw = bounds.getSouthWest();
       // console.log(ne)
       // console.log(sw)
       // console.log(JSON.stringify(ne.lng()), JSON.stringify(ne.lat()), JSON.stringify(sw.lng()) , JSON.stringify(sw.lat()))
@@ -152,8 +184,8 @@ function MapPage(props) {
       //  var ne2 = new Number(JSON.stringify(ne.lat()))
       //  var sw1 = new Number(JSON.stringify(sw.lng()))
       //  var sw2 = new Number(JSON.stringify(sw.lat()))
-        
-      // var newPoly0 = [[sw1, sw2], [ne1, sw2], [ne1, ne2], [sw1, ne2]]  
+
+      // var newPoly0 = [[sw1, sw2], [ne1, sw2], [ne1, ne2], [sw1, ne2]]
       // var newPoly = [[sw1, sw2], [ne1, sw2], [ne1, ne2], [sw1, -33.8]]
       // var newPoly2 = [[sw1, sw2], [ne1, sw2], [ne1, ne2], [sw1, -33.9]]
       // console.log("newPoly", newPoly)
@@ -166,39 +198,41 @@ function MapPage(props) {
       // SumPoly = polygon.union(...SumPolyWork , POLY_A);
       // console.log("SumPoly", SumPoly)
 
-  //here.props.setScrolledPosition([center.lat(), center.lng()], map.getZoom())
-  //here.fetchBoundariesSingle(ne,sw)
-      console.log("Fetch points BoarDERS?")
-})
+      //here.props.setScrolledPosition([center.lat(), center.lng()], map.getZoom())
+      //here.fetchBoundariesSingle(ne,sw)
+      console.log("Fetch points BoarDERS?");
+    });
 
-    map.addListener('click', function(event) { 
+    map.addListener("click", function(event) {
+      console.log("Listener from MAP CLICK");
+      console.log("previousMarker:", previousMarker);
 
-      console.log("Listener from MAP CLICK")
-      console.log("previousMarker:", previousMarker)
-  
       //here.setState({confirmedPressed: false})
-             
-            if (previousMarker && !InfoBevent){  //close the last new location marker and window on click on map
-                  console.log("EVENT from Map previousMarker && !InfoBevent")
-                  infoBubble.close();
-                  setTimeout(() => {
-                    if (document.getElementById('infoWindow')) {
-                          ReactDOM.unmountComponentAtNode(document.getElementById('infoWindow'))
-                    }  
-                }, 10) 
-                  //infoBubble.setMap(null);
-                  previousMarker = undefined;
-            }  
-            if (previousMarker) {
-              console.log("EVENT from Map outside Infobubble")
-              infoBubble.close();
-              previousMarker = undefined;
-            }   
+
+      if (previousMarker && !InfoBevent) {
+        //close the last new location marker and window on click on map
+        console.log("EVENT from Map previousMarker && !InfoBevent");
+        infoBubble.close();
+        setTimeout(() => {
+          if (document.getElementById("infoWindow")) {
+            ReactDOM.unmountComponentAtNode(
+              document.getElementById("infoWindow")
+            );
+          }
+        }, 10);
+        //infoBubble.setMap(null);
+        previousMarker = undefined;
+      }
+      if (previousMarker) {
+        console.log("EVENT from Map outside Infobubble");
+        infoBubble.close();
+        previousMarker = undefined;
+      }
     });
 
     infoBubble = new window.InfoBubble({
-      //content: `<div id="infoWindow"> </div>`, 
-      content: `<div id="infoWindow"> </div>`, 
+      //content: `<div id="infoWindow"> </div>`,
+      content: `<div id="infoWindow"> </div>`,
       shadowStyle: 1,
       padding: 0,
       backgroundColor: "#242323",
@@ -209,90 +243,86 @@ function MapPage(props) {
       disableAutoPan: true,
       hideCloseButton: true,
       arrowPosition: 50,
-      backgroundClassName: 'nonused',
+      backgroundClassName: "nonused",
       enableEventPropagation: false,
       arrowStyle: 0,
       minWidth: 200,
-      minHeight: 220,
-    })
+      minHeight: 220
+    });
 
-      var AllMarkersArr = UniqArr.map((location, i) => {
+    var AllMarkersArr = UniqArr.map((location, i) => {
+      var urlNA =
+        "https://res.cloudinary.com/party-images-app/image/upload/v1557626853/j4fot5g2fvldzh88h9u4.png";
+      //var urlAttend = "https://res.cloudinary.com/party-images-app/image/upload/v1557648350/caacy89b65efjmwjiho8.png"
+      var urlAttend =
+        "https://res.cloudinary.com/party-images-app/image/upload/v1558048597/lo7digag5hz5alymniwz.png";
+      var url = urlNA;
 
-        var urlNA = "https://res.cloudinary.com/party-images-app/image/upload/v1557626853/j4fot5g2fvldzh88h9u4.png"
-        //var urlAttend = "https://res.cloudinary.com/party-images-app/image/upload/v1557648350/caacy89b65efjmwjiho8.png"
-        var urlAttend = 'https://res.cloudinary.com/party-images-app/image/upload/v1558048597/lo7digag5hz5alymniwz.png' 
-        var url = urlNA
+      // location.EventGuests.map((guest, index) => {
 
-        // location.EventGuests.map((guest, index) => {
-        
-        //   if (here.props.email.indexOf(guest.guest_email) !== -1 && guest.guest_confirmed == true) {
-        //     url = urlAttend
-        //   }
-        // })
-
+      //   if (here.props.email.indexOf(guest.guest_email) !== -1 && guest.guest_confirmed == true) {
+      //     url = urlAttend
+      //   }
+      // })
+      console.log("Markering this one> ", location.name);
       var image = {
-          url: url,
-          size: new window.google.maps.Size(48, 48),
-          origin: new window.google.maps.Point(0, 0),
-          anchor: new window.google.maps.Point(24, 48),
-          scaledSize: new window.google.maps.Size(48, 48)
-        };
-
+        url: url,
+        size: new window.google.maps.Size(48, 48),
+        origin: new window.google.maps.Point(0, 0),
+        anchor: new window.google.maps.Point(24, 48),
+        scaledSize: new window.google.maps.Size(48, 48)
+      };
 
       var marker = new window.google.maps.Marker({
-        position: {lat: location.geometry.coordinates[0],
-                  lng: location.geometry.coordinates[1]}, 
+        position: {
+          lat: location.geometry.coordinates[0],
+          lng: location.geometry.coordinates[1]
+        },
         map: map,
         icon: image,
         animation: window.google.maps.Animation.DROP,
-        title: location.name,
-      })
+        title: location.name
+      });
 
-      marker.addListener('click', function() {
+      marker.addListener("click", function() {
+        console.log("Marker click listener PREV MARKER: ", previousMarker);
+        window.activeLocation_id = location._id;
 
-        console.log("Marker click listener PREV MARKER: ", previousMarker)
-        window.activeLocation_id = location._id
+        // if (previousMarker) {
+        //       infoBubble.close()
+        //       previousMarker = undefined
+        // } else{
+        infoBubble.addListener("domready", e => {
+          setTimeout(() => {
+            console.log("PRING INFOW...");
+            ReactDOM.render(
+              //<p>Infowindow</p>
+              <InfoWindow
+                lat={location.geometry.coordinates[1]}
+                lng={location.geometry.coordinates[0]}
+                id={location._id}
+                //{...here.props}
+                location={location}
+                //redirectLogin={here.redirectLogin}
+                //forceRerender={here.forceRerender}
+                //handleOpenModalJoinMAP={here.handleOpenModalJoinMAP}
+                //handleShowJoinedAlertConfirm={here.handleShowJoinedAlertConfirm}
+                //handleShowMailSent={here.handleShowMailSent}
+                //AttendingLocationHandler={here.AttendingLocationHandler}
+                //openGalleryMap={here.openGalleryMap}
+              />,
+              document.getElementById("infoWindow")
+            );
+          }, 100);
+        });
+        infoBubble.open(map, marker);
+        previousMarker = location;
+        // }
+      });
 
-      // if (previousMarker) {
-      //       infoBubble.close()
-      //       previousMarker = undefined
-      // } else{
-          infoBubble.addListener('domready', e => {
-              setTimeout(() => {
-                console.log("PRING INFOW...")
-          ReactDOM.render(
-          //<p>Infowindow</p>
-          <InfoWindow  
-                                      lat={location.geometry.coordinates[1]} 
-                                      lng={location.geometry.coordinates[0]} 
-                                      id={location._id} 
-                                      //{...here.props}
-                                      location={location} 
-                                      //redirectLogin={here.redirectLogin} 
-                                      //forceRerender={here.forceRerender}
-                                      //handleOpenModalJoinMAP={here.handleOpenModalJoinMAP}
-                                      //handleShowJoinedAlertConfirm={here.handleShowJoinedAlertConfirm}
-                                      //handleShowMailSent={here.handleShowMailSent}
-                                      //AttendingLocationHandler={here.AttendingLocationHandler}
-                                      //openGalleryMap={here.openGalleryMap}
-                                       /> 
-                                      , document.getElementById('infoWindow'))}, 100 ) 
-            })
-      infoBubble.open(map, marker);
-      previousMarker = location;
-     // }   
-    })
-
-
-
-      return marker
-
-
-    })
-
-
-
-  }
+      return marker;
+    });
+  };
 
   const MapOptions = {
     center: { lat: latitude, lng: longitude },

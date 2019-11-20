@@ -14,6 +14,7 @@ const EventSchema = new Schema({
   },
   addressGoogle: { type: String }, //Address..
   addressCustom: { type: String },
+  address: { type: String },
   eventType: { type: Number },
   dateStart: { type: Date },
   dateEnd: { type: Date },
