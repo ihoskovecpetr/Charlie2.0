@@ -28,7 +28,7 @@ import { UserContext } from "../userContext";
 import Dropzone from "../Molecules/Dropzone";
 import Spinner from "../Atoms/Spinner";
 import Map from "../Atoms/Hook-map";
-import MapMolecule from "../Molecules/Create-map-hooks";
+import MapMolecule from "../Molecules/create-map";
 
 const NEW_EVENT = gql`
   mutation createEvent(

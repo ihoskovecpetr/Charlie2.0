@@ -1,93 +1,77 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState, useEffect } from "react";
+//import GeolocationMarker from 'geolocation-marker'
+import { usePosition } from "../Hooks/useGoelocation";
+import TextField from "@material-ui/core/TextField";
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: "flex",
-    // width: `100%`,
-    // height: `100%`,
-    "& > * + *": {
-      marginLeft: theme.spacing(2)
-    }
-  }
-}));
+import Map from "../Atoms/Hook-map";
 
-export default function CreateMap() {
-  const classes = useStyles();
+export default function MapMolecule(props) {
+  const { latitude, longitude, error } = usePosition();
 
-  initMap = () => {
-    console.log("initialisation of map props: ", this.props);
+  let marker;
+  let markerGeoLoc = { lat: latitude, lng: longitude };
+  let geocoder;
 
-    var LandL;
-    var Zoom;
+  const MapOptions = {
+    center: { lat: latitude, lng: longitude },
+    zoom: 10,
+    disableDefaultUI: true,
+    zoomControl: true,
+    //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+    clickableIcons: false,
+    gestureHandling: "cooperative"
+  };
 
-    if (this.props.isUpdating) {
-      console.log("LandL from isUpdating!!");
-      LandL = [
-        this.props.updatingValues.geometry.coordinates[1],
-        this.props.updatingValues.geometry.coordinates[0]
-      ];
-    } else {
-      if (this.props.workingLocationGate[0] == undefined) {
-        //loading this location on  backgrould of Jumbo
-        LandL = [-33.81, 151.2];
-        Zoom = 10;
-        console.log("GENERAL location");
-      } else {
-        LandL = [
-          this.props.workingLocationGate[0],
-          this.props.workingLocationGate[1]
-        ];
-        Zoom = 11;
-      }
-    }
-
-    map = new window.google.maps.Map(document.getElementById("map-create"), {
-      center: { lat: LandL[0], lng: LandL[1] },
-      zoom: Zoom,
-      disableDefaultUI: true,
-      zoomControl: true,
-      mapTypeId: window.google.maps.MapTypeId.ROADMAP,
-      clickableIcons: false,
-      gestureHandling: "cooperative"
-    });
-
-    geocoder = new window.google.maps.Geocoder();
-    var GeoMarker = new window.GeolocationMarker(map);
-
-    var input = document.getElementById("input-location");
-    var autocomplete = new window.google.maps.places.Autocomplete(input);
-    var infowindow = new window.google.maps.InfoWindow();
-
-    autocomplete.bindTo("bounds", map);
+  const onMapMount = map => {
+    console.log("onMapMount fce ");
 
     marker = new window.google.maps.Marker({
       map: map,
       anchorPoint: new window.google.maps.Point(0, -29)
     });
 
-    var here = this;
+    var input = document.getElementById("input-location");
+    var autocomplete = new window.google.maps.places.Autocomplete(input);
+    geocoder = new window.google.maps.Geocoder();
+    autocomplete.bindTo("bounds", map);
 
-    if (this.state.location[0]) {
-      console.log("we do have location");
+    if (props.customMapParam) {
+      console.log("MArker CL: ", props.customMapParam);
       marker.setPosition({
-        lat: this.state.location[1],
-        lng: this.state.location[0]
+        lng: props.customMapParam.lng,
+        lat: props.customMapParam.lat
       });
-      marker.setVisible(true);
-    } else {
-      console.log("we do NOT have location");
+      map.setCenter({
+        lng: props.customMapParam.lng,
+        lat: props.customMapParam.lat
+      });
+      map.setZoom(props.customMapParam.zoom);
+      document.getElementById("input-location").value =
+        props.customMapParam.address;
+    } else if (markerGeoLoc) {
+      console.log("MArker MGL");
+      marker.setPosition(markerGeoLoc);
+      map.setCenter(markerGeoLoc);
+      geocodeLatLng(geocoder, map, markerGeoLoc.lat, markerGeoLoc.lng);
     }
 
+    map.addListener("click", e => {
+      document.getElementById("input-location").value = "";
+      marker.setVisible(false);
+      marker.setPosition(e.latLng);
+      marker.setVisible(true);
+
+      geocodeLatLng(geocoder, map, e.latLng.lat(), e.latLng.lng());
+    });
+
     autocomplete.addListener("place_changed", function() {
-      console.log("place_changed LISTENER AUTOCOMPL");
-      infowindow.close();
       marker.setVisible(false);
       var place = autocomplete.getPlace();
       if (!place.geometry) {
         // User entered the name of a Place that was not suggested and
         // pressed the Enter key, or the Place Details request failed.
-        window.alert("No details available for input: '" + place.name + "'");
+        //window.alert("No details available for input: '" + place.name + "'");
+        console.log(`No details available for input:  ${place.name}`);
         return;
       }
 
@@ -98,14 +82,15 @@ export default function CreateMap() {
         map.setCenter(place.geometry.location);
         map.setZoom(17); // Why 17? Because it looks good.
       }
-      console.log("LOCATION  FORM: ", place.geometry.location);
-      marker.setPosition(place.geometry.location);
+
+      markerGeoLoc = {
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng()
+      };
+
       marker.setVisible(true);
 
-      var address = "";
-
-      console.log("place.address_components");
-      console.log(place);
+      let address = "";
 
       if (place.address_components) {
         address = [
@@ -121,52 +106,66 @@ export default function CreateMap() {
         ].join(" ");
       }
 
-      //here.validateField('timezone', place.utc_offset)
-
-      here.setState(
-        {
+      props.setCustomMapParam(prev => {
+        return {
+          ...prev,
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
           address: address,
-          addressCustom: document.getElementById("input-location").value,
-          location: [
-            place.geometry.location.lat(),
-            place.geometry.location.lng()
-          ]
-          //venueTimeOffset: place.utc_offset,
-        },
-        () => {
-          console.log("VALID from initMap");
-          here.validateField("location", here.state.location);
-        }
-      );
+          zoom: 14
+        };
+      });
     });
+  };
 
-    map.addListener("click", e => {
-      console.log("CLIKC to MAP");
-
-      document.getElementById("input-location").value = "";
-
-      // marker.setVisible(false);
-      // marker.setPosition(e.latLng);
-      // marker.setVisible(true);
-
-      console.log(e.latLng.lat());
-      console.log(e.latLng.lng());
-      this.setState(
-        {
-          location: [e.latLng.lat(), e.latLng.lng()],
-          addrOff: false,
-          address: document.getElementById("input-location").value
-        },
-        () => {
-          this.geocodeLatLng(geocoder, map, e.latLng.lat(), e.latLng.lng());
-        }
-      );
+  const geocodeLatLng = (geocoder, map, lat, lng) => {
+    geocoder.geocode({ location: { lat: lat, lng: lng } }, function(
+      results,
+      status,
+      error_message
+    ) {
+      var spl = results[0].formatted_address.split(" ");
+      var shortAddress = [spl[0], spl[1], spl[2], spl[3]].join(" ");
+      status &&
+        props.setCustomMapParam(prev => {
+          return {
+            ...prev,
+            address: shortAddress,
+            lat: lat,
+            lng: lng,
+            zoom: 14
+          };
+        });
+      if (error_message) {
+        window.alert("Geocoder failed due to: " + status);
+        console.log("results: ", results);
+        //this.setState({addressOffer: "No address in your location"})
+        props.setCustomMapParam(prev => {
+          return { ...prev, address: "Failed to localize you" };
+        });
+      }
     });
   };
 
   return (
-    <div className={classes.root}>
-      <div id="map-create"> </div>
-    </div>
+    <>
+      <TextField
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        id="input-location"
+        //value={props.customMapParam && props.customMapParam.address}
+        //label="Enter a location"
+        placeholder="Enter a location"
+        name="name"
+        autoComplete="name"
+        onKeyPress={e => {
+          if (e.key === "Enter") e.preventDefault();
+        }}
+        autoFocus
+      />
+      <Map onMount={onMapMount} options={MapOptions} />
+    </>
   );
 }

@@ -31,7 +31,7 @@ export default function Map({ options, onMount, className }) {
   }, [onMount, options]);
 
   const divStyle = {
-    height: "200px",
+    height: "400px",
     width: "100%"
   };
   return (

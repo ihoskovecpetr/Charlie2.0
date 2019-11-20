@@ -29,66 +29,6 @@ app.use((req, res, next) => {
 
 app.use(authMid);
 
-// const typeDefs = gql`
-//   type Subscription {
-//     newVote: Vote!
-//   }
-
-//   type Query {
-//     Votes: [Vote!]
-//   }
-
-//   type Mutation {
-//     voteAction(inputVote: InputVote!): Vote!
-//     Login(inputLogin: InputLogin): Token!
-//     testing: Test!
-//   }
-
-//   type Test {
-//     test: String
-//   }
-
-//   type Vote {
-//     _id: ID
-//     vote: Float
-//     country: String
-//   }
-
-//   type Token {
-//     token: String
-//   }
-
-//   input InputVote {
-//     vote: Float
-//     country: String!
-//   }
-//   input InputLogin {
-//     user: String
-//     pass: String
-//   }
-// `;
-
-// const resolvers = {
-//   // Subscription: {
-//   //   // newVote: {
-//   //   //   subscribe: (_, __, { pubsub }) => pubsub.asyncIterator(NEW_VOTE)
-//   //   // }
-//   // },
-//   Query: {
-//     Votes: async (_, __, { pubsub }) => {
-//       try {
-//         //const result = await Vote.find({});
-//         //console.log("results: :", result);
-//         return {id: '54sd6sad65', name: 'String NAme'};
-//       } catch (err) {
-//         throw err;
-//       }
-//     }
-//   },
-//   Mutation: {
-
-//   }
-// };
 
 const pubsub = new PubSub();
 const server = new ApolloServer({

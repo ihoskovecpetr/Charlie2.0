@@ -11,6 +11,32 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
+    },
+    fewEvents:  () => {
+  
+        let allEvents = [{    
+          _id: '2sdf2sdfs2sfdsdfs2',
+          success: true,
+          author: 'Petr Work',
+          name: 'Event Namm',
+          lng: 14.45,
+          lat: 50,
+          addressGoogle: "addressGoogle",
+          addressCustom: "addressCustom",
+          address: "address",
+          eventType: 1,
+          dateStart: "2019-10-10",
+          price: 12,
+          capacityMax: 20,
+          BYO: true,
+          //imagesArr: [ImageInput],
+          description: "Desc",
+          confirmed: true ,
+          hide: false
+        }]
+
+        return allEvents;
+
     }
   },
   Mutation: {
@@ -64,6 +90,7 @@ function newFunction() {
   return `
   extend type Query {
     events(name: String ): [Event]
+    fewEvents: [Event]
   }
 
   extend type Mutation {
@@ -104,10 +131,28 @@ function newFunction() {
   }
 
   type Event {
-    success: Boolean
     _id: ID
-    name: String
+    success: Boolean
     author: String
+    name: String
+    lng: Float
+    lat: Float
+    addressGoogle: String
+    addressCustom: String
+    eventType: Int
+    dateStart: String
+    dateEnd: String
+    price: Float
+    capacityMax: Int
+    BYO: Boolean
+    repeatWeek: Boolean
+    freeSnack: Boolean
+    freeBeer: Boolean
+    freeMeal: Boolean
+    imagesArr: [Image]
+    description: String
+    confirmed: Boolean 
+    hide: Boolean
   }
   type Image {
     caption: String
