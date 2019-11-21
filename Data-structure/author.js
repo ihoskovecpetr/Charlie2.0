@@ -6,7 +6,7 @@ export const typeDef = `
     id: Int!
     firstName: String
     lastName: String
-    books: [Book]
+    src: String
   }
 `;
 export const resolvers = {

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-export default function Map({ options, onMount, className }) {
+export default function Map({ options, onMount, className, styling }) {
   const ref = useRef();
 
   useEffect(() => {
@@ -10,7 +10,8 @@ export default function Map({ options, onMount, className }) {
       if (typeof onMount === `function`) {
         //const map = new window.google.maps.Map(ref.current, options);
         const map = new window.google.maps.Map(
-          document.getElementById("map-create"),
+          //document.getElementById("map-create"),
+          ref.current,
           options
         );
 
@@ -30,16 +31,13 @@ export default function Map({ options, onMount, className }) {
     } else onLoad();
   }, [onMount, options]);
 
-  const divStyle = {
-    height: "400px",
-    width: "100%"
-  };
+
   return (
     <div
-      style={divStyle}
-      id="map-create"
+      style={styling}
+      //id="map-create"
       //css="height: 60vh; width: 60vh; margin: 1em 0; border-radius: 0.5em;"
-      //{...{ ref, className }}
+      {...{ ref, className }}
     ></div>
   );
 }

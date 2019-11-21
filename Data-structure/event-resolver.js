@@ -163,7 +163,7 @@ function newFunction() {
   type Event {
     _id: ID
     success: Boolean
-    author: String
+    author: Author
     name: String
     lng: Float
     lat: Float
