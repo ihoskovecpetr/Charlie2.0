@@ -41,17 +41,33 @@ const FEW_EVENTS = gql`
     $sw: Float
   ) {
     eventGeoDay(date: $date, geoObj: { ne: $ne, nw: $nw, se: $se, sw: $sw }) {
-      name
       _id
+      name
       confirmed
-      capacityMax
-      price
+      author {
+        name
+        picture
+      }
+      dateStart
       geometry {
         coordinates
       }
-      freeSnack
-      description
       address
+      capacityMax
+      price
+      description
+      BYO
+      freeSnack
+      imagesArr {
+        caption
+        src
+        thumbnail
+        thumbnailHeight
+        thumbnailWidth
+        scaletwidth
+        marginLeft
+        vwidth
+      }
     }
   }
 `;
@@ -75,84 +91,84 @@ function MapPage(props) {
   console.log("Few events DATA:", data);
   let dataMock;
 
-  dataMock = [
-    {
-      _id: "2sdf2sdfs2sfdsdfs2",
-      success: true,
-      author: {
-        firstName: "Petr", 
-        lastName: "Hoskovec", 
-        src: "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91",
-      },
-      name: "Event 111",
-      geometry: { coordinates: [50.040112099, 14.428] },
-      lng: 14.45,
-      lat: 50,
-      addressGoogle: "addressGoogle",
-      addressCustom: "addressCustom",
-      address: "address",
-      eventType: 1,
-      dateStart: "2019-10-10",
-      price: 12,
-      capacityMax: 20,
-      BYO: true,
-      imagesArr: [
-        {
-          caption: "No more pictures for this Event",
-          src:
-            "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-          thumbnail:
-          "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-          thumbnailHeight: 10,
-          thumbnailWidth: 10,
-          scaletwidth: 100,
-          marginLeft: 0,
-          vwidth: 100
-        }
-      ],
-      description: "Desc",
-      confirmed: true,
-      hide: false
-    },
-    {
-      _id: "2sdf2sdfs2sfdsdfsdf2",
-      success: true,
-      author: {
-        firstName: "Petr", 
-        lastName: "Hoskovec", 
-        src: "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91",
-      },
-      name: "Event 222",
-      geometry: { coordinates: [50.050312099, 14.458] },
-      lng: 14.45,
-      lat: 50,
-      addressGoogle: "addressGoogle",
-      addressCustom: "addressCustom",
-      address: "address",
-      eventType: 1,
-      dateStart: "2019-10-10",
-      price: 12,
-      capacityMax: 20,
-      BYO: true,
-      imagesArr: [
-        {
-          caption: "No more pictures for this Event",
-          src:
-            "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-          thumbnail:
-            "https://res.cloudinary.com/party-images-app/image/upload/v1551339472/m...",
-          thumbnailHeight: 10,
-          thumbnailWidth: 10,
-          scaletwidth: 100,
-          marginLeft: 0,
-          vwidth: 100
-        }
-      ],
-      description: "Desc",
-      confirmed: true,
-      hide: false
-    }
-  ];
+  // dataMock = [
+  //   {
+  //     _id: "2sdf2sdfs2sfdsdfs2",
+  //     success: true,
+  //     author: {
+  //       firstName: "Petr",
+  //       lastName: "Hoskovec",
+  //       src: "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91",
+  //     },
+  //     name: "Event 111",
+  //     geometry: { coordinates: [50.040112099, 14.428] },
+  //     lng: 14.45,
+  //     lat: 50,
+  //     addressGoogle: "addressGoogle",
+  //     addressCustom: "addressCustom",
+  //     address: "address",
+  //     eventType: 1,
+  //     dateStart: "2019-10-10",
+  //     price: 12,
+  //     capacityMax: 20,
+  //     BYO: true,
+  //     imagesArr: [
+  //       {
+  //         caption: "No more pictures for this Event",
+  //         src:
+  //           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+  //         thumbnail:
+  //         "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+  //         thumbnailHeight: 10,
+  //         thumbnailWidth: 10,
+  //         scaletwidth: 100,
+  //         marginLeft: 0,
+  //         vwidth: 100
+  //       }
+  //     ],
+  //     description: "Desc",
+  //     confirmed: true,
+  //     hide: false
+  //   },
+  //   {
+  //     _id: "2sdf2sdfs2sfdsdfsdf2",
+  //     success: true,
+  //     author: {
+  //       firstName: "Petr",
+  //       lastName: "Hoskovec",
+  //       src: "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91",
+  //     },
+  //     name: "Event 222",
+  //     geometry: { coordinates: [50.050312099, 14.458] },
+  //     lng: 14.45,
+  //     lat: 50,
+  //     addressGoogle: "addressGoogle",
+  //     addressCustom: "addressCustom",
+  //     address: "address",
+  //     eventType: 1,
+  //     dateStart: "2019-10-10",
+  //     price: 12,
+  //     capacityMax: 20,
+  //     BYO: true,
+  //     imagesArr: [
+  //       {
+  //         caption: "No more pictures for this Event",
+  //         src:
+  //           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+  //         thumbnail:
+  //           "https://res.cloudinary.com/party-images-app/image/upload/v1551339472/m...",
+  //         thumbnailHeight: 10,
+  //         thumbnailWidth: 10,
+  //         scaletwidth: 100,
+  //         marginLeft: 0,
+  //         vwidth: 100
+  //       }
+  //     ],
+  //     description: "Desc",
+  //     confirmed: true,
+  //     hide: false
+  //   }
+  // ];
 
   const onMapMount = map => {
     console.log("onMapMount fce MapPage ");
@@ -161,8 +177,8 @@ function MapPage(props) {
     let dataDB;
     if (dataMock) {
       dataDB = dataMock;
-    } else {
-      dataDB = data;
+    } else if (data) {
+      dataDB = data.eventGeoDay;
     }
     // if(dataMock){
     if (dataDB) {
@@ -173,6 +189,7 @@ function MapPage(props) {
           dataDB[i].confirmed == true
         ) {
           uniqueArrayOfId.push(dataDB[i]._id);
+          console.log("Original EVENT!");
           UniqArr.push(dataDB[i]);
         }
       }
@@ -208,7 +225,7 @@ function MapPage(props) {
 
       //here.props.setScrolledPosition([center.lat(), center.lng()], map.getZoom())
       //here.fetchBoundariesSingle(ne,sw)
-      console.log("Fetch points BoarDERS?");
+      //console.log("Fetch points BoarDERS?");
     });
 
     map.addListener("click", function(event) {
@@ -259,6 +276,7 @@ function MapPage(props) {
     });
 
     var AllMarkersArr = UniqArr.map((location, i) => {
+      console.log("PRINT ORIGINAL");
       var urlNA =
         "https://res.cloudinary.com/party-images-app/image/upload/v1557626853/j4fot5g2fvldzh88h9u4.png";
       //var urlAttend = "https://res.cloudinary.com/party-images-app/image/upload/v1557648350/caacy89b65efjmwjiho8.png"
@@ -346,15 +364,15 @@ function MapPage(props) {
     <Container component="main" maxWidth="md" className={classes.container}>
       <CssBaseline />
 
-      <Map onMount={onMapMount} 
-      options={MapOptions} 
-      className="Real-donald-domap" 
-      styling={{
+      <Map
+        onMount={onMapMount}
+        options={MapOptions}
+        className="Real-donald-domap"
+        styling={{
           height: "100vh",
-          width: "100%",
-          top: '-50px'
-        }} 
-        />
+          width: "100%"
+        }}
+      />
     </Container>
   );
 }
@@ -372,7 +390,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center"
   },
   container: {
-    padding: 0,
+    padding: 0
   },
   avatar: {
     margin: theme.spacing(1),

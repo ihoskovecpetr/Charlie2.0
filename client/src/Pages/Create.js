@@ -41,6 +41,7 @@ const NEW_EVENT = gql`
     $capacityMax: Int
     $BYO: Boolean
     $description: String
+    $imagesArr: [ImageInput]
   ) {
     createEvent(
       eventInput: {
@@ -53,6 +54,7 @@ const NEW_EVENT = gql`
         capacityMax: $capacityMax
         BYO: $BYO
         description: $description
+        imagesArr: $imagesArr
       }
     ) {
       _id
@@ -90,13 +92,13 @@ function Create(props) {
   const onSubmit = e => {
     e.preventDefault();
 
-    console.log("Posilam do GraphQl: ", inputName.current.value);
-    console.log("Posilam do GraphQl: ", inputDate.current.value);
-    console.log("Posilam do GraphQl: ", inputTime.current.value);
-    console.log("Posilam do GraphQl: ", inputCapacityMax.current.value);
-    console.log("Posilam do GraphQl: ", inputPrice.current.value);
-    console.log("Posilam do GraphQl: BYO ", inputBYO.current.checked);
-    console.log("Posilam do GraphQl: ", inputDescription.current.value);
+    // console.log("Posilam do GraphQl: ", inputName.current.value);
+    // console.log("Posilam do GraphQl: ", inputDate.current.value);
+    // console.log("Posilam do GraphQl: ", inputTime.current.value);
+    // console.log("Posilam do GraphQl: ", inputCapacityMax.current.value);
+    // console.log("Posilam do GraphQl: ", inputPrice.current.value);
+    // console.log("Posilam do GraphQl: BYO ", inputBYO.current.checked);
+    // console.log("Posilam do GraphQl: ", inputDescription.current.value);
 
     createEvent({
       variables: {
@@ -110,7 +112,23 @@ function Create(props) {
         price: parseInt(inputPrice.current.value),
         capacityMax: parseInt(inputCapacityMax.current.value),
         BYO: inputBYO.current.checked,
-        description: inputDescription.current.value
+        description: inputDescription.current.value,
+        imagesArr: formValue.ImagesArr
+        // imagesArr: [
+        //   {
+        //     caption: "No more pictures for this Event",
+        //     isSelected: false,
+        //     src:
+        //       "https://cms.hostelworld.com/hwblog/wp-content/uploads/sites/2/2017/12/surf-beaches-in-Australia-@hana_seas.jpg",
+        //     thumbnail:
+        //       "https://cms.hostelworld.com/hwblog/wp-content/uploads/sites/2/2017/12/surf-beaches-in-Australia-@hana_seas.jpg",
+        //     thumbnailHeight: 10,
+        //     thumbnailWidth: 10,
+        //     scaletwidth: 100,
+        //     marginLeft: 0,
+        //     vwidth: 100
+        //   }
+        // ]
       }
     });
   };

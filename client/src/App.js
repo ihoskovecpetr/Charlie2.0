@@ -40,8 +40,10 @@ function App(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
-
+  console.log("App props START: ", props);
   const { container } = props;
+
+  console.log(container);
   const [user, setUser] = useState({
     success: false,
     name: "NO USER",
@@ -57,22 +59,24 @@ function App(props) {
 
   const ListOfUrls = user.success
     ? ["", "signout", "create", "map"]
-    : ["", "signin", "create", "map", "signout"];
+    : ["", "signin", "create", "map", "signout", "event"];
   const ListOfNames = user.success
     ? ["Charlie", "SignOut", "Create", "Map"]
-    : ["Charlie", "SignIn", "Create", "Map"];
+    : ["Charlie", "Sign In", "Create", "Map", "Sign Out", "Event"];
   const ListOfComponents = user.success
     ? [
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
         <SignOut />,
         <Create />, //create
-        <MapPage /> //Map
+        <MapPage />, //Map
+        <SignOut />
       ]
     : [
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
         <SignIn />,
         <Create />,
-        <MapPage />
+        <MapPage />,
+        <SignOut />
       ];
   const drawer = (
     <div>
@@ -121,63 +125,90 @@ function App(props) {
   const returnComponent = index => {
     return <div className="content_wrap">{ListOfComponents[index]}</div>;
   };
+  console.log("Props STOPZ PO LOKACIIIIIIII: ", props);
+  var EventModal = false;
+  var UserModal = false;
+  var LoginModal = false;
+  var pathSet = props.location.pathname.split("/");
+  if (pathSet[1] == "event") {
+    EventModal = true;
+  }
+  if (pathSet[1] == "user") {
+    UserModal = true;
+  }
+  if (pathSet[1] == "login") {
+    LoginModal = true;
+  }
+  let { location } = props;
+  //var isModal = !!(this.previousLocation !== location); // not initial render
+
+  var justGoBack = false;
+  if (
+    props.location &&
+    props.location.state &&
+    props.location.state.justGoBack == true
+  ) {
+    justGoBack = true;
+  }
+
+  var EventOrUser = false;
+  if (EventModal || UserModal || LoginModal) {
+    EventOrUser = true;
+    console.log("EVENT OR USER pass: ", pathSet[1], EventOrUser);
+  }
 
   return (
     <div className={classes.root}>
       <UserContext.Provider value={providerValue}>
-        <Router>
-          <nav className={classes.drawer} aria-label="mailbox folders">
-            {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-            <Hidden smUp implementation="css">
-              <Drawer
-                container={container}
-                variant="temporary"
-                anchor={theme.direction === "rtl" ? "right" : "left"}
-                open={mobileOpen}
-                onClose={handleDrawerToggle}
-                classes={{
-                  paper: classes.drawerPaper
-                }}
-                ModalProps={{
-                  keepMounted: true // Better open performance on mobile.
-                }}
-              >
-                {drawer}
-              </Drawer>
-            </Hidden>
-            <Hidden xsDown implementation="css">
-              <Drawer
-                classes={{
-                  paper: classes.drawerPaper
-                }}
-                variant="permanent"
-                open
-              >
-                {drawer}
-              </Drawer>
-            </Hidden>
-          </nav>
-          <Switch>
-            {ListOfUrls.map((text, index) => (
-              <Route
-                exact
-                path={`/${text}`}
-                key={index}
-                render={() => (
-                  <>
-                    <UpperStripe
-                      name={`${ListOfNames[index]} -- ${user.name}`}
-                    />
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      {returnComponent(index)}
-                    </main>
-                  </>
-                )}
-              />
-            ))}
-          </Switch>
-        </Router>
+        <nav className={classes.drawer} aria-label="mailbox folders">
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Hidden smUp implementation="css">
+            <Drawer
+              container={container}
+              variant="temporary"
+              anchor={theme.direction === "rtl" ? "right" : "left"}
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper
+              }}
+              ModalProps={{
+                keepMounted: true // Better open performance on mobile.
+              }}
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+          <Hidden xsDown implementation="css">
+            <Drawer
+              classes={{
+                paper: classes.drawerPaper
+              }}
+              variant="permanent"
+              open
+            >
+              {drawer}
+            </Drawer>
+          </Hidden>
+        </nav>
+        <Switch>
+          {ListOfUrls.map((text, index) => (
+            <Route
+              exact
+              path={`/${text}`}
+              key={index}
+              render={() => (
+                <>
+                  <UpperStripe name={`${ListOfNames[index]} -- ${user.name}`} />
+                  <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    {returnComponent(index)}
+                  </main>
+                </>
+              )}
+            />
+          ))}
+        </Switch>
       </UserContext.Provider>
     </div>
   );
@@ -223,10 +254,18 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     flexGrow: 1,
-    height: '100vh',
-    width: '100%'
+    height: "100vh",
+    width: "100%"
     //padding: theme.spacing(3)
   }
 }));
 
-export default App;
+function AppWrap() {
+  return (
+    <Router>
+      <Route component={props2 => <App {...props2} />} />
+    </Router>
+  );
+}
+
+export default AppWrap;

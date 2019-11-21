@@ -165,7 +165,15 @@ export default function MapMolecule(props) {
         }}
         autoFocus
       />
-      <Map onMount={onMapMount} options={MapOptions} />
+      <Map
+        onMount={onMapMount}
+        options={MapOptions}
+        className="Create-hell-of-a-party"
+        styling={{
+          height: "200px",
+          width: "100%"
+        }}
+      />
     </>
   );
 }

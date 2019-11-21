@@ -87,7 +87,7 @@ export const resolvers = {
             freeMeal: _args.eventInput.freeMeal,
             imagesArr: _args.eventInput.imagesArr,
             description: _args.eventInput.description,
-            confirmed: _args.eventInput.confirmed,
+            confirmed: true,
             hide: _args.eventInput.hide
           });
           const result = await newEvent.save();
@@ -102,7 +102,11 @@ export const resolvers = {
   Event: {
     author: () => {
       console.log("Aurrr ěě");
-      return { firstName: "pepa jelinek" };
+      return {
+        name: "Fighter for adventure",
+        picture:
+          "https://techcrunch.com/wp-content/uploads/2019/09/SpaceX-Starship-Mk1-17.jpg?w=1390&crop=1"
+      };
     }
   }
 };
@@ -158,15 +162,14 @@ function newFunction() {
     scaletwidth: Int
     marginLeft: Int
     vwidth: Int
+    isSelected: Boolean
   }
 
   type Event {
     _id: ID
     success: Boolean
-    author: Author
+    author: User
     name: String
-    lng: Float
-    lat: Float
     geometry: Geometry
     addressGoogle: String
     addressCustom: String

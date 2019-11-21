@@ -13,7 +13,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-
+import { Route, BrowserRouter as Router } from "react-router-dom";
 import {
   ApolloClient,
   InMemoryCache,
@@ -92,3 +92,6 @@ ReactDOM.render(
   </ApolloProvider>,
   document.getElementById("root")
 );
+// <Router>
+//     <Route component={props => <App {...props} />} />
+//   </Router>
