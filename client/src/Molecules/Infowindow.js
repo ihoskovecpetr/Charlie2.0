@@ -15,6 +15,92 @@ import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
 import { green } from "@material-ui/core/colors";
 
+var alreadyAttending = false
+
+function Infowindow(props) {
+  console.log("props.location: ", props.location);
+  let Pic = props.location.imagesArr[0];
+  let Author = props.location.author;
+
+  const [spacing, setSpacing] = React.useState(2);
+  const classes = useStyles();
+
+  
+
+  const openModalEvent = () => {
+
+    console.log("openModalEvent: window history??: ", window)
+
+    var youOwnerVar = false
+    
+        if (props.location.creatorEmail == props.email) {
+        console.log("You are the OWNER!")
+        youOwnerVar = true
+      } else{
+        console.log("You are NOT the owner!")
+      }
+      console.log("Event _id: ", props.location._id)
+      var string = '/event/' + props.location._id
+      console.log("correct string: ", string)
+
+      window.AppHistory.push(string, {
+                                      //tady: napsatStateKdyžtak
+                                                }
+                                  )
+    }
+
+  return (
+    <>
+      <CssBaseline />
+      <Grid container justify="center" className={classes.topbar}>
+        <Grid>
+          <h3 className={classes.h3Name}>{props.location.name}</h3>
+        </Grid>
+      </Grid>
+      <img src={Pic.src} alt={Pic.capture} className={classes.img} />
+      <Grid
+        container
+        justify="center"
+        alignItems="center"
+        className={classes.authorGrid}
+      >
+        <Avatar
+          alt="Author picture"
+          src={Author.picture}
+          className={classes.avatar}
+        />
+      </Grid>
+
+      <Grid
+        container
+        direction="column"
+        justify="center"
+        alignItems="center"
+        className={classes.body}
+      >
+        <Grid item justify="center" alignItems="center">
+          <Typography noWrap>{props.location.price}</Typography>
+        </Grid>
+        <Grid item justify="center" alignItems="center">
+          <Typography noWrap>{props.location.dateStart}</Typography>
+        </Grid>
+      </Grid>
+
+      <Grid
+        container
+        direction="column"
+        justify="center"
+        alignItems="center"
+        className={classes.button}
+      >
+        <Grid item justify="center" alignItems="center">
+          <Typography noWrap onClick={openModalEvent}>OPEN</Typography>
+        </Grid>
+      </Grid>
+    </>
+  );
+}
+
 const useStyles = makeStyles(theme => ({
   img: {
     height: 100,
@@ -63,66 +149,5 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Infowindow(props) {
-  console.log("props.location: ", props.location);
-  let Pic = props.location.imagesArr[0];
-  let Author = props.location.author;
 
-  const [spacing, setSpacing] = React.useState(2);
-  const classes = useStyles();
-
-  const handleChange = event => {
-    setSpacing(20);
-  };
-
-  return (
-    <>
-      <CssBaseline />
-      <Grid container justify="center" className={classes.topbar}>
-        <Grid>
-          <h3 className={classes.h3Name}>{props.location.name}</h3>
-        </Grid>
-      </Grid>
-      <img src={Pic.src} alt={Pic.capture} className={classes.img} />
-      <Grid
-        container
-        justify="center"
-        alignItems="center"
-        className={classes.authorGrid}
-      >
-        <Avatar
-          alt="Author picture"
-          src={Author.picture}
-          className={classes.avatar}
-        />
-      </Grid>
-
-      <Grid
-        container
-        direction="column"
-        justify="center"
-        alignItems="center"
-        className={classes.body}
-      >
-        <Grid item justify="center" alignItems="center">
-          <Typography noWrap>{props.location.price}</Typography>
-        </Grid>
-        <Grid item justify="center" alignItems="center">
-          <Typography noWrap>{props.location.dateStart}</Typography>
-        </Grid>
-      </Grid>
-
-      <Grid
-        container
-        direction="column"
-        justify="center"
-        alignItems="center"
-        className={classes.button}
-      >
-        <Grid item justify="center" alignItems="center">
-          <Typography noWrap>OPEN</Typography>
-        </Grid>
-      </Grid>
-    </>
-  );
-}
+export default Infowindow

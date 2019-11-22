@@ -1,16 +1,3 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-// import './index.css';
-// import App from './App';
-// import * as serviceWorker from './serviceWorker';
-
-// ReactDOM.render(<App />, document.getElementById('root'));
-
-// // If you want your app to work offline and load faster, you can change
-// // unregister() to register() below. Note this comes with some pitfalls.
-// // Learn more about service workers: https://bit.ly/CRA-PWA
-// serviceWorker.unregister();
-
 import React from "react";
 import ReactDOM from "react-dom";
 import { Route, BrowserRouter as Router } from "react-router-dom";
@@ -27,7 +14,6 @@ import { setContext } from "apollo-link-context";
 import { getMainDefinition } from "apollo-utilities";
 
 import App from "./App";
-//window.localStorage.setItem("token", "faketokenXX");
 
 var GQL_ENDPOINT = `http://localhost:4005/graphql`;
 if (process.env.NODE_ENV == "production") {

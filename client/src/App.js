@@ -26,6 +26,8 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import gql from "graphql-tag";
 import { useMutation, useQuery, useApolloClient } from "@apollo/react-hooks";
 
+import UpperStripe from "./Atoms/upper-stripe";
+
 import { UserContext } from "./userContext";
 import Menu from "./Pages/Menu";
 import SignIn from "./Pages/SignIn";
@@ -33,12 +35,16 @@ import SignUp from "./Pages/SignUp";
 import SignOut from "./Pages/SignOut";
 import Create from "./Pages/Create";
 import MapPage from "./Pages/MapPage";
+import Event from "./Pages/Event";
 
 const drawerWidth = 240;
+let prevLocation;
 
 function App(props) {
   const classes = useStyles();
   const theme = useTheme();
+
+
   const [mobileOpen, setMobileOpen] = useState(false);
   console.log("App props START: ", props);
   const { container } = props;
@@ -53,13 +59,14 @@ function App(props) {
 
   const providerValue = useMemo(() => ({ user, setUser }), [user, setUser]);
 
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
   const ListOfUrls = user.success
     ? ["", "signout", "create", "map"]
-    : ["", "signin", "create", "map", "signout", "event"];
+    : ["", "signin", "create", "map", "signout", "event/654sad"];
   const ListOfNames = user.success
     ? ["Charlie", "SignOut", "Create", "Map"]
     : ["Charlie", "Sign In", "Create", "Map", "Sign Out", "Event"];
@@ -76,7 +83,8 @@ function App(props) {
         <SignIn />,
         <Create />,
         <MapPage />,
-        <SignOut />
+        <SignOut />,
+        <Event />
       ];
   const drawer = (
     <div>
@@ -98,38 +106,51 @@ function App(props) {
     </div>
   );
 
-  const UpperStripe = props => {
-    console.log(props);
-    return (
-      <>
-        <CssBaseline />
-        <AppBar position="fixed" color="secondary" className={classes.appBar}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              className={classes.menuButton}
-            >
-              <MenuIcon />
-            </IconButton>
+  // const UpperStripe = props => {
+  //   console.log(props);
+  //   return (
+  //     <>
+  //       <CssBaseline />
+  //       <AppBar position="fixed" color="secondary" className={classes.appBar}>
+  //         <Toolbar>
+  //           <IconButton
+  //             color="inherit"
+  //             aria-label="open drawer"
+  //             edge="start"
+  //             onClick={handleDrawerToggle}
+  //             className={classes.menuButton}
+  //           >
+  //             <MenuIcon />
+  //           </IconButton>
 
-            {props.name}
-          </Toolbar>
-        </AppBar>
-      </>
-    );
-  };
+  //           {props.name}
+  //         </Toolbar>
+  //       </AppBar>
+  //     </>
+  //   );
+  // };
 
   const returnComponent = index => {
     return <div className="content_wrap">{ListOfComponents[index]}</div>;
   };
-  console.log("Props STOPZ PO LOKACIIIIIIII: ", props);
+  //console.log("Props STOPZ PO LOKACIIIIIIII: ", props);
+
+  useEffect(() => {
+    // Update the document title using the browser API
+    prevLocation = props.location
+    console.log("OOO useEffect once! PrevLocation: ", prevLocation);
+  }, []);
+  var pathSet = props.location.pathname.split("/");
+  if (pathSet[1] == "event") {
+    console.log("OOO Event comming, keep PrevLocation and put it in Switch: ", prevLocation)
+  } else{
+    console.log("OOO next loc in Switch")
+    prevLocation = props.location
+  }
+
   var EventModal = false;
   var UserModal = false;
   var LoginModal = false;
-  var pathSet = props.location.pathname.split("/");
   if (pathSet[1] == "event") {
     EventModal = true;
   }
@@ -140,7 +161,6 @@ function App(props) {
     LoginModal = true;
   }
   let { location } = props;
-  //var isModal = !!(this.previousLocation !== location); // not initial render
 
   var justGoBack = false;
   if (
@@ -160,6 +180,7 @@ function App(props) {
   return (
     <div className={classes.root}>
       <UserContext.Provider value={providerValue}>
+      
         <nav className={classes.drawer} aria-label="mailbox folders">
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
           <Hidden smUp implementation="css">
@@ -179,7 +200,7 @@ function App(props) {
               {drawer}
             </Drawer>
           </Hidden>
-          <Hidden xsDown implementation="css">
+          {/* <Hidden xsDown implementation="css">
             <Drawer
               classes={{
                 paper: classes.drawerPaper
@@ -189,9 +210,17 @@ function App(props) {
             >
               {drawer}
             </Drawer>
-          </Hidden>
+          </Hidden> */}
         </nav>
-        <Switch>
+        {EventOrUser && console.log("PR EVNT")}
+        {EventOrUser && <Route
+              exact
+              path={`/event/:id`}
+              render={() => (
+                    <Event />
+              )}
+            />}
+        <Switch  location={prevLocation} >
           {ListOfUrls.map((text, index) => (
             <Route
               exact
@@ -199,7 +228,7 @@ function App(props) {
               key={index}
               render={() => (
                 <>
-                  <UpperStripe name={`${ListOfNames[index]} -- ${user.name}`} />
+                  <UpperStripe name={`${ListOfNames[index]} -- ${user.name}`} handleDrawerToggle={handleDrawerToggle} drawerWidth={drawerWidth} />
                   <main className={classes.content}>
                     <div className={classes.toolbar} />
                     {returnComponent(index)}
@@ -230,24 +259,11 @@ const useStyles = makeStyles(theme => ({
   },
   drawer: {
     [theme.breakpoints.up("sm")]: {
-      width: drawerWidth,
+      width: 0,
       flexShrink: 0
     }
   },
-  appBar: {
-    marginLeft: drawerWidth,
-    [theme.breakpoints.up("sm")]: {
-      width: `calc(100% - ${drawerWidth}px)`
-    },
-    fontWeight: 700,
-    fontSize: "20px"
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up("sm")]: {
-      display: "none"
-    }
-  },
+
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth
