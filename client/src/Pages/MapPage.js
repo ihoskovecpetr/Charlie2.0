@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
+import React, { useContext, useState, useRef, useEffect, useMemo } from "react";
 import ReactDOM from "react-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
@@ -12,7 +12,7 @@ import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
 import { usePosition } from "../Hooks/useGoelocation";
-import Dropzone from "../Molecules/Dropzone";
+import Dropzone from "../Molecules/dropzone";
 import Spinner from "../Atoms/Spinner";
 import Map from "../Atoms/Hook-map";
 import InfoWindow from "../Molecules/Infowindow";
@@ -75,90 +75,94 @@ function MapPage(props) {
 
   useEffect(() => {
     if (!window.AppHistory) {
-  window.AppHistory = history;
-}
-}, []);
+      window.AppHistory = history;
+    }
+  }, []);
 
   console.log("Few events DATA:", data);
   let dataMock;
 
-  dataMock = [
-    {
-      _id: "2sdf2sdfs2sfdsdfs2",
-      success: true,
-      author: {
-        name: "Petr H.",
-        picture: "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91",
-      },
-      name: "Event 111",
-      geometry: { coordinates: [50.040112099, 14.428] },
-      lng: 14.45,
-      lat: 50,
-      addressGoogle: "addressGoogle",
-      addressCustom: "addressCustom",
-      address: "address",
-      eventType: 1,
-      dateStart: "2019-10-10",
-      price: 12,
-      capacityMax: 20,
-      BYO: true,
-      imagesArr: [
-        {
-          caption: "No more pictures for this Event",
-          src:
-            "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-          thumbnail:
-          "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-          thumbnailHeight: 10,
-          thumbnailWidth: 10,
-          scaletwidth: 100,
-          marginLeft: 0,
-          vwidth: 100,
-          isSelected: false
-        }
-      ],
-      description: "Desc",
-      confirmed: true,
-      hide: false
-    },
-    {
-      _id: "2sdf2sdfs2sfdsdfsdf2",
-      success: true,
-      author: {
-        name: "Petr H.",
-        picture: "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91",
-      },
-      name: "Event 222",
-      geometry: { coordinates: [50.050312099, 14.458] },
-      lng: 14.45,
-      lat: 50,
-      addressGoogle: "addressGoogle",
-      addressCustom: "addressCustom",
-      address: "address",
-      eventType: 1,
-      dateStart: "2019-10-10",
-      price: 12,
-      capacityMax: 20,
-      BYO: true,
-      imagesArr: [
-        {
-          caption: "No more pictures for this Event",
-          src:
-            "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-          thumbnail:
-            "https://res.cloudinary.com/party-images-app/image/upload/v1551339472/m...",
-          thumbnailHeight: 10,
-          thumbnailWidth: 10,
-          scaletwidth: 100,
-          marginLeft: 0,
-          vwidth: 100
-        }
-      ],
-      description: "Desc",
-      confirmed: true,
-      hide: false
-    }
-  ];
+  const dataMemo = useMemo(() => data, [data]);
+
+  // dataMock = [
+  //   {
+  //     _id: "2sdf2sdfs2sfdsdfs2",
+  //     success: true,
+  //     author: {
+  //       name: "Petr H.",
+  //       picture:
+  //         "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
+  //     },
+  //     name: "Event 111",
+  //     geometry: { coordinates: [50.040112099, 14.428] },
+  //     lng: 14.45,
+  //     lat: 50,
+  //     addressGoogle: "addressGoogle",
+  //     addressCustom: "addressCustom",
+  //     address: "address",
+  //     eventType: 1,
+  //     dateStart: "2019-10-10",
+  //     price: 12,
+  //     capacityMax: 20,
+  //     BYO: true,
+  //     imagesArr: [
+  //       {
+  //         caption: "No more pictures for this Event",
+  //         src:
+  //           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+  //         thumbnail:
+  //           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+  //         thumbnailHeight: 10,
+  //         thumbnailWidth: 10,
+  //         scaletwidth: 100,
+  //         marginLeft: 0,
+  //         vwidth: 100,
+  //         isSelected: false
+  //       }
+  //     ],
+  //     description: "Desc",
+  //     confirmed: true,
+  //     hide: false
+  //   },
+  //   {
+  //     _id: "2sdf2sdfs2sfdsdfsdf2",
+  //     success: true,
+  //     author: {
+  //       name: "Petr H.",
+  //       picture:
+  //         "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
+  //     },
+  //     name: "Event 222",
+  //     geometry: { coordinates: [50.050312099, 14.458] },
+  //     lng: 14.45,
+  //     lat: 50,
+  //     addressGoogle: "addressGoogle",
+  //     addressCustom: "addressCustom",
+  //     address: "address",
+  //     eventType: 1,
+  //     dateStart: "2019-10-10",
+  //     price: 12,
+  //     capacityMax: 20,
+  //     BYO: true,
+  //     imagesArr: [
+  //       {
+  //         caption: "No more pictures for this Event",
+  //         src:
+  //           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+  //         thumbnail:
+  //           "https://res.cloudinary.com/party-images-app/image/upload/v1551339472/m...",
+  //         thumbnailHeight: 10,
+  //         thumbnailWidth: 10,
+  //         scaletwidth: 100,
+  //         marginLeft: 0,
+  //         vwidth: 100
+  //       }
+  //     ],
+  //     description: "Desc",
+  //     confirmed: true,
+  //     hide: false
+  //   }
+  // ];
 
   const onMapMount = map => {
     console.log("onMapMount fce MapPage ");
@@ -167,8 +171,8 @@ function MapPage(props) {
     let dataDB;
     if (dataMock) {
       dataDB = dataMock;
-    } else if (data) {
-      dataDB = data.eventGeoDay;
+    } else if (dataMemo) {
+      dataDB = dataMemo.eventGeoDay;
     }
     // if(dataMock){
     if (dataDB) {
@@ -186,13 +190,16 @@ function MapPage(props) {
     }
 
     map.addListener("idle", function() {
+      console.log("MAP: ", map);
+
       var bounds = map.getBounds();
       var center = map.getCenter();
 
-      console.log("ZOOOM: ", bounds.getNorthEast());
+      //console.log("ZOOOM1: ", bounds);
+      //console.log("ZOOOM2: ", bounds.getNorthEast());
       //var ne = bounds.getNorthEast();
       //var sw = bounds.getSouthWest();
-      // console.log(ne)
+      //console.log("ne, ", ne);
       // console.log(sw)
       // console.log(JSON.stringify(ne.lng()), JSON.stringify(ne.lat()), JSON.stringify(sw.lng()) , JSON.stringify(sw.lat()))
       //  var ne1 = new Number(JSON.stringify(ne.lng()))
@@ -246,7 +253,6 @@ function MapPage(props) {
     });
 
     infoBubble = new window.InfoBubble({
-      //content: `<div id="infoWindow"> </div>`,
       content: `<div id="infoWindow"> </div>`,
       shadowStyle: 1,
       padding: 0,
@@ -340,8 +346,13 @@ function MapPage(props) {
     });
   };
 
+  let LngLatCenter = { lat: latitude, lng: longitude };
+  if (!latitude) {
+    LngLatCenter = { lat: 50.068645, lng: 14.457364 };
+  }
+
   const MapOptions = {
-    center: { lat: latitude, lng: longitude },
+    center: LngLatCenter,
     zoom: 10,
     disableDefaultUI: true,
     zoomControl: true,
@@ -360,7 +371,9 @@ function MapPage(props) {
         className="Real-donald-domap"
         styling={{
           height: "100vh",
-          width: "100%"
+          width: "100%",
+          position: "absolute",
+          top: 0
         }}
       />
     </Container>
@@ -395,4 +408,4 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default MapPage
+export default MapPage;

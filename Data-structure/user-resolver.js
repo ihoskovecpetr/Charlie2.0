@@ -5,10 +5,11 @@ import jwt from "jsonwebtoken";
 export const typeDef = `
   extend type Query {
     getUsers(_id: ID name: String): [User]
+    getLoggedInUser: User
   }
 
   extend type Mutation {
-    newUser(name: String! password: String! email: String!): User
+    newUser(name: String! password: String! email: String! picture: String): User
     login(email: String! password: String!): User
   }
 
@@ -20,6 +21,7 @@ export const typeDef = `
     token: String
     password: String
     picture: String
+    createdEvents: [Event!]
   }
 `;
 export const resolvers = {
@@ -37,7 +39,8 @@ export const resolvers = {
           let newUser = new User({
             name: _args.name,
             email: _args.email,
-            password: hashedPassword
+            password: hashedPassword,
+            picture: _args.picture
           });
           const result = await newUser.save();
           console.log("Saved: ", result);
@@ -74,6 +77,21 @@ export const resolvers = {
     }
   },
   Query: {
+    getLoggedInUser: async (_, _args, context, info) => {
+      try {
+        console.log("2 ++ ted: ", context.reqO.req.isAuth);
+        console.log("2 ++ ted: ", context.reqO.req.userId);
+        console.log("2 ++ ted: ", context.reqO.req.email);
+        if (context.reqO.req.isAuth) {
+          let user = await User.findById(context.reqO.req.userId);
+          console.log("fount all: ", user);
+          return { ...user._doc, success: true };
+        }
+        return { success: false };
+      } catch (err) {
+        throw err;
+      }
+    },
     getUsers: async (_, _args, __) => {
       try {
         let users = await User.find({});

@@ -26,7 +26,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import gql from "graphql-tag";
 import { useMutation, useQuery, useApolloClient } from "@apollo/react-hooks";
 
-import UpperStripe from "./Atoms/upper-stripe";
+import UpperStripe from "./Atoms/Upper-stripe";
 
 import { UserContext } from "./userContext";
 import Menu from "./Pages/Menu";
@@ -40,43 +40,72 @@ import Event from "./Pages/Event";
 const drawerWidth = 240;
 let prevLocation;
 
+const LOGIN = gql`
+  query {
+    getLoggedInUser {
+      _id
+      success
+      name
+      email
+      picture
+    }
+  }
+`;
+
 function App(props) {
   const classes = useStyles();
   const theme = useTheme();
 
-
   const [mobileOpen, setMobileOpen] = useState(false);
-  console.log("App props START: ", props);
+  const { loading, error, data } = useQuery(LOGIN);
   const { container } = props;
-
-  console.log(container);
   const [user, setUser] = useState({
     success: false,
-    name: "NO USER",
-    email: "oh@chci.te",
-    picture: "url to pics"
+    name: false
   });
 
-  const providerValue = useMemo(() => ({ user, setUser }), [user, setUser]);
+  console.log("dataUser: ", data);
 
+  if (data) {
+    console.log("DATA User Logged In:", data);
+    if (data.getLoggedInUser.success && user.success == false) {
+      console.log("SUCCESS frm TOKEN");
+      setUser({
+        _id: data.getLoggedInUser._id,
+        success: data.getLoggedInUser.success,
+        name: data.getLoggedInUser.name,
+        email: data.getLoggedInUser.email,
+        picture: data.getLoggedInUser.picture
+      });
+    }
+  }
+
+  console.log("App props START: props user ", props, user);
+
+  const providerValue = useMemo(() => ({ user, setUser }), [user, setUser]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  useEffect(() => {
+    // Update the document title using the browser API
+    prevLocation = props.location;
+    console.log("First Print Event: props: ", props);
+  }, []);
+
   const ListOfUrls = user.success
     ? ["", "signout", "create", "map"]
-    : ["", "signin", "create", "map", "signout", "event/654sad"];
+    : ["", "signin", "create", "map", "signout", "event"];
   const ListOfNames = user.success
     ? ["Charlie", "SignOut", "Create", "Map"]
-    : ["Charlie", "Sign In", "Create", "Map", "Sign Out", "Event"];
+    : ["Charlie", "Sign In", "Create", "Map", "Sign Out"];
   const ListOfComponents = user.success
     ? [
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
         <SignOut />,
         <Create />, //create
-        <MapPage />, //Map
-        <SignOut />
+        <MapPage /> //Map
       ]
     : [
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
@@ -106,61 +135,42 @@ function App(props) {
     </div>
   );
 
-  // const UpperStripe = props => {
-  //   console.log(props);
-  //   return (
-  //     <>
-  //       <CssBaseline />
-  //       <AppBar position="fixed" color="secondary" className={classes.appBar}>
-  //         <Toolbar>
-  //           <IconButton
-  //             color="inherit"
-  //             aria-label="open drawer"
-  //             edge="start"
-  //             onClick={handleDrawerToggle}
-  //             className={classes.menuButton}
-  //           >
-  //             <MenuIcon />
-  //           </IconButton>
-
-  //           {props.name}
-  //         </Toolbar>
-  //       </AppBar>
-  //     </>
-  //   );
-  // };
-
   const returnComponent = index => {
     return <div className="content_wrap">{ListOfComponents[index]}</div>;
   };
-  //console.log("Props STOPZ PO LOKACIIIIIIII: ", props);
 
-  useEffect(() => {
-    // Update the document title using the browser API
-    prevLocation = props.location
-    console.log("OOO useEffect once! PrevLocation: ", prevLocation);
-  }, []);
   var pathSet = props.location.pathname.split("/");
-  if (pathSet[1] == "event") {
-    console.log("OOO Event comming, keep PrevLocation and put it in Switch: ", prevLocation)
-  } else{
-    console.log("OOO next loc in Switch")
-    prevLocation = props.location
-  }
+  // if (pathSet[1] == "event") {
+  // } else if (pathSet[1] == "signin") {
+  // } else if (pathSet[1] == "signout") {
+  // } else {
+  //   console.log("OOO next loc in Switch");
+  //   prevLocation = props.location;
+  // }
+  let firstPrint = false;
+  let Modal = false;
 
-  var EventModal = false;
-  var UserModal = false;
-  var LoginModal = false;
   if (pathSet[1] == "event") {
-    EventModal = true;
+    Modal = true;
   }
   if (pathSet[1] == "user") {
-    UserModal = true;
+    Modal = true;
   }
-  if (pathSet[1] == "login") {
-    LoginModal = true;
+  if (pathSet[1] == "signin") {
+    Modal = true;
   }
-  let { location } = props;
+  if (pathSet[1] == "signout") {
+    Modal = true;
+  }
+
+  if (!Modal) {
+    console.log("PREV LOC SET");
+    prevLocation = props.location;
+  }
+
+  if (prevLocation == props.location) {
+    firstPrint = true;
+  }
 
   var justGoBack = false;
   if (
@@ -171,16 +181,10 @@ function App(props) {
     justGoBack = true;
   }
 
-  var EventOrUser = false;
-  if (EventModal || UserModal || LoginModal) {
-    EventOrUser = true;
-    console.log("EVENT OR USER pass: ", pathSet[1], EventOrUser);
-  }
-
+  console.log("APP, firstPrint a Modal: ", firstPrint, Modal);
   return (
     <div className={classes.root}>
       <UserContext.Provider value={providerValue}>
-      
         <nav className={classes.drawer} aria-label="mailbox folders">
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
           <Hidden smUp implementation="css">
@@ -212,32 +216,151 @@ function App(props) {
             </Drawer>
           </Hidden> */}
         </nav>
-        {EventOrUser && console.log("PR EVNT")}
-        {EventOrUser && <Route
+        {firstPrint && Modal && (
+          <>
+            <Route
               exact
               path={`/event/:id`}
               render={() => (
-                    <Event />
-              )}
-            />}
-        <Switch  location={prevLocation} >
-          {ListOfUrls.map((text, index) => (
-            <Route
-              exact
-              path={`/${text}`}
-              key={index}
-              render={() => (
                 <>
-                  <UpperStripe name={`${ListOfNames[index]} -- ${user.name}`} handleDrawerToggle={handleDrawerToggle} drawerWidth={drawerWidth} />
+                  <UpperStripe
+                    //bringOwnUser?? true??
+                    userApp={false}
+                    ListOfNames={ListOfNames}
+                    ListOfUrls={ListOfUrls}
+                    handleDrawerToggle={handleDrawerToggle}
+                    drawerWidth={drawerWidth}
+                  />
                   <main className={classes.content}>
                     <div className={classes.toolbar} />
-                    {returnComponent(index)}
+                    <Event />
                   </main>
                 </>
               )}
             />
-          ))}
-        </Switch>
+            <Route
+              exact
+              path={`/signin`}
+              render={() => (
+                <>
+                  <UpperStripe
+                    //bringOwnUser?? true??
+                    userApp={false}
+                    ListOfNames={ListOfNames}
+                    ListOfUrls={ListOfUrls}
+                    handleDrawerToggle={handleDrawerToggle}
+                    drawerWidth={drawerWidth}
+                  />
+                  <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    <SignIn />
+                  </main>
+                </>
+              )}
+            />
+            <Route
+              exact
+              path={`/signout`}
+              render={() => (
+                <>
+                  <UpperStripe
+                    //bringOwnUser?? true??
+                    userApp={false}
+                    ListOfNames={ListOfNames}
+                    ListOfUrls={ListOfUrls}
+                    handleDrawerToggle={handleDrawerToggle}
+                    drawerWidth={drawerWidth}
+                  />
+                  <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    <SignOut />
+                  </main>
+                </>
+              )}
+            />
+          </>
+        )}
+        {!firstPrint && Modal && (
+          <>
+            <Route
+              exact
+              path={`/event/:id`}
+              render={() => (
+                <>
+                  <Event />
+                </>
+              )}
+            />
+            <Route
+              exact
+              path={`/signin`}
+              render={() => (
+                <>
+                  <SignIn />
+                </>
+              )}
+            />
+            <Route
+              exact
+              path={`/signout`}
+              render={() => (
+                <>
+                  <SignOut />
+                </>
+              )}
+            />
+            <Switch location={prevLocation}>
+              {ListOfUrls.map((text, index) => (
+                <Route
+                  exact
+                  path={`/${text}`}
+                  key={index}
+                  render={() => (
+                    <>
+                      <UpperStripe
+                        userApp={user}
+                        ListOfNames={ListOfNames}
+                        ListOfUrls={ListOfUrls}
+                        handleDrawerToggle={handleDrawerToggle}
+                        drawerWidth={drawerWidth}
+                      />
+                      <main className={classes.content}>
+                        <div className={classes.toolbar} />
+                        {returnComponent(index)}
+                      </main>
+                    </>
+                  )}
+                />
+              ))}
+            </Switch>
+          </>
+        )}
+        {!Modal && (
+          <Switch location={prevLocation}>
+            {ListOfUrls.map((text, index) => (
+              <Route
+                exact
+                path={`/${text}`}
+                key={index}
+                render={() => (
+                  <>
+                    <UpperStripe
+                      userApp={user}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      {returnComponent(index)}
+                    </main>
+                  </>
+                )}
+              />
+            ))}
+          </Switch>
+        )}
       </UserContext.Provider>
     </div>
   );

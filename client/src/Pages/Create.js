@@ -25,7 +25,7 @@ import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
-import Dropzone from "../Molecules/Dropzone";
+import Dropzone from "../Molecules/dropzone";
 import Spinner from "../Atoms/Spinner";
 import Map from "../Atoms/Hook-map";
 import MapMolecule from "../Molecules/create-map";
@@ -35,7 +35,8 @@ const NEW_EVENT = gql`
     $name: String!
     $lng: Float
     $lat: Float
-    $addressCustom: String
+    $address: String
+    $author: String!
     $dateStart: String
     $price: Float
     $capacityMax: Int
@@ -48,7 +49,8 @@ const NEW_EVENT = gql`
         name: $name
         lng: $lng
         lat: $lat
-        addressCustom: $addressCustom
+        address: $address
+        author: $author
         dateStart: $dateStart
         price: $price
         capacityMax: $capacityMax
@@ -105,7 +107,8 @@ function Create(props) {
         name: inputName.current.value,
         lng: customMapParam.lng,
         lat: customMapParam.lat,
-        addressCustom: customMapParam.address,
+        address: customMapParam.address,
+        author: user._id,
         eventType: 1,
         dateStart: inputDate.current.value,
         dateEnd: "1999-11-10",

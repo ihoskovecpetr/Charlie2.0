@@ -19,9 +19,10 @@ import { useHistory } from "react-router-dom";
 import { UserContext } from "../userContext";
 import Spinner from "../Atoms/Spinner";
 
-const NEW_USER = gql`
+const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
+      _id
       success
       name
       email
@@ -35,22 +36,27 @@ function SignIn(props) {
   const classes = useStyles();
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
-  const [signIn, { loading, error, data }] = useMutation(NEW_USER);
+  const [login, { loading, error, data }] = useMutation(LOGIN);
+
+  if (user.success) {
+    setTimeout(() => {
+      history.goBack();
+    }, 100);
+    return <p>Ahoj {user.name}</p>;
+  }
 
   if (loading) return <Spinner />;
 
   if (data) {
-    //console.log("GraphQl data: ", data);
+    console.log("DATA LOGIN: ", data);
     if (data.login.success == false) {
       return <p>Wrong combination Email and password</p>;
     } else {
-      setTimeout(() => {
-        history.push("/");
-      }, 1000);
-      if (!user.success) {
+      if (data.login.success) {
         window.localStorage.setItem("token", data.login.token);
         //console.log("LocalStorage: ", window.localStorage.getItem("token"));
         setUser({
+          _id: data.login._id,
           success: data.login.success,
           name: data.login.name,
           email: data.login.email,
@@ -58,14 +64,14 @@ function SignIn(props) {
           token: data.login.token
         });
       }
-      console.log("seTTTING USER");
+      console.log("seTTTING USER: ", user);
 
       return <p>Success, welcone {user.name}</p>;
     }
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" className={classes.container}>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -109,20 +115,10 @@ function SignIn(props) {
             className={classes.submit}
             onClick={e => {
               e.preventDefault();
-              console.log("sumbitHandler: ", e);
-              console.log(
-                "email: ",
-                document.getElementById("email").value,
-                document.getElementById("password").value
-              );
               let email = document.getElementById("email").value;
               let password = document.getElementById("password").value;
-              console.log("email: ", document.getElementById("password").value);
-
-              //login({ variables: { email: email, password: password } });
-              signIn({
+              login({
                 variables: {
-                  name: "Petr Browser",
                   email: email,
                   password: password
                 }
@@ -157,6 +153,13 @@ const useStyles = makeStyles(theme => ({
     body: {
       backgroundColor: theme.palette.common.white
     }
+  },
+  container: {
+    position: "absolute",
+    background: "rgba(100,100,100,0.2)",
+    "z-index": 10,
+    width: "100vw",
+    height: "100vh"
   },
   paper: {
     marginTop: theme.spacing(8),

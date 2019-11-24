@@ -32,11 +32,13 @@ function SignIn(props) {
       picture: null,
       token: null
     });
-    history.push("/");
+    // setTimeout(() => {
+    //   history.goBack();
+    // }, 100);
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" className={classes.container}>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -85,6 +87,13 @@ const useStyles = makeStyles(theme => ({
     body: {
       backgroundColor: theme.palette.common.white
     }
+  },
+  container: {
+    position: "absolute",
+    background: "rgba(100,100,100,0.2)",
+    "z-index": 10,
+    width: "100%",
+    height: "100vh"
   },
   paper: {
     marginTop: theme.spacing(8),

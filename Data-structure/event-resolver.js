@@ -1,4 +1,6 @@
 import Event from "../Models-Mongo/Event.js";
+import User from "../Models-Mongo/User.js";
+import Booking from "../Models-Mongo/Booking.js";
 
 export const typeDef = newFunction();
 export const resolvers = {
@@ -12,6 +14,30 @@ export const resolvers = {
         throw err;
       }
     },
+    getOneEvent: async (_, _args, context) => {
+      try {
+        console.log("getOneEvent context isAuth?? : ", context.reqO.req.isAuth);
+        console.log("2 ++ userId: ", context.reqO.req.userId);
+        console.log("2 ++ email: ", context.reqO.req.email);
+        if (context.reqO.req.isAuth) {
+          let oneEvent = await Event.findOne({ _id: _args.id });
+          if (oneEvent) {
+            let areYourAuthor = oneEvent.author == context.reqO.req.userId;
+            return {
+              ...oneEvent._doc,
+              success: true,
+              areYouAuthor: areYourAuthor
+            };
+          }
+        } else {
+          return {
+            success: false
+          };
+        }
+      } catch (err) {
+        throw err;
+      }
+    },
     deleteEvents: async () => {
       try {
         let result = await Event.deleteMany({});
@@ -21,7 +47,7 @@ export const resolvers = {
         throw err;
       }
     },
-    eventGeoDay: async (_, _args, __) => {
+    eventGeoDay: async (_, _args, context) => {
       console.log("Args: ", _args);
       try {
         let allEvents = await Event.find({});
@@ -30,32 +56,6 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
-    },
-    fewEvents: () => {
-      let allEvents = [
-        {
-          _id: "2sdf2sdfs2sfdsdfs2",
-          success: true,
-          author: "Petr Work",
-          name: "Event Namm",
-          lng: 14.45,
-          lat: 50,
-          addressGoogle: "addressGoogle",
-          addressCustom: "addressCustom",
-          address: "address",
-          eventType: 1,
-          dateStart: "2019-10-10",
-          price: 12,
-          capacityMax: 20,
-          BYO: true,
-          //imagesArr: [ImageInput],
-          description: "Desc",
-          confirmed: true,
-          hide: false
-        }
-      ];
-
-      return allEvents;
     }
   },
   Mutation: {
@@ -69,11 +69,10 @@ export const resolvers = {
         } else {
           let newEvent = new Event({
             name: _args.eventInput.name,
+            author: _args.eventInput.author,
             geometry: {
               coordinates: [_args.eventInput.lat, _args.eventInput.lng]
             },
-            addressGoogle: _args.eventInput.addressGoogle,
-            addressCustom: _args.eventInput.addressCustom,
             address: _args.eventInput.address,
             eventType: _args.eventInput.eventType,
             dateStart: _args.eventInput.dateStart,
@@ -100,13 +99,13 @@ export const resolvers = {
     }
   },
   Event: {
-    author: () => {
-      console.log("Aurrr ěě");
-      return {
-        name: "Fighter for adventure",
-        picture:
-          "https://techcrunch.com/wp-content/uploads/2019/09/SpaceX-Starship-Mk1-17.jpg?w=1390&crop=1"
-      };
+    author: async a => {
+      try {
+        const author = await User.findById(a.author);
+        return author;
+      } catch (err) {
+        throw err;
+      }
     }
   }
 };
@@ -114,6 +113,7 @@ function newFunction() {
   return `
   extend type Query {
     events(name: String ): [Event]
+    getOneEvent(id: ID): Event
     deleteEvents: String
     fewEvents: [Event]
     eventGeoDay(date: String, geoObj: BoundsInput ): [Event]
@@ -130,6 +130,7 @@ function newFunction() {
     addressGoogle: String
     addressCustom: String
     address: String
+    author: String!
     eventType: Int
     dateStart: String
     dateEnd: String
@@ -165,15 +166,16 @@ function newFunction() {
     isSelected: Boolean
   }
 
+
   type Event {
     _id: ID
     success: Boolean
-    author: User
     name: String
     geometry: Geometry
     addressGoogle: String
     addressCustom: String
     address: String
+    author: User
     eventType: Int
     dateStart: String
     dateEnd: String
@@ -188,6 +190,8 @@ function newFunction() {
     description: String
     confirmed: Boolean 
     hide: Boolean
+    areYouAuthor: Boolean
+    areYouGuest: Boolean
   }
 
   type Geometry{

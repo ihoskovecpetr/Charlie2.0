@@ -3,17 +3,23 @@ const Schema = mongoose.Schema;
 
 console.log("Defining schema Votes");
 
-voteSchema = new Schema({
-  vote: {
-    type: Number,
-    required: false
+const bookingSchema = new Schema(
+  {
+    event: {
+      type: Schema.Types.ObjectId,
+      ref: "Event"
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User"
+    },
+    confirmed: {
+      type: Boolean
+    }
   },
-  country: {
-    type: String,
-    required: false
-  }
-});
+  { timestamps: true }
+);
 
 module.exports =
-  mongoose.models.VoteHook || mongoose.model("VoteHook", voteSchema);
+  mongoose.models.VoteHook || mongoose.model("Bookings", bookingSchema);
 //'VoteHook' is name of new Schema/Model/Collection in DB

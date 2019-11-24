@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const EventSchema = new Schema({
   name: { type: String },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "User"
+  },
   geometry: {
     type: {
       type: String,

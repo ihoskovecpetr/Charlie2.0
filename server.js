@@ -29,12 +29,11 @@ app.use((req, res, next) => {
 
 app.use(authMid);
 
-
-const pubsub = new PubSub();
+//const pubsub = new PubSub();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: () => ({ pubsub }),
+  context: req => ({ /* pubsub, */ reqO: req }),
   subscriptions: "/subs",
   playground: true,
   introspection: true,
