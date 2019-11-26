@@ -79,11 +79,12 @@ function MapPage(props) {
     }
   }, []);
 
-  console.log("Few events DATA:", data);
+  console.log("MAP DATA:", data);
   let dataMock;
 
   const dataMemo = useMemo(() => data, [data]);
 
+  console.log("MAP DATA pass Memo:", data);
   // dataMock = [
   //   {
   //     _id: "2sdf2sdfs2sfdsdfs2",
@@ -177,21 +178,18 @@ function MapPage(props) {
     // if(dataMock){
     if (dataDB) {
       for (var i = 0; i < dataDB.length; i++) {
-        console.log("data[i]._id: ", dataDB[i]._id);
         if (
           uniqueArrayOfId.indexOf(dataDB[i]._id) == -1 &&
           dataDB[i].confirmed == true
         ) {
           uniqueArrayOfId.push(dataDB[i]._id);
-          console.log("Original EVENT!");
+
           UniqArr.push(dataDB[i]);
         }
       }
     }
 
     map.addListener("idle", function() {
-      console.log("MAP: ", map);
-
       var bounds = map.getBounds();
       var center = map.getCenter();
 
@@ -272,7 +270,6 @@ function MapPage(props) {
     });
 
     var AllMarkersArr = UniqArr.map((location, i) => {
-      console.log("PRINT ORIGINAL");
       var urlNA =
         "https://res.cloudinary.com/party-images-app/image/upload/v1557626853/j4fot5g2fvldzh88h9u4.png";
       //var urlAttend = "https://res.cloudinary.com/party-images-app/image/upload/v1557648350/caacy89b65efjmwjiho8.png"
@@ -286,7 +283,6 @@ function MapPage(props) {
       //     url = urlAttend
       //   }
       // })
-      console.log("Markering this one> ", location.name);
       var image = {
         url: url,
         size: new window.google.maps.Size(48, 48),
@@ -307,7 +303,6 @@ function MapPage(props) {
       });
 
       marker.addListener("click", function() {
-        console.log("Marker click listener PREV MARKER: ", previousMarker);
         window.activeLocation_id = location._id;
 
         // if (previousMarker) {
@@ -316,7 +311,6 @@ function MapPage(props) {
         // } else{
         infoBubble.addListener("domready", e => {
           setTimeout(() => {
-            console.log("PRING INFOW...");
             ReactDOM.render(
               //<p>Infowindow</p>
               <InfoWindow

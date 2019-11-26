@@ -15,7 +15,7 @@ import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
 import { green } from "@material-ui/core/colors";
 
-var alreadyAttending = false
+var alreadyAttending = false;
 
 function Infowindow(props) {
   console.log("props.location: ", props.location);
@@ -25,29 +25,25 @@ function Infowindow(props) {
   const [spacing, setSpacing] = React.useState(2);
   const classes = useStyles();
 
-  
-
   const openModalEvent = () => {
+    console.log("openModalEvent: window history??: ", window);
 
-    console.log("openModalEvent: window history??: ", window)
+    var youOwnerVar = false;
 
-    var youOwnerVar = false
-    
-        if (props.location.creatorEmail == props.email) {
-        console.log("You are the OWNER!")
-        youOwnerVar = true
-      } else{
-        console.log("You are NOT the owner!")
-      }
-      console.log("Event _id: ", props.location._id)
-      var string = '/event/' + props.location._id
-      console.log("correct string: ", string)
-
-      window.AppHistory.push(string, {
-                                      //tady: napsatStateKdyžtak
-                                                }
-                                  )
+    if (props.location.creatorEmail == props.email) {
+      console.log("You are the OWNER!");
+      youOwnerVar = true;
+    } else {
+      console.log("You are NOT the owner!");
     }
+    console.log("Event _id: ", props.location._id);
+    var string = "/event/" + props.location._id;
+    console.log("correct string: ", string);
+
+    window.AppHistory.push(string, {
+      //tady: napsatStateKdyžtak
+    });
+  };
 
   return (
     <>
@@ -58,12 +54,7 @@ function Infowindow(props) {
         </Grid>
       </Grid>
       <img src={Pic.src} alt={Pic.capture} className={classes.img} />
-      <Grid
-        container
-        justify="center"
-        alignItems="center"
-        className={classes.authorGrid}
-      >
+      <Grid container justify="center" className={classes.authorGrid}>
         <Avatar
           alt="Author picture"
           src={Author.picture}
@@ -78,10 +69,10 @@ function Infowindow(props) {
         alignItems="center"
         className={classes.body}
       >
-        <Grid item justify="center" alignItems="center">
+        <Grid item alignItems="center">
           <Typography noWrap>{props.location.price}</Typography>
         </Grid>
-        <Grid item justify="center" alignItems="center">
+        <Grid item alignItems="center">
           <Typography noWrap>{props.location.dateStart}</Typography>
         </Grid>
       </Grid>
@@ -94,7 +85,9 @@ function Infowindow(props) {
         className={classes.button}
       >
         <Grid item justify="center" alignItems="center">
-          <Typography noWrap onClick={openModalEvent}>OPEN</Typography>
+          <Typography noWrap onClick={openModalEvent}>
+            OPEN
+          </Typography>
         </Grid>
       </Grid>
     </>
@@ -149,5 +142,4 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-
-export default Infowindow
+export default Infowindow;

@@ -155,10 +155,29 @@ function Event(props) {
 
   let dataDB;
 
+  const BaseAndPaper = props => {
+    console.log("BaseAndPaper: props, childern ", props);
+    return (
+      <div className={classes.opaque}>
+        <Container maxWidth="lg" fixed={true}>
+          <Grid
+            container
+            justify="center"
+            alignItems="center"
+            className={classes.container}
+          >
+            <Paper className={classes.root}>{props.children}</Paper>
+          </Grid>
+        </Container>
+      </div>
+    );
+  };
+
   console.log("bookingStates: ", bookingStates);
   // if (bookingStates.loading) {
   //   return <>Creating Booking</>;
   // }
+
   if (bookingStates.data) {
     refetch();
   }
@@ -175,142 +194,114 @@ function Event(props) {
 
   if (loading) {
     return (
-      <>
-        <p>Loading... Spinner...</p>
+      <BaseAndPaper>
         <Spinner />
-      </>
+      </BaseAndPaper>
     );
   }
   if (error) {
-    return <p>Error...</p>;
+    return (
+      <BaseAndPaper>
+        <p>Error...</p>
+      </BaseAndPaper>
+    );
   }
 
   if (dataDB && dataDB.getOneEvent.success) {
     return (
-      <div className={classes.opaque}>
-        <Container maxWidth="lg" fixed={true}>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-            className={classes.container}
+      <BaseAndPaper>
+        <Grid item>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              props.history.goBack();
+            }}
           >
-            <Paper className={classes.root}>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    props.history.goBack();
-                  }}
-                >
-                  Back
-                </Button>
-                <Link to={{ pathname: `/`, state: { justGoBack: true } }}>
-                  <Button variant="contained" color="secondary">
-                    Close
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item>
-                <Box textAlign="center" m={1}>
-                  <Typography component="div">
-                    {dataDB.getOneEvent.name}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item>
-                <Box textAlign="justify" m={1}>
-                  {dataDB.getOneEvent.description}
-                </Box>
-              </Grid>
-              <Grid item>
-                <Gallery
-                  images={dataDB.getOneEvent.imagesArr}
-                  rowHeight={100}
-                  display={true}
-                  backdropClosesModal={true}
-                />
-              </Grid>
-              <Grid item>
-                <Box textAlign="left" m={1}>
-                  Date:
-                  {dataDB.getOneEvent.dateStart}
-                </Box>
-              </Grid>
-              <Grid item>
-                <Box textAlign="left" m={1}>
-                  Price:
-                  {dataDB.getOneEvent.price}
-                </Box>
-              </Grid>
-              <Grid item>
-                <Box textAlign="left" m={1}>
-                  BYO:
-                  {dataDB.getOneEvent.BYO ? "YES" : "NO"}
-                </Box>
-              </Grid>
-              <Grid item>
-                <Box textAlign="left" m={1}>
-                  Guests:
-                  {dataDB.showBookings.map(booking => {
-                    return (
-                      <Avatar alt="Remy Sharp" src={booking.user.picture} />
-                    );
-                  })}
-                  {bookingStates.loading && <Spinner />}
-                </Box>
-              </Grid>
-              <Grid item>
-                <Box textAlign="left" m={1}>
-                  Host:
-                  {dataDB.getOneEvent.author.name}
-                </Box>
-              </Grid>
-              <Grid item>
-                <Box textAlign="left" m={1}>
-                  Address
-                  {dataDB.getOneEvent.address}
-                </Box>
-              </Grid>
+            Back
+          </Button>
+          <Link to={{ pathname: `/`, state: { justGoBack: true } }}>
+            <Button variant="contained" color="secondary">
+              Close
+            </Button>
+          </Link>
+        </Grid>
+        <Grid item>
+          <Box textAlign="center" m={1}>
+            <Typography component="div">{dataDB.getOneEvent.name}</Typography>
+          </Box>
+        </Grid>
+        <Grid item>
+          <Box textAlign="justify" m={1}>
+            {dataDB.getOneEvent.description}
+          </Box>
+        </Grid>
+        <Grid item>
+          <Gallery
+            images={dataDB.getOneEvent.imagesArr}
+            rowHeight={100}
+            display={true}
+            backdropClosesModal={true}
+          />
+        </Grid>
+        <Grid item>
+          <Box textAlign="left" m={1}>
+            Date:
+            {dataDB.getOneEvent.dateStart}
+          </Box>
+        </Grid>
+        <Grid item>
+          <Box textAlign="left" m={1}>
+            Price:
+            {dataDB.getOneEvent.price}
+          </Box>
+        </Grid>
+        <Grid item>
+          <Box textAlign="left" m={1}>
+            BYO:
+            {dataDB.getOneEvent.BYO ? "YES" : "NO"}
+          </Box>
+        </Grid>
+        <Grid item>
+          <Box textAlign="left" m={1}>
+            Guests:
+            {dataDB.showBookings.map(booking => {
+              return <Avatar alt="Remy Sharp" src={booking.user.picture} />;
+            })}
+            {bookingStates.loading && <Spinner />}
+          </Box>
+        </Grid>
+        <Grid item>
+          <Box textAlign="left" m={1}>
+            Host:
+            {dataDB.getOneEvent.author.name}
+          </Box>
+        </Grid>
+        <Grid item>
+          <Box textAlign="left" m={1}>
+            Address
+            {dataDB.getOneEvent.address}
+          </Box>
+        </Grid>
 
-              <EventButtons
-                data={dataDB}
-                user={user}
-                createBooking={createBooking}
-              />
-            </Paper>
-          </Grid>
-        </Container>
-        <CssBaseline />
-      </div>
+        <EventButtons data={dataDB} user={user} createBooking={createBooking} />
+      </BaseAndPaper>
     );
   }
   if (dataDB && dataDB.getOneEvent.success == false) {
     return (
-      <div className={classes.opaque}>
-        <Container maxWidth="lg" fixed={true}>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-            className={classes.container}
-          >
-            <Paper className={classes.root}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  props.history.goBack();
-                }}
-              >
-                Back
-              </Button>
-              <>Login first</>
-            </Paper>
-          </Grid>
-        </Container>
-      </div>
+      <BaseAndPaper>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            props.history.goBack();
+          }}
+        >
+          Back
+        </Button>
+        <>Login first</>
+      </BaseAndPaper>
     );
   }
 }

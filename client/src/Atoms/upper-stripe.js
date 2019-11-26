@@ -15,8 +15,6 @@ import { UserContext } from "../userContext";
 function UpperStripe(props) {
   const { user, setUser } = useContext(UserContext);
 
-  console.log("Upper STRIPE props: ", props);
-  console.log("Upper STRIPE user ctx: ", user);
   const useStyles = makeStyles(theme => ({
     menuButton: {
       marginRight: theme.spacing(2)
