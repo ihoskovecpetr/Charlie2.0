@@ -43,12 +43,32 @@ export const resolvers = {
         const booking = new Booking({
           user: _args.user_id,
           event: fetchedEvent,
-          confirmed: true
+          confirmed: true,
+          cancelled: false
         });
         const result = await booking.save();
 
         console.log("Booking finished: ", result);
         return { ...transformBooking(result), success: true };
+      } catch (err) {
+        throw err;
+      }
+    },
+    cancelBooking: async (_, _args, __) => {
+      try {
+        //const fetchedEvent = await Booking.findOne({ _id: _args.event_id });
+        const result = await Booking.update(
+          { event: _args.event_id, user: _args.user_id },
+          { $set: { cancelled: true } }
+        );
+        //const result = await booking.save();
+
+        console.log("Cancelling finished: ", result);
+        if (result.ok) {
+          return "{ success: true }";
+        } else {
+          return "{ success: false }";
+        }
       } catch (err) {
         throw err;
       }
@@ -83,6 +103,7 @@ function newFunction() {
 
   extend type Mutation {
     bookEvent(event_id: String!, user_id: String!): Booking!
+    cancelBooking(event_id: String!, user_id: String!): String
   }
 
   type Booking {
@@ -92,6 +113,7 @@ function newFunction() {
     createdAt: String!
     udpatedAt: String! 
     confirmed: Boolean
+    cancelled: Boolean
     success: Boolean
   }
 `;

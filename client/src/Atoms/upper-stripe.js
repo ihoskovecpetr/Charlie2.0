@@ -11,25 +11,32 @@ import Avatar from "@material-ui/core/Avatar";
 
 import { Route, NavLink } from "react-router-dom";
 import { UserContext } from "../userContext";
+import { useWindowWidth } from "../Hooks/useWindowWidth";
 
 function UpperStripe(props) {
   const { user, setUser } = useContext(UserContext);
+  const { width } = useWindowWidth();
 
+  //console.log("Upper stripe width: ", width);
   const useStyles = makeStyles(theme => ({
     menuButton: {
-      marginRight: theme.spacing(2)
-      // [theme.breakpoints.up("sm")]: {
-      //   display: "none"
-      // }
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up("sm")]: {
+        display: "none"
+      }
     },
     appBar: {
-      //marginLeft: props.drawerWidth,
+      marginLeft: props.drawerWidth
       // [theme.breakpoints.up("sm")]: {
       //   width: `calc(100% - ${props.drawerWidth}px)`
-      // },
+      // }
     },
     title: {
-      flexGrow: 1
+      flexGrow: 1,
+      [theme.breakpoints.down("xs")]: {
+        width: `calc(100% - ${props.drawerWidth}px)`,
+        display: "none"
+      }
     }
   }));
 
@@ -70,7 +77,7 @@ function UpperStripe(props) {
 
           {!props.userApp.success && !user.name && (
             <Button color="inherit">
-              <NavLink to={`/signin`}>Sign In</NavLink>
+              <NavLink to={`/signin`}>Sign In {width}</NavLink>
             </Button>
           )}
           {props.userApp.success && (

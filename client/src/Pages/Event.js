@@ -9,7 +9,8 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Avatar from "@material-ui/core/Avatar";
 
-import { withRouter, Link } from "react-router-dom";
+import { withRouter, NavLink } from "react-router-dom";
+
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import Gallery from "react-grid-gallery";
 import gql from "graphql-tag";
@@ -53,6 +54,7 @@ const ONE_EVENT = gql`
     }
     showBookings(id: $id) {
       confirmed
+      cancelled
       user {
         _id
         name
@@ -69,7 +71,13 @@ const BOOKING = gql`
       _id
       success
       confirmed
+      cancelled
     }
+  }
+`;
+const CANCELLING = gql`
+  mutation cancelBooking($user_id: String!, $event_id: String!) {
+    cancelBooking(user_id: $user_id, event_id: $event_id)
   }
 `;
 let dataMock;
@@ -147,6 +155,7 @@ function Event(props) {
   const classes = useStyles();
   const { user, setUser } = useContext(UserContext);
   const [createBooking, bookingStates] = useMutation(BOOKING);
+  const [cancelBooking, cancelledState] = useMutation(CANCELLING);
   const { loading, error, data, refetch } = useQuery(ONE_EVENT, {
     variables: { id: props.match.params.id }
     //skip: !id,
@@ -220,11 +229,11 @@ function Event(props) {
           >
             Back
           </Button>
-          <Link to={{ pathname: `/`, state: { justGoBack: true } }}>
+          <NavLink to={{ pathname: `/`, state: { justGoBack: true } }}>
             <Button variant="contained" color="secondary">
               Close
             </Button>
-          </Link>
+          </NavLink>
         </Grid>
         <Grid item>
           <Box textAlign="center" m={1}>
@@ -284,7 +293,12 @@ function Event(props) {
           </Box>
         </Grid>
 
-        <EventButtons data={dataDB} user={user} createBooking={createBooking} />
+        <EventButtons
+          data={dataDB}
+          user={user}
+          createBooking={createBooking}
+          cancelBooking={cancelBooking}
+        />
       </BaseAndPaper>
     );
   }

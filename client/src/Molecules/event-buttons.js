@@ -12,7 +12,11 @@ function EventButtons(props) {
         props.user._id,
         booking.user._id
       );
-      if (props.user._id == booking.user._id && booking.confirmed) {
+      if (
+        props.user._id == booking.user._id &&
+        booking.confirmed &&
+        !booking.cancelled
+      ) {
         userIsAttending = true;
       }
     });
@@ -30,8 +34,8 @@ function EventButtons(props) {
           <Button
             variant="contained"
             color="primary"
-            onClick={(e) => {
-                e.preventDefault()
+            onClick={e => {
+              e.preventDefault();
               props.createBooking({
                 variables: {
                   user_id: props.user._id,
@@ -44,7 +48,19 @@ function EventButtons(props) {
           </Button>
         )}
         {userIsAttending && (
-          <Button variant="contained" color="primary">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={e => {
+              e.preventDefault();
+              props.cancelBooking({
+                variables: {
+                  user_id: props.user._id,
+                  event_id: props.data.getOneEvent._id
+                }
+              });
+            }}
+          >
             Cancel Attendance
           </Button>
         )}

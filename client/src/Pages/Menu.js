@@ -70,6 +70,7 @@ export default function Menu(props) {
               PROJECT
             </Typography>
           </Grid>
+
           <Grid item>
             <Typography variant="h3" component="h3" className={classes.center}>
               CHARLIE
@@ -90,24 +91,28 @@ export default function Menu(props) {
               direction="row"
               className={classes.buttonsContainer}
             >
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                >
-                  MAP
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                >
-                  CREATE
-                </Button>
-              </Grid>
+              <NavLink to={`/map`}>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                  >
+                    MAP
+                  </Button>
+                </Grid>
+              </NavLink>
+              <NavLink to={`/create`}>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                  >
+                    CREATE
+                  </Button>
+                </Grid>
+              </NavLink>
             </Grid>
           </Grid>
         </Grid>

@@ -15,6 +15,9 @@ const bookingSchema = new Schema(
     },
     confirmed: {
       type: Boolean
+    },
+    cancelled: {
+      type: Boolean
     }
   },
   { timestamps: true }
