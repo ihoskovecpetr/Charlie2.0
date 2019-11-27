@@ -11,9 +11,11 @@ import Avatar from "@material-ui/core/Avatar";
 
 import { Route, NavLink } from "react-router-dom";
 import { UserContext } from "../userContext";
+import {useWindowWidth} from "../Hooks/useWindowWidth"
 
 function UpperStripe(props) {
   const { user, setUser } = useContext(UserContext);
+  const {width} = useWindowWidth()
 
   console.log("Upper STRIPE props: ", props);
   console.log("Upper STRIPE user ctx: ", user);
@@ -72,7 +74,7 @@ function UpperStripe(props) {
 
           {!props.userApp.success && !user.name && (
             <Button color="inherit">
-              <NavLink to={`/signin`}>Sign In</NavLink>
+              <NavLink to={`/signin`}>Sign In {width}</NavLink>
             </Button>
           )}
           {props.userApp.success && (
