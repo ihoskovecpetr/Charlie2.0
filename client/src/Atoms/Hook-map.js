@@ -6,7 +6,7 @@ export default function Map({ options, onMount, className, styling }) {
   useEffect(() => {
     const onLoad = () => {
       console.log("Map loaded: have a look: ", window);
-      console.log(".env: ", process.env.GOOGLE_MAPS_API_KEY);
+      console.log(".env: ", process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
       if (typeof onMount === `function`) {
         //const map = new window.google.maps.Map(ref.current, options);
         const map = new window.google.maps.Map(
@@ -21,7 +21,7 @@ export default function Map({ options, onMount, className, styling }) {
     if (!window.google) {
       const script = document.createElement(`script`);
       script.type = `text/javascript`;
-      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyADHzQ7cTn3uwDBUMoROC2JFdzZ_gEAzvI&libraries=geometry,places`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=geometry,places`;
       //`https://maps.googleapis.com/maps/api/js?key=` +
       //process.env.GOOGLE_MAPS_API_KEY;
       const headScript = document.getElementsByTagName(`script`)[0];
