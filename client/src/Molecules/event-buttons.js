@@ -17,6 +17,7 @@ function EventButtons(props) {
         booking.confirmed &&
         !booking.cancelled
       ) {
+        console.log("jj. is attending");
         userIsAttending = true;
       }
     });

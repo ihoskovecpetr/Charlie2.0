@@ -87,10 +87,10 @@ function App(props) {
 
   const ListOfUrls = user.success
     ? ["", "signout", "create", "map"]
-    : ["", "signin", "create", "map", "signout", "event"];
+    : ["", "signin", "create", "map"];
   const ListOfNames = user.success
     ? ["Charlie", "SignOut", "Create", "Map"]
-    : ["Charlie", "Sign In", "Create", "Map", "Sign Out"];
+    : ["Charlie", "Sign In", "Create", "Map"];
   const ListOfComponents = user.success
     ? [
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,

@@ -12,6 +12,7 @@ import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
 import { usePosition } from "../Hooks/useGoelocation";
+import { useGeoWatcher } from "../Hooks/useGeoWrap";
 import Dropzone from "../Molecules/dropzone";
 import Spinner from "../Atoms/Spinner";
 import Map from "../Atoms/Hook-map";
@@ -67,7 +68,7 @@ function MapPage(props) {
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
   const [customMapParam, setCustomMapParam] = useState();
-  const { latitude, longitude, errorPosition } = usePosition();
+  const { latitude, longitude, errorPosition } = useGeoWatcher();
   //const [createEvent, { loading, error, data }] = useMutation(NEW_EVENT);
   const { loading, error, data } = useQuery(FEW_EVENTS, {
     variables: { date: "2019-11-11" }
@@ -356,7 +357,7 @@ function MapPage(props) {
   };
 
   return (
-    <Container component="main" maxWidth="md" className={classes.container}>
+    <Container component="main" maxWidth="xl" className={classes.container}>
       <CssBaseline />
 
       <Map

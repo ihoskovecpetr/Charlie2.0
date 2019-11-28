@@ -37,6 +37,9 @@ function UpperStripe(props) {
         width: `calc(100% - ${props.drawerWidth}px)`,
         display: "none"
       }
+    },
+    ButtonAvatar: {
+      margin: "10px"
     }
   }));
 
@@ -70,20 +73,28 @@ function UpperStripe(props) {
 
           {!props.userApp && user && user.name && (
             <>
-              <Button color="inherit">{user.name}</Button>
-              <Avatar alt="Remy Sharp" src={user.picture} />
+              <Button color="inherit" className={classes.ButtonAvatar}>
+                {user.name}
+                <Avatar alt="Remy Sharp" src={user.picture}>
+                  x
+                </Avatar>
+              </Button>
             </>
           )}
 
           {!props.userApp.success && !user.name && (
-            <Button color="inherit">
+            <Button color="inherit" className={classes.ButtonAvatar}>
               <NavLink to={`/signin`}>Sign In {width}</NavLink>
             </Button>
           )}
           {props.userApp.success && (
             <>
-              <Button color="inherit">{props.userApp.name}</Button>
-              <Avatar alt="Remy Sharp" src={props.userApp.picture} />
+              <Button color="inherit" className={classes.ButtonAvatar}>
+                {props.userApp.name}
+                <Avatar alt="Remy Sharp" src={props.userApp.picture}>
+                  x
+                </Avatar>
+              </Button>
             </>
           )}
         </Toolbar>

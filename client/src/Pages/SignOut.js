@@ -16,6 +16,7 @@ import gql from "graphql-tag";
 import { Redirect, useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
+import ModalLayout from "../Layouts/ModalLayout";
 import Spinner from "../Atoms/Spinner";
 
 function SignIn(props) {
@@ -32,13 +33,14 @@ function SignIn(props) {
       picture: null,
       token: null
     });
-    // setTimeout(() => {
-    //   history.goBack();
-    // }, 100);
+    setTimeout(() => {
+      history.goBack();
+    }, 100);
   };
 
   return (
-    <Container component="main" maxWidth="xs" className={classes.container}>
+    //<Container component="main" maxWidth="xs" className={classes.container}>
+    <ModalLayout>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -78,7 +80,7 @@ function SignIn(props) {
       <Box mt={8}>
         <Copyright />
       </Box>
-    </Container>
+    </ModalLayout>
   );
 }
 
@@ -87,19 +89,6 @@ const useStyles = makeStyles(theme => ({
     body: {
       backgroundColor: theme.palette.common.white
     }
-  },
-  container: {
-    position: "absolute",
-    background: "rgba(100,100,100,0.2)",
-    "z-index": 10,
-    width: "100%",
-    height: "100vh"
-  },
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
   },
   avatar: {
     margin: theme.spacing(1),

@@ -17,16 +17,7 @@ import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../userContext";
 
-//import checkLoggedIn from "../apollo/lib/checkLoggedIn";
-
-// const ADD_TODO = gql`
-//   mutation AddTodo($type: String!) {
-//     addTodo(type: $type) {
-//       id
-//       type
-//     }
-//   }
-// `;
+import ModalLayout from "../Layouts/ModalLayout";
 
 const NEW_USER = gql`
   mutation newUser($name: String!, $email: String!, $password: String!) {
@@ -89,11 +80,19 @@ function SignUp() {
   console.log("Context: ", user);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <ModalLayout>
+        <p>Loading...</p>
+      </ModalLayout>
+    );
   }
 
   if (error) {
-    return <p>Error</p>;
+    return (
+      <ModalLayout>
+        <p>Error</p>
+      </ModalLayout>
+    );
   }
 
   if (data) {
@@ -101,13 +100,15 @@ function SignUp() {
       setTimeout(() => {
         history.push("/");
       }, 1000);
-      return <p>successfull signup! redirecting to menu</p>;
+      return (
+        <ModalLayout>
+          <p>successfull signup! redirecting to menu</p>
+        </ModalLayout>
+      );
     }
-
-    return <p>Error</p>;
   }
   return (
-    <Container component="main" maxWidth="xs">
+    <ModalLayout>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -212,7 +213,7 @@ function SignUp() {
       <Box mt={8}>
         <Copyright />
       </Box>
-    </Container>
+    </ModalLayout>
   );
 }
 

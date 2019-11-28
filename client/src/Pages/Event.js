@@ -68,16 +68,15 @@ const ONE_EVENT = gql`
 const BOOKING = gql`
   mutation bookEvent($user_id: String!, $event_id: String!) {
     bookEvent(user_id: $user_id, event_id: $event_id) {
-      _id
       success
-      confirmed
-      cancelled
     }
   }
 `;
 const CANCELLING = gql`
   mutation cancelBooking($user_id: String!, $event_id: String!) {
-    cancelBooking(user_id: $user_id, event_id: $event_id)
+    cancelBooking(user_id: $user_id, event_id: $event_id) {
+      success
+    }
   }
 `;
 let dataMock;
@@ -161,6 +160,14 @@ function Event(props) {
     //skip: !id,
     //pollInterval: 500
   });
+
+  if (cancelledState.data && cancelledState.data.cancelBooking.success) {
+    refetch();
+  }
+
+  if (bookingStates.data && bookingStates.data.bookEvent.success) {
+    refetch();
+  }
 
   let dataDB;
 
@@ -275,7 +282,10 @@ function Event(props) {
           <Box textAlign="left" m={1}>
             Guests:
             {dataDB.showBookings.map(booking => {
-              return <Avatar alt="Remy Sharp" src={booking.user.picture} />;
+              if (booking.confirmed && !booking.cancelled) {
+                return <Avatar alt="Remy Sharp" src={booking.user.picture} />;
+              }
+              return null;
             })}
             {bookingStates.loading && <Spinner />}
           </Box>

@@ -38,25 +38,45 @@ export const resolvers = {
   Mutation: {
     bookEvent: async (_, _args, __) => {
       try {
-        const fetchedEvent = await Event.findOne({ _id: _args.event_id });
-
-        const booking = new Booking({
-          user: _args.user_id,
-          event: fetchedEvent,
-          confirmed: true,
-          cancelled: false
+        const existingBooking = await Booking.findOne({
+          event: _args.event_id
         });
-        const result = await booking.save();
 
-        console.log("Booking finished: ", result);
-        return { ...transformBooking(result), success: true };
+        console.log("Exisrting Booking: ", existingBooking);
+        if (existingBooking) {
+          console.log("Updatni existing Booking: ");
+          const result = await Booking.update(
+            { event: _args.event_id, user: _args.user_id },
+            { $set: { cancelled: false } }
+          );
+          console.log("booking.update() result: ", result);
+
+          if (result.ok) {
+            return { success: true };
+          } else return { success: false };
+        } else {
+          const fetchedEvent = await Event.findOne({ _id: _args.event_id });
+
+          const booking = new Booking({
+            user: _args.user_id,
+            event: fetchedEvent,
+            confirmed: true,
+            cancelled: false
+          });
+          const result = await booking.save();
+
+          console.log("booking.save() result: ", result);
+
+          if (result.ok) {
+            return { success: true };
+          } else return { success: false };
+        }
       } catch (err) {
         throw err;
       }
     },
     cancelBooking: async (_, _args, __) => {
       try {
-        //const fetchedEvent = await Booking.findOne({ _id: _args.event_id });
         const result = await Booking.update(
           { event: _args.event_id, user: _args.user_id },
           { $set: { cancelled: true } }
@@ -65,9 +85,9 @@ export const resolvers = {
 
         console.log("Cancelling finished: ", result);
         if (result.ok) {
-          return "{ success: true }";
+          return { success: true };
         } else {
-          return "{ success: false }";
+          return { success: false };
         }
       } catch (err) {
         throw err;
@@ -102,8 +122,12 @@ function newFunction() {
   }
 
   extend type Mutation {
-    bookEvent(event_id: String!, user_id: String!): Booking!
-    cancelBooking(event_id: String!, user_id: String!): String
+    bookEvent(event_id: String!, user_id: String!): Hlaska!
+    cancelBooking(event_id: String!, user_id: String!): Hlaska!
+  }
+
+  type Hlaska { 
+    success: String
   }
 
   type Booking {

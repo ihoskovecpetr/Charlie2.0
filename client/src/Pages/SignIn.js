@@ -11,12 +11,12 @@ import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import { useMutation, useQuery, useApolloClient } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
+import ModalLayout from "../Layouts/ModalLayout";
 import Spinner from "../Atoms/Spinner";
 
 const LOGIN = gql`
@@ -42,15 +42,28 @@ function SignIn(props) {
     setTimeout(() => {
       history.goBack();
     }, 100);
-    return <p>Ahoj {user.name}</p>;
+    return (
+      <ModalLayout>
+        <p>Ahoj {user.name}</p>
+      </ModalLayout>
+    );
   }
 
-  if (loading) return <Spinner />;
+  if (loading)
+    return (
+      <ModalLayout>
+        <Spinner />
+      </ModalLayout>
+    );
 
   if (data) {
     console.log("DATA LOGIN: ", data);
     if (data.login.success == false) {
-      return <p>Wrong combination Email and password</p>;
+      return (
+        <ModalLayout>
+          <p>Wrong combination Email and password</p>
+        </ModalLayout>
+      );
     } else {
       if (data.login.success) {
         window.localStorage.setItem("token", data.login.token);
@@ -71,7 +84,7 @@ function SignIn(props) {
   }
 
   return (
-    <Container component="main" maxWidth="xs" className={classes.container}>
+    <ModalLayout>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -144,7 +157,7 @@ function SignIn(props) {
       <Box mt={8}>
         <Copyright />
       </Box>
-    </Container>
+    </ModalLayout>
   );
 }
 
@@ -153,13 +166,6 @@ const useStyles = makeStyles(theme => ({
     body: {
       backgroundColor: theme.palette.common.white
     }
-  },
-  container: {
-    position: "absolute",
-    background: "rgba(100,100,100,0.2)",
-    "z-index": 10,
-    width: "100vw",
-    height: "100vh"
   },
   paper: {
     marginTop: theme.spacing(8),
