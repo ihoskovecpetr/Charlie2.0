@@ -8,6 +8,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -41,8 +42,7 @@ function SignIn(props) {
   return (
     //<Container component="main" maxWidth="xs" className={classes.container}>
     <ModalLayout>
-      <CssBaseline />
-      <div className={classes.paper}>
+       <Paper className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -76,7 +76,7 @@ function SignIn(props) {
             </Grid>
           </Grid>
         </form>
-      </div>
+      </Paper>
       <Box mt={8}>
         <Copyright />
       </Box>
@@ -90,6 +90,13 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: theme.palette.common.white
     }
   },
+  paper: {
+    marginTop: theme.spacing(8),
+    padding: theme.spacing(3, 2),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
@@ -100,7 +107,7 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
-  }
+  },
 }));
 
 function Copyright() {

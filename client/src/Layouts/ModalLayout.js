@@ -12,13 +12,11 @@ function Layout(props) {
       background: "rgba(100,10,10,0.2)",
       width: "100%",
       position: "absolute",
-      "z-index": 10
+      "z-index": 10,
+      top: 0
     },
     container: {
       height: "100vh"
-    },
-    root: {
-      padding: theme.spacing(3, 2)
     }
   }));
   const classes = useStyles();
@@ -30,10 +28,10 @@ function Layout(props) {
         <Grid
           container
           justify="center"
-          alignItems="center"
+          //alignItems="center"
           className={classes.container}
         >
-          <Paper className={classes.root}>{props.children}</Paper>
+          {props.children}
         </Grid>
       </Container>
     </div>

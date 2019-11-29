@@ -18,6 +18,9 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import MailIcon from "@material-ui/icons/Mail";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
+
 //import { withApollo } from "react-apollo";
 import gql from "graphql-tag";
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
@@ -48,9 +51,21 @@ const LOGIN = gql`
   }
 `;
 
+
+
 function App(props) {
   const classes = useStyles();
-  const theme = useTheme();
+
+  const theme = createMuiTheme({
+    palette: {
+      violetova: '#600328',
+      contrastThreshold: 3,
+      // Used to shift a color's luminance by approximately
+      // two indexes within its tonal palette.
+      // E.g., shift from Red 500 to Red 300 or Red 700.
+      tonalOffset: 0.2,
+    },
+  });
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const { loading, error, data } = useQuery(LOGIN);
@@ -174,6 +189,7 @@ function App(props) {
   //console.log("APP, firstPrint a Modal: ", firstPrint, Modal);
   return (
     <div className={classes.root}>
+      <ThemeProvider theme={theme}>
       <UserContext.Provider value={providerValue}>
         <nav className={classes.drawer} aria-label="mailbox folders">
           {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
@@ -352,6 +368,7 @@ function App(props) {
           </Switch>
         )}
       </UserContext.Provider>
+      </ThemeProvider>
     </div>
   );
 }
