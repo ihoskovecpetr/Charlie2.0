@@ -1,6 +1,7 @@
 import Event from "../Models-Mongo/Event.js";
 import User from "../Models-Mongo/User.js";
 import Booking from "../Models-Mongo/Booking.js";
+import { transformEvent } from "./merge.js";
 
 export const typeDef = newFunction();
 export const resolvers = {
@@ -23,15 +24,28 @@ export const resolvers = {
           let oneEvent = await Event.findOne({ _id: _args.id });
           if (oneEvent) {
             let areYourAuthor = oneEvent.author == context.reqO.req.userId;
+            // let transform1 = {
+            //   ...oneEvent._doc,
+            //   success: true,
+            //   areYouAuthor: areYourAuthor
+            // };
+            //return transformEvent(oneEvent, true, areYourAuthor);
             return {
               ...oneEvent._doc,
+              dateStart: new Date(oneEvent._doc.dateStart).toISOString(),
               success: true,
               areYouAuthor: areYourAuthor
+            };
+          } else {
+            return {
+              success: false,
+              message: "This event is worhere to be seen, check url and repeat"
             };
           }
         } else {
           return {
-            success: false
+            success: false,
+            message: "You are not authorised, login first to continue"
           };
         }
       } catch (err) {
@@ -52,7 +66,10 @@ export const resolvers = {
       try {
         let allEvents = await Event.find({});
         //console.log("allEvents: ", allEvents);
-        return allEvents;
+
+        return allEvents.map(event => {
+          return transformEvent(event);
+        });
       } catch (err) {
         throw err;
       }
@@ -96,6 +113,19 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
+    },
+    deleteOneEvent: async (_, _args, __) => {
+      console.log("DEL One Event", _args);
+      try {
+        let result = await Event.deleteOne({ _id: _args.delete_id });
+        if (result.ok) {
+          return { success: true };
+        } else {
+          return { success: false };
+        }
+      } catch (err) {
+        throw err;
+      }
     }
   },
   Event: {
@@ -121,6 +151,7 @@ function newFunction() {
 
   extend type Mutation {
     createEvent(eventInput: EventInput!): Event
+    deleteOneEvent(delete_id: ID!): Hlaska
   }
 
   input EventInput {
@@ -166,10 +197,10 @@ function newFunction() {
     isSelected: Boolean
   }
 
-
   type Event {
     _id: ID
     success: Boolean
+    message: String
     name: String
     geometry: Geometry
     addressGoogle: String

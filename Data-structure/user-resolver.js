@@ -6,6 +6,7 @@ export const typeDef = `
   extend type Query {
     getUsers(_id: ID name: String): [User]
     getLoggedInUser: User
+    deleteAllUsers: String
   }
 
   extend type Mutation {
@@ -27,21 +28,27 @@ export const typeDef = `
 export const resolvers = {
   Mutation: {
     newUser: async (_, _args, __) => {
-      console.log("newUser MUTATION hitttt");
       try {
         let existing = await User.find({ email: _args.email });
         if (existing.length) {
-          console.log("Found email: ", existing);
+          console.log("Found existing one: ", existing);
           return { success: false };
         } else {
+          let picture;
+          if (!_args.picture) {
+            picture =
+              "http://www.queensland-photo.com/wp-content/uploads/2013/01/surfing-burleigh-1024x538.jpg";
+          } else {
+            picture = _args.picture;
+          }
           const hashedPassword = await bcrypt.hash(_args.password, 12);
-
           let newUser = new User({
             name: _args.name,
             email: _args.email,
             password: hashedPassword,
-            picture: _args.picture
+            picture: picture
           });
+
           const result = await newUser.save();
           console.log("Saved: ", result);
           return { ...result._doc, success: true };
@@ -77,6 +84,10 @@ export const resolvers = {
     }
   },
   Query: {
+    deleteAllUsers: async (_, _args, context, info) => {
+      let result = await User.deleteMany({});
+      return result.deletedCount;
+    },
     getLoggedInUser: async (_, _args, context, info) => {
       try {
         console.log("2 ++ ted: ", context.reqO.req.isAuth);

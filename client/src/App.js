@@ -18,8 +18,8 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import MailIcon from "@material-ui/icons/Mail";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
 
 //import { withApollo } from "react-apollo";
 import gql from "graphql-tag";
@@ -51,20 +51,18 @@ const LOGIN = gql`
   }
 `;
 
-
-
 function App(props) {
   const classes = useStyles();
 
   const theme = createMuiTheme({
     palette: {
-      violetova: '#600328',
+      violetova: "#600328",
       contrastThreshold: 3,
       // Used to shift a color's luminance by approximately
       // two indexes within its tonal palette.
       // E.g., shift from Red 500 to Red 300 or Red 700.
-      tonalOffset: 0.2,
-    },
+      tonalOffset: 0.2
+    }
   });
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -102,7 +100,7 @@ function App(props) {
 
   const ListOfUrls = user.success
     ? ["", "signout", "create", "map"]
-    : ["", "signin", "create", "map"];
+    : ["", "signin", "create", "map", "signup"];
   const ListOfNames = user.success
     ? ["Charlie", "SignOut", "Create", "Map"]
     : ["Charlie", "Sign In", "Create", "Map"];
@@ -118,7 +116,7 @@ function App(props) {
         <SignIn />,
         <Create />,
         <MapPage />,
-        <SignOut />,
+        <SignUp />,
         <Event />
       ];
   const drawer = (
@@ -190,27 +188,27 @@ function App(props) {
   return (
     <div className={classes.root}>
       <ThemeProvider theme={theme}>
-      <UserContext.Provider value={providerValue}>
-        <nav className={classes.drawer} aria-label="mailbox folders">
-          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-          <Hidden smUp implementation="css">
-            <Drawer
-              container={container}
-              variant="temporary"
-              anchor={theme.direction === "rtl" ? "right" : "left"}
-              open={mobileOpen}
-              onClose={handleDrawerToggle}
-              classes={{
-                paper: classes.drawerPaper
-              }}
-              ModalProps={{
-                keepMounted: true // Better open performance on mobile.
-              }}
-            >
-              {drawer}
-            </Drawer>
-          </Hidden>
-          {/* <Hidden xsDown implementation="css">
+        <UserContext.Provider value={providerValue}>
+          <nav className={classes.drawer} aria-label="mailbox folders">
+            {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+            <Hidden smUp implementation="css">
+              <Drawer
+                container={container}
+                variant="temporary"
+                anchor={theme.direction === "rtl" ? "right" : "left"}
+                open={mobileOpen}
+                onClose={handleDrawerToggle}
+                classes={{
+                  paper: classes.drawerPaper
+                }}
+                ModalProps={{
+                  keepMounted: true // Better open performance on mobile.
+                }}
+              >
+                {drawer}
+              </Drawer>
+            </Hidden>
+            {/* <Hidden xsDown implementation="css">
             <Drawer
               classes={{
                 paper: classes.drawerPaper
@@ -221,100 +219,127 @@ function App(props) {
               {drawer}
             </Drawer>
           </Hidden> */}
-        </nav>
-        {firstPrint && Modal && (
-          <>
-            <Route
-              exact
-              path={`/event/:id`}
-              render={() => (
-                <>
-                  <UpperStripe
-                    //bringOwnUser?? true??
-                    userApp={false}
-                    ListOfNames={ListOfNames}
-                    ListOfUrls={ListOfUrls}
-                    handleDrawerToggle={handleDrawerToggle}
-                    drawerWidth={drawerWidth}
-                  />
-                  <main className={classes.content}>
-                    <div className={classes.toolbar} />
+          </nav>
+          {firstPrint && Modal && (
+            <>
+              <Route
+                exact
+                path={`/event/:id`}
+                render={() => (
+                  <>
+                    <UpperStripe
+                      //bringOwnUser?? true??
+                      userApp={false}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <Event />
+                    </main>
+                  </>
+                )}
+              />
+              <Route
+                exact
+                path={`/signin`}
+                render={() => (
+                  <>
+                    <UpperStripe
+                      //bringOwnUser?? true??
+                      userApp={false}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <SignIn />
+                    </main>
+                  </>
+                )}
+              />
+              <Route
+                exact
+                path={`/signout`}
+                render={() => (
+                  <>
+                    <UpperStripe
+                      //bringOwnUser?? true??
+                      userApp={false}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <SignOut />
+                    </main>
+                  </>
+                )}
+              />
+            </>
+          )}
+          {!firstPrint && Modal && (
+            <>
+              <Route
+                exact
+                path={`/event/:id`}
+                render={() => (
+                  <>
                     <Event />
-                  </main>
-                </>
-              )}
-            />
-            <Route
-              exact
-              path={`/signin`}
-              render={() => (
-                <>
-                  <UpperStripe
-                    //bringOwnUser?? true??
-                    userApp={false}
-                    ListOfNames={ListOfNames}
-                    ListOfUrls={ListOfUrls}
-                    handleDrawerToggle={handleDrawerToggle}
-                    drawerWidth={drawerWidth}
-                  />
-                  <main className={classes.content}>
-                    <div className={classes.toolbar} />
+                  </>
+                )}
+              />
+              <Route
+                exact
+                path={`/signin`}
+                render={() => (
+                  <>
                     <SignIn />
-                  </main>
-                </>
-              )}
-            />
-            <Route
-              exact
-              path={`/signout`}
-              render={() => (
-                <>
-                  <UpperStripe
-                    //bringOwnUser?? true??
-                    userApp={false}
-                    ListOfNames={ListOfNames}
-                    ListOfUrls={ListOfUrls}
-                    handleDrawerToggle={handleDrawerToggle}
-                    drawerWidth={drawerWidth}
-                  />
-                  <main className={classes.content}>
-                    <div className={classes.toolbar} />
+                  </>
+                )}
+              />
+              <Route
+                exact
+                path={`/signout`}
+                render={() => (
+                  <>
                     <SignOut />
-                  </main>
-                </>
-              )}
-            />
-          </>
-        )}
-        {!firstPrint && Modal && (
-          <>
-            <Route
-              exact
-              path={`/event/:id`}
-              render={() => (
-                <>
-                  <Event />
-                </>
-              )}
-            />
-            <Route
-              exact
-              path={`/signin`}
-              render={() => (
-                <>
-                  <SignIn />
-                </>
-              )}
-            />
-            <Route
-              exact
-              path={`/signout`}
-              render={() => (
-                <>
-                  <SignOut />
-                </>
-              )}
-            />
+                  </>
+                )}
+              />
+              <Switch location={prevLocation}>
+                {ListOfUrls.map((text, index) => (
+                  <Route
+                    exact
+                    path={`/${text}`}
+                    key={index}
+                    render={() => (
+                      <>
+                        <UpperStripe
+                          userApp={user}
+                          ListOfNames={ListOfNames}
+                          ListOfUrls={ListOfUrls}
+                          handleDrawerToggle={handleDrawerToggle}
+                          drawerWidth={drawerWidth}
+                        />
+                        <main className={classes.content}>
+                          <div className={classes.toolbar} />
+                          {returnComponent(index)}
+                        </main>
+                      </>
+                    )}
+                  />
+                ))}
+              </Switch>
+            </>
+          )}
+          {!Modal && (
             <Switch location={prevLocation}>
               {ListOfUrls.map((text, index) => (
                 <Route
@@ -339,35 +364,8 @@ function App(props) {
                 />
               ))}
             </Switch>
-          </>
-        )}
-        {!Modal && (
-          <Switch location={prevLocation}>
-            {ListOfUrls.map((text, index) => (
-              <Route
-                exact
-                path={`/${text}`}
-                key={index}
-                render={() => (
-                  <>
-                    <UpperStripe
-                      userApp={user}
-                      ListOfNames={ListOfNames}
-                      ListOfUrls={ListOfUrls}
-                      handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
-                    />
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      {returnComponent(index)}
-                    </main>
-                  </>
-                )}
-              />
-            ))}
-          </Switch>
-        )}
-      </UserContext.Provider>
+          )}
+        </UserContext.Provider>
       </ThemeProvider>
     </div>
   );

@@ -8,6 +8,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -25,6 +26,9 @@ const NEW_USER = gql`
       success
       name
       _id
+      token
+      password
+      email
     }
   }
 `;
@@ -75,14 +79,16 @@ function SignUp() {
   const classes = useStyles();
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
-  const [signUp, { loading, error, data }] = useMutation(NEW_USER);
+  const [newUser, { loading, error, data }] = useMutation(NEW_USER);
 
   console.log("Context: ", user);
 
   if (loading) {
     return (
       <ModalLayout>
-        <p>Loading...</p>
+        <Paper className={classes.paper}>
+          <p>Loading...</p>
+        </Paper>
       </ModalLayout>
     );
   }
@@ -90,7 +96,9 @@ function SignUp() {
   if (error) {
     return (
       <ModalLayout>
-        <p>Error</p>
+        <Paper className={classes.paper}>
+          <p>Error</p>
+        </Paper>
       </ModalLayout>
     );
   }
@@ -102,117 +110,127 @@ function SignUp() {
       }, 1000);
       return (
         <ModalLayout>
-          <p>successfull signup! redirecting to menu</p>
+          <Paper className={classes.paper}>
+            <p>successfull signup! redirecting to Login</p>
+          </Paper>
         </ModalLayout>
       );
     }
   }
   return (
     <ModalLayout>
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign Up
-        </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="name"
-            label="User name"
-            name="name"
-            autoComplete="name"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password2"
-            label="Confirm password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={e => {
-              e.preventDefault();
-              console.log("sumbitHandler: ", e);
-              console.log(
-                "email: ",
-                document.getElementById("email").value,
-                document.getElementById("password").value
-              );
-              let name = document.getElementById("name").value;
-              let email = document.getElementById("email").value;
-              let password = document.getElementById("password").value;
-              console.log("email: ", document.getElementById("password").value);
-
-              signUp({
-                variables: {
-                  name: name,
-                  email: email,
-                  password: password
-                }
-              });
-            }}
-          >
+      <Paper className={classes.paper}>
+        <CssBaseline />
+        <div className={classes.paper}>
+          {data && !data.newUser.success && (
+            <h1>Error, this email is already taken!!</h1>
+          )}
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
             Sign Up
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+          </Typography>
+          <form className={classes.form} noValidate>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="name"
+              label="User name"
+              name="name"
+              autoComplete="name"
+              autoFocus
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password2"
+              label="Confirm password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              onClick={e => {
+                e.preventDefault();
+                console.log("sumbitHandler: ", e);
+                console.log(
+                  "email: ",
+                  document.getElementById("email").value,
+                  document.getElementById("password").value
+                );
+                let name = document.getElementById("name").value;
+                let email = document.getElementById("email").value;
+                let password = document.getElementById("password").value;
+                console.log(
+                  "email: ",
+                  document.getElementById("password").value
+                );
+
+                newUser({
+                  variables: {
+                    name: name,
+                    email: email,
+                    password: password
+                  }
+                });
+              }}
+            >
+              Sign Up
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link href="#" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
+          </form>
+        </div>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+      </Paper>
     </ModalLayout>
   );
 }

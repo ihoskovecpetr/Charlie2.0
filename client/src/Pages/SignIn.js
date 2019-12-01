@@ -13,7 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useMutation, useQuery, useApolloClient } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { useHistory } from "react-router-dom";
+import { useHistory, NavLink } from "react-router-dom";
 
 import { UserContext } from "../userContext";
 import ModalLayout from "../Layouts/ModalLayout";
@@ -44,7 +44,9 @@ function SignIn(props) {
     }, 100);
     return (
       <ModalLayout>
-        <p>Ahoj {user.name}</p>
+        <Paper className={classes.paper}>
+          <p>Ahoj {user.name}</p>
+        </Paper>
       </ModalLayout>
     );
   }
@@ -52,7 +54,9 @@ function SignIn(props) {
   if (loading)
     return (
       <ModalLayout>
-        <Spinner />
+        <Paper className={classes.paper}>
+          <Spinner />
+        </Paper>
       </ModalLayout>
     );
 
@@ -61,7 +65,9 @@ function SignIn(props) {
     if (data.login.success == false) {
       return (
         <ModalLayout>
-          <p>Wrong combination Email and password</p>
+          <Paper className={classes.paper}>
+            <p>Wrong combination Email and password</p>
+          </Paper>
         </ModalLayout>
       );
     } else {
@@ -146,15 +152,15 @@ function SignIn(props) {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <NavLink to={`/signup`} variant="body2">
                 {"Don't have an account? Sign Up"}
-              </Link>
+              </NavLink>
             </Grid>
           </Grid>
         </form>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
+        <Box mt={8}>
+          <Copyright />
+        </Box>
       </Paper>
     </ModalLayout>
   );
@@ -183,8 +189,7 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
-  },
-
+  }
 }));
 
 function Copyright() {

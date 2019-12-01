@@ -25,6 +25,7 @@ import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
+import ModalLayout from "../Layouts/ModalLayout";
 import Dropzone from "../Molecules/dropzone";
 import Spinner from "../Atoms/Spinner";
 import Map from "../Atoms/Hook-map";
@@ -137,8 +138,29 @@ function Create(props) {
   };
 
   const handleDateChange = date => {
+    console.log("CHange of DAte: ", date);
     setSelectedDate(date);
   };
+
+  if (loading) {
+    return (
+      <ModalLayout>
+        <Spinner />
+      </ModalLayout>
+    );
+  }
+
+  if (data && data.createEvent.success) {
+    console.log("SUCCESS and redirect");
+    setTimeout(() => {
+      history.push("/map");
+    }, 1000);
+    return (
+      <ModalLayout>
+        <Typography> SUCCESS </Typography>
+      </ModalLayout>
+    );
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -176,6 +198,9 @@ function Create(props) {
               inputRef={inputDate}
               label="Date picker dialog"
               format="MM/dd/yyyy"
+              onChange={e => {
+                handleDateChange(e);
+              }}
               KeyboardButtonProps={{
                 "aria-label": "change date"
               }}
@@ -186,7 +211,9 @@ function Create(props) {
               inputRef={inputTime}
               label="Time picker"
               value={selectedDate}
-              onChange={handleDateChange}
+              onChange={e => {
+                handleDateChange(e);
+              }}
               KeyboardButtonProps={{
                 "aria-label": "change time"
               }}

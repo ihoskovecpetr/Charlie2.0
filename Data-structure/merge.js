@@ -1,13 +1,17 @@
 const Event = require("../Models-Mongo/Event");
 const User = require("../Models-Mongo/User");
 
-const transformEvent = event => {
+const transformEvent = (event, success, areYourAuthor) => {
   console.log("transformEvent FCE");
   return {
     ...event._doc,
     _id: event.id,
-    date: new Date(event._doc.date).toISOString(),
-    creator: userLookup.bind(this, event._doc.creator)
+    dateStart: new Date(event._doc.dateStart).toISOString(),
+    dateEnd: event._doc.dateStart,
+    //creator: userLookup.bind(this, event._doc.creator)
+    freeSnack: true,
+    success: true,
+    areYourAuthor: areYourAuthor
   };
 };
 

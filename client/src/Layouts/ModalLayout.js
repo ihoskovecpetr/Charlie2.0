@@ -13,10 +13,11 @@ function Layout(props) {
       width: "100%",
       position: "absolute",
       "z-index": 10,
-      top: 0
-    },
-    container: {
+      top: 0,
       height: "100vh"
+    },
+    gridContainer: {
+      // height: "100vh"
     }
   }));
   const classes = useStyles();
@@ -29,7 +30,7 @@ function Layout(props) {
           container
           justify="center"
           //alignItems="center"
-          className={classes.container}
+          className={classes.gridContainer}
         >
           {props.children}
         </Grid>

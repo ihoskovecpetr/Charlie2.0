@@ -18,6 +18,9 @@ const bookingSchema = new Schema(
     },
     cancelled: {
       type: Boolean
+    },
+    message: {
+      type: String
     }
   },
   { timestamps: true }
