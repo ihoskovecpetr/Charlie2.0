@@ -57,6 +57,8 @@ function App(props) {
   const theme = createMuiTheme({
     palette: {
       violetova: "#600328",
+      darkGrey: "#242323",
+      charliePink: '#E8045D',
       contrastThreshold: 3,
       // Used to shift a color's luminance by approximately
       // two indexes within its tonal palette.
