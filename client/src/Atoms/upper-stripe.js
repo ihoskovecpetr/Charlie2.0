@@ -60,11 +60,13 @@ function UpperStripe(props) {
           </IconButton>
 
           {props.ListOfNames.map((text, index) => (
-            <Typography variant="h6" className={classes.title} key={text}>
-              <NavLink to={`/${props.ListOfUrls[index]}`} key={index}>
-                {text}
-              </NavLink>
-            </Typography>
+            <Button color="inherit">
+              <Typography variant="h6" className={classes.title} key={text}>
+                <NavLink to={`/${props.ListOfUrls[index]}`} key={index}>
+                  {text}
+                </NavLink>
+              </Typography>
+            </Button>
           ))}
 
           <Typography variant="h6" className={classes.title}>
@@ -73,29 +75,39 @@ function UpperStripe(props) {
 
           {!props.userApp && user && user.name && (
             <>
-              <Button color="inherit" className={classes.ButtonAvatar}>
-                {user.name}
-                <Avatar alt="Remy Sharp" src={user.picture}>
-                  x
-                </Avatar>
-              </Button>
+              <NavLink to={`/profile`}>
+                <Button color="inherit">
+                  {user.name}
+                  <Avatar
+                    alt="Remy Sharp"
+                    src={user.picture}
+                    className={classes.ButtonAvatar}
+                  >
+                    x
+                  </Avatar>
+                </Button>
+              </NavLink>
             </>
           )}
 
           {!props.userApp.success && !user.name && (
-            <Button color="inherit" className={classes.ButtonAvatar}>
+            <Button color="inherit">
               <NavLink to={`/signin`}>Sign In {width}</NavLink>
             </Button>
           )}
           {props.userApp.success && (
-            <>
-              <Button color="inherit" className={classes.ButtonAvatar}>
+            <NavLink to={`/profile`}>
+              <Button color="inherit">
                 {props.userApp.name}
-                <Avatar alt="Remy Sharp" src={props.userApp.picture}>
+                <Avatar
+                  alt="Remy Sharp"
+                  src={props.userApp.picture}
+                  className={classes.ButtonAvatar}
+                >
                   x
                 </Avatar>
               </Button>
-            </>
+            </NavLink>
           )}
         </Toolbar>
       </AppBar>

@@ -35,6 +35,7 @@ import SignOut from "./Pages/SignOut";
 import Create from "./Pages/Create";
 import MapPage from "./Pages/MapPage";
 import Event from "./Pages/Event";
+import Profile from "./Pages/Profile";
 
 const drawerWidth = 240;
 let prevLocation;
@@ -58,7 +59,7 @@ function App(props) {
     palette: {
       violetova: "#600328",
       darkGrey: "#242323",
-      charliePink: '#E8045D',
+      charliePink: "#E8045D",
       contrastThreshold: 3,
       // Used to shift a color's luminance by approximately
       // two indexes within its tonal palette.
@@ -101,7 +102,7 @@ function App(props) {
   }, []);
 
   const ListOfUrls = user.success
-    ? ["", "signout", "create", "map"]
+    ? ["", "signout", "create", "map", "profile"]
     : ["", "signin", "create", "map", "signup"];
   const ListOfNames = user.success
     ? ["Charlie", "SignOut", "Create", "Map"]
@@ -111,7 +112,8 @@ function App(props) {
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
         <SignOut />,
         <Create />, //create
-        <MapPage /> //Map
+        <MapPage />, //Map
+        <Profile />
       ]
     : [
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,

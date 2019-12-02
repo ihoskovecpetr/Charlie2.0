@@ -41,9 +41,16 @@ export default function TransitionsModal(props) {
 
   return (
     <div>
-      <button type="button" onClick={handleOpen}>
-        react-transition-group
-      </button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={e => {
+          e.preventDefault();
+          handleOpen();
+        }}
+      >
+        JOIN
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -58,7 +65,7 @@ export default function TransitionsModal(props) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="transition-modal-title">Transition modal</h2>
+            <h2 id="transition-modal-title">Request Author for admission</h2>
 
             <form className={classes.root} noValidate autoComplete="off">
               <TextField
@@ -81,6 +88,16 @@ export default function TransitionsModal(props) {
               }}
             >
               SEND YOUR REQUEST
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={e => {
+                e.preventDefault();
+                handleClose();
+              }}
+            >
+              CLOSE
             </Button>
           </div>
         </Fade>

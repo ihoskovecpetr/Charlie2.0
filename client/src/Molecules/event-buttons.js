@@ -131,42 +131,8 @@ function EventButtons(props) {
   return (
     <>
       <Grid item>
-        {props.data && props.data.getOneEvent.areYouAuthor && (
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={e => {
-              e.preventDefault();
-              props.deleteOneEvent({
-                variables: {
-                  delete_id: props.data.getOneEvent._id
-                },
-                refetchQueries: () => [
-                  {
-                    query: ALL_EVENTS,
-                    variables: { date: "2019-11-11" }
-                  }
-                ]
-              });
-            }}
-          >
-            Delete this event
-          </Button>
-        )}
         {!userIsAttending && (
-          <>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={e => {
-                e.preventDefault();
-                sendBookingRequest();
-              }}
-            >
-              Book this event
-            </Button>
-            <ModalJoin sendBookingRequest={sendBookingRequest} />
-          </>
+          <ModalJoin sendBookingRequest={sendBookingRequest} />
         )}
         {userIsAttending && (
           <>
@@ -194,6 +160,28 @@ function EventButtons(props) {
           </>
         )}
       </Grid>
+      {props.data && props.data.getOneEvent.areYouAuthor && (
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={e => {
+            e.preventDefault();
+            props.deleteOneEvent({
+              variables: {
+                delete_id: props.data.getOneEvent._id
+              },
+              refetchQueries: () => [
+                {
+                  query: ALL_EVENTS,
+                  variables: { date: "2019-11-11" }
+                }
+              ]
+            });
+          }}
+        >
+          Delete this event
+        </Button>
+      )}
     </>
   );
 }

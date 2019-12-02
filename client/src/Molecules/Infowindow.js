@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -14,6 +15,8 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
 import { green } from "@material-ui/core/colors";
+
+import { displayDate } from "../Services/transform-services";
 
 var alreadyAttending = false;
 
@@ -70,10 +73,9 @@ function Infowindow(props) {
         className={classes.body}
       >
         <Grid item alignItems="center">
-          <Typography noWrap>{props.location.price}</Typography>
-        </Grid>
-        <Grid item alignItems="center">
-          <Typography noWrap>{props.location.dateStart}</Typography>
+          <Typography noWrap>
+            {displayDate(props.location.dateStart)}
+          </Typography>
         </Grid>
       </Grid>
 
@@ -82,13 +84,19 @@ function Infowindow(props) {
         direction="column"
         justify="center"
         alignItems="center"
-        className={classes.button}
+        className={classes.gridButton}
       >
-        <Grid item justify="center" alignItems="center">
-          <Typography noWrap onClick={openModalEvent}>
-            OPEN
-          </Typography>
-        </Grid>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.buttonOpen}
+          onClick={e => {
+            e.preventDefault();
+            openModalEvent();
+          }}
+        >
+          OPEN
+        </Button>
       </Grid>
     </>
   );
@@ -110,7 +118,11 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     alignContent: "center"
   },
-
+  buttonOpen: {
+    width: "100%",
+    background: "#E8045D",
+    color: "white"
+  },
   h3Name: {
     display: "inline-block",
     margin: "0.5em",
@@ -133,7 +145,7 @@ const useStyles = makeStyles(theme => ({
     color: "white",
     flexGrow: 1
   },
-  button: {
+  gridButton: {
     width: "100%",
     bottom: 0,
     position: "absolute",

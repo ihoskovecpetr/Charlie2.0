@@ -292,20 +292,20 @@ function Event(props) {
             </Box>
           </Grid>
           <Grid item>
+            <Typography component="div">Price:</Typography>
             <Box textAlign="left" m={1}>
-              Price:
               {dataDB.getOneEvent.price}
             </Box>
           </Grid>
           <Grid item>
+            <Typography component="div">BYO:</Typography>
             <Box textAlign="left" m={1}>
-              BYO:
               {dataDB.getOneEvent.BYO ? "YES" : "NO"}
             </Box>
           </Grid>
           <Grid item>
+            <Typography component="div">Confirmed guests:</Typography>
             <Box textAlign="left" m={1}>
-              Confirmed guests:
               <Grid container direction="row">
                 {dataDB.showBookings.map(booking => {
                   if (booking.confirmed && !booking.cancelled) {
@@ -322,8 +322,8 @@ function Event(props) {
             </Box>
           </Grid>
           <Grid item>
+            <Typography component="div">Pending Guests:</Typography>
             <Box textAlign="left" m={1}>
-              Pending Guests:
               <Grid container direction="row">
                 {dataDB.showBookings.map(booking => {
                   if (!booking.confirmed && !booking.cancelled) {
@@ -343,14 +343,14 @@ function Event(props) {
             </Box>
           </Grid>
           <Grid item>
+            <Typography component="div">Host:</Typography>
             <Box textAlign="left" m={1}>
-              Host:
               {dataDB.getOneEvent.author.name}
             </Box>
           </Grid>
           <Grid item>
+            <Typography component="div">Address:</Typography>
             <Box textAlign="left" m={1}>
-              Address
               {dataDB.getOneEvent.address}
             </Box>
           </Grid>

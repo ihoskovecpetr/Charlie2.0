@@ -73,6 +73,18 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
+    },
+    userEvents: async (_, _args, __) => {
+      try {
+        const usersEvents = Event.find({ author: _args.user_id });
+        if (usersEvents) {
+          return usersEvents;
+        } else {
+          return [{ success: false }];
+        }
+      } catch (err) {
+        throw err;
+      }
     }
   },
   Mutation: {
@@ -145,8 +157,8 @@ function newFunction() {
     events(name: String ): [Event]
     getOneEvent(id: ID): Event
     deleteEvents: String
-    fewEvents: [Event]
     eventGeoDay(date: String, geoObj: BoundsInput ): [Event]
+    userEvents(user_id: ID!): [Event]
   }
 
   extend type Mutation {
