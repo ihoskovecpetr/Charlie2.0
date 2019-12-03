@@ -6,15 +6,16 @@ const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const hbs = require("nodemailer-express-handlebars");
 
-// const transformBooking = booking => {
-//   return {
-//     ...booking._doc,
-//     user: userLookup.bind(this, booking._doc.user),
-//     event: singleEvent.bind(this, booking._doc.event),
-//     createdAt: new Date(booking._doc.createdAt).toISOString(),
-//     updatedAt: new Date(booking._doc.updatedAt).toISOString()
-//   };
-// };
+const transformBooking = async booking => {
+  console.log("transformBooking: ", booking._doc);
+  return {
+    ...booking._doc,
+    user: await userLookup(booking._doc.user),
+    event: await singleEvent(booking._doc.event),
+    createdAt: new Date(booking._doc.createdAt).toISOString(),
+    updatedAt: new Date(booking._doc.updatedAt).toISOString()
+  };
+};
 
 const OAuth2 = google.auth.OAuth2;
 
@@ -51,6 +52,18 @@ export const resolvers = {
         let bookings = await Booking.find({ event: _args.id });
         console.log("ShowBookings: ", bookings);
         return bookings;
+      } catch (err) {
+        throw err;
+      }
+    },
+    showUserBookings: async (_, _args, __) => {
+      try {
+        let bookings = await Booking.find({ user: _args.user_id });
+        console.log("ShowBookings: ", bookings);
+
+        return await bookings.map(async booking => {
+          return await transformBooking(booking);
+        });
       } catch (err) {
         throw err;
       }
@@ -212,6 +225,7 @@ function newFunction() {
   return `
   extend type Query {
     showBookings(id: ID): [Booking]
+    showUserBookings(user_id: ID!): [Booking]
     deleteBookings: String
   }
 

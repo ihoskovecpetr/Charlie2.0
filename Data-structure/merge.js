@@ -1,18 +1,25 @@
 const Event = require("../Models-Mongo/Event");
 const User = require("../Models-Mongo/User");
 
-const transformEvent = (event, success, areYourAuthor) => {
-  console.log("transformEvent FCE");
+const transformEvent = async (event, success, areYourAuthor) => {
+  console.log(
+    "transformEvent FCE _dot.dateS",
+    new Date(event._doc.dateStart).toISOString()
+  );
+  //if (event) {
   return {
     ...event._doc,
     _id: event.id,
     dateStart: new Date(event._doc.dateStart).toISOString(),
-    dateEnd: event._doc.dateStart,
-    //creator: userLookup.bind(this, event._doc.creator)
+    author: await userLookup(event._doc.author),
     freeSnack: true,
     success: true,
     areYourAuthor: areYourAuthor
   };
+  // } else {
+  //   console.log("NULL ODMITNUTO");
+  //   return null;
+  // }
 };
 
 const eventsLookup = async eventIds => {
@@ -29,7 +36,9 @@ const eventsLookup = async eventIds => {
 const singleEvent = async eventId => {
   try {
     const event = await Event.findById(eventId);
-    return transformEvent(event);
+    console.log("SINGLE EV: ", event);
+    return await transformEvent(event);
+    return { ...event[0]._doc, dateStart: "2019" };
   } catch (err) {
     throw err;
   }
@@ -38,15 +47,19 @@ const singleEvent = async eventId => {
 const userLookup = async userId => {
   try {
     const userLookupResult = await User.findById(userId);
-    console.log("Users created events:", userLookupResult._doc.createdEvents);
-    return {
-      ...userLookupResult._doc,
-      password: null,
-      createdEvents: eventsLookup.bind(
-        this,
-        userLookupResult._doc.createdEvents
-      )
-    };
+    if (userLookupResult) {
+      console.log("userLookup: XX", userLookupResult._doc);
+      return {
+        ...userLookupResult._doc,
+        password: null
+        // createdEvents: eventsLookup.bind(
+        //   this,
+        //   userLookupResult._doc.createdEvents
+        // )
+      };
+    } else {
+      return null;
+    }
   } catch (err) {
     throw err;
   }

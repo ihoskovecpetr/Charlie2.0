@@ -42,7 +42,7 @@ function SignIn(props) {
   return (
     //<Container component="main" maxWidth="xs" className={classes.container}>
     <ModalLayout>
-       <Paper className={classes.paper}>
+      <Paper className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -67,11 +67,6 @@ function SignIn(props) {
             <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
           </Grid>
@@ -107,7 +102,7 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
-  },
+  }
 }));
 
 function Copyright() {

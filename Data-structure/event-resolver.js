@@ -76,9 +76,13 @@ export const resolvers = {
     },
     userEvents: async (_, _args, __) => {
       try {
-        const usersEvents = Event.find({ author: _args.user_id });
-        if (usersEvents) {
-          return usersEvents;
+        const userEvents = await Event.find({ author: _args.user_id });
+        if (userEvents) {
+          return userEvents.map(event => {
+            //let result = await transformEvent(event);
+            //console.log("RESOLVR LEVL: ", result);
+            return transformEvent(event);
+          });
         } else {
           return [{ success: false }];
         }
