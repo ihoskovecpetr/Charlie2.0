@@ -1,21 +1,26 @@
 import Event from "../Models-Mongo/Event.js";
 import User from "../Models-Mongo/User.js";
 import Booking from "../Models-Mongo/Booking.js";
-import { userLookup, singleEvent } from "./merge";
+import {
+  userLookup,
+  singleEvent,
+  //transformBooking,
+  transformEvent
+} from "./merge";
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const hbs = require("nodemailer-express-handlebars");
 
-const transformBooking = async booking => {
-  console.log("transformBooking: ", booking._doc);
-  return {
-    ...booking._doc,
-    user: await userLookup(booking._doc.user),
-    event: await singleEvent(booking._doc.event),
-    createdAt: new Date(booking._doc.createdAt).toISOString(),
-    updatedAt: new Date(booking._doc.updatedAt).toISOString()
-  };
-};
+// const transformBooking = async booking => {
+//   console.log("transformBooking: ", booking._doc);
+//   return {
+//     ...booking._doc,
+//     user: await userLookup(booking._doc.user),
+//     event: await singleEvent(booking._doc.event),
+//     createdAt: new Date(booking._doc.createdAt).toISOString(),
+//     updatedAt: new Date(booking._doc.updatedAt).toISOString()
+//   };
+// };
 
 const OAuth2 = google.auth.OAuth2;
 
@@ -60,10 +65,10 @@ export const resolvers = {
       try {
         let bookings = await Booking.find({ user: _args.user_id });
         console.log("ShowBookings: ", bookings);
-
-        return await bookings.map(async booking => {
-          return await transformBooking(booking);
-        });
+        return bookings;
+        // return await bookings.map(async booking => {
+        //   return await transformBooking(booking);
+        // });
       } catch (err) {
         throw err;
       }
@@ -205,7 +210,7 @@ export const resolvers = {
     event: async a => {
       try {
         const event = await Event.findById(a.event);
-        return event;
+        return transformEvent(event);
       } catch (err) {
         throw err;
       }

@@ -108,11 +108,19 @@ function EventButtons(props) {
   {
     if (eventIsPast) {
       console.log("PASSSt: ", eventIsPast);
+      console.log("userIsAttending: ", userIsAttending);
       return (
         <Grid item>
-          <Button variant="contained" color="secondary">
-            Past Event
-          </Button>
+          {userIsAttending ? (
+            <Button variant="contained" color="secondary">
+              Past Event, You can rate
+            </Button>
+          ) : (
+            <Button variant="contained" color="secondary">
+              Past Event
+            </Button>
+          )}
+
           {props.data && props.data.getOneEvent.areYouAuthor && (
             <Button variant="contained" color="secondary">
               Yours

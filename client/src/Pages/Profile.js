@@ -207,7 +207,14 @@ function Profile() {
             variant="fullWidth"
             aria-label="full width tabs example"
           >
-            <Tab label="ATTENDING" {...a11yProps(0)} />
+            <Tab
+              label={
+                bookingStates.data && bookingStates.data.showUserBookings
+                  ? `ATTENDING (${bookingStates.data.showUserBookings.length})`
+                  : "ATTENDING"
+              }
+              {...a11yProps(0)}
+            />
             <Tab
               label={
                 data && data.userEvents

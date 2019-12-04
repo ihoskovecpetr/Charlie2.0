@@ -6,21 +6,32 @@ const transformEvent = async (event, success, areYourAuthor) => {
     "transformEvent FCE _dot.dateS",
     new Date(event._doc.dateStart).toISOString()
   );
-  //if (event) {
-  return {
-    ...event._doc,
-    _id: event.id,
-    dateStart: new Date(event._doc.dateStart).toISOString(),
-    author: await userLookup(event._doc.author),
-    freeSnack: true,
-    success: true,
-    areYourAuthor: areYourAuthor
-  };
-  // } else {
-  //   console.log("NULL ODMITNUTO");
-  //   return null;
-  // }
+  if (event) {
+    return {
+      ...event._doc,
+      _id: event.id,
+      dateStart: new Date(event._doc.dateStart).toISOString(),
+      author: await userLookup(event._doc.author),
+      freeSnack: true,
+      success: true,
+      areYourAuthor: areYourAuthor
+    };
+  } else {
+    console.log("NULL ODMITNUTO");
+    return null;
+  }
 };
+
+// const transformBooking = async booking => {
+//   console.log("transformBooking: ", booking._doc);
+//   return {
+//     ...booking._doc,
+//     user: await userLookup(booking._doc.user),
+//     event: await singleEvent(booking._doc.event),
+//     createdAt: new Date(booking._doc.createdAt).toISOString(),
+//     updatedAt: new Date(booking._doc.updatedAt).toISOString()
+//   };
+// };
 
 const eventsLookup = async eventIds => {
   try {
@@ -36,9 +47,9 @@ const eventsLookup = async eventIds => {
 const singleEvent = async eventId => {
   try {
     const event = await Event.findById(eventId);
-    console.log("SINGLE EV: ", event);
-    return await transformEvent(event);
-    return { ...event[0]._doc, dateStart: "2019" };
+    console.log("SINGLE EV ... : ", { ...event._doc, dateStart: "2019-09-18" });
+    //return transformEvent(event);
+    return { ...event._doc, dateStart: "2019-09-18" };
   } catch (err) {
     throw err;
   }
@@ -69,3 +80,4 @@ exports.userLookup = userLookup;
 //exports.eventsLookup = eventsLookup;
 exports.singleEvent = singleEvent;
 exports.transformEvent = transformEvent;
+//exports.transformBooking = transformBooking;
