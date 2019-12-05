@@ -26,6 +26,7 @@ import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
 import ModalLayout from "../Layouts/ModalLayout";
+import Copyright from "../Atoms/copyright"
 import Dropzone from "../Molecules/dropzone";
 import Spinner from "../Atoms/Spinner";
 import Map from "../Atoms/Hook-map";
@@ -313,17 +314,5 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Charlie Party
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 export default Create;

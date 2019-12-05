@@ -1,10 +1,10 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
 import CardMedia from "@material-ui/core/CardMedia";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -12,6 +12,14 @@ import IconButton from "@material-ui/core/IconButton";
 import ExploreIcon from "@material-ui/icons/Explore";
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew';
 import { withTheme } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core/styles";
+
+import { NavLink } from "react-router-dom";
+
+import Copyright from "../Atoms/copyright"
+import SocialLine from "../Atoms/social-line"
+
+
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -25,6 +33,11 @@ const useStyles = makeStyles(theme => ({
   },
   media: {
     height: 0,
+    paddingTop: "56.25%" // 16:9
+  },
+  cardMediaBottom: {
+    width: '100%',
+    height: 200,
     paddingTop: "56.25%" // 16:9
   },
   center: {
@@ -56,9 +69,18 @@ const useStyles = makeStyles(theme => ({
     background: theme.palette.darkGrey,
     color: "white",
   },
+  pinkContainer:{
+    //ackground: theme.palette.charliePink,
+    //color: "white",
+  },
   defaultHeader: { 
     color: theme.palette.charliePink,
     fontWeight: 300
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(0),
+    marginBottom: theme.spacing(5)
   },
   
 }));
@@ -128,7 +150,7 @@ export default function Menu(props) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item justify="center" alignItems="center">
+        <Grid item>
           <Typography variant="h6" component="h6" className={classes.text}>
             “Have you ever seen house on the beach or flat in a skyscraper and
             wonder how would it be to enjoy a drink in there?”
@@ -259,7 +281,7 @@ export default function Menu(props) {
                 <AccessibilityNewIcon fontSize="large" />
               </IconButton>
           </Grid>
-          <Grid item>
+          <Grid item justify="center" alignItems="center">
               <Typography
                 variant="subtitle2" gutterBottom
               >
@@ -278,19 +300,121 @@ export default function Menu(props) {
           </Grid>
       </Grid>
 
-        {props.ListOfUrls.map((item, index) => (
-          <NavLink to={`/${item}`} key={index}>
-            <Paper className={classes.root}>
-              <Typography variant="h5" component="h3">
-                {props.ListOfNames[index]}
+      <Grid item>
+          <Typography
+            variant="h6"
+            component="h6"
+            className={classes.defaultHeader}
+          >
+            <b>CONTACT</b> US
+          </Typography>
+            </Grid>
+            <Grid container  className={classes.pinkContainer}>
+          <form className={classes.form} noValidate>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            //color="secondary"
+            id="email"
+            //inputRef={inputName}
+            label="Your Email"
+            name="email"
+            autoComplete="email"
+            autoFocus
+          />
+            <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            multiline
+            rows="5"
+            //color="secondary"
+            id="question"
+            //inputRef={inputName}
+            label="Your Question"
+            name="question"
+            autoComplete="text"
+            autoFocus
+          />
+                    <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            //onClick={e => onSubmit(e)}
+          >
+            Send
+          </Button>
+          </form>
+          <Grid container justify="center" alignItems="center" direction="column">
+          <Grid item>
+            <Typography
+              variant="body2"
+            >
+              GET IN TOUCH
+            </Typography>
+          </Grid>
+            
+              <Grid item>
+              <Typography
+                variant="body2"
+              >
+                Sydney NSW, Australia
               </Typography>
-              <Typography component="p">
-                Paper can be used to build surface or other elements for your
-                application.
+              </Grid>
+              <Grid item>
+              <Typography
+                variant="body2"
+              >
+                charliepartyapp@gmail.com
               </Typography>
-            </Paper>
-          </NavLink>
-        ))}
+              </Grid>
+              <Grid item>
+              <Typography
+                variant="body2"
+              >
+                0435-388-698
+              </Typography>
+              </Grid>
+              <SocialLine color="secondary" />
+              
+              <CardMedia
+            className={classes.cardMediaBottom}
+            image="https://res.cloudinary.com/party-images-app/image/upload/v1559960064/uvic6vretl0zabrk570z.png"
+            title="Paella dish"
+          />
+         <SocialLine color="secondary" />
+         <Grid item>
+              <NavLink to={`/privacy-policy`}>
+                <Grid item>
+                <Typography
+                variant="subtitle2"
+              >
+                PRIVACY POLICY
+              </Typography>
+                </Grid>
+              </NavLink>
+              </Grid>
+              <Grid item>
+              <NavLink to={`/faq`}>
+                <Grid item>
+                <Typography
+                variant="subtitle2"
+              >
+                F.A.Q.
+              </Typography>
+                </Grid>
+              </NavLink>
+              </Grid>
+            </Grid>
+          </Grid>
+            <Box mt={8}>
+              <Copyright />
+            </Box>
       </Container>
     </>
   );
