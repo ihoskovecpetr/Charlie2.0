@@ -25,7 +25,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import gql from "graphql-tag";
 import { useQuery, useApolloClient } from "@apollo/react-hooks";
 
-import UpperStripe from "./Atoms/upper-stripe";
+import UpperStripe from "./Atoms/Upper-stripe";
 
 import { UserContext } from "./userContext";
 import Menu from "./Pages/Menu";

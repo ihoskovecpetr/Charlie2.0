@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import { withRouter, NavLink } from "react-router-dom";
 import gql from "graphql-tag";
 import ModalJoin from "./event/modal-join";
+import ModalRate from "./event/modal-rate";
 
 const ALL_EVENTS = gql`
   query eventGeoDay(
@@ -111,12 +112,9 @@ function EventButtons(props) {
       console.log("userIsAttending: ", userIsAttending);
       return (
         <Grid item>
-          {userIsAttending ? (
-            <Button variant="contained" color="secondary">
-              Past Event, You can rate
-            </Button>
-          ) : (
-            <Button variant="contained" color="secondary">
+          <ModalRate event={props.data.getOneEvent} user={props.user} />
+          {userIsAttending ? null : (
+            <Button variant="contained" color="secondary" c>
               Past Event
             </Button>
           )}

@@ -91,7 +91,7 @@ export const resolvers = {
         if (existingBooking) {
           const result = await Booking.update(
             { event: _args.event_id, user: _args.user_id },
-            { $set: { cancelled: false } }
+            { $set: { cancelled: false, message: _args.message } }
           );
 
           if (result.ok) {
@@ -103,6 +103,7 @@ export const resolvers = {
           const booking = new Booking({
             user: _args.user_id,
             event: fetchedEvent,
+            message: _args.message,
             confirmed: true,
             cancelled: false
           });
@@ -236,7 +237,7 @@ function newFunction() {
 
   extend type Mutation {
     requestBookEvent(event_id: String!, guest_id: String!, guest_name: String!, message: String!): Hlaska!
-    bookEvent(event_id: String!, user_id: String!): Hlaska!
+    bookEvent(event_id: String!, user_id: String!, message: String): Hlaska!
     cancelBooking(event_id: String!, user_id: String!): Hlaska!
   }
 

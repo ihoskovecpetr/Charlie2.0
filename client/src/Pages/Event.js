@@ -29,6 +29,7 @@ const ONE_EVENT = gql`
       message
       name
       author {
+        _id
         name
         picture
       }

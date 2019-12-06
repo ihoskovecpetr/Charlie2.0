@@ -11,6 +11,10 @@ import {
   typeDef as Booking,
   resolvers as bookingResolvers
 } from "./Data-structure/booking-resolver.js";
+import {
+  typeDef as Rating,
+  resolvers as ratingResolvers
+} from "./Data-structure/rating-resolver.js";
 // If you had Query fields not associated with a
 // specific type you could put them here
 console.log("Schema hitted");
@@ -42,10 +46,11 @@ const resolversLoc = {
   }
 };
 
-export const typeDefs = [Query, Mutation, User, Event, Booking];
+export const typeDefs = [Query, Mutation, User, Event, Booking, Rating];
 export const resolvers = merge(
   resolversLoc,
   userResolvers,
   eventResolvers,
-  bookingResolvers
+  bookingResolvers,
+  ratingResolvers
 );

@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TransitionsModal(props) {
+export default function ModalJoin(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState("Hi, please let me in");
