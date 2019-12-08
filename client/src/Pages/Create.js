@@ -1,18 +1,20 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
+import CssBaseline from "@material-ui/core/CssBaseline";
+
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Switch from "@material-ui/core/Switch";
 import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -26,7 +28,7 @@ import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
 import ModalLayout from "../Layouts/ModalLayout";
-import Copyright from "../Atoms/copyright"
+import Copyright from "../Atoms/copyright";
 import Dropzone from "../Molecules/dropzone";
 import Spinner from "../Atoms/Spinner";
 import Map from "../Atoms/Hook-map";
@@ -75,15 +77,18 @@ function Create(props) {
   const [customMapParam, setCustomMapParam] = useState();
   const [createEvent, { loading, error, data }] = useMutation(NEW_EVENT);
   console.log("Data from Create Event: ", data);
-  const [selectedDate, setSelectedDate] = useState(
-    new Date("2014-08-18T21:11:54")
-  );
+  const [selectedDate, setSelectedDate] = useState(new Date());
   //const [capacityMax, setCapacityMax] = useState(10);
   const [formValue, setFormValue] = useState({
     startDate: "1990",
     description: "Yatim nic",
     price: 22
   });
+
+  useEffect(() => {
+    console.log("Only first mount OF CREATE");
+    window.scrollTo(0, 0);
+  }, []);
 
   const inputName = useRef(null);
   const inputDate = useRef(null);
@@ -112,7 +117,7 @@ function Create(props) {
         address: customMapParam.address,
         author: user._id,
         eventType: 1,
-        dateStart: inputDate.current.value,
+        dateStart: selectedDate, //inputDate.current.value,
         dateEnd: "1999-11-10",
         price: parseInt(inputPrice.current.value),
         capacityMax: parseInt(inputCapacityMax.current.value),
@@ -164,11 +169,11 @@ function Create(props) {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" className={classes.profileContainer}>
       <CssBaseline />
-      <div className={classes.paper}>
+      <Paper className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
+          <AddCircleOutlineIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Create Party
@@ -197,8 +202,9 @@ function Create(props) {
               margin="normal"
               id="date-picker-dialog"
               inputRef={inputDate}
-              label="Date picker dialog"
-              format="MM/dd/yyyy"
+              label="Choose date"
+              format="dd/MM/yyyy"
+              value={selectedDate}
               onChange={e => {
                 handleDateChange(e);
               }}
@@ -281,7 +287,7 @@ function Create(props) {
             Create Party
           </Button>
         </form>
-      </div>
+      </Paper>
       <Box mt={8}>
         <Copyright />
       </Box>
@@ -290,16 +296,30 @@ function Create(props) {
 }
 
 const useStyles = makeStyles(theme => ({
-  "@global": {
-    body: {
-      backgroundColor: theme.palette.common.white
-    }
-  },
-  paper: {
-    marginTop: theme.spacing(8),
+  profileContainer: {
+    position: "absolute",
+    top: 0,
+    minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    background:
+      "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
+  },
+  // paper: {
+  //   marginTop: theme.spacing(8),
+  //   display: "flex",
+  //   flexDirection: "column",
+  //   alignItems: "center"
+  // },
+  paper: {
+    marginTop: theme.spacing(8),
+    padding: 10,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    maxWidth: 500,
+    background: "rgba(255,255,255,0.5)"
   },
   avatar: {
     margin: theme.spacing(1),
@@ -313,6 +333,5 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   }
 }));
-
 
 export default Create;

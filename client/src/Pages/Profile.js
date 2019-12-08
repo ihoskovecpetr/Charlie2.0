@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
-import SwipeableViews from "react-swipeable-views";
+import Container from "@material-ui/core/Container";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -17,15 +17,18 @@ import Paper from "@material-ui/core/Paper";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+
+import SwipeableViews from "react-swipeable-views";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { useHistory } from "react-router-dom";
+import { useHistory, NavLink } from "react-router-dom";
 
+import Copyright from "../Atoms/copyright";
 import { UserContext } from "../userContext";
 import Spinner from "../Atoms/Spinner";
 import EventCard from "../Molecules/event-card";
-import Copyright from "../Atoms/copyright";
+import RatingCard from "../Molecules/rating-card";
 
 const USER_EVENTS = gql`
   query userEvents($user_id: ID!) {
@@ -76,6 +79,21 @@ const USER_BOOKING = gql`
     }
   }
 `;
+
+const HOST_RATINGS = gql`
+  query showRatings($host_id: ID!) {
+    showRatings(host_id: $host_id) {
+      guest {
+        picture
+        name
+      }
+      message
+      ratingValue
+      createdAt
+    }
+  }
+`;
+
 // function tryLogin() {
 //   console.log("Mutation data: ", data);
 // }
@@ -118,12 +136,8 @@ const useStyles = makeStyles(theme => ({
   appBar: {
     zIndex: 1
   },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
+  buttonNavi: {
+    marginBottom: 10
   }
 }));
 
@@ -169,6 +183,10 @@ function Profile() {
     variables: { user_id: user._id }
   });
 
+  const ratingStates = useQuery(HOST_RATINGS, {
+    variables: { host_id: user._id }
+  });
+
   //const { loadingB, errorB, dataB } = bookingStates;
 
   //const [newUser, { loading, error, data }] = useMutation(NEW_USER);
@@ -195,7 +213,12 @@ function Profile() {
         <Typography component="h1" variant="h5">
           {user.name}
         </Typography>
-
+        <Button color="inherit" className={classes.buttonNavi}>
+          <NavLink to={`/signout`}>
+            <Typography variant="subtitle2">Sign out</Typography>
+            <ExitToAppIcon fontSize="medium" />
+          </NavLink>
+        </Button>
         {/* </Paper>
       <Paper className={classes.paper}> */}
         <AppBar position="static" color="default" className={classes.appBar}>
@@ -224,7 +247,14 @@ function Profile() {
               {...a11yProps(1)}
             />
 
-            <Tab label="RATING" {...a11yProps(2)} />
+            <Tab
+              label={
+                ratingStates.data && ratingStates.data.showRatings
+                  ? `RATINGS (${ratingStates.data.showRatings.length})`
+                  : "RATINGS"
+              }
+              {...a11yProps(2)}
+            />
           </Tabs>
         </AppBar>
         <SwipeableViews
@@ -248,6 +278,12 @@ function Profile() {
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
             Item Three
+            {ratingStates.loading && <Spinner />}
+            {ratingStates.data &&
+              ratingStates.data.showRatings &&
+              ratingStates.data.showRatings.map((rating, index) => (
+                <RatingCard rating={rating} key={index} />
+              ))}
           </TabPanel>
         </SwipeableViews>
       </Paper>

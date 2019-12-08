@@ -14,8 +14,20 @@ export const resolvers = {
     showRatings: async (_, _args, __) => {
       try {
         console.log("ShowBookings args: ", _args.event_id);
-        let ratings = await Rating.find({ event: _args.event_id });
-        console.log("showRatings: ", ratings);
+        let ratings;
+        if (_args.event_id) {
+          ratings = await Rating.find({ event: _args.event_id });
+        } else if (_args.host_id) {
+          ratings = await Rating.find({ host: _args.host_id });
+        }
+        console.log("showRatings found: ", ratings);
+        return ratings.map(rating => {
+          return {
+            ...rating._doc,
+            createdAt: new Date(rating._doc.createdAt).toISOString(),
+            success: true
+          };
+        });
         return ratings;
       } catch (err) {
         throw err;
@@ -46,36 +58,38 @@ export const resolvers = {
         const result = await rating.save();
 
         console.log("rating.save() result: ", result);
-        return result;
+        return { ...result._doc, success: true };
       } catch (err) {
         throw err;
       }
     }
   },
   Rating: {
-    // event: async a => {
-    //   try {
-    //     const event = await Event.findById(a.event);
-    //     return transformEvent(event);
-    //   } catch (err) {
-    //     throw err;
-    //   }
-    // },
-    // host: async a => {
-    //   try {
-    //     const user = await User.findById(a.user);
-    //     return user;
-    //   } catch (err) {
-    //     throw err;
-    //   }
-    // }
+    event: async a => {
+      try {
+        const event = await Event.findById(a.event);
+        return transformEvent(event);
+      } catch (err) {
+        throw err;
+      }
+    },
+    guest: async (a, b, c) => {
+      try {
+        console.log("RATING guest:: ", a.guest);
+        const user = await User.findById(a.guest);
+        console.log("RATING guest:: ", user);
+        return user;
+      } catch (err) {
+        throw err;
+      }
+    }
   }
 };
 
 function newFunction() {
   return `
   extend type Query {
-    showRatings(event_id: ID): [Rating]
+    showRatings(event_id: ID, host_id: ID): [Rating]
     deleteRatings: String
   }
 
@@ -84,11 +98,13 @@ function newFunction() {
   }
 
   type Rating { 
-    event: ID!
+    event: Event!
     host: ID!
-    guest: ID!
+    guest: User!
     ratingValue: Int
     message: String
+    createdAt: String
+    success: Boolean
   }
 `;
 }

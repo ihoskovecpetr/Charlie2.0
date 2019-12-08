@@ -19,7 +19,9 @@ import { displayDate } from "../Services/transform-services";
 import { UserContext } from "../userContext";
 import ModalLayout from "../Layouts/ModalLayout";
 import EventButtons from "../Molecules/event-buttons";
+import RatingCard from "../Molecules/rating-card";
 import Spinner from "../Atoms/Spinner";
+import PendingGuest from "../Molecules/event/pending-guest";
 
 const ONE_EVENT = gql`
   query getOneEvent($id: ID!) {
@@ -70,6 +72,20 @@ const ONE_EVENT = gql`
   }
 `;
 
+const EVENT_RATINGS = gql`
+  query showRatings($event_id: ID!) {
+    showRatings(event_id: $event_id) {
+      guest {
+        picture
+        name
+      }
+      message
+      ratingValue
+      createdAt
+    }
+  }
+`;
+
 const BOOKING = gql`
   mutation bookEvent($user_id: String!, $event_id: String!) {
     bookEvent(user_id: $user_id, event_id: $event_id) {
@@ -78,24 +94,6 @@ const BOOKING = gql`
   }
 `;
 
-const BOOKING_REQ = gql`
-  mutation requestBookEvent(
-    $event_id: String!
-    $guest_id: String!
-    $guest_name: String!
-    $message: String!
-  ) {
-    requestBookEvent(
-      event_id: $event_id
-      guest_id: $guest_id
-      guest_name: $guest_name
-      message: $message
-    ) {
-      success
-      message
-    }
-  }
-`;
 const CANCELLING = gql`
   mutation cancelBooking($user_id: String!, $event_id: String!) {
     cancelBooking(user_id: $user_id, event_id: $event_id) {
@@ -171,11 +169,16 @@ function Event(props) {
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
   const [createBooking, bookingStates] = useMutation(BOOKING);
-  const [createReqBooking, bookingReqStates] = useMutation(BOOKING_REQ);
+  //const [createReqBooking, bookingReqStates] = useMutation(BOOKING_REQ);
   const [cancelBooking, cancelledState] = useMutation(CANCELLING);
   const [deleteOneEvent, deleteState] = useMutation(DELETE);
   const { loading, error, data, refetch } = useQuery(ONE_EVENT, {
     variables: { id: props.match.params.id }
+    //skip: !id,
+    //pollInterval: 500
+  });
+  const ratings = useQuery(EVENT_RATINGS, {
+    variables: { event_id: props.match.params.id }
     //skip: !id,
     //pollInterval: 500
   });
@@ -242,12 +245,20 @@ function Event(props) {
   // }
 
   console.log("DATA EVENT jsou tady: ", dataDB);
+  console.log("RATING data: ", ratings.data);
 
   if (dataDB && dataDB.getOneEvent.success) {
     return (
       <ModalLayout>
         <PaperEvent>
-          <Grid container alignItems="flex-start" direction="row" spacing={2}>
+          <Grid
+            container
+            justify="flex-start"
+            alignItems="flex-start"
+            alignContent="flex-start"
+            direction="column"
+            spacing={2}
+          >
             <Grid item xs>
               <Button
                 variant="contained"
@@ -261,7 +272,7 @@ function Event(props) {
               </Button>
             </Grid>
           </Grid>
-          <Grid container justify="center">
+          <Grid container justify="flex-start">
             <Grid item className={classes.nameGrid} md={12}>
               <Box textAlign="center" m={1}>
                 <Typography component="div">
@@ -276,8 +287,11 @@ function Event(props) {
               {dataDB.getOneEvent.description}
             </Box>
           </Grid>
+
+          <Typography component="div" className={classes.standardHeading}>
+            Gallery
+          </Typography>
           <Grid item className={classes.galleryGrid}>
-            <Typography component="div">Gallery</Typography>
             <Gallery
               images={dataDB.getOneEvent.imagesArr}
               rowHeight={100}
@@ -285,27 +299,35 @@ function Event(props) {
               backdropClosesModal={true}
             />
           </Grid>
+          <Typography component="div" className={classes.standardHeading}>
+            Date
+          </Typography>
           <Grid item>
-            <Typography component="div">Date</Typography>
             <Box textAlign="left" m={1}>
               {dataDB.getOneEvent.dateStart &&
                 displayDate(dataDB.getOneEvent.dateStart)}
             </Box>
           </Grid>
+          <Typography component="div" className={classes.standardHeading}>
+            Price:
+          </Typography>
           <Grid item>
-            <Typography component="div">Price:</Typography>
             <Box textAlign="left" m={1}>
               {dataDB.getOneEvent.price}
             </Box>
           </Grid>
           <Grid item>
-            <Typography component="div">BYO:</Typography>
+            <Typography component="div" className={classes.standardHeading}>
+              BYO
+            </Typography>
             <Box textAlign="left" m={1}>
               {dataDB.getOneEvent.BYO ? "YES" : "NO"}
             </Box>
           </Grid>
           <Grid item>
-            <Typography component="div">Confirmed guests:</Typography>
+            <Typography component="div" className={classes.standardHeading}>
+              Confirmed guests:
+            </Typography>
             <Box textAlign="left" m={1}>
               <Grid container direction="row">
                 {dataDB.showBookings.map(booking => {
@@ -323,28 +345,39 @@ function Event(props) {
             </Box>
           </Grid>
           <Grid item>
-            <Typography component="div">Pending Guests:</Typography>
-            <Box textAlign="left" m={1}>
-              <Grid container direction="row">
-                {dataDB.showBookings.map(booking => {
-                  if (!booking.confirmed && !booking.cancelled) {
-                    return (
-                      <Grid item>
-                        <Avatar alt="Remy Sharp" src={booking.user.picture} />
-                        <Typography component="div">
-                          {booking.message}
-                        </Typography>
-                      </Grid>
-                    );
-                  }
-                  return null;
-                })}
-              </Grid>
-              {bookingStates.loading && <Spinner />}
-            </Box>
+            {dataDB.getOneEvent.areYouAuthor && (
+              <>
+                <Typography component="div" className={classes.standardHeading}>
+                  Pending Guests:
+                </Typography>
+                <Grid container className={classes.guestsContainer}>
+                  <Box textAlign="left" m={1}>
+                    <Grid container direction="row">
+                      {dataDB.showBookings.map(booking => {
+                        if (!booking.confirmed && !booking.cancelled) {
+                          return (
+                            <Grid item>
+                              <PendingGuest
+                                booking={booking}
+                                refetch={refetch}
+                                event={dataDB.getOneEvent}
+                              />
+                            </Grid>
+                          );
+                        }
+                        return null;
+                      })}
+                    </Grid>
+                    {bookingStates.loading && <Spinner />}
+                  </Box>
+                </Grid>
+              </>
+            )}
           </Grid>
+          <Typography component="div" className={classes.standardHeading}>
+            Host
+          </Typography>
           <Grid item>
-            <Typography component="div">Host:</Typography>
             <Box textAlign="left" m={1}>
               {dataDB.getOneEvent.author.name}
             </Box>
@@ -355,16 +388,33 @@ function Event(props) {
               {dataDB.getOneEvent.address}
             </Box>
           </Grid>
+          <Grid item>
+            <Grid
+              container
+              direction="row"
+              wrap="no-wrap"
+              spacing={2}
+              className={classes.ratingContainer}
+            >
+              {ratings.data &&
+                ratings.data.showRatings.map((rating, index) => (
+                  <Grid item>
+                    <RatingCard rating={rating} key={index} />
+                  </Grid>
+                ))}
+            </Grid>
+          </Grid>
 
           <EventButtons
             data={dataDB}
             user={user}
             createBooking={createBooking}
             cancelBooking={cancelBooking}
-            createReqBooking={createReqBooking}
             deleteOneEvent={deleteOneEvent}
             match={props.match.params.id}
             ONE_EVENT={ONE_EVENT}
+            EVENT_RATINGS={EVENT_RATINGS}
+            className={classes.eventButtons}
           />
         </PaperEvent>
       </ModalLayout>
@@ -409,8 +459,8 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    maxWidth: 500,
-    minWidth: 300,
+    maxWidth: 380,
+    minWidth: 250,
     maxHeight: "80vh",
     overflow: "scroll"
   },
@@ -426,6 +476,23 @@ const useStyles = makeStyles(theme => ({
     background: "rgba(255,255,255,0.2)",
     borderRadius: 4,
     padding: theme.spacing(3, 2)
+  },
+  standardHeading: {
+    borderBottom: "solid 1px grey"
+  },
+  guestsContainer: {
+    background: "rgba(255,255,255,0.2)",
+    borderRadius: 4,
+    padding: theme.spacing(3, 2)
+  },
+  ratingContainer: {
+    width: "100%",
+    maxHeight: 200,
+    overflow: "scroll"
+  },
+  eventButtons: {
+    position: "absolute",
+    bottom: 0
   }
 }));
 

@@ -11,12 +11,16 @@ import PropTypes from "prop-types";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
+import Avatar from "@material-ui/core/Avatar";
+
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import ExploreIcon from "@material-ui/icons/Explore";
+import SubjectIcon from "@material-ui/icons/Subject";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -36,6 +40,7 @@ import Create from "./Pages/Create";
 import MapPage from "./Pages/MapPage";
 import Event from "./Pages/Event";
 import Profile from "./Pages/Profile";
+import About from "./Pages/About";
 
 const drawerWidth = 240;
 let prevLocation;
@@ -102,26 +107,27 @@ function App(props) {
   }, []);
 
   const ListOfUrls = user.success
-    ? ["", "signout", "create", "map", "profile"]
-    : ["", "signin", "create", "map", "signup"];
+    ? ["", "create", "map", "about", "profile", "signout"]
+    : ["", "create", "map", "about", "signup", "signin"];
   const ListOfNames = user.success
-    ? ["Charlie", "SignOut", "Create", "Map"]
-    : ["Charlie", "Sign In", "Create", "Map"];
+    ? ["Charlie", "Create", "Map", "About"]
+    : ["Charlie", "Create", "Map", "About"];
   const ListOfComponents = user.success
     ? [
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
-        <SignOut />,
         <Create />, //create
         <MapPage />, //Map
-        <Profile />
+        <About />,
+        <Profile />,
+        <SignOut />
       ]
     : [
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
-        <SignIn />,
         <Create />,
         <MapPage />,
+        <About />,
         <SignUp />,
-        <Event />
+        <SignIn />
       ];
   const drawer = (
     <div>
@@ -129,11 +135,40 @@ function App(props) {
       <Divider />
       <List>
         {ListOfNames.map((text, index) => (
-          <NavLink to={`/${ListOfUrls[index]}`} key={index}>
+          <NavLink
+            to={`/${ListOfUrls[index]}`}
+            key={index}
+            onClick={() => {
+              handleDrawerToggle();
+            }}
+          >
             <ListItem button key={text}>
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                {index === 0 && (
+                  <Avatar
+                    className={classes.avatarCharlie}
+                    alt="Remy Sharp"
+                    src="https://res.cloudinary.com/party-images-app/image/upload/v1557794256/ojkgl1hkiljwij69njbb.png"
+                  />
+                )}
+
+                {index === 1 && (
+                  <Avatar className={classes.avatar}>
+                    <AddCircleOutlineIcon fontSize="medium" />
+                  </Avatar>
+                )}
+                {index === 2 && (
+                  <Avatar className={classes.avatar}>
+                    <ExploreIcon />
+                  </Avatar>
+                )}
+                {index === 3 && (
+                  <Avatar className={classes.avatar}>
+                    <SubjectIcon />
+                  </Avatar>
+                )}
               </ListItemIcon>
+
               <ListItemText primary={text} />
             </ListItem>
           </NavLink>
@@ -340,6 +375,29 @@ function App(props) {
                     )}
                   />
                 ))}
+                <Route
+                  path={`/`}
+                  key={"xc"}
+                  render={() => (
+                    <>
+                      <UpperStripe
+                        userApp={user}
+                        ListOfNames={ListOfNames}
+                        ListOfUrls={ListOfUrls}
+                        handleDrawerToggle={handleDrawerToggle}
+                        drawerWidth={drawerWidth}
+                      />
+                      <main className={classes.content}>
+                        <div className={classes.toolbar} />
+                        <Menu
+                          ListOfNames={ListOfNames}
+                          ListOfUrls={ListOfUrls}
+                        />
+                        ,
+                      </main>
+                    </>
+                  )}
+                />
               </Switch>
             </>
           )}
@@ -367,6 +425,26 @@ function App(props) {
                   )}
                 />
               ))}
+              <Route
+                path={`/`}
+                key={"xc"}
+                render={() => (
+                  <>
+                    <UpperStripe
+                      userApp={user}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />
+                      ,
+                    </main>
+                  </>
+                )}
+              />
             </Switch>
           )}
         </UserContext.Provider>
@@ -395,7 +473,16 @@ const useStyles = makeStyles(theme => ({
       flexShrink: 0
     }
   },
-
+  avatarCharlie: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+    width: 40,
+    height: 40
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main
+  },
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth

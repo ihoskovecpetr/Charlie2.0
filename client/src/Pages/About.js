@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
   button: {
     width: 100,
     margin: 10,
-    fontWeight: '700 !important'
+    fontWeight: "700 !important"
   },
   text: {
     height: 0,
@@ -227,76 +227,6 @@ export default function Menu(props) {
           </Grid>
         </Grid>
 
-        <Grid container>
-          <Grid item>
-            <Typography
-              variant="h5"
-              component="h5"
-              className={classes.defaultHeader}
-            >
-              SUMMMARY OF <b>KEY FEATURES</b>
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <Grid container className={classes.blackContainer}>
-          <Grid item>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={props.handleDrawerToggle}
-              className={classes.menuButton}
-            >
-              <ExploreIcon fontSize="large" />
-            </IconButton>
-          </Grid>
-          <Grid item>
-            <Typography variant="subtitle2" gutterBottom>
-              DISCOVER
-            </Typography>
-            <Typography variant="subtitle2" gutterBottom>
-              Find your favourite event in Sydney and enjoy evening
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <ul>
-                <li>JOIN event</li>
-                <li>Bring your own drinks</li>
-                <li>ENJOY evening</li>
-              </ul>
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <Grid container className={classes.blackContainer}>
-          <Grid item>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={props.handleDrawerToggle}
-              className={classes.menuButton}
-            >
-              <AccessibilityNewIcon fontSize="large" />
-            </IconButton>
-          </Grid>
-          <Grid item justify="center" alignItems="center">
-            <Typography variant="subtitle2" gutterBottom>
-              CREATE
-            </Typography>
-            <Typography variant="subtitle2" gutterBottom>
-              Create your first CHARLIE event and start earning
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              <ul>
-                <li>CREATE event</li>
-                <li>Welcomme guests</li>
-                <li>EARN entry fee</li>
-              </ul>
-            </Typography>
-          </Grid>
-        </Grid>
-
         <Grid item>
           <Typography
             variant="h6"
@@ -353,34 +283,6 @@ export default function Menu(props) {
             alignItems="center"
             direction="column"
           >
-            <Grid item>
-              <Typography variant="body2">GET IN TOUCH</Typography>
-            </Grid>
-
-            <Grid item>
-              <Typography variant="body2">Sydney NSW, Australia</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="body2">charliepartyapp@gmail.com</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="body2">0435-388-698</Typography>
-            </Grid>
-            <SocialLine color="secondary" />
-
-            <CardMedia
-              className={classes.cardMediaBottom}
-              image="https://res.cloudinary.com/party-images-app/image/upload/v1559960064/uvic6vretl0zabrk570z.png"
-              title="Paella dish"
-            />
-            <SocialLine color="secondary" />
-            <Grid item>
-              <NavLink to={`/privacy-policy`}>
-                <Grid item>
-                  <Typography variant="subtitle2">PRIVACY POLICY</Typography>
-                </Grid>
-              </NavLink>
-            </Grid>
             <Grid item>
               <NavLink to={`/faq`}>
                 <Grid item>

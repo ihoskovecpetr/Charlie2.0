@@ -18,6 +18,7 @@ import { useHistory, NavLink } from "react-router-dom";
 import { UserContext } from "../userContext";
 import ModalLayout from "../Layouts/ModalLayout";
 import Spinner from "../Atoms/Spinner";
+import Copyright from "../Atoms/copyright";
 
 const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
@@ -191,18 +192,5 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   }
 }));
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Charlie Party
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 export default SignIn;

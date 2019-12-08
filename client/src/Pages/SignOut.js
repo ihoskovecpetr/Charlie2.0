@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -19,11 +19,17 @@ import { Redirect, useHistory } from "react-router-dom";
 import { UserContext } from "../userContext";
 import ModalLayout from "../Layouts/ModalLayout";
 import Spinner from "../Atoms/Spinner";
+import Copyright from "../Atoms/copyright";
 
 function SignIn(props) {
   const classes = useStyles();
   const { user, setUser } = useContext(UserContext);
   let history = useHistory();
+
+  useEffect(() => {
+    console.log("Only first mount OF CREATE");
+    window.scrollTo(0, 0);
+  }, []);
 
   const Out = () => {
     window.localStorage.setItem("token", "_deleted_");
@@ -63,13 +69,6 @@ function SignIn(props) {
           >
             Sing Out
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </Paper>
       <Box mt={8}>
@@ -104,18 +103,5 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2)
   }
 }));
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Charlie Party
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 export default SignIn;

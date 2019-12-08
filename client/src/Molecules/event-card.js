@@ -21,6 +21,7 @@ import { displayDate } from "../Services/transform-services";
 const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: 345,
+    width: "100%",
     marginBottom: 5
   },
   media: {

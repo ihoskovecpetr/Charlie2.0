@@ -52,35 +52,35 @@ function EventButtons(props) {
   let eventIsPast = false;
   console.log("EventButtons: ", props.data);
 
-  const sendBookingRequest = message => {
-    props.createReqBooking({
-      variables: {
-        guest_id: props.user._id,
-        guest_name: props.user.name,
-        event_id: props.data.getOneEvent._id,
-        message: message
-      },
-      refetchQueries: () => [
-        {
-          query: props.ONE_EVENT,
-          variables: { id: props.match.params.id }
-        }
-      ]
-    });
+  // const sendBookingRequest = message => {
+  //   props.createReqBooking({
+  //     variables: {
+  //       guest_id: props.user._id,
+  //       guest_name: props.user.name,
+  //       event_id: props.data.getOneEvent._id,
+  //       message: message
+  //     },
+  //     refetchQueries: () => [
+  //       {
+  //         query: props.ONE_EVENT,
+  //         variables: { id: props.match.params.id }
+  //       }
+  //     ]
+  //   });
 
-    // props.createBooking({
-    //   variables: {
-    //     user_id: props.user._id,
-    //     event_id: props.data.getOneEvent._id
-    //   },
-    //   refetchQueries: () => [
-    //     {
-    //       query: props.ONE_EVENT,
-    //       variables: { id: props.match.params.id }
-    //     }
-    //   ]
-    // });
-  };
+  //   // props.createBooking({
+  //   //   variables: {
+  //   //     user_id: props.user._id,
+  //   //     event_id: props.data.getOneEvent._id
+  //   //   },
+  //   //   refetchQueries: () => [
+  //   //     {
+  //   //       query: props.ONE_EVENT,
+  //   //       variables: { id: props.match.params.id }
+  //   //     }
+  //   //   ]
+  //   // });
+  // };
 
   if (props.data && props.data.getOneEvent.dateStart) {
     const todayDate = new Date();
@@ -112,10 +112,15 @@ function EventButtons(props) {
       console.log("userIsAttending: ", userIsAttending);
       return (
         <Grid item>
-          <ModalRate event={props.data.getOneEvent} user={props.user} />
-          {userIsAttending ? null : (
-            <Button variant="contained" color="secondary" c>
-              Past Event
+          {userIsAttending ? (
+            <ModalRate
+              event={props.data.getOneEvent}
+              user={props.user}
+              EVENT_RATINGS={props.EVENT_RATINGS}
+            />
+          ) : (
+            <Button variant="contained" color="secondary">
+              Past Event, did not attend
             </Button>
           )}
 
@@ -138,7 +143,11 @@ function EventButtons(props) {
     <>
       <Grid item>
         {!userIsAttending && (
-          <ModalJoin sendBookingRequest={sendBookingRequest} />
+          <ModalJoin
+            ONE_EVENT={props.ONE_EVENT}
+            user={props.user}
+            event={props.data.getOneEvent}
+          />
         )}
         {userIsAttending && (
           <>

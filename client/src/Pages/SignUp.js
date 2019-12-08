@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -80,6 +80,11 @@ function SignUp() {
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
   const [newUser, { loading, error, data }] = useMutation(NEW_USER);
+
+  useEffect(() => {
+    console.log("Only first mount OF CREATE");
+    window.scrollTo(0, 0);
+  }, []);
 
   console.log("Context: ", user);
 

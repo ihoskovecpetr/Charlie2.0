@@ -205,6 +205,24 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
+    },
+    confirmBooking: async (_, _args, __) => {
+      try {
+        const result = await Booking.update(
+          { event: _args.event_id, user: _args.user_id },
+          { $set: { confirmed: true } }
+        );
+        //const result = await booking.save();
+
+        console.log("confirming finished: ", result);
+        if (result.ok) {
+          return { success: true };
+        } else {
+          return { success: false };
+        }
+      } catch (err) {
+        throw err;
+      }
     }
   },
   Booking: {
@@ -239,6 +257,7 @@ function newFunction() {
     requestBookEvent(event_id: String!, guest_id: String!, guest_name: String!, message: String!): Hlaska!
     bookEvent(event_id: String!, user_id: String!, message: String): Hlaska!
     cancelBooking(event_id: String!, user_id: String!): Hlaska!
+    confirmBooking(event_id: ID!, user_id: ID!): Hlaska!
   }
 
   type Hlaska { 

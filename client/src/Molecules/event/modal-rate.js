@@ -11,6 +11,9 @@ import Button from "@material-ui/core/Button";
 
 import gql from "graphql-tag";
 import StarRatingComponent from "react-star-rating-component";
+import { withRouter } from "react-router-dom";
+
+import Spinner from "../../Atoms/Spinner";
 
 const RATE_EVENT = gql`
   mutation rateEvent(
@@ -27,9 +30,7 @@ const RATE_EVENT = gql`
       ratingValue: $ratingValue
       message: $message
     ) {
-      event
-      guest
-      host
+      success
       ratingValue
       message
     }
@@ -59,7 +60,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ModalRate(props) {
+function ModalRate(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState("Hi, please let me in");
@@ -80,6 +81,12 @@ export default function ModalRate(props) {
   // };
 
   console.log("MODAL RATING: props, stars, open ", props, stars, open);
+
+  if (rateEventState.data && rateEventState.data.rateEvent.success) {
+    setTimeout(() => {
+      handleClose();
+    }, 1000);
+  }
 
   return (
     <div>
@@ -107,91 +114,116 @@ export default function ModalRate(props) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="transition-modal-title">Rate host of this event</h2>
-            <Grid
-              container
-              justify="center"
-              alignItems="center"
-              direction="column"
-            >
-              <Grid item>
-                <StarRatingComponent
-                  name={String} /* name of the radio input, it is required */
-                  className={classes.starContainer}
-                  value={
-                    stars
-                  } /* number of selected icon (`0` - none, `1` - first) */
-                  starCount={5} /* number of icons in rating, default `5` */
-                  starColor={
-                    "#E8045D"
-                  } /* color of selected icons, default `#ffb400` */
-                  emptyStarColor={
-                    "#999"
-                  } /* color of non-selected icons, default `#333` */
-                  editing={
-                    true
-                  } /* is component available for editing, default `true` */
-                  onStarClick={(nextValue, prevValue, name) => {
-                    setStars(nextValue);
-                    console.log("SATRT SET: ", stars);
+            {rateEventState.loading && <Spinner />}
+            {rateEventState.data && rateEventState.data.rateEvent.success && (
+              <div>Finished, success</div>
+            )}
+            {rateEventState.data && !rateEventState.data.rateEvent.success && (
+              <div>Finished, FAIL</div>
+            )}
+            {!rateEventState.loading && !rateEventState.data && (
+              <>
+                <h2 id="transition-modal-title">Rate host of this event</h2>
+                <Grid
+                  container
+                  justify="center"
+                  alignItems="center"
+                  direction="column"
+                >
+                  <Grid item>
+                    <StarRatingComponent
+                      name={
+                        String
+                      } /* name of the radio input, it is required */
+                      className={classes.starContainer}
+                      value={
+                        stars
+                      } /* number of selected icon (`0` - none, `1` - first) */
+                      starCount={5} /* number of icons in rating, default `5` */
+                      starColor={
+                        "#E8045D"
+                      } /* color of selected icons, default `#ffb400` */
+                      emptyStarColor={
+                        "#999"
+                      } /* color of non-selected icons, default `#333` */
+                      editing={
+                        true
+                      } /* is component available for editing, default `true` */
+                      onStarClick={(nextValue, prevValue, name) => {
+                        setStars(nextValue);
+                        console.log("SATRT SET: ", stars);
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <form
+                      className={classes.root}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <TextField
+                        id="outlined-basic"
+                        label="You rock!"
+                        variant="outlined"
+                        multiline={true}
+                        rows={4}
+                        value={message}
+                        onChange={e => {
+                          setMessage(e.target.value);
+                        }}
+                      />
+                    </form>
+                  </Grid>
+                </Grid>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={e => {
+                    e.preventDefault();
+                    console.log(
+                      "GRAPH send: ",
+                      props.event._id,
+                      props.event.author._id,
+                      props.user._id,
+                      stars,
+                      message
+                    );
+                    rateEvent({
+                      variables: {
+                        event_id: props.event._id,
+                        host_id: props.event.author._id,
+                        guest_id: props.user._id,
+                        ratingValue: stars,
+                        message: message
+                      },
+                      refetchQueries: () => [
+                        {
+                          query: props.EVENT_RATINGS,
+                          variables: { event_id: props.match.params.id }
+                        }
+                      ]
+                    });
                   }}
-                />
-              </Grid>
-              <Grid item>
-                <form className={classes.root} noValidate autoComplete="off">
-                  <TextField
-                    id="outlined-basic"
-                    label="You rock!"
-                    variant="outlined"
-                    multiline={true}
-                    rows={4}
-                    value={message}
-                    onChange={e => {
-                      setMessage(e.target.value);
-                    }}
-                  />
-                </form>
-              </Grid>
-            </Grid>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={e => {
-                e.preventDefault();
-                console.log(
-                  "GRAPH send: ",
-                  props.event._id,
-                  props.event.author._id,
-                  props.user._id,
-                  stars,
-                  message
-                );
-                rateEvent({
-                  variables: {
-                    event_id: props.event._id,
-                    host_id: props.event.author._id,
-                    guest_id: props.user._id,
-                    ratingValue: stars,
-                    message: message
-                  }
-                });
-              }}
-            >
-              SEND RATING
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={e => {
-                e.preventDefault();
-                handleClose();
-              }}
-            >
-              CLOSE
-            </Button>
+                >
+                  SEND RATING
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={e => {
+                    e.preventDefault();
+                    handleClose();
+                  }}
+                >
+                  CLOSE
+                </Button>
+              </>
+            )}
           </div>
         </Fade>
       </Modal>
     </div>
   );
 }
+
+export default withRouter(ModalRate);
