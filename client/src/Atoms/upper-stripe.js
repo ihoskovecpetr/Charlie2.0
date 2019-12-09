@@ -35,13 +35,13 @@ function UpperStripe(props) {
       [theme.breakpoints.down("xs")]: {
         width: `calc(100% - ${props.drawerWidth}px)`,
         display: "none",
-        fontWeight: "700 !important"
+        fontWeight: "400 !important"
       }
     },
     title: {
       flexGrow: 1,
-      fontWeight: "700 !important",
-      fontSize: 20
+      fontWeight: "500 !important",
+      //fontSize: 20
     },
     ButtonAvatar: {
       margin: "10px"
@@ -56,7 +56,7 @@ function UpperStripe(props) {
   return (
     <>
       <CssBaseline />
-      <AppBar position="fixed" color="secondary" className={classes.appBar}>
+      <AppBar position="fixed" color="white" className={classes.appBar}>
         <Toolbar>
           <Grid
             justify="space-between" // Add it here :)
@@ -74,7 +74,7 @@ function UpperStripe(props) {
               >
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h6">
+              <Typography variant="h5">
                 {props.ListOfNames.map((text, index) => (
                   <Button color="inherit" className={classes.buttonToBeHidden}>
                     <NavLink
@@ -82,15 +82,17 @@ function UpperStripe(props) {
                       key={index}
                       className={classes.title}
                     >
-                      {text}
+                      {text == 'Charlie' ? <Avatar
+                    className={classes.avatarCharlie}
+                    alt="Remy Sharp"
+                    src="https://res.cloudinary.com/party-images-app/image/upload/v1557794256/ojkgl1hkiljwij69njbb.png"
+                  /> : text}
+                  
                     </NavLink>
                   </Button>
                 ))}
               </Typography>
             </Grid>
-            {/* <Typography variant="h6" className={classes.title}>
-            {props.name}
-          </Typography> */}
             <Grid item>
               {!props.userApp && user && user.name && (
                 <>

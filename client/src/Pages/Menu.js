@@ -39,8 +39,16 @@ const useStyles = makeStyles(theme => ({
     height: 200,
     paddingTop: "56.25%" // 16:9
   },
-  center: {
-    textAlign: "center"
+  project: {
+    textAlign: "center",
+    fontWeight: 300,
+    letterSpacing: 11,
+    paddingLeft: 17
+    
+  },
+  charlie: {
+    textAlign: "center",
+    fontWeight: 800
   },
   avatar: {
     width: 100,
@@ -60,7 +68,7 @@ const useStyles = makeStyles(theme => ({
   },
   text: {
     height: 0,
-    top: 30,
+    top: 10,
     position: "relative",
     color: "white",
     textAlign: "center"
@@ -75,7 +83,8 @@ const useStyles = makeStyles(theme => ({
   },
   defaultHeader: {
     color: theme.palette.charliePink,
-    fontWeight: 300
+    fontWeight: 300,
+    paddingTop: 20
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -95,7 +104,7 @@ export default function Menu(props) {
 
   return (
     <>
-      <Container maxWidth="sm">
+      <Container maxWidth="xs">
         <Grid
           container
           justify="center"
@@ -103,13 +112,13 @@ export default function Menu(props) {
           className={classes.menuContainer}
         >
           <Grid item>
-            <Typography variant="h4" component="h3" className={classes.center}>
+            <Typography variant="h6" component="h3" className={classes.project}>
               PROJECT
             </Typography>
           </Grid>
 
           <Grid item>
-            <Typography variant="h3" component="h3" className={classes.center}>
+            <Typography variant="h4" component="h4" className={classes.charlie}>
               CHARLIE
             </Typography>
           </Grid>
@@ -154,7 +163,7 @@ export default function Menu(props) {
           </Grid>
         </Grid>
         <Grid item>
-          <Typography variant="h6" component="h6" className={classes.text}>
+          <Typography variant="subtitle1" component="h6" className={classes.text}>
             “Have you ever seen house on the beach or flat in a skyscraper and
             wonder how would it be to enjoy a drink in there?”
           </Typography>
