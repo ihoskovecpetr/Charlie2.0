@@ -44,7 +44,6 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 300,
     letterSpacing: 11,
     paddingLeft: 17
-    
   },
   charlie: {
     textAlign: "center",
@@ -64,7 +63,7 @@ const useStyles = makeStyles(theme => ({
   button: {
     width: 100,
     margin: 10,
-    fontWeight: '700 !important'
+    fontWeight: "700 !important"
   },
   text: {
     height: 0,
@@ -84,7 +83,8 @@ const useStyles = makeStyles(theme => ({
   defaultHeader: {
     color: theme.palette.charliePink,
     fontWeight: 300,
-    paddingTop: 20
+    paddingTop: 20,
+    fontSize: 20
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -163,7 +163,11 @@ export default function Menu(props) {
           </Grid>
         </Grid>
         <Grid item>
-          <Typography variant="subtitle1" component="h6" className={classes.text}>
+          <Typography
+            variant="subtitle1"
+            component="h6"
+            className={classes.text}
+          >
             “Have you ever seen house on the beach or flat in a skyscraper and
             wonder how would it be to enjoy a drink in there?”
           </Typography>
@@ -175,12 +179,8 @@ export default function Menu(props) {
         </Grid>
 
         <Grid item>
-          <Typography
-            variant="h5"
-            component="h5"
-            className={classes.defaultHeader}
-          >
-            Your next Event
+          <Typography className={classes.defaultHeader}>
+            YOUR <b>NEXT</b> EVENT
           </Typography>
         </Grid>
         <Grid item>
@@ -197,11 +197,7 @@ export default function Menu(props) {
 
         <Grid container>
           <Grid item>
-            <Typography
-              variant="h6"
-              component="h6"
-              className={classes.defaultHeader}
-            >
+            <Typography className={classes.defaultHeader}>
               MAIN <b>MISSION</b>
             </Typography>
           </Grid>
@@ -215,11 +211,7 @@ export default function Menu(props) {
 
         <Grid container>
           <Grid item>
-            <Typography
-              variant="h6"
-              component="h6"
-              className={classes.defaultHeader}
-            >
+            <Typography className={classes.defaultHeader}>
               CHARLIE <b>INTRO</b>
             </Typography>
           </Grid>
@@ -238,11 +230,7 @@ export default function Menu(props) {
 
         <Grid container>
           <Grid item>
-            <Typography
-              variant="h5"
-              component="h5"
-              className={classes.defaultHeader}
-            >
+            <Typography className={classes.defaultHeader}>
               SUMMMARY OF <b>KEY FEATURES</b>
             </Typography>
           </Grid>
@@ -307,11 +295,7 @@ export default function Menu(props) {
         </Grid>
 
         <Grid item>
-          <Typography
-            variant="h6"
-            component="h6"
-            className={classes.defaultHeader}
-          >
+          <Typography className={classes.defaultHeader}>
             <b>CONTACT</b> US
           </Typography>
         </Grid>

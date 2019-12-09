@@ -9,7 +9,20 @@ import CardContent from "@material-ui/core/CardContent";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 
+import gql from "graphql-tag";
+import { useMutation } from "@apollo/react-hooks";
+
+const CONFIRM_BOOKING = gql`
+  mutation confirmBooking($event_id: ID!, $user_id: ID!) {
+    confirmBooking(event_id: $event_id, user_id: $user_id) {
+      success
+    }
+  }
+`;
+
 export default function PendingGuest(props) {
+  const [confirmBooking, confirmStates] = useMutation(CONFIRM_BOOKING);
+
   const useStyles = makeStyles(theme => ({
     card: {
       //maxWidth: 345,
@@ -55,11 +68,27 @@ export default function PendingGuest(props) {
         subheader={props.booking.message}
       />
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <ThumbUpIcon />
+        <IconButton
+          aria-label="add to favorites"
+          onClick={() => {
+            confirmBooking({
+              variables: {
+                user_id: props.booking.user._id,
+                event_id: props.event._id
+              },
+              refetchQueries: () => [
+                {
+                  query: props.ONE_EVENT,
+                  variables: { id: props.event._id }
+                }
+              ]
+            });
+          }}
+        >
+          <ThumbUpIcon color="secondary" />
         </IconButton>
         <IconButton aria-label="share">
-          <ThumbDownIcon />
+          <ThumbDownIcon color="primary" />
         </IconButton>
       </CardActions>
     </Card>

@@ -40,7 +40,7 @@ function UpperStripe(props) {
     },
     title: {
       flexGrow: 1,
-      fontWeight: "500 !important",
+      fontWeight: "500 !important"
       //fontSize: 20
     },
     ButtonAvatar: {
@@ -82,12 +82,15 @@ function UpperStripe(props) {
                       key={index}
                       className={classes.title}
                     >
-                      {text == 'Charlie' ? <Avatar
-                    className={classes.avatarCharlie}
-                    alt="Remy Sharp"
-                    src="https://res.cloudinary.com/party-images-app/image/upload/v1557794256/ojkgl1hkiljwij69njbb.png"
-                  /> : text}
-                  
+                      {text == "Charlie" ? (
+                        <Avatar
+                          className={classes.avatarCharlie}
+                          alt="Remy Sharp"
+                          src="https://res.cloudinary.com/party-images-app/image/upload/v1557794256/ojkgl1hkiljwij69njbb.png"
+                        />
+                      ) : (
+                        text
+                      )}
                     </NavLink>
                   </Button>
                 ))}
@@ -113,7 +116,7 @@ function UpperStripe(props) {
 
               {!props.userApp.success && !user.name && (
                 <Button color="inherit" className={classes.buttonNavi}>
-                  <NavLink to={`/signin`}>Sign In : </NavLink>
+                  <NavLink to={`/signin`}>Sign In </NavLink>
                   <AccountCircleIcon color="disabled" fontSize="large" />
                 </Button>
               )}

@@ -9,6 +9,8 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
+import Chip from "@material-ui/core/Chip";
+import CloseIcon from "@material-ui/icons/Close";
 
 import { withRouter, useHistory, NavLink } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/react-hooks";
@@ -22,6 +24,7 @@ import EventButtons from "../Molecules/event-buttons";
 import RatingCard from "../Molecules/rating-card";
 import Spinner from "../Atoms/Spinner";
 import PendingGuest from "../Molecules/event/pending-guest";
+import ConfirmedGuest from "../Molecules/event/confirmed-guest";
 
 const ONE_EVENT = gql`
   query getOneEvent($id: ID!) {
@@ -259,149 +262,151 @@ function Event(props) {
             direction="column"
             spacing={2}
           >
-            <Grid item xs>
+            <Grid item>
               <Button
                 variant="contained"
                 //color={theme.background}
+                size="small"
                 className={classes.closeButton}
                 onClick={() => {
                   props.history.goBack();
                 }}
               >
-                Close
+                <CloseIcon fontSize="large" />
               </Button>
             </Grid>
           </Grid>
-          <Grid container justify="flex-start">
-            <Grid item className={classes.nameGrid} md={12}>
-              <Box textAlign="center" m={1}>
-                <Typography component="div">
-                  {dataDB.getOneEvent.name}
-                </Typography>
-              </Box>
-              <Divider />
-            </Grid>
+          <Grid item className={classes.nameGrid} md={12}>
+            <Box textAlign="center" m={1}>
+              <Typography component="div">{dataDB.getOneEvent.name}</Typography>
+            </Box>
+            <Divider />
           </Grid>
+
           <Grid item>
             <Box textAlign="justify" m={1}>
               {dataDB.getOneEvent.description}
             </Box>
           </Grid>
+          <Grid
+            container
+            justify="flex-start"
+            alignItems="flex-start"
+            alignContent="flex-start"
+            direction="column"
+            spacing={2}
+          >
+            <Grid item className={classes.galleryGrid}>
+              <Gallery
+                images={dataDB.getOneEvent.imagesArr}
+                rowHeight={100}
+                display={true}
+                backdropClosesModal={true}
+              />
+            </Grid>
 
-          <Typography component="div" className={classes.standardHeading}>
-            Gallery
-          </Typography>
-          <Grid item className={classes.galleryGrid}>
-            <Gallery
-              images={dataDB.getOneEvent.imagesArr}
-              rowHeight={100}
-              display={true}
-              backdropClosesModal={true}
-            />
-          </Grid>
-          <Typography component="div" className={classes.standardHeading}>
-            Date
-          </Typography>
-          <Grid item>
-            <Box textAlign="left" m={1}>
-              {dataDB.getOneEvent.dateStart &&
-                displayDate(dataDB.getOneEvent.dateStart)}
-            </Box>
-          </Grid>
-          <Typography component="div" className={classes.standardHeading}>
-            Price:
-          </Typography>
-          <Grid item>
-            <Box textAlign="left" m={1}>
-              {dataDB.getOneEvent.price}
-            </Box>
-          </Grid>
-          <Grid item>
+            <Grid item>
+              <Typography component="div" className={classes.standardHeading}>
+                DATE
+              </Typography>
+              <Box textAlign="left" m={1}>
+                {dataDB.getOneEvent.dateStart &&
+                  displayDate(dataDB.getOneEvent.dateStart)}
+              </Box>
+            </Grid>
             <Typography component="div" className={classes.standardHeading}>
-              BYO
+              PRICE
             </Typography>
-            <Box textAlign="left" m={1}>
-              {dataDB.getOneEvent.BYO ? "YES" : "NO"}
-            </Box>
-          </Grid>
-          <Grid item>
-            <Typography component="div" className={classes.standardHeading}>
-              Confirmed guests:
-            </Typography>
-            <Box textAlign="left" m={1}>
-              <Grid container direction="row">
-                {dataDB.showBookings.map(booking => {
-                  if (booking.confirmed && !booking.cancelled) {
-                    return (
-                      <Grid item>
-                        <Avatar alt="Remy Sharp" src={booking.user.picture} />
+            <Grid item>
+              <Box textAlign="left" m={1}>
+                {dataDB.getOneEvent.price}
+              </Box>
+            </Grid>
+            <Grid item>
+              <Typography component="div" className={classes.standardHeading}>
+                BYO
+              </Typography>
+              <Box textAlign="left" m={1}>
+                {dataDB.getOneEvent.BYO ? "YES" : "NO"}
+              </Box>
+            </Grid>
+            <Grid item>
+              <Typography component="div" className={classes.standardHeading}>
+                ATTENDEES
+              </Typography>
+              <Box textAlign="left" m={1}>
+                <ConfirmedGuest
+                  bookings={dataDB.showBookings}
+                  cancelBooking={cancelBooking}
+                  cancelledState={cancelledState}
+                  event={dataDB.getOneEvent}
+                  ONE_EVENT={ONE_EVENT}
+                />
+                {bookingStates.loading && <Spinner />}
+              </Box>
+            </Grid>
+            <Grid item>
+              {dataDB.getOneEvent.areYouAuthor && (
+                <>
+                  <Typography
+                    component="div"
+                    className={classes.standardHeading}
+                  >
+                    PENDING
+                  </Typography>
+                  <Grid container>
+                    <Box textAlign="left" m={1}>
+                      <Grid container direction="row">
+                        {dataDB.showBookings.map(booking => {
+                          if (!booking.confirmed && !booking.cancelled) {
+                            return (
+                              <Grid item>
+                                <PendingGuest
+                                  booking={booking}
+                                  event={dataDB.getOneEvent}
+                                  ONE_EVENT={ONE_EVENT}
+                                />
+                              </Grid>
+                            );
+                          }
+                          return null;
+                        })}
                       </Grid>
-                    );
-                  }
-                  return null;
-                })}
-              </Grid>
-              {bookingStates.loading && <Spinner />}
-            </Box>
-          </Grid>
-          <Grid item>
-            {dataDB.getOneEvent.areYouAuthor && (
-              <>
-                <Typography component="div" className={classes.standardHeading}>
-                  Pending Guests:
-                </Typography>
-                <Grid container className={classes.guestsContainer}>
-                  <Box textAlign="left" m={1}>
-                    <Grid container direction="row">
-                      {dataDB.showBookings.map(booking => {
-                        if (!booking.confirmed && !booking.cancelled) {
-                          return (
-                            <Grid item>
-                              <PendingGuest
-                                booking={booking}
-                                refetch={refetch}
-                                event={dataDB.getOneEvent}
-                              />
-                            </Grid>
-                          );
-                        }
-                        return null;
-                      })}
-                    </Grid>
-                    {bookingStates.loading && <Spinner />}
-                  </Box>
-                </Grid>
-              </>
-            )}
-          </Grid>
-          <Typography component="div" className={classes.standardHeading}>
-            Host
-          </Typography>
-          <Grid item>
-            <Box textAlign="left" m={1}>
-              {dataDB.getOneEvent.author.name}
-            </Box>
-          </Grid>
-          <Grid item>
-            <Typography component="div">Address:</Typography>
-            <Box textAlign="left" m={1}>
-              {dataDB.getOneEvent.address}
-            </Box>
-          </Grid>
-          <Grid item>
-            <Grid
-              container
-              direction="row"
-              wrap="no-wrap"
-              spacing={2}
-              className={classes.ratingContainer}
-            >
-              {ratings.data &&
-                ratings.data.showRatings.map((rating, index) => (
-                  <Grid item>
-                    <RatingCard rating={rating} key={index} />
+                      {bookingStates.loading && <Spinner />}
+                    </Box>
                   </Grid>
-                ))}
+                </>
+              )}
+            </Grid>
+            <Typography component="div" className={classes.standardHeading}>
+              Host
+            </Typography>
+            <Grid item>
+              <Box textAlign="left" m={1}>
+                {dataDB.getOneEvent.author.name}
+              </Box>
+            </Grid>
+            <Grid item>
+              <Typography component="div">Address:</Typography>
+              <Box textAlign="left" m={1}>
+                {dataDB.getOneEvent.address}
+              </Box>
+            </Grid>
+            <Grid item>
+              <Grid
+                container
+                direction="row"
+                wrap="no-wrap"
+                spacing={2}
+                className={classes.ratingContainer}
+              >
+                {ratings.data &&
+                  ratings.data.showRatings.map((rating, index) => (
+                    <Grid item>
+                      <RatingCard rating={rating} key={index} />
+                    </Grid>
+                  ))}
+              </Grid>
             </Grid>
           </Grid>
 
@@ -478,13 +483,11 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(3, 2)
   },
   standardHeading: {
-    borderBottom: "solid 1px grey"
+    //borderBottom: "solid 1px grey",
+    fontWeight: 600,
+    color: "grey"
   },
-  guestsContainer: {
-    background: "rgba(255,255,255,0.2)",
-    borderRadius: 4,
-    padding: theme.spacing(3, 2)
-  },
+
   ratingContainer: {
     width: "100%",
     maxHeight: 200,
