@@ -13,12 +13,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CircularIndeterminate() {
+export default function Spinner(props) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <CircularProgress color="secondary" />
+      <CircularProgress
+        color="secondary"
+        style={{ height: props.height, width: props.width }}
+      />
     </div>
   );
 }

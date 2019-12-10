@@ -49,6 +49,7 @@ const ALL_EVENTS = gql`
 
 function EventButtons(props) {
   let userIsAttending = false;
+  let userRequestedBooking = false;
   let eventIsPast = false;
   console.log("EventButtons: ", props.data);
 
@@ -98,11 +99,22 @@ function EventButtons(props) {
     props.data.showBookings.map(booking => {
       if (
         props.user._id == booking.user._id &&
-        booking.confirmed &&
-        !booking.cancelled
       ) {
-        userIsAttending = true;
+
+        if(!booking.confirmed &&
+          !booking.cancelled){
+            userRequestedBooking = true;
+          }
+
+      if(booking.confirmed &&
+        !booking.cancelled){
+          userIsAttending = true;
+        }
+        
       }
+
+
+
     });
   }
 
@@ -142,13 +154,22 @@ function EventButtons(props) {
   return (
     <>
       <Grid item>
-        {!userIsAttending && (
+        {!userIsAttending && !userRequestedBooking && (
           <ModalJoin
             ONE_EVENT={props.ONE_EVENT}
             user={props.user}
             event={props.data.getOneEvent}
           />
         )}
+
+    {!userIsAttending && userRequestedBooking && (
+              <Button
+              variant="contained"
+              disabled
+            >
+              REQUEST PENDING
+            </Button>
+            )}
         {userIsAttending && (
           <>
             <Button

@@ -28,6 +28,7 @@ export const typeDef = `
 export const resolvers = {
   Mutation: {
     newUser: async (_, _args, __) => {
+      console.log("NeWUser args: ", _args);
       try {
         let existing = await User.find({ email: _args.email });
         if (existing.length) {
@@ -35,6 +36,7 @@ export const resolvers = {
           return { success: false };
         } else {
           let picture;
+          console.log("!_args.picture: ", !_args.picture);
           if (!_args.picture) {
             picture =
               "http://www.queensland-photo.com/wp-content/uploads/2013/01/surfing-burleigh-1024x538.jpg";

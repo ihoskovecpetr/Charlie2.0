@@ -9,7 +9,7 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -22,10 +22,19 @@ import ModalLayout from "../Layouts/ModalLayout";
 import Copyright from "../Atoms/copyright";
 import Dropzone from "../Molecules/dropzone-signup";
 
-
 const NEW_USER = gql`
-  mutation newUser($name: String!, $email: String!, $password: String!, $picture: String) {
-    newUser(name: $name, email: $email, password: $password) {
+  mutation newUser(
+    $name: String!
+    $email: String!
+    $password: String!
+    $picture: String
+  ) {
+    newUser(
+      name: $name
+      email: $email
+      password: $password
+      picture: $picture
+    ) {
       success
       name
       _id
@@ -40,7 +49,6 @@ const NEW_USER = gql`
 //   console.log("Mutation data: ", data);
 // }
 
-
 const useStyles = makeStyles(theme => ({
   "@global": {
     body: {
@@ -53,13 +61,14 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    background: "linear-gradient(180deg, rgba(200,100,155,0.5) 30%, rgba(255,0,100,0.5) 100%)"
+    background:
+      "linear-gradient(180deg, rgba(200,100,155,0.5) 30%, rgba(255,0,100,0.5) 100%)"
   },
   avatar: {
     margin: theme.spacing(4),
     backgroundColor: theme.palette.secondary.main,
-    height: 150,
-    width: 150
+    height: 100,
+    width: 100
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -72,6 +81,9 @@ const useStyles = makeStyles(theme => ({
     //borderBottom: "solid 1px grey",
     //fontWeight: 600,
   },
+  gridDropzone: {
+    width: "100%"
+  },
   mainHeading: {
     marginTop: 10
   }
@@ -83,7 +95,7 @@ function SignUp() {
   const { user, setUser } = useContext(UserContext);
   const [newUser, { loading, error, data }] = useMutation(NEW_USER);
   const [formValue, setFormValue] = useState({
-    picture: null  //"https://res.cloudinary.com/party-images-app/image/upload/v1575981578/wc9pd4wxm3cgor6v2yls.jpg"
+    picture: null //"https://res.cloudinary.com/party-images-app/image/upload/v1575981578/wc9pd4wxm3cgor6v2yls.jpg",
   });
 
   useEffect(() => {
@@ -131,129 +143,117 @@ function SignUp() {
     <ModalLayout>
       <Paper className={classes.paper}>
         <CssBaseline />
-          {data && !data.newUser.success && (
-            <h1>Error, this email is already taken!!</h1>
-          )}
-          <Typography variant="h4" className={classes.mainHeading}>
-            Sign UP
-          </Typography>
-          <Avatar className={classes.avatar}>
-            <PersonAddIcon />
-            
-          </Avatar>
-          
-          <form className={classes.form} noValidate >
-          <Typography component="div" className={classes.standardHeading}>
-            Picture
-          </Typography>
-          <Grid container justify="center" direction="column" className={classes}>
+        {data && !data.newUser.success && (
+          <h1>Error, this email is already taken!!</h1>
+        )}
+        <Typography variant="h6" className={classes.mainHeading}>
+          Sign UP
+        </Typography>
+
+        <form className={classes.form} noValidate>
+          <Grid
+            container
+            justify="center"
+            alignItems="center"
+            direction="column"
+            className={classes.gridDropzone}
+          >
             <Grid item>
               <Dropzone setFormValue={setFormValue} formValue={formValue} />
             </Grid>
+          </Grid>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="User name"
+            name="name"
+            autoComplete="name"
+            autoFocus
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password2"
+            label="Confirm password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+          />
+          <FormControlLabel
+            control={<Checkbox value="remember" color="primary" />}
+            label="Remember me"
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={e => {
+              e.preventDefault();
+              console.log("sumbitHandler: ", e);
+              console.log(
+                "email: ",
+                document.getElementById("email").value,
+                document.getElementById("password").value
+              );
+              let name = document.getElementById("name").value;
+              let email = document.getElementById("email").value;
+              let password = document.getElementById("password").value;
+              console.log("email: ", document.getElementById("password").value);
+
+              newUser({
+                variables: {
+                  name: name,
+                  email: email,
+                  password: password,
+                  picture: formValue.picture
+                }
+              });
+            }}
+          >
+            Sign Up
+          </Button>
+          <Grid container>
+            <Grid item xs>
+              <Link href="#" variant="body2">
+                Forgot password?
+              </Link>
+            </Grid>
             <Grid item>
-            <Avatar
-                        alt="Remy Sharp"
-                        src={formValue.ImagesArr && formValue.picture }
-                        className={classes.avatar}
-                      >
-                        ?
-                      </Avatar>
+              <Link href="#" variant="body2">
+                {"Don't have an account? Sign Up"}
+              </Link>
             </Grid>
           </Grid>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="name"
-              label="User name"
-              name="name"
-              autoComplete="name"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password2"
-              label="Confirm password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={e => {
-                e.preventDefault();
-                console.log("sumbitHandler: ", e);
-                console.log(
-                  "email: ",
-                  document.getElementById("email").value,
-                  document.getElementById("password").value
-                );
-                let name = document.getElementById("name").value;
-                let email = document.getElementById("email").value;
-                let password = document.getElementById("password").value;
-                console.log(
-                  "email: ",
-                  document.getElementById("password").value
-                );
-
-                newUser({
-                  variables: {
-                    name: name,
-                    email: email,
-                    password: password
-                  }
-                });
-              }}
-            >
-              Sign Up
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
+        </form>
         <Box mt={8}>
           <Copyright />
         </Box>

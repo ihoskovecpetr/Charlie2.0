@@ -8,7 +8,7 @@ import Avatar from "@material-ui/core/Avatar";
 function ConfirmedGuest(props) {
   const classes = useStyles();
   return (
-    <Grid container direction="row">
+    <Grid container justify="center" alignItems="center" direction="column">
       {props.bookings.map(booking => {
         if (booking.confirmed && !booking.cancelled) {
           return (

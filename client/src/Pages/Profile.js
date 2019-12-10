@@ -213,6 +213,7 @@ function Profile() {
         <Typography component="h1" variant="h5">
           {user.name}
         </Typography>
+        <Typography variant="body">{user.email}</Typography>
         <Button color="inherit" className={classes.buttonNavi}>
           <NavLink to={`/signout`}>
             <Typography variant="subtitle2">Sign out</Typography>
