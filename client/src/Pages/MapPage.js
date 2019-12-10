@@ -87,85 +87,85 @@ function MapPage(props) {
   const dataMemo = useMemo(() => data, [data]);
 
   console.log("MAP DATA pass Memo:", data);
-  // dataMock = [
-  //   {
-  //     _id: "2sdf2sdfs2sfdsdfs2",
-  //     success: true,
-  //     author: {
-  //       name: "Petr H.",
-  //       picture:
-  //         "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
-  //     },
-  //     name: "Event 111",
-  //     geometry: { coordinates: [50.040112099, 14.428] },
-  //     lng: 14.45,
-  //     lat: 50,
-  //     addressGoogle: "addressGoogle",
-  //     addressCustom: "addressCustom",
-  //     address: "address",
-  //     eventType: 1,
-  //     dateStart: "2019-10-10",
-  //     price: 12,
-  //     capacityMax: 20,
-  //     BYO: true,
-  //     imagesArr: [
-  //       {
-  //         caption: "No more pictures for this Event",
-  //         src:
-  //           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-  //         thumbnail:
-  //           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-  //         thumbnailHeight: 10,
-  //         thumbnailWidth: 10,
-  //         scaletwidth: 100,
-  //         marginLeft: 0,
-  //         vwidth: 100,
-  //         isSelected: false
-  //       }
-  //     ],
-  //     description: "Desc",
-  //     confirmed: true,
-  //     hide: false
-  //   },
-  //   {
-  //     _id: "2sdf2sdfs2sfdsdfsdf2",
-  //     success: true,
-  //     author: {
-  //       name: "Petr H.",
-  //       picture:
-  //         "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
-  //     },
-  //     name: "Event 222",
-  //     geometry: { coordinates: [50.050312099, 14.458] },
-  //     lng: 14.45,
-  //     lat: 50,
-  //     addressGoogle: "addressGoogle",
-  //     addressCustom: "addressCustom",
-  //     address: "address",
-  //     eventType: 1,
-  //     dateStart: "2019-10-10",
-  //     price: 12,
-  //     capacityMax: 20,
-  //     BYO: true,
-  //     imagesArr: [
-  //       {
-  //         caption: "No more pictures for this Event",
-  //         src:
-  //           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-  //         thumbnail:
-  //           "https://res.cloudinary.com/party-images-app/image/upload/v1551339472/m...",
-  //         thumbnailHeight: 10,
-  //         thumbnailWidth: 10,
-  //         scaletwidth: 100,
-  //         marginLeft: 0,
-  //         vwidth: 100
-  //       }
-  //     ],
-  //     description: "Desc",
-  //     confirmed: true,
-  //     hide: false
-  //   }
-  // ];
+  dataMock = [
+    {
+      _id: "2sdf2sdfs2sfdsdfs2",
+      success: true,
+      author: {
+        name: "Petr H.",
+        picture:
+          "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
+      },
+      name: "Event 111",
+      geometry: { coordinates: [50.040112099, 14.428] },
+      lng: 14.45,
+      lat: 50,
+      addressGoogle: "addressGoogle",
+      addressCustom: "addressCustom",
+      address: "address",
+      eventType: 1,
+      dateStart: "2019-10-10",
+      price: 12,
+      capacityMax: 20,
+      BYO: true,
+      imagesArr: [
+        {
+          caption: "No more pictures for this Event",
+          src:
+            "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+          thumbnail:
+            "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+          thumbnailHeight: 10,
+          thumbnailWidth: 10,
+          scaletwidth: 100,
+          marginLeft: 0,
+          vwidth: 100,
+          isSelected: false
+        }
+      ],
+      description: "Desc",
+      confirmed: true,
+      hide: false
+    },
+    {
+      _id: "2sdf2sdfs2sfdsdfsdf2",
+      success: true,
+      author: {
+        name: "Petr H.",
+        picture:
+          "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
+      },
+      name: "Event 222",
+      geometry: { coordinates: [50.050312099, 14.458] },
+      lng: 14.45,
+      lat: 50,
+      addressGoogle: "addressGoogle",
+      addressCustom: "addressCustom",
+      address: "address",
+      eventType: 1,
+      dateStart: "2019-10-10",
+      price: 12,
+      capacityMax: 20,
+      BYO: true,
+      imagesArr: [
+        {
+          caption: "No more pictures for this Event",
+          src:
+            "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+          thumbnail:
+            "https://res.cloudinary.com/party-images-app/image/upload/v1551339472/m...",
+          thumbnailHeight: 10,
+          thumbnailWidth: 10,
+          scaletwidth: 100,
+          marginLeft: 0,
+          vwidth: 100
+        }
+      ],
+      description: "Desc",
+      confirmed: true,
+      hide: false
+    }
+  ];
 
   const onMapMount = map => {
     console.log("onMapMount fce MapPage ");

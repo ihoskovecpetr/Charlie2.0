@@ -169,7 +169,7 @@ function Create(props) {
   }
 
   return (
-    <Container component="main" className={classes.profileContainer}>
+    <Container component="main" maxWidth="xl" className={classes.profileContainer}>
       <CssBaseline />
       <Paper className={classes.paper}>
         <Avatar className={classes.avatar}>

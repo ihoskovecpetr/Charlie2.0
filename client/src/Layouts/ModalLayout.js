@@ -9,7 +9,7 @@ function Layout(props) {
   const useStyles = makeStyles(theme => ({
     opaque: {
       // flexGrow: 1,
-      background: "rgba(200,210,210,0.4)",
+      //background: "rgba(200,210,210,0.4)",
       width: "100%",
       position: "absolute",
       "z-index": 10,
@@ -26,7 +26,7 @@ function Layout(props) {
 
   return (
     <div className={classes.opaque}>
-      <Container maxWidth="lg" fixed={true}>
+      <Container maxWidth="xs" fixed={true}>
         <CssBaseline />
         <Grid
           container
