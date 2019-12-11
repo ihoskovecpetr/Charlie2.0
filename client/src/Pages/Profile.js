@@ -4,6 +4,7 @@ import Container from "@material-ui/core/Container";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import Badge from '@material-ui/core/Badge';
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -232,10 +233,15 @@ function Profile() {
             aria-label="full width tabs example"
           >
             <Tab
+              // label={
+              //   bookingStates.data && bookingStates.data.showUserBookings
+              //     ? `ATTENDING (${bookingStates.data.showUserBookings.length})`
+              //     : "ATTENDING"
+              // }
               label={
-                bookingStates.data && bookingStates.data.showUserBookings
-                  ? `ATTENDING (${bookingStates.data.showUserBookings.length})`
-                  : "ATTENDING"
+                <Badge className={classes.padding} color="secondary" badgeContent={bookingStates.data && bookingStates.data.showUserBookings.length}>
+                  ATTENDING
+                </Badge>
               }
               {...a11yProps(0)}
             />

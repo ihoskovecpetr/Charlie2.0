@@ -41,6 +41,7 @@ import MapPage from "./Pages/MapPage";
 import Event from "./Pages/Event";
 import Profile from "./Pages/Profile";
 import About from "./Pages/About";
+import UserModal from "./Pages/UserModal";
 
 const drawerWidth = 240;
 let prevLocation;
@@ -107,8 +108,8 @@ function App(props) {
   }, []);
 
   const ListOfUrls = user.success
-    ? ["", "create", "map", "about", "profile", "signout"]
-    : ["", "create", "map", "about", "signup", "signin"];
+    ? ["", "create", "map", "about", "user", "profile", "signout"]
+    : ["", "create", "map", "about", "user", "signup", "signin"];
   const ListOfNames = user.success
     ? ["Charlie", "Create", "Map", "About"]
     : ["Charlie", "Create", "Map", "About"];
@@ -118,16 +119,18 @@ function App(props) {
         <Create />, //create
         <MapPage />, //Map
         <About />,
+        <UserModal />,
         <Profile />,
-        <SignOut />
+        <SignOut />,
       ]
     : [
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
         <Create />,
         <MapPage />,
         <About />,
+        <UserModal />,
         <SignUp />,
-        <SignIn />
+        <SignIn />,
       ];
   const drawer = (
     <div>
@@ -223,7 +226,7 @@ function App(props) {
     justGoBack = true;
   }
 
-  //console.log("APP, firstPrint a Modal: ", firstPrint, Modal);
+  console.log("APP, firstPrint a Modal: ", firstPrint, Modal);
   return (
     <div className={classes.root}>
       <ThemeProvider theme={theme}>
@@ -281,6 +284,26 @@ function App(props) {
                   </>
                 )}
               />
+               <Route
+                exact
+                path={`/user/:id`}
+                render={() => (
+                  <>
+                    <UpperStripe
+                      //bringOwnUser?? true??
+                      userApp={false}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <UserModal />
+                    </main>
+                  </>
+                )}
+              />
               <Route
                 exact
                 path={`/signin`}
@@ -331,6 +354,15 @@ function App(props) {
                 render={() => (
                   <>
                     <Event />
+                  </>
+                )}
+              />
+              <Route
+                exact
+                path={`/user/:id`}
+                render={() => (
+                  <>
+                    <UserModal />
                   </>
                 )}
               />

@@ -25,6 +25,8 @@ import RatingCard from "../Molecules/rating-card";
 import Spinner from "../Atoms/Spinner";
 import PendingGuest from "../Molecules/event/pending-guest";
 import ConfirmedGuest from "../Molecules/event/confirmed-guest";
+import UserCard from "../Molecules/event/user-card";
+
 
 const ONE_EVENT = gql`
   query getOneEvent($id: ID!) {
@@ -112,59 +114,60 @@ const DELETE = gql`
   }
 `;
 let dataMock;
-// dataMock = {
-//   getOneEvent: {
-//     _id: "2sdf2sdfs2sfdsdfs2",
-//     success: true,
-//     author: {
-//       name: "Petr H.",
-//       picture:
-//         "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
-//     },
-//     name: "Mock data Party",
-//     geometry: { coordinates: [50.040112099, 14.428] },
-//     lng: 14.45,
-//     lat: 50,
-//     addressGoogle: "addressGoogle",
-//     addressCustom: "addressCustom",
-//     address: "address",
-//     eventType: 1,
-//     dateStart: "2019-10-10",
-//     price: 12,
-//     capacityMax: 20,
-//     BYO: true,
-//     imagesArr: [
-//       {
-//         caption: "No more pictures for this Event",
-//         src:
-//           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-//         thumbnail:
-//           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-//         thumbnailHeight: 10,
-//         thumbnailWidth: 10,
-//         scaletwidth: 100,
-//         marginLeft: 0,
-//         vwidth: 100,
-//         isSelected: false
-//       }
-//     ],
-//     description: "Desc Mocks data",
-//     confirmed: true,
-//     hide: false
-//   },
-//   showBookings: [
-//     {
-//       confrimed: true,
-//       user: {
-//         name: "Mock Guy",
-//         email: "mock@email.com",
-//         picture:
-//           "https://www.ixxiyourworld.com/media/2389064/ixxi-paul-fuentes-pink-rocket.jpg?mode=crop&width=562&height=832",
-//         _id: "232hj23h24h234"
-//       }
-//     }
-//   ]
-// };
+dataMock = {
+  getOneEvent: {
+    _id: "12321",
+    success: true,
+    author: {
+      _id: "12321",
+      name: "Petr H. McOcker",
+      picture:
+        "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
+    },
+    name: "Mock data Party",
+    geometry: { coordinates: [50.040112099, 14.428] },
+    lng: 14.45,
+    lat: 50,
+    addressGoogle: "addressGoogle",
+    addressCustom: "addressCustom",
+    address: "address",
+    eventType: 1,
+    dateStart: "2019-10-10",
+    price: 12,
+    capacityMax: 20,
+    BYO: true,
+    imagesArr: [
+      {
+        caption: "No more pictures for this Event",
+        src:
+          "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+        thumbnail:
+          "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+        thumbnailHeight: 10,
+        thumbnailWidth: 10,
+        scaletwidth: 100,
+        marginLeft: 0,
+        vwidth: 100,
+        isSelected: false
+      }
+    ],
+    description: "Desc Mocks data",
+    confirmed: true,
+    hide: false
+  },
+  showBookings: [
+    {
+      confrimed: true,
+      user: {
+        name: "Mock Guy",
+        email: "mock@email.com",
+        picture:
+          "https://www.ixxiyourworld.com/media/2389064/ixxi-paul-fuentes-pink-rocket.jpg?mode=crop&width=562&height=832",
+        _id: "232hj23h24h234"
+      }
+    }
+  ]
+};
 
 function Event(props) {
   const classes = useStyles();
@@ -382,9 +385,7 @@ function Event(props) {
               Host
             </Typography>
             <Grid item>
-              <Box textAlign="left" m={1}>
-                {dataDB.getOneEvent.author.name}
-              </Box>
+              <UserCard author={dataDB.getOneEvent.author} />
             </Grid>
             <Grid item>
               <Typography component="div">Address:</Typography>
@@ -446,16 +447,7 @@ function Event(props) {
 }
 
 const useStyles = makeStyles(theme => ({
-  opaque: {
-    // flexGrow: 1,
-    background: "rgba(100,10,10,0.2)",
-    width: "100%",
-    position: "absolute",
-    "z-index": 10
-  },
-  container: {
-    height: "100vh"
-  },
+
   paper: {
     background: "black",
     color: "white",

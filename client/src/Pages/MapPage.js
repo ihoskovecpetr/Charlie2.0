@@ -13,6 +13,8 @@ import { useHistory } from "react-router-dom";
 import { UserContext } from "../userContext";
 import { usePosition } from "../Hooks/useGoelocation";
 import { useGeoWatcher } from "../Hooks/useGeoWrap";
+
+import mapSetup from '../Services/map-settings';
 import Dropzone from "../Molecules/dropzone";
 import Spinner from "../Atoms/Spinner";
 import Map from "../Atoms/Hook-map";
@@ -354,7 +356,8 @@ function MapPage(props) {
     zoomControl: true,
     //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
     clickableIcons: false,
-    gestureHandling: "cooperative"
+    gestureHandling: "cooperative",
+    styles: mapSetup,
   };
 
   return (

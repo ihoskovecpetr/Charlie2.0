@@ -98,7 +98,7 @@ function EventButtons(props) {
   if (props.data && props.data.showBookings) {
     props.data.showBookings.map(booking => {
       if (
-        props.user._id == booking.user._id &&
+        props.user._id == booking.user._id
       ) {
 
         if(!booking.confirmed &&

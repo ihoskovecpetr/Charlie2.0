@@ -268,6 +268,8 @@ function Create(props) {
             required
             fullWidth
             id="decsription"
+            multiline
+            rows="4"
             inputRef={inputDescription}
             label="Description"
             name="decsription"

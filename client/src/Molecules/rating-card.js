@@ -27,10 +27,12 @@ const useStyles = makeStyles(theme => ({
     minWidth: 300,
     width: "100%",
     display: "block",
-    marginBottom: 5
+    marginBottom: 5,
+    background: "rgba(255,255,255,0.5)"
   },
   cardHeader: {
-    width: "100%"
+    width: "100%",
+    padding: 0,
   },
   media: {
     height: 0,
@@ -38,6 +40,16 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     backgroundColor: red[500]
+  },
+  expand: {
+    transform: 'rotate(0deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    transform: 'rotate(180deg)',
   },
   starContainer: {
     fontSize: 20
@@ -65,14 +77,28 @@ export default function RecipeReviewCard(props) {
             aria-label="show more"
             className={classes.cardHeader}
           >
+            <Avatar
+            aria-label="recipe"
+            src={props.rating.guest.picture}
+            className={classes.avatar}
+          >
+            R
+          </Avatar>
+          </IconButton>
+        }
+        action={
+          <IconButton
+            className={clsx(classes.expand, {
+              [classes.expandOpen]: expanded
+            })}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
+            className={classes.cardHeader}
+          >
             <ExpandMoreIcon />
           </IconButton>
         }
-        // action={
-        //   <IconButton aria-label="settings">
-        //     <MoreVertIcon />
-        //   </IconButton>
-        // }
         title={
           <StarRatingComponent
             name={String} /* name of the radio input, it is required */
@@ -95,7 +121,6 @@ export default function RecipeReviewCard(props) {
         //title={props.rating.guest.name}
         subheader={props.rating.guest.name}
       />
-      <CardActions disableSpacing></CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography variant="subtitle2">Message:</Typography>
