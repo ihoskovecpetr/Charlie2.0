@@ -30,14 +30,13 @@ import Copyright from "../Atoms/copyright";
 
 const GET_USER = gql`
   query getOneUser($user_id: ID!) {
-    getOneUser(id: $user_id) {
-        success
-        _id
-        name
-        picture
-      
+    getOneUser(user_id: $user_id) {
+      success
+      _id
+      name
+      picture
+    }
   }
-}
 `;
 
 const HOST_RATINGS = gql`
@@ -55,17 +54,14 @@ const HOST_RATINGS = gql`
 `;
 
 let dataMock;
-dataMock = {
-  getOneUser: {
-    success: true,
-      name: "Petr H. McOcker",
-      picture:
-        "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
-  },
-
-};
-
-
+// dataMock = {
+//   getOneUser: {
+//     success: true,
+//     name: "Petr H. McOcker",
+//     picture:
+//       "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
+//   }
+// };
 
 function UserModal(props) {
   const classes = useStyles();
@@ -77,28 +73,26 @@ function UserModal(props) {
     //pollInterval: 500
   });
 
-  // const ratingStates = useQuery(HOST_RATINGS, {
-  //   variables: { host_id: props.match.params.id}
-  // });
+  const ratingStates = useQuery(HOST_RATINGS, {
+    variables: { host_id: props.match.params.id }
+  });
 
-  const ratingStates ={
-    data: {
-      showRatings: [
-    {
-      guest: {
-        picture: "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91",
-        name: "Rater Ivo"
-      },
-      message: "Cool event bro",
-      ratingValue: 5,
-      createdAt: "2019"
-    }
-  ]
-    }
-  }   
+  // const ratingStates ={
+  //   data: {
+  //     showRatings: [
+  //   {
+  //     guest: {
+  //       picture: "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91",
+  //       name: "Rater Ivo"
+  //     },
+  //     message: "Cool event bro",
+  //     ratingValue: 5,
+  //     createdAt: "2019"
+  //   }
+  // ]
+  //   }
+  // }
   console.log("RENDERING USER MODAL");
-
-
 
   let dataDB;
 
@@ -124,7 +118,7 @@ function UserModal(props) {
     return (
       <ModalLayout>
         <PaperUser>
-          <Spinner />
+          <Spinner height={50} width={50} />
         </PaperUser>
       </ModalLayout>
     );
@@ -138,11 +132,26 @@ function UserModal(props) {
   // }
 
   console.log("DATA EVENT jsou tady: ", dataDB);
- 
+
   if (dataDB && dataDB.getOneUser.success) {
     return (
       <ModalLayout>
-        <PaperUser>
+        <Grid container justify="flex-start" className={classes.gridClose}>
+          <Grid item>
+            <Button
+              variant="contained"
+              //color={theme.background}
+              size="small"
+              className={classes.closeButton}
+              onClick={() => {
+                props.history.goBack();
+              }}
+            >
+              <CloseIcon fontSize="large" />
+            </Button>
+          </Grid>
+        </Grid>
+        <PaperUser className={classes.paper}>
           <Grid
             container
             justify="center"
@@ -153,26 +162,26 @@ function UserModal(props) {
             className={classes.mainGrid}
           >
             <Grid item>
-        <Avatar className={classes.avatar} src={dataDB.getOneUser.picture}>
-          <LockOutlinedIcon />
-        </Avatar>
-        </ Grid>
-        <Grid item>
-          <Typography variant="subtitle2">
-          {dataDB.getOneUser.name}
-          </Typography>
-        </Grid>
+              <Avatar
+                className={classes.avatar}
+                src={dataDB.getOneUser.picture}
+              >
+                <LockOutlinedIcon />
+              </Avatar>
+            </Grid>
+            <Grid item>
+              <Typography variant="subtitle2">
+                {dataDB.getOneUser.name}
+              </Typography>
+            </Grid>
 
-        {ratingStates.loading && <Spinner />}
+            {ratingStates.loading && <Spinner height={100} width={100} />}
             {ratingStates.data &&
               ratingStates.data.showRatings &&
               ratingStates.data.showRatings.map((rating, index) => (
                 <RatingCard rating={rating} key={index} />
               ))}
-            
-           </ Grid>
-
-       
+          </Grid>
         </PaperUser>
         <Box mt={8}>
           <Copyright />
@@ -181,6 +190,7 @@ function UserModal(props) {
     );
   }
 
+  return <p>No</p>;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -195,17 +205,29 @@ const useStyles = makeStyles(theme => ({
     width: "100%"
   },
   paper: {
-    background: "red",
+    background: "#600328",
     color: "white",
-    marginTop: theme.spacing(8),
+    marginTop: "10vh",
     padding: theme.spacing(3, 2),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    maxWidth: 380,
-    minWidth: 250,
-    maxHeight: "80vh",
-    overflow: "scroll"
+    width: 300,
+    maxHeight: "70vh",
+    minHeight: "50vh",
+    overflow: "scroll",
+    borderBottomRightRadius: 0,
+    borderBottomLeftRadius: 0
+  },
+  gridClose: {
+    position: "absolute",
+    top: "10vh",
+    height: 0,
+    color: "white",
+    margin: 0,
+    marginLeft: 10,
+    padding: 0,
+    width: "100%"
   },
   closeButton: {
     background: theme.palette.violetova,

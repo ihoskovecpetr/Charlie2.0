@@ -13,12 +13,12 @@ import { useHistory } from "react-router-dom";
 import { UserContext } from "../userContext";
 import { usePosition } from "../Hooks/useGoelocation";
 import { useGeoWatcher } from "../Hooks/useGeoWrap";
+import { usePositionStatic } from "../Hooks/useGeolocationStatic";
 
-import mapSetup from '../Services/map-settings';
-import Dropzone from "../Molecules/dropzone";
-import Spinner from "../Atoms/Spinner";
+import mapSetup from "../Services/map-settings";
 import Map from "../Atoms/Hook-map";
 import InfoWindow from "../Molecules/Infowindow";
+import MapSettingsPanel from "../Molecules/map-settings-panel";
 
 const ALL_EVENTS = gql`
   query eventGeoDay(
@@ -57,6 +57,13 @@ const ALL_EVENTS = gql`
         marginLeft
         vwidth
       }
+      bookings {
+        confirmed
+        cancelled
+        user {
+          _id
+        }
+      }
     }
   }
 `;
@@ -70,11 +77,15 @@ function MapPage(props) {
   const classes = useStyles();
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
-  const [customMapParam, setCustomMapParam] = useState();
+  //const [customMapParam, setCustomMapParam] = useState();
+  const [dateState, setDateState] = useState(
+    new Date().toISOString().split("T")[0]
+  );
   const { latitude, longitude, errorPosition } = useGeoWatcher();
+  //const { latitude, longitude } = usePositionStatic();
   //const [createEvent, { loading, error, data }] = useMutation(NEW_EVENT);
   const { loading, error, data } = useQuery(ALL_EVENTS, {
-    variables: { date: "2019-11-11" }
+    variables: { date: props.workingPose.date }
   });
 
   useEffect(() => {
@@ -281,12 +292,20 @@ function MapPage(props) {
         "https://res.cloudinary.com/party-images-app/image/upload/v1558048597/lo7digag5hz5alymniwz.png";
       var url = urlNA;
 
-      // location.EventGuests.map((guest, index) => {
-
-      //   if (here.props.email.indexOf(guest.guest_email) !== -1 && guest.guest_confirmed == true) {
-      //     url = urlAttend
-      //   }
-      // })
+      location.bookings.map((guest, index) => {
+        console.log("User indexOf: ", guest.user._id, user._id);
+        if (guest.user._id == user._id) {
+          console.log("Yes, GUEST");
+          {
+            !guest.cancelled && guest.confirmed && (url = urlAttend);
+          }
+        } else {
+          console.log("No, GUEST");
+        }
+        // if (here.props.email.indexOf(guest.guest_email) !== -1 && guest.guest_confirmed == true) {
+        //   url = urlAttend
+        // }
+      });
       var image = {
         url: url,
         size: new window.google.maps.Size(48, 48),
@@ -357,13 +376,17 @@ function MapPage(props) {
     //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
     clickableIcons: false,
     gestureHandling: "cooperative",
-    styles: mapSetup,
+    styles: mapSetup
   };
 
   return (
     <Container component="main" maxWidth="xl" className={classes.container}>
       <CssBaseline />
-
+      <MapSettingsPanel
+        dateState={props.workingPose.date}
+        setWorkingPose={props.setWorkingPose}
+        loading={loading}
+      />
       <Map
         onMount={onMapMount}
         options={MapOptions}
@@ -372,7 +395,8 @@ function MapPage(props) {
           height: "100vh",
           width: "100%",
           position: "absolute",
-          top: 0
+          top: 0,
+          background: "black"
         }}
       />
     </Container>

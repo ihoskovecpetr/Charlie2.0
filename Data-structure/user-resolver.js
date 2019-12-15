@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 export const typeDef = `
   extend type Query {
     getUsers(_id: ID name: String): [User]
+    getOneUser(user_id: ID): User
     getLoggedInUser: User
     deleteAllUsers: String
   }
@@ -92,15 +93,20 @@ export const resolvers = {
     },
     getLoggedInUser: async (_, _args, context, info) => {
       try {
-        console.log("2 ++ ted: ", context.reqO.req.isAuth);
-        console.log("2 ++ ted: ", context.reqO.req.userId);
-        console.log("2 ++ ted: ", context.reqO.req.email);
         if (context.reqO.req.isAuth) {
           let user = await User.findById(context.reqO.req.userId);
           console.log("fount all: ", user);
           return { ...user._doc, success: true };
         }
         return { success: false };
+      } catch (err) {
+        throw err;
+      }
+    },
+    getOneUser: async (_, _args, __) => {
+      try {
+        let user = await User.findById(_args.user_id);
+        return { ...user._doc, success: true };
       } catch (err) {
         throw err;
       }

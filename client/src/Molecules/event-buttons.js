@@ -1,6 +1,8 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+
 import { withRouter, NavLink } from "react-router-dom";
 import gql from "graphql-tag";
 import ModalJoin from "./event/modal-join";
@@ -48,6 +50,7 @@ const ALL_EVENTS = gql`
 `;
 
 function EventButtons(props) {
+  const classes = useStyles();
   let userIsAttending = false;
   let userRequestedBooking = false;
   let eventIsPast = false;
@@ -97,24 +100,15 @@ function EventButtons(props) {
 
   if (props.data && props.data.showBookings) {
     props.data.showBookings.map(booking => {
-      if (
-        props.user._id == booking.user._id
-      ) {
+      if (props.user._id == booking.user._id) {
+        if (!booking.confirmed && !booking.cancelled) {
+          userRequestedBooking = true;
+        }
 
-        if(!booking.confirmed &&
-          !booking.cancelled){
-            userRequestedBooking = true;
-          }
-
-      if(booking.confirmed &&
-        !booking.cancelled){
+        if (booking.confirmed && !booking.cancelled) {
           userIsAttending = true;
         }
-        
       }
-
-
-
     });
   }
 
@@ -123,103 +117,121 @@ function EventButtons(props) {
       console.log("PASSSt: ", eventIsPast);
       console.log("userIsAttending: ", userIsAttending);
       return (
-        <Grid item>
+        <>
           {userIsAttending ? (
-            <ModalRate
-              event={props.data.getOneEvent}
-              user={props.user}
-              EVENT_RATINGS={props.EVENT_RATINGS}
-            />
+            <Grid item className={classes.buttonCls}>
+              <ModalRate
+                event={props.data.getOneEvent}
+                user={props.user}
+                EVENT_RATINGS={props.EVENT_RATINGS}
+              />
+            </Grid>
           ) : (
-            <Button variant="contained" color="secondary">
-              Past Event, did not attend
-            </Button>
+            <Grid item className={classes.buttonCls}>
+              <Button variant="contained" color="secondary">
+                Past Event, did not attend
+              </Button>
+            </Grid>
           )}
 
           {props.data && props.data.getOneEvent.areYouAuthor && (
-            <Button variant="contained" color="secondary">
-              Yours
-            </Button>
+            <Grid item className={classes.buttonCls}>
+              <Button variant="contained" color="secondary">
+                Yours
+              </Button>
+            </Grid>
           )}
           {props.data && !props.data.getOneEvent.areYouAuthor && (
-            <Button variant="contained" color="secondary">
-              Cizi
-            </Button>
+            <Grid item className={classes.buttonCls}>
+              <Button variant="contained" color="secondary">
+                Cizi
+              </Button>
+            </Grid>
           )}
-        </Grid>
+        </>
       );
     }
   }
 
   return (
     <>
-      <Grid item>
-        {!userIsAttending && !userRequestedBooking && (
+      {!userIsAttending && !userRequestedBooking && (
+        <Grid item className={classes.buttonCls}>
           <ModalJoin
             ONE_EVENT={props.ONE_EVENT}
             user={props.user}
             event={props.data.getOneEvent}
           />
-        )}
+        </Grid>
+      )}
 
-    {!userIsAttending && userRequestedBooking && (
-              <Button
-              variant="contained"
-              disabled
-            >
-              REQUEST PENDING
-            </Button>
-            )}
-        {userIsAttending && (
-          <>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={e => {
-                e.preventDefault();
-                props.cancelBooking({
-                  variables: {
-                    user_id: props.user._id,
-                    event_id: props.data.getOneEvent._id
-                  },
-                  refetchQueries: () => [
-                    {
-                      query: props.ONE_EVENT,
-                      variables: { id: props.match.params.id }
-                    }
-                  ]
-                });
-              }}
-            >
-              Cancel Attendance
-            </Button>
-          </>
-        )}
-      </Grid>
+      {!userIsAttending && userRequestedBooking && (
+        <Grid item className={classes.buttonCls}>
+          <Button variant="contained" color="grey">
+            PENDING REQ
+          </Button>
+        </Grid>
+      )}
+
+      {userIsAttending && (
+        <Grid item className={classes.buttonCls}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={e => {
+              e.preventDefault();
+              props.cancelBooking({
+                variables: {
+                  user_id: props.user._id,
+                  event_id: props.data.getOneEvent._id
+                },
+                refetchQueries: () => [
+                  {
+                    query: props.ONE_EVENT,
+                    variables: { id: props.match.params.id }
+                  }
+                ]
+              });
+            }}
+          >
+            Cancel Attendance
+          </Button>
+        </Grid>
+      )}
+
       {props.data && props.data.getOneEvent.areYouAuthor && (
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={e => {
-            e.preventDefault();
-            props.deleteOneEvent({
-              variables: {
-                delete_id: props.data.getOneEvent._id
-              },
-              refetchQueries: () => [
-                {
-                  query: ALL_EVENTS,
-                  variables: { date: "2019-11-11" }
-                }
-              ]
-            });
-          }}
-        >
-          Delete this event
-        </Button>
+        <Grid item className={classes.buttonCls}>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={e => {
+              e.preventDefault();
+              props.deleteOneEvent({
+                variables: {
+                  delete_id: props.data.getOneEvent._id
+                },
+                refetchQueries: () => [
+                  {
+                    query: ALL_EVENTS,
+                    variables: { date: "2019-11-11" }
+                  }
+                ]
+              });
+            }}
+          >
+            DELETE
+          </Button>
+        </Grid>
       )}
     </>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  buttonCls: {
+    margin: 0,
+    width: "45%"
+  }
+}));
 
 export default withRouter(EventButtons);

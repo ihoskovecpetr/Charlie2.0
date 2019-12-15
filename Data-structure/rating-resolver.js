@@ -13,7 +13,7 @@ export const resolvers = {
   Query: {
     showRatings: async (_, _args, __) => {
       try {
-        console.log("ShowBookings args: ", _args.event_id);
+        console.log("ShowBookings args: ", _args.host_id);
         let ratings;
         if (_args.event_id) {
           ratings = await Rating.find({ event: _args.event_id });
@@ -56,9 +56,13 @@ export const resolvers = {
           message: _args.message
         });
         const result = await rating.save();
-
-        console.log("rating.save() result: ", result);
-        return { ...result._doc, success: true };
+        console.log("RESSSU: ", result);
+        if (result) {
+          console.log("passresult: ");
+          return { ...result._doc, success: true };
+        } else {
+          return { success: false };
+        }
       } catch (err) {
         throw err;
       }
@@ -67,15 +71,17 @@ export const resolvers = {
   Rating: {
     event: async a => {
       try {
-        const event = await Event.findById(a.event);
-        return transformEvent(event);
+        console.log("RATING event:: ", a);
+        const event = await Event.findById(a);
+        //return transformEvent(event);
+        return event;
       } catch (err) {
         throw err;
       }
     },
     guest: async (a, b, c) => {
       try {
-        console.log("RATING guest:: ", a.guest);
+        console.log("RATING guest:: input ", a.guest);
         const user = await User.findById(a.guest);
         console.log("RATING guest:: ", user);
         return user;

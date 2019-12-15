@@ -15,6 +15,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Rating from "@material-ui/lab/Rating";
 
 import StarRatingComponent from "react-star-rating-component";
 
@@ -24,7 +25,7 @@ import { Z_BLOCK } from "zlib";
 const useStyles = makeStyles(theme => ({
   card: {
     //maxWidth: 345,
-    minWidth: 300,
+    //minWidth: 300,
     width: "100%",
     display: "block",
     marginBottom: 5,
@@ -32,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   },
   cardHeader: {
     width: "100%",
-    padding: 0,
+    padding: 0
   },
   media: {
     height: 0,
@@ -42,14 +43,14 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: red[500]
   },
   expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
+    transform: "rotate(0deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest
+    })
   },
   expandOpen: {
-    transform: 'rotate(180deg)',
+    transform: "rotate(180deg)"
   },
   starContainer: {
     fontSize: 20
@@ -78,12 +79,12 @@ export default function RecipeReviewCard(props) {
             className={classes.cardHeader}
           >
             <Avatar
-            aria-label="recipe"
-            src={props.rating.guest.picture}
-            className={classes.avatar}
-          >
-            R
-          </Avatar>
+              aria-label="recipe"
+              src={props.rating.guest.picture}
+              className={classes.avatar}
+            >
+              R
+            </Avatar>
           </IconButton>
         }
         action={
@@ -100,22 +101,10 @@ export default function RecipeReviewCard(props) {
           </IconButton>
         }
         title={
-          <StarRatingComponent
-            name={String} /* name of the radio input, it is required */
-            className={classes.starContainer}
-            value={
-              props.rating.ratingValue
-            } /* number of selected icon (`0` - none, `1` - first) */
-            starCount={5} /* number of icons in rating, default `5` */
-            starColor={
-              "#E8045D"
-            } /* color of selected icons, default `#ffb400` */
-            emptyStarColor={
-              "#999"
-            } /* color of non-selected icons, default `#333` */
-            editing={
-              false
-            } /* is component available for editing, default `true` */
+          <Rating
+            name="simple-controlled"
+            readOnly
+            value={props.rating.ratingValue}
           />
         }
         //title={props.rating.guest.name}

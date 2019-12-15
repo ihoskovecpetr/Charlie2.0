@@ -27,7 +27,6 @@ import PendingGuest from "../Molecules/event/pending-guest";
 import ConfirmedGuest from "../Molecules/event/confirmed-guest";
 import UserCard from "../Molecules/event/user-card";
 
-
 const ONE_EVENT = gql`
   query getOneEvent($id: ID!) {
     getOneEvent(id: $id) {
@@ -114,60 +113,60 @@ const DELETE = gql`
   }
 `;
 let dataMock;
-dataMock = {
-  getOneEvent: {
-    _id: "12321",
-    success: true,
-    author: {
-      _id: "12321",
-      name: "Petr H. McOcker",
-      picture:
-        "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
-    },
-    name: "Mock data Party",
-    geometry: { coordinates: [50.040112099, 14.428] },
-    lng: 14.45,
-    lat: 50,
-    addressGoogle: "addressGoogle",
-    addressCustom: "addressCustom",
-    address: "address",
-    eventType: 1,
-    dateStart: "2019-10-10",
-    price: 12,
-    capacityMax: 20,
-    BYO: true,
-    imagesArr: [
-      {
-        caption: "No more pictures for this Event",
-        src:
-          "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-        thumbnail:
-          "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-        thumbnailHeight: 10,
-        thumbnailWidth: 10,
-        scaletwidth: 100,
-        marginLeft: 0,
-        vwidth: 100,
-        isSelected: false
-      }
-    ],
-    description: "Desc Mocks data",
-    confirmed: true,
-    hide: false
-  },
-  showBookings: [
-    {
-      confrimed: true,
-      user: {
-        name: "Mock Guy",
-        email: "mock@email.com",
-        picture:
-          "https://www.ixxiyourworld.com/media/2389064/ixxi-paul-fuentes-pink-rocket.jpg?mode=crop&width=562&height=832",
-        _id: "232hj23h24h234"
-      }
-    }
-  ]
-};
+// dataMock = {
+//   getOneEvent: {
+//     _id: "12321",
+//     success: true,
+//     author: {
+//       _id: "12321",
+//       name: "Petr H. McOcker",
+//       picture:
+//         "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
+//     },
+//     name: "Mock data Party",
+//     geometry: { coordinates: [50.040112099, 14.428] },
+//     lng: 14.45,
+//     lat: 50,
+//     addressGoogle: "addressGoogle",
+//     addressCustom: "addressCustom",
+//     address: "address",
+//     eventType: 1,
+//     dateStart: "2019-10-10",
+//     price: 12,
+//     capacityMax: 20,
+//     BYO: true,
+//     imagesArr: [
+//       {
+//         caption: "No more pictures for this Event",
+//         src:
+//           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+//         thumbnail:
+//           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+//         thumbnailHeight: 10,
+//         thumbnailWidth: 10,
+//         scaletwidth: 100,
+//         marginLeft: 0,
+//         vwidth: 100,
+//         isSelected: false
+//       }
+//     ],
+//     description: "Desc Mocks data",
+//     confirmed: true,
+//     hide: false
+//   },
+//   showBookings: [
+//     {
+//       confrimed: true,
+//       user: {
+//         name: "Mock Guy",
+//         email: "mock@email.com",
+//         picture:
+//           "https://www.ixxiyourworld.com/media/2389064/ixxi-paul-fuentes-pink-rocket.jpg?mode=crop&width=562&height=832",
+//         _id: "232hj23h24h234"
+//       }
+//     }
+//   ]
+// };
 
 function Event(props) {
   const classes = useStyles();
@@ -237,7 +236,7 @@ function Event(props) {
     return (
       <ModalLayout>
         <PaperEvent>
-          <Spinner />
+          <Spinner height={100} width={100} />
         </PaperEvent>
       </ModalLayout>
     );
@@ -264,6 +263,7 @@ function Event(props) {
             alignContent="flex-start"
             direction="column"
             spacing={2}
+            className={classes.gridClose}
           >
             <Grid item>
               <Button
@@ -281,16 +281,13 @@ function Event(props) {
           </Grid>
           <Grid item className={classes.nameGrid} md={12}>
             <Box textAlign="center" m={1}>
-              <Typography component="div">{dataDB.getOneEvent.name}</Typography>
+              <Typography component="h5" variant="h5">
+                {dataDB.getOneEvent.name}
+              </Typography>
             </Box>
             <Divider />
           </Grid>
 
-          <Grid item>
-            <Box textAlign="justify" m={1}>
-              {dataDB.getOneEvent.description}
-            </Box>
-          </Grid>
           <Grid
             container
             justify="flex-start"
@@ -310,11 +307,24 @@ function Event(props) {
 
             <Grid item>
               <Typography component="div" className={classes.standardHeading}>
+                DESCRIPTION
+              </Typography>
+              <Box textAlign="justify" m={1}>
+                <Typography component="p" className={classes.standardContent}>
+                  {dataDB.getOneEvent.description}
+                </Typography>
+              </Box>
+            </Grid>
+
+            <Grid item>
+              <Typography component="div" className={classes.standardHeading}>
                 DATE
               </Typography>
               <Box textAlign="left" m={1}>
-                {dataDB.getOneEvent.dateStart &&
-                  displayDate(dataDB.getOneEvent.dateStart)}
+                <Typography component="p" className={classes.standardContent}>
+                  {dataDB.getOneEvent.dateStart &&
+                    displayDate(dataDB.getOneEvent.dateStart)}
+                </Typography>
               </Box>
             </Grid>
             <Typography component="div" className={classes.standardHeading}>
@@ -322,7 +332,9 @@ function Event(props) {
             </Typography>
             <Grid item>
               <Box textAlign="left" m={1}>
-                {dataDB.getOneEvent.price}
+                <Typography component="p" className={classes.standardContent}>
+                  {dataDB.getOneEvent.price}
+                </Typography>
               </Box>
             </Grid>
             <Grid item>
@@ -330,7 +342,9 @@ function Event(props) {
                 BYO
               </Typography>
               <Box textAlign="left" m={1}>
-                {dataDB.getOneEvent.BYO ? "YES" : "NO"}
+                <Typography component="p" className={classes.standardContent}>
+                  {dataDB.getOneEvent.BYO ? "YES" : "NO"}
+                </Typography>
               </Box>
             </Grid>
             <Grid item>
@@ -345,7 +359,7 @@ function Event(props) {
                   event={dataDB.getOneEvent}
                   ONE_EVENT={ONE_EVENT}
                 />
-                {bookingStates.loading && <Spinner />}
+                {bookingStates.loading && <Spinner height={100} width={100} />}
               </Box>
             </Grid>
             <Grid item>
@@ -375,42 +389,66 @@ function Event(props) {
                           return null;
                         })}
                       </Grid>
-                      {bookingStates.loading && <Spinner />}
+                      {bookingStates.loading && (
+                        <Spinner height={100} width={100} />
+                      )}
                     </Box>
                   </Grid>
                 </>
               )}
             </Grid>
             <Typography component="div" className={classes.standardHeading}>
-              Host
+              AUTHOR
             </Typography>
-            <Grid item>
-              <UserCard author={dataDB.getOneEvent.author} />
-            </Grid>
-            <Grid item>
-              <Typography component="div">Address:</Typography>
-              <Box textAlign="left" m={1}>
-                {dataDB.getOneEvent.address}
-              </Box>
-            </Grid>
-            <Grid item>
-              <Grid
-                container
-                direction="row"
-                wrap="no-wrap"
-                spacing={2}
-                className={classes.ratingContainer}
-              >
-                {ratings.data &&
-                  ratings.data.showRatings.map((rating, index) => (
-                    <Grid item>
-                      <RatingCard rating={rating} key={index} />
-                    </Grid>
-                  ))}
+            <Grid
+              container
+              justify="center"
+              className={classes.authorContainer}
+            >
+              <Grid item>
+                <UserCard author={dataDB.getOneEvent.author} />
               </Grid>
             </Grid>
-          </Grid>
+            <Typography component="div" className={classes.standardHeading}>
+              ADDRESS
+            </Typography>
+            <Grid item>
+              <Box textAlign="left" m={1}>
+                <Typography component="p" className={classes.standardContent}>
+                  {dataDB.getOneEvent.address}
+                </Typography>
+              </Box>
+            </Grid>
+            <Typography component="div" className={classes.standardHeading}>
+              RATING
+            </Typography>
 
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              alignContent="center"
+              direction="column"
+              className={classes.ratingContainer}
+            >
+              {ratings.data &&
+                ratings.data.showRatings.map((rating, index) => (
+                  <Grid item>
+                    <RatingCard rating={rating} key={index} />
+                  </Grid>
+                ))}
+            </Grid>
+          </Grid>
+        </PaperEvent>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+          alignContent="center"
+          spacing={2}
+          className={classes.gridButtons}
+        >
           <EventButtons
             data={dataDB}
             user={user}
@@ -422,7 +460,7 @@ function Event(props) {
             EVENT_RATINGS={EVENT_RATINGS}
             className={classes.eventButtons}
           />
-        </PaperEvent>
+        </Grid>
       </ModalLayout>
     );
   }
@@ -444,29 +482,53 @@ function Event(props) {
       </ModalLayout>
     );
   }
+  return <p>Reload please</p>;
 }
 
 const useStyles = makeStyles(theme => ({
-
   paper: {
     background: "black",
     color: "white",
-    marginTop: theme.spacing(8),
+    marginTop: "10vh",
     padding: theme.spacing(3, 2),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    maxWidth: 380,
-    minWidth: 250,
-    maxHeight: "80vh",
-    overflow: "scroll"
+    width: 300,
+    maxHeight: "70vh",
+    minHeight: "50vh",
+    overflow: "scroll",
+    borderBottomRightRadius: 0,
+    borderBottomLeftRadius: 0
+  },
+  gridClose: {
+    position: "absolute",
+    top: "10vh",
+    height: 0,
+    color: "white",
+    margin: "0 !important",
+    padding: 0,
+    width: "100%"
+  },
+  gridButtons: {
+    background: "black",
+    color: "white",
+    marginTop: "0 !important",
+    //padding: theme.spacing(3, 2),
+    display: "flex",
+    width: 300,
+    overflow: "scroll",
+    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 5,
+    boxShadow: "0px -2px 4px 0px rgba(255,255,255,0.2)"
   },
   closeButton: {
     background: theme.palette.violetova,
     color: "white"
   },
   nameGrid: {
-    borderBottom: "solid 1px white"
+    borderBottom: "solid 1px white",
+    marginBottom: 15
   },
   galleryGrid: {
     width: "100%",
@@ -476,13 +538,19 @@ const useStyles = makeStyles(theme => ({
   },
   standardHeading: {
     //borderBottom: "solid 1px grey",
-    fontWeight: 600,
+    fontWeight: 500,
     color: "grey"
+  },
+  standardContent: {
+    fontWeight: 400,
+    color: "white"
+  },
+  authorContainer: {
+    width: "100%"
   },
 
   ratingContainer: {
     width: "100%",
-    maxHeight: 200,
     overflow: "scroll"
   },
   eventButtons: {

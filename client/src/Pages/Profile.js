@@ -4,7 +4,7 @@ import Container from "@material-ui/core/Container";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Badge from '@material-ui/core/Badge';
+import Badge from "@material-ui/core/Badge";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -60,7 +60,9 @@ const USER_BOOKING = gql`
   query {
     showUserBookings(user_id: "5de415967198fe2d1e694c87") {
       event {
+        _id
         name
+        description
         dateStart
         imagesArr {
           caption
@@ -73,6 +75,7 @@ const USER_BOOKING = gql`
           vwidth
         }
         author {
+          _id
           name
           picture
         }
@@ -239,7 +242,14 @@ function Profile() {
               //     : "ATTENDING"
               // }
               label={
-                <Badge className={classes.padding} color="secondary" badgeContent={bookingStates.data && bookingStates.data.showUserBookings.length}>
+                <Badge
+                  className={classes.padding}
+                  color="secondary"
+                  badgeContent={
+                    bookingStates.data &&
+                    bookingStates.data.showUserBookings.length
+                  }
+                >
                   ATTENDING
                 </Badge>
               }
@@ -247,18 +257,28 @@ function Profile() {
             />
             <Tab
               label={
-                data && data.userEvents
-                  ? `HOSTING (${data.userEvents.length})`
-                  : "HOSTING"
+                <Badge
+                  className={classes.padding}
+                  color="secondary"
+                  badgeContent={data && data.userEvents.length}
+                >
+                  HOSTING
+                </Badge>
               }
               {...a11yProps(1)}
             />
 
             <Tab
               label={
-                ratingStates.data && ratingStates.data.showRatings
-                  ? `RATINGS (${ratingStates.data.showRatings.length})`
-                  : "RATINGS"
+                <Badge
+                  className={classes.padding}
+                  color="secondary"
+                  badgeContent={
+                    ratingStates.data && ratingStates.data.showRatings.length
+                  }
+                >
+                  RATING
+                </Badge>
               }
               {...a11yProps(2)}
             />
@@ -270,7 +290,7 @@ function Profile() {
           onChangeIndex={handleChangeIndex}
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
-            {bookingStates.loading && <Spinner />}
+            {bookingStates.loading && <Spinner height={100} width={100} />}
             {bookingStates.data &&
               bookingStates.data.showUserBookings &&
               bookingStates.data.showUserBookings.map(event => (
@@ -285,7 +305,7 @@ function Profile() {
           </TabPanel>
           <TabPanel value={value} index={2} dir={theme.direction}>
             Item Three
-            {ratingStates.loading && <Spinner />}
+            {ratingStates.loading && <Spinner height={100} width={100} />}
             {ratingStates.data &&
               ratingStates.data.showRatings &&
               ratingStates.data.showRatings.map((rating, index) => (

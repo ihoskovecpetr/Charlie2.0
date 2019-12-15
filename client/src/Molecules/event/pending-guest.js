@@ -26,7 +26,7 @@ export default function PendingGuest(props) {
   const useStyles = makeStyles(theme => ({
     card: {
       //maxWidth: 345,
-      minWidth: 300,
+      //minWidth: 300,
       width: "100%",
       display: "block",
       marginBottom: 5

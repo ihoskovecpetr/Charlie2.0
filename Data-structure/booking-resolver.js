@@ -184,11 +184,6 @@ export const resolvers = {
 
             const resMail = await smtpTransport.sendMail(mailOptions1);
 
-            console.log(
-              "AWAIT RES: resMail.rejected.length ",
-              resMail.rejected.length
-            );
-
             if (resMail.rejected.length !== 0) {
               return {
                 success: false,

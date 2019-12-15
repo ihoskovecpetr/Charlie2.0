@@ -71,7 +71,7 @@ function ModalJoin(props) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            {bookingReqStates.loading && <Spinner />}
+            {bookingReqStates.loading && <Spinner height={100} width={100} />}
             {bookingReqStates.data &&
               bookingReqStates.data.requestBookEvent.success && (
                 <div>Finished, success</div>

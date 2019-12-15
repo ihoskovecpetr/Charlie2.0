@@ -110,7 +110,13 @@ function MyDropzone(props) {
 
   return (
     <>
-      <div {...getRootProps()}>
+      <div
+        {...getRootProps()}
+        style={{
+          outline: "none",
+          margin: 10
+        }}
+      >
         <input {...getInputProps()} />
         {isDragActive ? (
           <>
@@ -121,28 +127,30 @@ function MyDropzone(props) {
             <WallpaperIcon fontSize="large" />
           </>
         )}
+        {/* <p>Place HERE your pictures</p> */}
+
+        {isUploading ? <Spinner height={100} width={100} /> : null}
+        {display ? (
+          <Gallery
+            images={uploadedFiles}
+            rowHeight={100}
+            display={display}
+            backdropClosesModal={true}
+          />
+        ) : (
+          <span> </span>
+        )}
+        {display ? (
+          <span> </span>
+        ) : (
+          <Gallery
+            images={uploadedFiles}
+            rowHeight={100}
+            display={display}
+            backdropClosesModal={true}
+          />
+        )}
       </div>
-      {isUploading ? <Spinner /> : null}
-      {display ? (
-        <Gallery
-          images={uploadedFiles}
-          rowHeight={100}
-          display={display}
-          backdropClosesModal={true}
-        />
-      ) : (
-        <span> </span>
-      )}
-      {display ? (
-        <span> </span>
-      ) : (
-        <Gallery
-          images={uploadedFiles}
-          rowHeight={100}
-          display={display}
-          backdropClosesModal={true}
-        />
-      )}
     </>
   );
 }

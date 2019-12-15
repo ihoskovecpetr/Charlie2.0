@@ -114,7 +114,7 @@ function ModalRate(props) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            {rateEventState.loading && <Spinner />}
+            {rateEventState.loading && <Spinner height={100} width={100} />}
             {rateEventState.data && rateEventState.data.rateEvent.success && (
               <div>Finished, success</div>
             )}

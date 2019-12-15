@@ -14,6 +14,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { Route, NavLink } from "react-router-dom";
 import { UserContext } from "../userContext";
 import { useWindowWidth } from "../Hooks/useWindowWidth";
+import Spinner from "./Spinner";
 
 function UpperStripe(props) {
   const { user, setUser } = useContext(UserContext);
@@ -40,7 +41,7 @@ function UpperStripe(props) {
     },
     title: {
       flexGrow: 1,
-      fontWeight: "500 !important"
+      fontWeight: "550 !important"
       //fontSize: 20
     },
     ButtonAvatar: {
@@ -102,6 +103,7 @@ function UpperStripe(props) {
                   <NavLink to={`/profile`}>
                     <Button color="inherit" className={classes.buttonNavi}>
                       {user.name}
+
                       <Avatar
                         alt="Remy Sharp"
                         src={user.picture}
@@ -117,7 +119,11 @@ function UpperStripe(props) {
               {!props.userApp.success && !user.name && (
                 <Button color="inherit" className={classes.buttonNavi}>
                   <NavLink to={`/signin`}>Sign In </NavLink>
-                  <AccountCircleIcon color="disabled" fontSize="large" />
+                  {props.loading ? (
+                    <Spinner height={30} width={30} />
+                  ) : (
+                    <AccountCircleIcon color="disabled" fontSize="large" />
+                  )}
                 </Button>
               )}
               {props.userApp.success && (

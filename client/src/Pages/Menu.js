@@ -16,13 +16,22 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { NavLink } from "react-router-dom";
 
+import Carousel from "../Atoms/carousel";
 import Copyright from "../Atoms/copyright";
 import SocialLine from "../Atoms/social-line";
 
 const useStyles = makeStyles(theme => ({
+  wrapContainer: {
+    background:
+      "linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(245,0,87,0.5) 90%)"
+  },
+  contentWrap: {
+    //maxWidth: 500
+    padding: 0
+  },
   menuContainer: {
     flexGrow: 1,
-    background: "linear-gradient(white, black)",
+    background: "linear-gradient(180deg, transparent 30%, rgba(0,0,0,1) 100%)",
     paddingTop: 20
   },
   root: {
@@ -38,6 +47,9 @@ const useStyles = makeStyles(theme => ({
     width: "100%",
     height: 200,
     paddingTop: "56.25%" // 16:9
+  },
+  menuButton: {
+    background: "white"
   },
   project: {
     textAlign: "center",
@@ -70,11 +82,14 @@ const useStyles = makeStyles(theme => ({
     top: 10,
     position: "relative",
     color: "white",
-    textAlign: "center"
+    textAlign: "center",
+    fontWeight: 600
   },
   blackContainer: {
     background: theme.palette.darkGrey,
-    color: "white"
+    color: "white",
+    padding: 10,
+    marginBottom: 20
   },
   pinkContainer: {
     //ackground: theme.palette.charliePink,
@@ -84,7 +99,19 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.charliePink,
     fontWeight: 300,
     paddingTop: 20,
-    fontSize: 20
+    fontSize: 20,
+    margin: 10
+  },
+  defaultContent: {
+    margin: 20,
+    fontWeight: 500
+  },
+  containerIframe: {
+    width: "100%"
+  },
+  iFrame: {
+    width: "100%",
+    height: 250
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -103,8 +130,8 @@ export default function Menu(props) {
   }, []);
 
   return (
-    <>
-      <Container maxWidth="xs">
+    <div className={classes.wrapContainer}>
+      <Container maxWidth="sm" className={classes.contentWrap}>
         <Grid
           container
           justify="center"
@@ -177,7 +204,24 @@ export default function Menu(props) {
             title="Paella dish"
           />
         </Grid>
-
+        <Grid container>
+          <Grid item>
+            <Typography className={classes.defaultHeader}>
+              CHARLIE <b>INTRO</b>
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid container className={classes.containerIframe}>
+          <Grid item className={classes.iFrame}>
+            <iframe
+              src="https://www.youtube.com/embed/PogfNxsugF0"
+              frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              className={classes.iFrame}
+            ></iframe>
+          </Grid>
+        </Grid>
         <Grid item>
           <Typography className={classes.defaultHeader}>
             YOUR <b>NEXT</b> EVENT
@@ -188,13 +232,12 @@ export default function Menu(props) {
             <Typography variant="h5" component="h3">
               GALLERY
             </Typography>
-            <Typography component="p">
+            <Typography component="p" className={classes.defaultContent}>
               Paper can be used to build surface or other elements for your
               application.
             </Typography>
           </Paper>
         </Grid>
-
         <Grid container>
           <Grid item>
             <Typography className={classes.defaultHeader}>
@@ -202,29 +245,10 @@ export default function Menu(props) {
             </Typography>
           </Grid>
           <Grid item>
-            <Typography variant="body2">
+            <Typography variant="subtitle2" className={classes.defaultContent}>
               Charlie is here to connect owners or renters of miscelanous places
               with guest for a joyfull evening
             </Typography>
-          </Grid>
-        </Grid>
-
-        <Grid container>
-          <Grid item>
-            <Typography className={classes.defaultHeader}>
-              CHARLIE <b>INTRO</b>
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <Grid container>
-          <Grid item>
-            <iframe
-              src="https://www.youtube.com/embed/PogfNxsugF0"
-              frameborder="0"
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
           </Grid>
         </Grid>
 
@@ -235,8 +259,18 @@ export default function Menu(props) {
             </Typography>
           </Grid>
         </Grid>
-
-        <Grid container className={classes.blackContainer}>
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          direction="column"
+          className={classes.blackContainer}
+        >
+          <Grid item>
+            <Typography variant="h5" gutterBottom>
+              DISCOVER
+            </Typography>
+          </Grid>
           <Grid item>
             <IconButton
               color="inherit"
@@ -245,17 +279,14 @@ export default function Menu(props) {
               onClick={props.handleDrawerToggle}
               className={classes.menuButton}
             >
-              <ExploreIcon fontSize="large" />
+              <ExploreIcon fontSize="large" color="secondary" />
             </IconButton>
           </Grid>
           <Grid item>
-            <Typography variant="subtitle2" gutterBottom>
-              DISCOVER
+            <Typography variant="h6" gutterBottom>
+              Find your favourite event and enjoy evening
             </Typography>
-            <Typography variant="subtitle2" gutterBottom>
-              Find your favourite event in Sydney and enjoy evening
-            </Typography>
-            <Typography variant="body2" gutterBottom>
+            <Typography variant="body1" gutterBottom>
               <ul>
                 <li>JOIN event</li>
                 <li>Bring your own drinks</li>
@@ -264,8 +295,19 @@ export default function Menu(props) {
             </Typography>
           </Grid>
         </Grid>
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          direction="column"
+          className={classes.blackContainer}
+        >
+          <Grid item>
+            <Typography variant="h5" gutterBottom>
+              CREATE
+            </Typography>
+          </Grid>
 
-        <Grid container className={classes.blackContainer}>
           <Grid item>
             <IconButton
               color="inherit"
@@ -274,17 +316,14 @@ export default function Menu(props) {
               onClick={props.handleDrawerToggle}
               className={classes.menuButton}
             >
-              <AccessibilityNewIcon fontSize="large" />
+              <AccessibilityNewIcon fontSize="large" color="secondary" />
             </IconButton>
           </Grid>
-          <Grid item justify="center" alignItems="center">
-            <Typography variant="subtitle2" gutterBottom>
-              CREATE
-            </Typography>
-            <Typography variant="subtitle2" gutterBottom>
+          <Grid item>
+            <Typography variant="h6" gutterBottom>
               Create your first CHARLIE event and start earning
             </Typography>
-            <Typography variant="body2" gutterBottom>
+            <Typography variant="body1" gutterBottom>
               <ul>
                 <li>CREATE event</li>
                 <li>Welcomme guests</li>
@@ -293,7 +332,108 @@ export default function Menu(props) {
             </Typography>
           </Grid>
         </Grid>
+        <Grid item>
+          <Typography className={classes.defaultHeader}>
+            CHARLIE <b>BLOG</b>
+          </Typography>
+        </Grid>
+        <Grid container justify="center" alignItems="center" direction="column">
+          <Grid item></Grid>
+          <Grid item>
+            <Avatar
+              alt="Author"
+              sizes="large"
+              src="https://res.cloudinary.com/party-images-app/image/upload/v1553553202/eredff7zmlr65fm3bbue.png"
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="h5">
+              ‘Its all about the view from my balcony’
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2" className={classes.defaultContent}>
+              I do have nice flat in the Sydney and I love to share this place
+              with other people via Charlie. I do offer bbq nights twice a week
+              and it alone can pay my rent in this beautiful place
+            </Typography>
+          </Grid>
+        </Grid>
+        <Carousel
+          images={[
+            "https://res.cloudinary.com/party-images-app/image/upload/v1553554542/ixgdwwuaasm5f49cfhpb.png",
+            "https://res.cloudinary.com/party-images-app/image/upload/v1553554542/ukwkr5wraaezjeipbrgr.png",
+            "https://res.cloudinary.com/party-images-app/image/upload/v1553559427/xbugpqhcehvfatnpdrxi.png"
+          ]}
+        />
+        <Grid item>
+          <Typography className={classes.defaultHeader}>
+            CHARLIE <b>BLOG</b>
+          </Typography>
+        </Grid>
+        <Grid container justify="center" alignItems="center" direction="column">
+          <Grid item></Grid>
+          <Grid item>
+            <Avatar
+              alt="Author"
+              sizes="large"
+              src="https://res.cloudinary.com/party-images-app/image/upload/v1553557168/cgnjfgxcbegttvftwbox.png"
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="h5">‘People like my food’</Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2" className={classes.defaultContent}>
+              I do not have the best flat with view on the bay, but I know how
+              to make delicious food which make all the guests happy and they
+              love to come again and again.
+            </Typography>
+          </Grid>
+        </Grid>
+        <Carousel
+          images={[
+            "https://res.cloudinary.com/party-images-app/image/upload/v1553558709/hdyqsmvfmye0abxbmo6v.png",
 
+            "https://res.cloudinary.com/party-images-app/image/upload/v1553558710/kuh7whsezyjnbbtlphg2.png",
+
+            "https://res.cloudinary.com/party-images-app/image/upload/v1553558710/fh4mqii1zzgtd2sircza.png"
+          ]}
+        />
+        <Grid item>
+          <Typography className={classes.defaultHeader}>
+            CHARLIE <b>BLOG</b>
+          </Typography>
+        </Grid>
+        <Grid container justify="center" alignItems="center" direction="column">
+          <Grid item></Grid>
+          <Grid item>
+            <Avatar
+              alt="Author"
+              sizes="large"
+              src="https://res.cloudinary.com/party-images-app/image/upload/v1555136792/qcb1xwjgfb1ozhhgmajg.jpg"
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="h5">
+              ‘I love to share my great flat with others’
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2" className={classes.defaultContent}>
+              Come to hang out in my flat, it is pretty neat place. I do love
+              this energy from young people. I use it as a motivation in my life
+              and my business.
+            </Typography>
+          </Grid>
+        </Grid>
+        <Carousel
+          images={[
+            "https://res.cloudinary.com/party-images-app/image/upload/v1555137923/hp9x1b6w6hxx7ipk9nyw.png",
+            "https://res.cloudinary.com/party-images-app/image/upload/v1555137919/k74xwqzb3ssmh0mezqg5.png",
+            "https://res.cloudinary.com/party-images-app/image/upload/v1555137918/ozocoqfkuouyaomybh4u.png"
+          ]}
+        />
         <Grid item>
           <Typography className={classes.defaultHeader}>
             <b>CONTACT</b> US
@@ -387,6 +527,6 @@ export default function Menu(props) {
           <Copyright />
         </Box>
       </Container>
-    </>
+    </div>
   );
 }

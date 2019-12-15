@@ -64,8 +64,18 @@ export const resolvers = {
     eventGeoDay: async (_, _args, context) => {
       console.log("Args: ", _args);
       try {
-        let allEvents = await Event.find({});
-        //console.log("allEvents: ", allEvents);
+        console.log("Geo date>>> ", _args.date);
+
+        let startD = new Date(_args.date);
+        let nextD = new Date(_args.date);
+        nextD.setDate(nextD.getDate() + 1);
+        //let isoDen = den.toISOString().split("T")[0];
+        console.log("From: ", startD);
+        console.log("To: ", nextD);
+        const allEvents = await Event.find({
+          dateStart: { $gte: startD, $lte: nextD }
+        });
+        console.log("aktualni Eventy: ", allEvents);
 
         return allEvents.map(event => {
           return transformEvent(event);
@@ -149,6 +159,15 @@ export const resolvers = {
       try {
         const author = await User.findById(a.author);
         return author;
+      } catch (err) {
+        throw err;
+      }
+    },
+    bookings: async a => {
+      try {
+        console.log("Event.bookings.a: ", a);
+        const bookingsArr = await Booking.find({ event: a });
+        return bookingsArr;
       } catch (err) {
         throw err;
       }
@@ -238,7 +257,7 @@ function newFunction() {
     confirmed: Boolean 
     hide: Boolean
     areYouAuthor: Boolean
-    areYouGuest: Boolean
+    bookings: [Booking]
   }
 
   type Geometry{

@@ -9,7 +9,8 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -50,7 +51,7 @@ function SignIn(props) {
     <ModalLayout>
       <Paper className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
+          <ExitToAppIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign Out
@@ -85,7 +86,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(10),
     padding: theme.spacing(3, 2),
     display: "flex",
     flexDirection: "column",

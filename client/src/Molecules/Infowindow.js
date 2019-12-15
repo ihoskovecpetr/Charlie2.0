@@ -88,7 +88,7 @@ function Infowindow(props) {
       >
         <Button
           variant="contained"
-          color="primary"
+          color="#E8045D"
           className={classes.buttonOpen}
           onClick={e => {
             e.preventDefault();
@@ -121,7 +121,8 @@ const useStyles = makeStyles(theme => ({
   buttonOpen: {
     width: "100%",
     background: "#E8045D",
-    color: "white"
+    color: "white",
+    borderRadius: 0
   },
   h3Name: {
     display: "inline-block",

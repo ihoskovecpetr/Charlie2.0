@@ -81,6 +81,10 @@ function App(props) {
     success: false,
     name: false
   });
+  const [workingPose, setWorkingPose] = useState({
+    date: new Date().toISOString().split("T")[0],
+    geolocation: [1, 2]
+  });
 
   if (data) {
     if (data.getLoggedInUser.success && user.success == false) {
@@ -117,20 +121,20 @@ function App(props) {
     ? [
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
         <Create />, //create
-        <MapPage />, //Map
+        <MapPage workingPose={workingPose} setWorkingPose={setWorkingPose} />, //Map
         <About />,
         <UserModal />,
         <Profile />,
-        <SignOut />,
+        <SignOut />
       ]
     : [
         <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
         <Create />,
-        <MapPage />,
+        <MapPage workingPose={workingPose} setWorkingPose={setWorkingPose} />,
         <About />,
         <UserModal />,
         <SignUp />,
-        <SignIn />,
+        <SignIn />
       ];
   const drawer = (
     <div>
@@ -271,6 +275,7 @@ function App(props) {
                   <>
                     <UpperStripe
                       //bringOwnUser?? true??
+                      loading={loading}
                       userApp={false}
                       ListOfNames={ListOfNames}
                       ListOfUrls={ListOfUrls}
@@ -284,13 +289,14 @@ function App(props) {
                   </>
                 )}
               />
-               <Route
+              <Route
                 exact
                 path={`/user/:id`}
                 render={() => (
                   <>
                     <UpperStripe
                       //bringOwnUser?? true??
+                      loading={loading}
                       userApp={false}
                       ListOfNames={ListOfNames}
                       ListOfUrls={ListOfUrls}
@@ -311,6 +317,7 @@ function App(props) {
                   <>
                     <UpperStripe
                       //bringOwnUser?? true??
+                      loading={loading}
                       userApp={false}
                       ListOfNames={ListOfNames}
                       ListOfUrls={ListOfUrls}
@@ -331,6 +338,7 @@ function App(props) {
                   <>
                     <UpperStripe
                       //bringOwnUser?? true??
+                      loading={loading}
                       userApp={false}
                       ListOfNames={ListOfNames}
                       ListOfUrls={ListOfUrls}
@@ -393,6 +401,7 @@ function App(props) {
                     render={() => (
                       <>
                         <UpperStripe
+                          loading={loading}
                           userApp={user}
                           ListOfNames={ListOfNames}
                           ListOfUrls={ListOfUrls}
@@ -413,6 +422,7 @@ function App(props) {
                   render={() => (
                     <>
                       <UpperStripe
+                        loading={loading}
                         userApp={user}
                         ListOfNames={ListOfNames}
                         ListOfUrls={ListOfUrls}
@@ -443,6 +453,7 @@ function App(props) {
                   render={() => (
                     <>
                       <UpperStripe
+                        loading={loading}
                         userApp={user}
                         ListOfNames={ListOfNames}
                         ListOfUrls={ListOfUrls}
@@ -463,6 +474,7 @@ function App(props) {
                 render={() => (
                   <>
                     <UpperStripe
+                      loading={loading}
                       userApp={user}
                       ListOfNames={ListOfNames}
                       ListOfUrls={ListOfUrls}

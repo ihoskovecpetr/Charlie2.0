@@ -38,6 +38,7 @@ function SignIn(props) {
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
   const [login, { loading, error, data }] = useMutation(LOGIN);
+  console.log("useMutation(LOGIN: ", loading, error, data);
 
   if (user.success) {
     setTimeout(() => {
@@ -56,7 +57,7 @@ function SignIn(props) {
     return (
       <ModalLayout>
         <Paper className={classes.paper}>
-          <Spinner />
+          <Spinner height={50} width={50} />
         </Paper>
       </ModalLayout>
     );
@@ -174,11 +175,12 @@ const useStyles = makeStyles(theme => ({
     }
   },
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(10),
     padding: theme.spacing(3, 2),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    maxWidth: 400
   },
   avatar: {
     margin: theme.spacing(1),

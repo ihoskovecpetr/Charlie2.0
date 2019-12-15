@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 //import GeolocationMarker from 'geolocation-marker'
 import { usePosition } from "../Hooks/useGoelocation";
 import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
 
 import Map from "../Atoms/Hook-map";
 
@@ -149,22 +150,26 @@ export default function MapMolecule(props) {
 
   return (
     <>
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        id="input-location"
-        //value={props.customMapParam && props.customMapParam.address}
-        //label="Enter a location"
-        placeholder="Enter a location"
-        name="name"
-        autoComplete="name"
-        onKeyPress={e => {
-          if (e.key === "Enter") e.preventDefault();
-        }}
-        autoFocus
-      />
+      <Grid container>
+        <Grid item style={{ width: "100%" }}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="input-location"
+            //value={props.customMapParam && props.customMapParam.address}
+            //label="Enter a location"
+            //placeholder="Enter a location"
+            name="name"
+            autoComplete="name"
+            onKeyPress={e => {
+              if (e.key === "Enter") e.preventDefault();
+            }}
+            autoFocus
+          />
+        </Grid>
+      </Grid>
       <Map
         onMount={onMapMount}
         options={MapOptions}
