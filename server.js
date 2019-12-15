@@ -11,10 +11,10 @@ import { typeDefs, resolvers } from "./schema.js";
 //const resolvers = require("./resolvers.js");
 const app = express();
 
-app.use(express.static(path.join(__dirname, "client/build")));
+app.use(express.static(path.join(__dirname, "build")));
 
 app.get("/", function(req, res, next) {
-  res.sendFile(path.join(__dirname, "client/build/index.html"));
+  res.sendFile(path.join(__dirname, "build/index.html"));
 });
 
 app.use((req, res, next) => {
