@@ -3,7 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import CloseIcon from "@material-ui/icons/Close";
 
 import { withRouter, useHistory } from "react-router-dom";
 
@@ -19,15 +21,32 @@ function Layout(props) {
         () => {} //history.goBack()
       }
     >
-      <Container maxWidth="md" fixed={true} className={classes.container}>
+      <Container fixed={true} className={classes.container}>
         <CssBaseline />
         <Grid
           container
-          justify="center"
-          alignItems="center"
+          justify="flex-start"
+          alignItems="flex-start"
+          alignContent="flex-start"
           direction="column"
-          className={classes.gridContainer}
+          spacing={2}
+          className={classes.gridClose}
         >
+          <Grid item>
+            <Button
+              variant="contained"
+              //color={theme.background}
+              size="small"
+              className={classes.closeButton}
+              onClick={() => {
+                props.history.goBack();
+              }}
+            >
+              <CloseIcon fontSize="large" />
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid container justify="center" alignItems="center" direction="column">
           {props.children}
         </Grid>
       </Container>
@@ -48,10 +67,18 @@ const useStyles = makeStyles(theme => ({
   container: {
     padding: 0
   },
-  gridContainer: {
-    //marginTop: "3vh"
-    //padding: 20
-    // height: "100vh"
+  gridClose: {
+    position: "absolute",
+    top: "10vh",
+    height: 0,
+    color: "white",
+    margin: "0 !important",
+    padding: 0,
+    width: "100%"
+  },
+  closeButton: {
+    background: theme.palette.violetova,
+    color: "white"
   }
 }));
 

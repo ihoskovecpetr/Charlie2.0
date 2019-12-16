@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -14,115 +14,69 @@ import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
 import { withTheme } from "@material-ui/styles";
 import { makeStyles } from "@material-ui/core/styles";
 
+import { useMutation, useQuery } from "@apollo/react-hooks";
+import gql from "graphql-tag";
 import { NavLink } from "react-router-dom";
 
+import { UserContext } from "../userContext";
+import Spinner from "../Atoms/Spinner";
+import EventCard from "../Molecules/event-card";
 import Carousel from "../Atoms/carousel";
 import Copyright from "../Atoms/copyright";
 import SocialLine from "../Atoms/social-line";
 
-const useStyles = makeStyles(theme => ({
-  wrapContainer: {
-    background:
-      "linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(245,0,87,0.5) 90%)"
-  },
-  contentWrap: {
-    //maxWidth: 500
-    padding: 0
-  },
-  menuContainer: {
-    flexGrow: 1,
-    background: "linear-gradient(180deg, transparent 30%, rgba(0,0,0,1) 100%)",
-    paddingTop: 20
-  },
-  root: {
-    padding: theme.spacing(3, 2),
-    margin: theme.spacing(3, 2),
-    backgroundColor: "lightBlue"
-  },
-  media: {
-    height: 0,
-    paddingTop: "56.25%" // 16:9
-  },
-  cardMediaBottom: {
-    width: "100%",
-    height: 200,
-    paddingTop: "56.25%" // 16:9
-  },
-  menuButton: {
-    background: "white"
-  },
-  project: {
-    textAlign: "center",
-    fontWeight: 300,
-    letterSpacing: 11,
-    paddingLeft: 17
-  },
-  charlie: {
-    textAlign: "center",
-    fontWeight: 800
-  },
-  avatar: {
-    width: 100,
-    height: 100
-  },
-  gridLogo: {
-    textAlign: "center"
-  },
-  buttonsContainer: {
-    flexGrow: 1,
-    padding: 20
-  },
-  button: {
-    width: 100,
-    margin: 10,
-    fontWeight: "700 !important"
-  },
-  text: {
-    height: 0,
-    top: 10,
-    position: "relative",
-    color: "white",
-    textAlign: "center",
-    fontWeight: 600
-  },
-  blackContainer: {
-    background: theme.palette.darkGrey,
-    color: "white",
-    padding: 10,
-    marginBottom: 20
-  },
-  pinkContainer: {
-    //ackground: theme.palette.charliePink,
-    //color: "white",
-  },
-  defaultHeader: {
-    color: theme.palette.charliePink,
-    fontWeight: 300,
-    paddingTop: 20,
-    fontSize: 20,
-    margin: 10
-  },
-  defaultContent: {
-    margin: 20,
-    fontWeight: 500
-  },
-  containerIframe: {
-    width: "100%"
-  },
-  iFrame: {
-    width: "100%",
-    height: 250
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(0),
-    marginBottom: theme.spacing(5)
+const USER_NEW_BOOKINGS = gql`
+  mutation newestUserBookings($user_id: ID!) {
+    newestUserBookings(user_id: $user_id) {
+      event {
+        _id
+        name
+        description
+        dateStart
+        imagesArr {
+          caption
+          src
+          thumbnail
+          thumbnailHeight
+          thumbnailWidth
+          scaletwidth
+          marginLeft
+          vwidth
+        }
+        author {
+          _id
+          name
+          picture
+        }
+      }
+    }
   }
-}));
+`;
 
 export default function Menu(props) {
   const classes = useStyles();
+  const { user, setUser } = useContext(UserContext);
+  const [newBookingsArr, { loading, error, data }] = useMutation(
+    USER_NEW_BOOKINGS,
+    {
+      variables: { user_id: user._id }
+    }
+  );
 
+  // const ratings = useQuery(USER_NEW_BOOKINGS, {
+  //   variables: { user_id: user._id }
+  //   //skip: !id,
+  //   //pollInterval: 500
+  // });
+
+  if (user.success) {
+    console.log("YESUSR: ", user);
+    {
+      !loading && !data && newBookingsArr();
+    }
+  } else {
+    console.log("NO USR: ", user);
+  }
   console.log("Menu props: ", props);
 
   useEffect(() => {
@@ -227,16 +181,25 @@ export default function Menu(props) {
             YOUR <b>NEXT</b> EVENT
           </Typography>
         </Grid>
+
         <Grid item>
-          <Paper className={classes.root}>
-            <Typography variant="h5" component="h3">
-              GALLERY
-            </Typography>
-            <Typography component="p" className={classes.defaultContent}>
-              Paper can be used to build surface or other elements for your
-              application.
-            </Typography>
-          </Paper>
+          <Grid justify="center" container>
+            <Grid item>
+              {!loading && !data && <p>No data</p>}
+              {loading && <Spinner height={100} width={100} />}
+              {data &&
+                data.newestUserBookings &&
+                data.newestUserBookings.map(event => {
+                  if (new Date(event.event.dateStart) >= new Date()) {
+                    console.log("FUTUR EVENT: ", event.event);
+                    return <EventCard event={event.event} />;
+                  } else {
+                    console.log("PAST EVENT: ", event.event.dateStart);
+                    return null;
+                  }
+                })}
+            </Grid>
+          </Grid>
         </Grid>
         <Grid container>
           <Grid item>
@@ -530,3 +493,103 @@ export default function Menu(props) {
     </div>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  wrapContainer: {
+    // background:
+    //   "linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(245,0,87,0.5) 90%)"
+  },
+  contentWrap: {
+    //maxWidth: 500
+    padding: 0
+  },
+  menuContainer: {
+    flexGrow: 1,
+    background: "linear-gradient(180deg, transparent 30%, rgba(0,0,0,1) 100%)",
+    paddingTop: 20
+  },
+  root: {
+    padding: theme.spacing(3, 2),
+    margin: theme.spacing(3, 2),
+    backgroundColor: "lightBlue"
+  },
+  media: {
+    height: 0,
+    paddingTop: "56.25%" // 16:9
+  },
+  cardMediaBottom: {
+    width: "100%",
+    height: 200,
+    paddingTop: "56.25%" // 16:9
+  },
+  menuButton: {
+    background: "white"
+  },
+  project: {
+    textAlign: "center",
+    fontWeight: 300,
+    letterSpacing: 11,
+    paddingLeft: 17
+  },
+  charlie: {
+    textAlign: "center",
+    fontWeight: 800
+  },
+  avatar: {
+    width: 100,
+    height: 100
+  },
+  gridLogo: {
+    textAlign: "center"
+  },
+  buttonsContainer: {
+    flexGrow: 1,
+    padding: 20
+  },
+  button: {
+    width: 100,
+    margin: 10,
+    fontWeight: "700 !important"
+  },
+  text: {
+    height: 0,
+    top: 10,
+    position: "relative",
+    color: "white",
+    textAlign: "center",
+    fontWeight: 600
+  },
+  blackContainer: {
+    background: theme.palette.darkGrey,
+    color: "white",
+    padding: 10,
+    marginBottom: 20
+  },
+  pinkContainer: {
+    //ackground: theme.palette.charliePink,
+    //color: "white",
+  },
+  defaultHeader: {
+    color: theme.palette.charliePink,
+    fontWeight: 300,
+    paddingTop: 20,
+    fontSize: 20,
+    margin: 10
+  },
+  defaultContent: {
+    margin: 20,
+    fontWeight: 500
+  },
+  containerIframe: {
+    width: "100%"
+  },
+  iFrame: {
+    width: "100%",
+    height: 250
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(0),
+    marginBottom: theme.spacing(5)
+  }
+}));

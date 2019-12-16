@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -9,8 +9,6 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
-import Chip from "@material-ui/core/Chip";
-import CloseIcon from "@material-ui/icons/Close";
 
 import { withRouter, useHistory, NavLink } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/react-hooks";
@@ -188,24 +186,9 @@ function Event(props) {
     //pollInterval: 500
   });
 
-  console.log("RENDERING EVENT");
-
-  console.log(
-    "bookingStates, cancelledState: ",
-    bookingStates,
-    cancelledState,
-    deleteState
-  );
-
-  // if (cancelledState.data && cancelledState.data.cancelBooking.success) {
-  //   console.log("RERF cancelledState");
-  //   refetch();
-  // }
-
-  // if (bookingStates.data && bookingStates.data.bookEvent.success) {
-  //   console.log("RERF bookingStates");
-  //   refetch();
-  // }
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (deleteState.data && deleteState.data.deleteOneEvent.success == true) {
     console.log("Yes deleted, confirmed!!");
@@ -256,29 +239,6 @@ function Event(props) {
     return (
       <ModalLayout>
         <PaperEvent>
-          <Grid
-            container
-            justify="flex-start"
-            alignItems="flex-start"
-            alignContent="flex-start"
-            direction="column"
-            spacing={2}
-            className={classes.gridClose}
-          >
-            <Grid item>
-              <Button
-                variant="contained"
-                //color={theme.background}
-                size="small"
-                className={classes.closeButton}
-                onClick={() => {
-                  props.history.goBack();
-                }}
-              >
-                <CloseIcon fontSize="large" />
-              </Button>
-            </Grid>
-          </Grid>
           <Grid item className={classes.nameGrid} md={12}>
             <Box textAlign="center" m={1}>
               <Typography component="h5" variant="h5">
@@ -359,6 +319,7 @@ function Event(props) {
                   event={dataDB.getOneEvent}
                   ONE_EVENT={ONE_EVENT}
                 />
+
                 {bookingStates.loading && <Spinner height={100} width={100} />}
               </Box>
             </Grid>

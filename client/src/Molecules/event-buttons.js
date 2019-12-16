@@ -143,8 +143,13 @@ function EventButtons(props) {
           )}
           {props.data && !props.data.getOneEvent.areYouAuthor && (
             <Grid item className={classes.buttonCls}>
-              <Button variant="contained" color="secondary">
-                Cizi
+              <Button
+                variant="contained"
+                color="secondary"
+                disabled
+                className={classes.disabledBtn}
+              >
+                not owner
               </Button>
             </Grid>
           )}
@@ -231,6 +236,9 @@ const useStyles = makeStyles(theme => ({
   buttonCls: {
     margin: 0,
     width: "45%"
+  },
+  disabledBtn: {
+    background: "white !important"
   }
 }));
 

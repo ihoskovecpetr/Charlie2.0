@@ -161,7 +161,7 @@ function App(props) {
 
                 {index === 1 && (
                   <Avatar className={classes.avatar}>
-                    <AddCircleOutlineIcon fontSize="medium" />
+                    <AddCircleOutlineIcon />
                   </Avatar>
                 )}
                 {index === 2 && (

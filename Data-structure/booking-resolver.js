@@ -119,6 +119,30 @@ export const resolvers = {
         throw err;
       }
     },
+    newestUserBookings: async (_, _args, __) => {
+      try {
+        //let bookings = await Booking.count();
+        let bookings = await Booking.find({
+          user: _args.user_id,
+          confirmed: true
+        }).sort("-event.dateStart");
+        console.log("Bookings count: ", bookings);
+        // return {
+        //   ...bookings,
+        //   createdAt: new Date(bookings.createdAt)
+        // };
+        return bookings.map(async (booking, index) => {
+          return {
+            ...booking._doc,
+            createdAt: new Date(booking._doc.createdAt).toISOString()
+          };
+        });
+
+        //return bookings[0];
+      } catch (err) {
+        throw err;
+      }
+    },
     requestBookEvent: async (_, _args, __) => {
       try {
         let event = await Event.findById(_args.event_id);
@@ -256,6 +280,16 @@ export const resolvers = {
       }
     }
   }
+  // Evt: {
+  //   event: async a => {
+  //     try {
+  //       const event = await Event.findById(a.event);
+  //       return transformEvent(event);
+  //     } catch (err) {
+  //       throw err;
+  //     }
+  //   }
+  // }
 };
 
 function newFunction() {
@@ -271,6 +305,7 @@ function newFunction() {
     bookEvent(event_id: String!, user_id: String!, message: String): Hlaska!
     cancelBooking(event_id: String!, user_id: String!): Hlaska!
     confirmBooking(event_id: ID!, user_id: ID!): Hlaska!
+    newestUserBookings(user_id: ID!): [Booking]
   }
 
   type Hlaska { 
@@ -289,5 +324,7 @@ function newFunction() {
     cancelled: Boolean
     success: Boolean
   }
+
+
 `;
 }

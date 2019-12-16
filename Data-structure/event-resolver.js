@@ -6,15 +6,15 @@ import { transformEvent } from "./merge.js";
 export const typeDef = newFunction();
 export const resolvers = {
   Query: {
-    events: async () => {
-      try {
-        let allEvents = await Event.find({});
-        console.log("allEvents: ", allEvents);
-        return allEvents;
-      } catch (err) {
-        throw err;
-      }
-    },
+    // events: async () => {
+    //   try {
+    //     let allEvents = await Event.find({});
+    //     console.log("allEvents: ", allEvents);
+    //     return allEvents;
+    //   } catch (err) {
+    //     throw err;
+    //   }
+    // },
     getOneEvent: async (_, _args, context) => {
       try {
         console.log("getOneEvent context isAuth?? : ", context.reqO.req.isAuth);

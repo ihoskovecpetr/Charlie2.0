@@ -105,11 +105,12 @@ function Create(props) {
   const [formValue, setFormValue] = useState({
     startDate: "1990",
     description: "Yatim nic",
-    price: 22
+    price: 22,
+    capacity: 13
   });
 
   const [createEvent, { loading, error, data }] = useMutation(NEW_EVENT);
-
+  console.log("formValue: ", formValue);
   let history = useHistory();
   let den = new Date(selectedDate);
   //Day +- one day
@@ -139,6 +140,17 @@ function Create(props) {
     let isoDen = den.toISOString().split(":")[0];
     console.log("Split 0,1: ", isoDen);
     setSelectedDate(`${isoDen}:00:00.000Z`);
+  };
+
+  const plusCapacity = () => {
+    setFormValue(prev => {
+      return { ...prev, capacity: prev.capacity + 1 };
+    });
+  };
+  const minusCapacity = () => {
+    setFormValue(prev => {
+      return { ...prev, capacity: prev.capacity - 1 };
+    });
   };
 
   useEffect(() => {
@@ -180,21 +192,6 @@ function Create(props) {
         BYO: inputBYO.current.checked,
         description: inputDescription.current.value,
         imagesArr: formValue.ImagesArr
-        // imagesArr: [
-        //   {
-        //     caption: "No more pictures for this Event",
-        //     isSelected: false,
-        //     src:
-        //       "https://cms.hostelworld.com/hwblog/wp-content/uploads/sites/2/2017/12/surf-beaches-in-Australia-@hana_seas.jpg",
-        //     thumbnail:
-        //       "https://cms.hostelworld.com/hwblog/wp-content/uploads/sites/2/2017/12/surf-beaches-in-Australia-@hana_seas.jpg",
-        //     thumbnailHeight: 10,
-        //     thumbnailWidth: 10,
-        //     scaletwidth: 100,
-        //     marginLeft: 0,
-        //     vwidth: 100
-        //   }
-        // ]
       }
     });
   };
@@ -254,7 +251,7 @@ function Create(props) {
                 name="name"
                 autoComplete="name"
                 autoFocus
-                style={{ background: "white" }}
+                style={{ background: "rgba(255,255,255,0.7)", borderRadius: 5 }}
               />
             </Grid>
           </Grid>
@@ -278,7 +275,6 @@ function Create(props) {
           >
             <Grid item>
               <ArrowBackIosIcon
-                //fontSize="medium"
                 color="primary"
                 onClick={() => {
                   minusDay();
@@ -361,18 +357,6 @@ function Create(props) {
             </Grid>
           </Grid>
 
-          {/* <TextField
-            fullWidth
-            id="standard-number"
-            inputRef={inputPrice}
-            label="Price"
-            type="number"
-            className={classes.textField}
-            InputLabelProps={{
-              shrink: true
-            }}
-            margin="normal"
-          /> */}
           <InputLabel htmlFor="standard-adornment-amount">PRICE</InputLabel>
           <Grid
             container
@@ -397,7 +381,6 @@ function Create(props) {
             </Grid>
             <Grid item>
               <ArrowBackIosIcon
-                //fontSize="medium"
                 color="primary"
                 onClick={() => {
                   //plusPrice();
@@ -419,7 +402,6 @@ function Create(props) {
             </Grid>
             <Grid item>
               <ArrowForwardIosIcon
-                //fontSize="medium"
                 color="primary"
                 onClick={() => {
                   //plusPrice();
@@ -427,35 +409,23 @@ function Create(props) {
               />
             </Grid>
           </Grid>
-          {/* <TextField
-            fullWidth
-            id="standard-number"
-            inputRef={inputCapacityMax}
-            label="Capacity Max"
-            type="number"
-            className={classes.textField}
-            InputLabelProps={{
-              shrink: true
-            }}
-            margin="normal"
-          /> */}
+
           <InputLabel htmlFor="standard-adornment-amount">CAPACITY</InputLabel>
           <Grid container className={classes.formRow}>
             <Grid item>
               <ArrowBackIosIcon
-                //fontSize="medium"
                 color="primary"
                 onClick={() => {
-                  //plusPrice();
+                  minusCapacity();
                 }}
               />
             </Grid>
             <Grid>
               <TextField
-                className={classes.margin}
                 id="standard-number"
-                inputRef={inputCapacityMax}
-                defaultValue={20}
+                //inputRef={inputCapacityMax}
+                //defaultValue={20}
+                value={formValue.capacity}
                 type="number"
                 InputProps={{
                   startAdornment: (
@@ -468,10 +438,9 @@ function Create(props) {
             </Grid>
             <Grid item>
               <ArrowForwardIosIcon
-                //fontSize="medium"
                 color="primary"
                 onClick={() => {
-                  //plusPrice();
+                  plusCapacity();
                 }}
               />
             </Grid>
@@ -610,9 +579,7 @@ const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2)
   },
-  margin: {
-    margin: theme.spacing(1)
-  },
+
   withoutLabel: {
     marginTop: theme.spacing(3)
   },

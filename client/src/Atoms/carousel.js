@@ -35,8 +35,6 @@ export default function Example(props) {
     }
   ];
 
-  console.log("Props.images: ", props.images);
-
   return (
     <Carousel>
       <CardMedia

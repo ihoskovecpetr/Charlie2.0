@@ -57,8 +57,8 @@ const USER_EVENTS = gql`
 `;
 
 const USER_BOOKING = gql`
-  query {
-    showUserBookings(user_id: "5de415967198fe2d1e694c87") {
+  query showUserBookings($user_id: ID!) {
+    showUserBookings(user_id: $user_id) {
       event {
         _id
         name
@@ -221,7 +221,7 @@ function Profile() {
         <Button color="inherit" className={classes.buttonNavi}>
           <NavLink to={`/signout`}>
             <Typography variant="subtitle2">Sign out</Typography>
-            <ExitToAppIcon fontSize="medium" />
+            <ExitToAppIcon />
           </NavLink>
         </Button>
         {/* </Paper>
