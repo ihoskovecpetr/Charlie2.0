@@ -18,12 +18,15 @@ import gql from "graphql-tag";
 import { Redirect, useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
+import { useScrollDisable } from "../Hooks/useScrollDisable";
+
 import ModalLayout from "../Layouts/ModalLayout";
 import Spinner from "../Atoms/Spinner";
 import Copyright from "../Atoms/copyright";
 
 function SignIn(props) {
   const classes = useStyles();
+  useScrollDisable();
   const { user, setUser } = useContext(UserContext);
   let history = useHistory();
 
@@ -56,21 +59,20 @@ function SignIn(props) {
         <Typography component="h1" variant="h5">
           Sign Out
         </Typography>
-        <form className={classes.form} noValidate>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={e => {
-              e.preventDefault();
-              Out();
-            }}
-          >
-            Sing Out
-          </Button>
-        </form>
+
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          onClick={e => {
+            e.preventDefault();
+            Out();
+          }}
+        >
+          Sing Out
+        </Button>
       </Paper>
       <Box mt={8}>
         <Copyright />
@@ -93,15 +95,12 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center"
   },
   avatar: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(3),
     backgroundColor: theme.palette.secondary.main
   },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
-  },
   submit: {
-    margin: theme.spacing(3, 0, 2)
+    margin: theme.spacing(3, 0, 2),
+    width: "50%"
   }
 }));
 

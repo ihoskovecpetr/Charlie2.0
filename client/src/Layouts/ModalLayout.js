@@ -21,7 +21,7 @@ function Layout(props) {
         () => {} //history.goBack()
       }
     >
-      <Container fixed={true} className={classes.container}>
+      <div fixed={true} className={classes.modalWrap}>
         <CssBaseline />
         <Grid
           container
@@ -46,10 +46,8 @@ function Layout(props) {
             </Button>
           </Grid>
         </Grid>
-        <Grid container justify="center" alignItems="center" direction="column">
-          {props.children}
-        </Grid>
-      </Container>
+        <Container maxWidth="sm">{props.children}</Container>
+      </div>
     </div>
   );
 }
@@ -64,7 +62,7 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     height: "100vh"
   },
-  container: {
+  modalWrap: {
     padding: 0
   },
   gridClose: {

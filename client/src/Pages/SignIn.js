@@ -16,6 +16,8 @@ import gql from "graphql-tag";
 import { useHistory, NavLink } from "react-router-dom";
 
 import { UserContext } from "../userContext";
+import { useScrollDisable } from "../Hooks/useScrollDisable";
+
 import ModalLayout from "../Layouts/ModalLayout";
 import Spinner from "../Atoms/Spinner";
 import Copyright from "../Atoms/copyright";
@@ -36,6 +38,7 @@ const LOGIN = gql`
 function SignIn(props) {
   const classes = useStyles();
   let history = useHistory();
+  useScrollDisable();
   const { user, setUser } = useContext(UserContext);
   const [login, { loading, error, data }] = useMutation(LOGIN);
   console.log("useMutation(LOGIN: ", loading, error, data);
@@ -154,9 +157,7 @@ function SignIn(props) {
               </Link>
             </Grid>
             <Grid item>
-              <NavLink to={`/signup`} variant="body2">
-                {"Don't have an account? Sign Up"}
-              </NavLink>
+              <Link href="/signup">Don't have an account? Sign In</Link>
             </Grid>
           </Grid>
         </form>
@@ -179,8 +180,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(3, 2),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    maxWidth: 400
+    alignItems: "center"
   },
   avatar: {
     margin: theme.spacing(1),
@@ -192,6 +192,13 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  blueUnderline: {
+    margin: 20,
+    color: "blue",
+    "&:hover": {
+      textDecoration: "underline"
+    }
   }
 }));
 

@@ -14,9 +14,11 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useMutation } from "@apollo/react-hooks";
+
 import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../userContext";
+import { useScrollDisable } from "../Hooks/useScrollDisable";
 
 import ModalLayout from "../Layouts/ModalLayout";
 import Copyright from "../Atoms/copyright";
@@ -60,9 +62,9 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    background:
-      "linear-gradient(180deg, rgba(200,100,155,0.5) 30%, rgba(255,0,100,0.5) 100%)"
+    alignItems: "center"
+    // background:
+    //   "linear-gradient(180deg, rgba(200,100,155,0.5) 30%, rgba(255,0,100,0.5) 100%)"
   },
   avatar: {
     margin: theme.spacing(4),
@@ -82,7 +84,8 @@ const useStyles = makeStyles(theme => ({
     //fontWeight: 600,
   },
   gridDropzone: {
-    width: "100%"
+    width: "100%",
+    margin: theme.spacing(3, 0, 2)
   },
   mainHeading: {
     marginTop: 10
@@ -93,6 +96,7 @@ function SignUp() {
   const classes = useStyles();
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
+  useScrollDisable();
   const [newUser, { loading, error, data }] = useMutation(NEW_USER);
   const [formValue, setFormValue] = useState({
     picture: null //"https://res.cloudinary.com/party-images-app/image/upload/v1575981578/wc9pd4wxm3cgor6v2yls.jpg",
@@ -248,8 +252,8 @@ function SignUp() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+              <Link href="/signup" variant="body2">
+                Have an account? Sign Up
               </Link>
             </Grid>
           </Grid>

@@ -8,6 +8,7 @@ import clsx from "clsx";
 
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -101,10 +102,9 @@ function Create(props) {
   const { user, setUser } = useContext(UserContext);
   const [customMapParam, setCustomMapParam] = useState();
   const [currency, setCurrency] = React.useState("CZK");
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  //const [selectedDate, setSelectedDate] = useState(new Date());
   const [formValue, setFormValue] = useState({
-    startDate: "1990",
-    description: "Yatim nic",
+    startDate: new Date(),
     price: 22,
     capacity: 13
   });
@@ -112,18 +112,24 @@ function Create(props) {
   const [createEvent, { loading, error, data }] = useMutation(NEW_EVENT);
   console.log("formValue: ", formValue);
   let history = useHistory();
-  let den = new Date(selectedDate);
+  let den = new Date(formValue.startDate);
   //Day +- one day
   const plusDay = () => {
     den.setDate(den.getDate() + 1);
     //let isoDen = den.toISOString();
-    setSelectedDate(den);
+    //setFormValue(den);
+    console.log("SETTING: ", den);
+    setFormValue(prev => {
+      return { ...prev, startDate: den };
+    });
   };
 
   const minusDay = () => {
     den.setDate(den.getDate() - 1);
     //let isoDen = den.toISOString();
-    setSelectedDate(den);
+    setFormValue(prev => {
+      return { ...prev, startDate: den };
+    });
   };
 
   //Hours +- one hour
@@ -131,7 +137,11 @@ function Create(props) {
     den.setHours(den.getHours() + 1);
     let isoDen = den.toISOString().split(":")[0];
     console.log("Split 0,1: ", isoDen);
-    setSelectedDate(`${isoDen}:00:00.000Z`);
+    //setSelectedDate(`${isoDen}:00:00.000Z`);
+
+    setFormValue(prev => {
+      return { ...prev, startDate: `${isoDen}:00:00.000Z` };
+    });
   };
 
   const minusHour = () => {
@@ -139,7 +149,22 @@ function Create(props) {
     //let isoDen = den.toISOString();
     let isoDen = den.toISOString().split(":")[0];
     console.log("Split 0,1: ", isoDen);
-    setSelectedDate(`${isoDen}:00:00.000Z`);
+    //setSelectedDate(`${isoDen}:00:00.000Z`);
+
+    setFormValue(prev => {
+      return { ...prev, startDate: `${isoDen}:00:00.000Z` };
+    });
+  };
+
+  const plusPrice = () => {
+    setFormValue(prev => {
+      return { ...prev, price: prev.price + 1 };
+    });
+  };
+  const minusPrice = () => {
+    setFormValue(prev => {
+      return { ...prev, price: prev.price - 1 };
+    });
   };
 
   const plusCapacity = () => {
@@ -162,20 +187,12 @@ function Create(props) {
   const inputDate = useRef(null);
   const inputTime = useRef(null);
   const inputCapacityMax = useRef(null);
-  const inputPrice = useRef(null);
+  const inputCurrency = useRef(null);
   const inputBYO = useRef(null);
   const inputDescription = useRef(null);
 
   const onSubmit = e => {
     e.preventDefault();
-
-    // console.log("Posilam do GraphQl: ", inputName.current.value);
-    // console.log("Posilam do GraphQl: ", inputDate.current.value);
-    // console.log("Posilam do GraphQl: ", inputTime.current.value);
-    // console.log("Posilam do GraphQl: ", inputCapacityMax.current.value);
-    // console.log("Posilam do GraphQl: ", inputPrice.current.value);
-    // console.log("Posilam do GraphQl: BYO ", inputBYO.current.checked);
-    // console.log("Posilam do GraphQl: ", inputDescription.current.value);
 
     createEvent({
       variables: {
@@ -185,10 +202,10 @@ function Create(props) {
         address: customMapParam.address,
         author: user._id,
         eventType: 1,
-        dateStart: selectedDate, //inputDate.current.value,
-        dateEnd: "1999-11-10",
-        price: parseInt(inputPrice.current.value),
-        capacityMax: parseInt(inputCapacityMax.current.value),
+        dateStart: formValue.startDate, //inputDate.current.value,
+        price: formValue.price,
+        currency: inputCurrency.current.value,
+        capacityMax: formValue.capacity,
         BYO: inputBYO.current.checked,
         description: inputDescription.current.value,
         imagesArr: formValue.ImagesArr
@@ -197,8 +214,9 @@ function Create(props) {
   };
 
   const handleDateChange = date => {
-    console.log("CHange of DAte: ", date);
-    setSelectedDate(date);
+    setFormValue(prev => {
+      return { ...prev, startDate: date };
+    });
   };
 
   const handleChange = event => {
@@ -226,16 +244,29 @@ function Create(props) {
   }
 
   return (
-    <Container component="main" className={classes.profileContainer}>
+    <div component="main" className={classes.profileWrap}>
       <CssBaseline />
-      <Paper className={classes.paper1}>
-        <Grid container className={classes.pinkBack}>
+      <Container maxWidth="sm" className={classes.paper1}>
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          direction="column"
+          className={classes.pinkBack}
+        >
           {/* <Avatar className={classes.avatar}>
             <AddCircleOutlineIcon />
           </Avatar> */}
-          <Typography component="h1" variant="h5">
-            JUST DO IT <b>NOW</b>
-          </Typography>
+          <Grid item>
+            <Typography variant="h5" className={classes.justDoIt}>
+              JUST DO IT
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="h5" className={classes.now}>
+              <b>NOW</b>
+            </Typography>
+          </Grid>
 
           <Grid container className={clsx(classes.formRow)}>
             <Grid item style={{ width: "100%" }}>
@@ -251,13 +282,17 @@ function Create(props) {
                 name="name"
                 autoComplete="name"
                 autoFocus
-                style={{ background: "rgba(255,255,255,0.7)", borderRadius: 5 }}
+                style={{
+                  background: "rgba(255,255,255,0.9)",
+                  borderRadius: 5,
+                  boxShadow: "5px 5px 5px 0px rgba(0,0,0,0.75)"
+                }}
               />
             </Grid>
           </Grid>
         </Grid>
-      </Paper>
-      <Paper className={classes.paper}>
+      </Container>
+      <Container maxWidth="sm" className={classes.paper}>
         <form className={classes.form} noValidate>
           <InputLabel htmlFor="standard-adornment-amount">ADDRESS</InputLabel>
           <MapCreate
@@ -274,12 +309,19 @@ function Create(props) {
             className={clsx(classes.settingsPanel, classes.formRow)}
           >
             <Grid item>
-              <ArrowBackIosIcon
-                color="primary"
-                onClick={() => {
-                  minusDay();
-                }}
-              />
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={props.handleDrawerToggle}
+              >
+                <ArrowBackIosIcon
+                  color="primary"
+                  onClick={() => {
+                    minusDay();
+                  }}
+                />
+              </IconButton>
             </Grid>
             <Grid item>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -289,7 +331,7 @@ function Create(props) {
                   inputRef={inputDate}
                   //label="Choose date"
                   format="dd/MM/yyyy"
-                  value={selectedDate}
+                  value={formValue.startDate}
                   onChange={e => {
                     handleDateChange(e);
                   }}
@@ -300,13 +342,20 @@ function Create(props) {
               </MuiPickersUtilsProvider>
             </Grid>
             <Grid item>
-              <ArrowForwardIosIcon
-                //fontSize="large"
-                color="primary"
-                onClick={() => {
-                  plusDay();
-                }}
-              />
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={props.handleDrawerToggle}
+              >
+                <ArrowForwardIosIcon
+                  //fontSize="large"
+                  color="primary"
+                  onClick={() => {
+                    plusDay();
+                  }}
+                />
+              </IconButton>
             </Grid>
           </Grid>
 
@@ -321,13 +370,20 @@ function Create(props) {
             className={clsx(classes.settingsPanel, classes.formRow)}
           >
             <Grid item>
-              <ArrowBackIosIcon
-                //fontSize="large"
-                color="primary"
-                onClick={() => {
-                  minusHour();
-                }}
-              />
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={props.handleDrawerToggle}
+              >
+                <ArrowBackIosIcon
+                  //fontSize="large"
+                  color="primary"
+                  onClick={() => {
+                    minusHour();
+                  }}
+                />
+              </IconButton>
             </Grid>
             <Grid item>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -336,7 +392,7 @@ function Create(props) {
                   id="time-picker"
                   inputRef={inputTime}
                   //label="Time picker"
-                  value={selectedDate}
+                  value={formValue.startDate}
                   onChange={e => {
                     handleDateChange(e);
                   }}
@@ -347,13 +403,20 @@ function Create(props) {
               </MuiPickersUtilsProvider>
             </Grid>
             <Grid item>
-              <ArrowForwardIosIcon
-                //fontSize="large"
-                color="primary"
-                onClick={() => {
-                  plusHour();
-                }}
-              />
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={props.handleDrawerToggle}
+              >
+                <ArrowForwardIosIcon
+                  //fontSize="large"
+                  color="primary"
+                  onClick={() => {
+                    plusHour();
+                  }}
+                />
+              </IconButton>
             </Grid>
           </Grid>
 
@@ -380,19 +443,26 @@ function Create(props) {
               </TextField>
             </Grid>
             <Grid item>
-              <ArrowBackIosIcon
-                color="primary"
-                onClick={() => {
-                  //plusPrice();
-                }}
-              />
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={props.handleDrawerToggle}
+              >
+                <ArrowBackIosIcon
+                  color="primary"
+                  onClick={() => {
+                    minusPrice();
+                  }}
+                />
+              </IconButton>
             </Grid>
             <Grid item>
               <Input
                 id="standard-number"
-                inputRef={inputPrice}
+                //inputRef={inputPrice}
                 type="number"
-                //value={values.amount}
+                value={formValue.price}
                 defaultValue={10}
                 //onChange={handleChange("amount")}
                 // startAdornment={
@@ -401,24 +471,38 @@ function Create(props) {
               />
             </Grid>
             <Grid item>
-              <ArrowForwardIosIcon
-                color="primary"
-                onClick={() => {
-                  //plusPrice();
-                }}
-              />
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={props.handleDrawerToggle}
+              >
+                <ArrowForwardIosIcon
+                  color="primary"
+                  onClick={() => {
+                    plusPrice();
+                  }}
+                />
+              </IconButton>
             </Grid>
           </Grid>
 
           <InputLabel htmlFor="standard-adornment-amount">CAPACITY</InputLabel>
           <Grid container className={classes.formRow}>
             <Grid item>
-              <ArrowBackIosIcon
-                color="primary"
-                onClick={() => {
-                  minusCapacity();
-                }}
-              />
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={props.handleDrawerToggle}
+              >
+                <ArrowBackIosIcon
+                  color="primary"
+                  onClick={() => {
+                    minusCapacity();
+                  }}
+                />
+              </IconButton>
             </Grid>
             <Grid>
               <TextField
@@ -437,12 +521,19 @@ function Create(props) {
               />
             </Grid>
             <Grid item>
-              <ArrowForwardIosIcon
-                color="primary"
-                onClick={() => {
-                  plusCapacity();
-                }}
-              />
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={props.handleDrawerToggle}
+              >
+                <ArrowForwardIosIcon
+                  color="primary"
+                  onClick={() => {
+                    plusCapacity();
+                  }}
+                />
+              </IconButton>
             </Grid>
           </Grid>
           <InputLabel htmlFor="standard-adornment-amount">BYO Event</InputLabel>
@@ -512,56 +603,60 @@ function Create(props) {
               : "Add images first"}
           </Button>
         </form>
-      </Paper>
+      </Container>
       <Box mt={8}>
         <Copyright />
       </Box>
-    </Container>
+    </div>
   );
 }
 
 const useStyles = makeStyles(theme => ({
-  profileContainer: {
+  profileWrap: {
     position: "absolute",
     top: 0,
     minHeight: "100vh",
     width: "100%",
-    maxWidth: "100%",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     background:
       "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
   },
-  // paper: {
-  //   marginTop: theme.spacing(8),
-  //   display: "flex",
-  //   flexDirection: "column",
-  //   alignItems: "center"
-  // },
-  paper: {
-    //marginTop: theme.spacing(8),
-    padding: 10,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    maxWidth: 500,
-    background: "rgba(255,255,255,0.7)",
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0
-  },
   paper1: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(7),
     padding: 10,
-    paddingTop: 30,
+    paddingTop: 50,
     paddingBottom: 0,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    maxWidth: 286,
     background: "#E8045D"
+  },
+  paper: {
+    padding: 10,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    background: "rgba(255,255,255,0.7)",
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0
+  },
+
+  justDoIt: {
+    fontWeight: 200,
+    fontSize: 25,
+    letterSpacing: 12,
+    position: "relative",
+    top: 5,
+    marginBottom: 0
+  },
+  now: {
+    fontWeight: 700,
+    fontSize: 38,
+    letterSpacing: 3
   },
   avatar: {
     margin: theme.spacing(1),
@@ -573,8 +668,8 @@ const useStyles = makeStyles(theme => ({
   },
   pinkBack: {
     //background: "red",
-    width: "100%",
-    fisplay: "flex"
+
+    width: "100%"
   },
   submit: {
     margin: theme.spacing(3, 0, 2)

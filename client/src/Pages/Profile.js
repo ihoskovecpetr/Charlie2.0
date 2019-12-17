@@ -112,10 +112,11 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     width: 500
   },
-  profileContainer: {
+  profileWrap: {
     position: "absolute",
     top: 0,
     minHeight: "100vh",
+    width: "100%",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -208,7 +209,7 @@ function Profile() {
   console.log("user Events: ", data);
 
   return (
-    <Container className={classes.profileContainer}>
+    <div className={classes.profileWrap}>
       <CssBaseline />
       <Paper className={classes.paper}>
         <Avatar className={classes.avatar} src={user.picture}>
@@ -317,7 +318,7 @@ function Profile() {
       <Box mt={8}>
         <Copyright />
       </Box>
-    </Container>
+    </div>
   );
 }
 

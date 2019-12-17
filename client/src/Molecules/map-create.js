@@ -163,6 +163,7 @@ export default function MapMolecule(props) {
             //placeholder="Enter a location"
             name="name"
             autoComplete="name"
+            style={{ marginBottom: 0 }}
             onKeyPress={e => {
               if (e.key === "Enter") e.preventDefault();
             }}
@@ -176,7 +177,8 @@ export default function MapMolecule(props) {
         className="Create-hell-of-a-party"
         styling={{
           height: "200px",
-          width: "100%"
+          width: "100%",
+          marginBottom: 20
         }}
       />
     </>
