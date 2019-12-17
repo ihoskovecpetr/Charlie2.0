@@ -438,7 +438,11 @@ function Event(props) {
           >
             Back
           </Button>
-          <Typography component="div">{dataDB.getOneEvent.message}</Typography>
+          <Paper>
+            <Typography component="div">
+              {dataDB.getOneEvent.message}
+            </Typography>
+          </Paper>
         </PaperEvent>
       </ModalLayout>
     );
@@ -455,7 +459,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    width: 300,
+    //width: 300,
     maxHeight: "70vh",
     minHeight: "50vh",
     overflow: "scroll",
@@ -477,7 +481,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: "0 !important",
     //padding: theme.spacing(3, 2),
     display: "flex",
-    width: 300,
+    //width: 300,
     overflow: "scroll",
     borderBottomRightRadius: 5,
     borderBottomLeftRadius: 5,
