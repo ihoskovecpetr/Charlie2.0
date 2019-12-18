@@ -98,7 +98,7 @@ function ModalRate(props) {
           handleOpen();
         }}
       >
-        RATE EVENT
+        RATE
       </Button>
       <Modal
         aria-labelledby="transition-modal-title"

@@ -46,7 +46,7 @@ function Layout(props) {
             </Button>
           </Grid>
         </Grid>
-        <Container maxWidth="sm">{props.children}</Container>
+        <Container maxWidth="xs">{props.children}</Container>
       </div>
     </div>
   );

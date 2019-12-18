@@ -88,14 +88,18 @@ function Infowindow(props) {
       >
         <Button
           variant="contained"
-          color="#E8045D"
           className={classes.buttonOpen}
           onClick={e => {
             e.preventDefault();
-            openModalEvent();
+            console.log("INFW user: ", props.user);
+            if (props.user.success) {
+              openModalEvent();
+            } else {
+              props.redirectLogin();
+            }
           }}
         >
-          OPEN
+          OPEN {!props.user.success && "(LOGIN)"}
         </Button>
       </Grid>
     </>
