@@ -407,7 +407,6 @@ function Event(props) {
           justify="center"
           alignItems="center"
           alignContent="center"
-          spacing={2}
           className={classes.gridButtons}
         >
           <EventButtons

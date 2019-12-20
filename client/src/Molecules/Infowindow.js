@@ -6,15 +6,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
-import FormLabel from "@material-ui/core/FormLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Radio from "@material-ui/core/Radio";
-import Paper from "@material-ui/core/Paper";
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
-import GridListTileBar from "@material-ui/core/GridListTileBar";
-import { green } from "@material-ui/core/colors";
 
 import { displayDate } from "../Services/transform-services";
 
@@ -88,14 +79,18 @@ function Infowindow(props) {
       >
         <Button
           variant="contained"
-          color="#E8045D"
           className={classes.buttonOpen}
           onClick={e => {
             e.preventDefault();
-            openModalEvent();
+            console.log("INFW user: ", props.user);
+            if (props.user.success) {
+              openModalEvent();
+            } else {
+              props.redirectLogin();
+            }
           }}
         >
-          OPEN
+          OPEN {!props.user.success && "(LOGIN)"}
         </Button>
       </Grid>
     </>

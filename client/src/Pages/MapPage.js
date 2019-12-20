@@ -12,7 +12,6 @@ import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
 import { usePosition } from "../Hooks/useGoelocation";
-import { useGeoWatcher } from "../Hooks/useGeoWrap";
 import { usePositionStatic } from "../Hooks/useGeolocationStatic";
 
 import mapSetup from "../Services/map-settings";
@@ -81,8 +80,8 @@ function MapPage(props) {
   const [dateState, setDateState] = useState(
     new Date().toISOString().split("T")[0]
   );
-  const { latitude, longitude, errorPosition } = useGeoWatcher();
-  //const { latitude, longitude } = usePositionStatic();
+  //const { latitude, longitude, errorPosition } = useGeoWatcher();
+  const { latitude, longitude, err } = usePosition();
   //const [createEvent, { loading, error, data }] = useMutation(NEW_EVENT);
   const { loading, error, data } = useQuery(ALL_EVENTS, {
     variables: { date: props.workingPose.date }
@@ -93,6 +92,10 @@ function MapPage(props) {
       window.AppHistory = history;
     }
   }, []);
+
+  const redirectLogin = () => {
+    history.push("/signin");
+  };
 
   console.log("MAP DATA:", data);
   let dataMock;
@@ -340,15 +343,9 @@ function MapPage(props) {
                 lat={location.geometry.coordinates[1]}
                 lng={location.geometry.coordinates[0]}
                 id={location._id}
-                //{...here.props}
                 location={location}
-                //redirectLogin={here.redirectLogin}
-                //forceRerender={here.forceRerender}
-                //handleOpenModalJoinMAP={here.handleOpenModalJoinMAP}
-                //handleShowJoinedAlertConfirm={here.handleShowJoinedAlertConfirm}
-                //handleShowMailSent={here.handleShowMailSent}
-                //AttendingLocationHandler={here.AttendingLocationHandler}
-                //openGalleryMap={here.openGalleryMap}
+                user={user}
+                redirectLogin={redirectLogin}
               />,
               document.getElementById("infoWindow")
             );
@@ -376,6 +373,7 @@ function MapPage(props) {
     //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
     clickableIcons: false,
     gestureHandling: "cooperative",
+    backgroundColor: "#242323",
     styles: mapSetup
   };
 

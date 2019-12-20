@@ -128,7 +128,11 @@ function EventButtons(props) {
             </Grid>
           ) : (
             <Grid item className={classes.buttonCls}>
-              <Button variant="contained" color="secondary">
+              <Button
+                variant="contained"
+                color="secondary"
+                className={classes.trueBtn}
+              >
                 Past Event, did not attend
               </Button>
             </Grid>
@@ -146,8 +150,8 @@ function EventButtons(props) {
               <Button
                 variant="contained"
                 color="secondary"
-                disabled
-                className={classes.disabledBtn}
+                style={{ background: "white !important" }}
+                className={classes.trueBtn}
               >
                 not owner
               </Button>
@@ -172,7 +176,7 @@ function EventButtons(props) {
 
       {!userIsAttending && userRequestedBooking && (
         <Grid item className={classes.buttonCls}>
-          <Button variant="contained" color="grey">
+          <Button variant="contained" color="grey" className={classes.trueBtn}>
             PENDING REQ
           </Button>
         </Grid>
@@ -183,6 +187,7 @@ function EventButtons(props) {
           <Button
             variant="contained"
             color="primary"
+            className={classes.trueBtn}
             onClick={e => {
               e.preventDefault();
               props.cancelBooking({
@@ -199,7 +204,7 @@ function EventButtons(props) {
               });
             }}
           >
-            Cancel Attendance
+            CANCEL ATT.
           </Button>
         </Grid>
       )}
@@ -209,6 +214,7 @@ function EventButtons(props) {
           <Button
             variant="contained"
             color="secondary"
+            className={classes.trueBtn}
             onClick={e => {
               e.preventDefault();
               props.deleteOneEvent({
@@ -235,10 +241,14 @@ function EventButtons(props) {
 const useStyles = makeStyles(theme => ({
   buttonCls: {
     margin: 0,
-    width: "45%"
+    width: "50%"
   },
   disabledBtn: {
     background: "white !important"
+  },
+  trueBtn: {
+    width: "100%",
+    height: 60
   }
 }));
 
