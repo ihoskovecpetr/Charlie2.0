@@ -27,7 +27,9 @@ function UpperStripe(props) {
       }
     },
     appBar: {
-      marginLeft: props.drawerWidth
+      marginLeft: props.drawerWidth,
+      color: "black",
+      background: "white"
       // [theme.breakpoints.up("sm")]: {
       //   width: `calc(100% - ${props.drawerWidth}px)`
       // }
@@ -57,7 +59,7 @@ function UpperStripe(props) {
   return (
     <>
       <CssBaseline />
-      <AppBar position="fixed" color="white" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Grid
             justify="space-between" // Add it here :)

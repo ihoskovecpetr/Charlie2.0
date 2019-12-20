@@ -104,7 +104,7 @@ export default function Menu(props) {
             </Typography>
           </Grid>
 
-          <Grid item justify="center" alignItems="center">
+          <Grid item>
             <Grid container justify="center">
               <Avatar
                 className={classes.avatar}
@@ -169,9 +169,9 @@ export default function Menu(props) {
           <Grid item className={classes.iFrame}>
             <iframe
               src="https://www.youtube.com/embed/PogfNxsugF0"
-              frameborder="0"
+              frameBorder="0"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
+              allowFullScreen
               className={classes.iFrame}
             ></iframe>
           </Grid>

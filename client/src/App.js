@@ -150,31 +150,37 @@ function App(props) {
             }}
           >
             <ListItem button key={text}>
-              <ListItemIcon>
+             
                 {index === 0 && (
+                  <ListItemIcon>
                   <Avatar
                     className={classes.avatarCharlie}
                     alt="Remy Sharp"
                     src="https://res.cloudinary.com/party-images-app/image/upload/v1557794256/ojkgl1hkiljwij69njbb.png"
-                  />
+                  /></ListItemIcon>
                 )}
 
                 {index === 1 && (
+                  <ListItemIcon>
                   <Avatar className={classes.avatar}>
                     <AddCircleOutlineIcon />
-                  </Avatar>
+                  </Avatar></ListItemIcon>
                 )}
                 {index === 2 && (
+                  <ListItemIcon>
                   <Avatar className={classes.avatar}>
                     <ExploreIcon />
                   </Avatar>
+                  </ListItemIcon>
                 )}
                 {index === 3 && (
+                  <ListItemIcon>
                   <Avatar className={classes.avatar}>
                     <SubjectIcon />
                   </Avatar>
+                  </ListItemIcon>
                 )}
-              </ListItemIcon>
+              
 
               <ListItemText primary={text} />
             </ListItem>

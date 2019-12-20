@@ -52,7 +52,8 @@ server.installSubscriptionHandlers(httpServer);
 mongoose
   .connect(
     `mongodb+srv://${process.env.MONGO_user}:${process.env.MONGO_password}@cluster0-5xb1t.mongodb.net/${process.env.MONGO_DB_NAME}?retryWrites=true&w=majority`,
-    { useNewUrlParser: true }
+    { useNewUrlParser: true,
+      useUnifiedTopology: true }
   )
   .then(() => {
     const PORT = process.env.PORT || 4005;

@@ -380,7 +380,7 @@ function MapPage(props) {
   };
 
   return (
-    <Container component="main" maxWidth="xl" className={classes.container}>
+    <div component="main" className={classes.container}>
       <CssBaseline />
       <MapSettingsPanel
         dateState={props.workingPose.date}
@@ -399,7 +399,7 @@ function MapPage(props) {
           background: "black"
         }}
       />
-    </Container>
+    </div>
   );
 }
 

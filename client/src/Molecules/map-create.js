@@ -6,12 +6,14 @@ import Grid from "@material-ui/core/Grid";
 
 import Map from "../Atoms/Hook-map";
 
-export default function MapMolecule(props) {
+function MapCreate(props) {
   const { latitude, longitude, error } = usePosition();
 
   let marker;
   let markerGeoLoc = { lat: latitude, lng: longitude };
   let geocoder;
+
+  console.log("RENDER CREATE MAP: position: ", markerGeoLoc)
 
   const MapOptions = {
     center: { lat: latitude, lng: longitude },
@@ -42,7 +44,7 @@ export default function MapMolecule(props) {
         lng: props.customMapParam.lng,
         lat: props.customMapParam.lat
       });
-      map.setCenter({
+      map.panTo({
         lng: props.customMapParam.lng,
         lat: props.customMapParam.lat
       });
@@ -52,9 +54,18 @@ export default function MapMolecule(props) {
     } else if (markerGeoLoc) {
       console.log("MArker MGL");
       marker.setPosition(markerGeoLoc);
-      map.setCenter(markerGeoLoc);
+      map.panTo(markerGeoLoc);
       geocodeLatLng(geocoder, map, markerGeoLoc.lat, markerGeoLoc.lng);
     }
+    map.addListener('zoom_changed', function() {
+      console.log("ZOOM: ", map.zoom)
+      props.setCustomMapParam(prev => {
+        return {
+          ...prev,
+          zoom: map.zoom
+        };
+      })
+    });
 
     map.addListener("click", e => {
       document.getElementById("input-location").value = "";
@@ -81,7 +92,7 @@ export default function MapMolecule(props) {
         map.fitBounds(place.geometry.viewport);
       } else {
         map.setCenter(place.geometry.location);
-        map.setZoom(17); // Why 17? Because it looks good.
+        map.setZoom(17);
       }
 
       markerGeoLoc = {
@@ -113,7 +124,8 @@ export default function MapMolecule(props) {
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
           address: address,
-          zoom: 14
+          //zoom: map.zoom
+          zoom: 16
         };
       });
     });
@@ -134,7 +146,7 @@ export default function MapMolecule(props) {
             address: shortAddress,
             lat: lat,
             lng: lng,
-            zoom: 14
+            zoom: map.zoom
           };
         });
       if (error_message) {
@@ -184,3 +196,5 @@ export default function MapMolecule(props) {
     </>
   );
 }
+
+export default React.memo(MapCreate)

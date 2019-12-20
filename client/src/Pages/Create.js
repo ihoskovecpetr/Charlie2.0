@@ -116,9 +116,6 @@ function Create(props) {
   //Day +- one day
   const plusDay = () => {
     den.setDate(den.getDate() + 1);
-    //let isoDen = den.toISOString();
-    //setFormValue(den);
-    console.log("SETTING: ", den);
     setFormValue(prev => {
       return { ...prev, startDate: den };
     });
@@ -126,7 +123,6 @@ function Create(props) {
 
   const minusDay = () => {
     den.setDate(den.getDate() - 1);
-    //let isoDen = den.toISOString();
     setFormValue(prev => {
       return { ...prev, startDate: den };
     });

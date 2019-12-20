@@ -72,7 +72,7 @@ function Infowindow(props) {
         alignItems="center"
         className={classes.body}
       >
-        <Grid item alignItems="center">
+        <Grid item>
           <Typography noWrap>
             {displayDate(props.location.dateStart)}
           </Typography>
