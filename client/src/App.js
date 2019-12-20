@@ -32,6 +32,8 @@ import { useQuery, useApolloClient } from "@apollo/react-hooks";
 import UpperStripe from "./Atoms/upper-stripe";
 
 import { UserContext } from "./userContext";
+import { usePosition } from "./Hooks/useGeolocation";
+
 import Menu from "./Pages/Menu";
 import SignIn from "./Pages/SignIn";
 import SignUp from "./Pages/SignUp";
@@ -73,13 +75,14 @@ function App(props) {
       tonalOffset: 0.2
     }
   });
-
+  const { latitude, longitude, err } = usePosition();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { loading, error, data } = useQuery(LOGIN);
   const { container } = props;
   const [user, setUser] = useState({
     success: false,
-    name: false
+    name: false,
+    geolocationObj: null
   });
   const [workingPose, setWorkingPose] = useState({
     date: new Date().toISOString().split("T")[0],
@@ -97,6 +100,13 @@ function App(props) {
       });
     }
   }
+
+  if (latitude && longitude && !user.geolocationObj) {
+    setUser({
+      geolocationObj: { lat: latitude, lng: longitude }
+    })
+  }
+
 
   console.log("App props START: props user ", props, user);
 
@@ -119,23 +129,23 @@ function App(props) {
     : ["Charlie", "Create", "Map", "About"];
   const ListOfComponents = user.success
     ? [
-        <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
-        <Create />, //create
-        <MapPage workingPose={workingPose} setWorkingPose={setWorkingPose} />, //Map
-        <About />,
-        <UserModal />,
-        <Profile />,
-        <SignOut />
-      ]
+      <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
+      <Create />, //create
+      <MapPage workingPose={workingPose} setWorkingPose={setWorkingPose} />, //Map
+      <About />,
+      <UserModal />,
+      <Profile />,
+      <SignOut />
+    ]
     : [
-        <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
-        <Create />,
-        <MapPage workingPose={workingPose} setWorkingPose={setWorkingPose} />,
-        <About />,
-        <UserModal />,
-        <SignUp />,
-        <SignIn />
-      ];
+      <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
+      <Create />,
+      <MapPage workingPose={workingPose} setWorkingPose={setWorkingPose} />,
+      <About />,
+      <UserModal />,
+      <SignUp />,
+      <SignIn />
+    ];
   const drawer = (
     <div>
       <div className={classes.toolbar} />
@@ -150,37 +160,37 @@ function App(props) {
             }}
           >
             <ListItem button key={text}>
-             
-                {index === 0 && (
-                  <ListItemIcon>
+
+              {index === 0 && (
+                <ListItemIcon>
                   <Avatar
                     className={classes.avatarCharlie}
                     alt="Remy Sharp"
                     src="https://res.cloudinary.com/party-images-app/image/upload/v1557794256/ojkgl1hkiljwij69njbb.png"
                   /></ListItemIcon>
-                )}
+              )}
 
-                {index === 1 && (
-                  <ListItemIcon>
+              {index === 1 && (
+                <ListItemIcon>
                   <Avatar className={classes.avatar}>
                     <AddCircleOutlineIcon />
                   </Avatar></ListItemIcon>
-                )}
-                {index === 2 && (
-                  <ListItemIcon>
+              )}
+              {index === 2 && (
+                <ListItemIcon>
                   <Avatar className={classes.avatar}>
                     <ExploreIcon />
                   </Avatar>
-                  </ListItemIcon>
-                )}
-                {index === 3 && (
-                  <ListItemIcon>
+                </ListItemIcon>
+              )}
+              {index === 3 && (
+                <ListItemIcon>
                   <Avatar className={classes.avatar}>
                     <SubjectIcon />
                   </Avatar>
-                  </ListItemIcon>
-                )}
-              
+                </ListItemIcon>
+              )}
+
 
               <ListItemText primary={text} />
             </ListItem>

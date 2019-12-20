@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 //import GeolocationMarker from 'geolocation-marker'
-import { usePosition } from "../Hooks/useGoelocation";
+import { usePosition } from "../Hooks/useGeolocation";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 
@@ -57,7 +57,7 @@ function MapCreate(props) {
       map.panTo(markerGeoLoc);
       geocodeLatLng(geocoder, map, markerGeoLoc.lat, markerGeoLoc.lng);
     }
-    map.addListener('zoom_changed', function() {
+    map.addListener('zoom_changed', function () {
       console.log("ZOOM: ", map.zoom)
       props.setCustomMapParam(prev => {
         return {
@@ -76,7 +76,7 @@ function MapCreate(props) {
       geocodeLatLng(geocoder, map, e.latLng.lat(), e.latLng.lng());
     });
 
-    autocomplete.addListener("place_changed", function() {
+    autocomplete.addListener("place_changed", function () {
       marker.setVisible(false);
       var place = autocomplete.getPlace();
       if (!place.geometry) {
@@ -108,13 +108,13 @@ function MapCreate(props) {
         address = [
           (place.address_components[0] &&
             place.address_components[0].short_name) ||
-            "",
+          "",
           (place.address_components[1] &&
             place.address_components[1].short_name) ||
-            "",
+          "",
           (place.address_components[2] &&
             place.address_components[2].short_name) ||
-            ""
+          ""
         ].join(" ");
       }
 
@@ -132,7 +132,7 @@ function MapCreate(props) {
   };
 
   const geocodeLatLng = (geocoder, map, lat, lng) => {
-    geocoder.geocode({ location: { lat: lat, lng: lng } }, function(
+    geocoder.geocode({ location: { lat: lat, lng: lng } }, function (
       results,
       status,
       error_message

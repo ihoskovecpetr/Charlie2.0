@@ -13,22 +13,20 @@ export const usePosition = () => {
     setError(error.message);
   };
   useEffect(() => {
-    const geo = navigator.geolocation;
+    const geo = window.navigator.geolocation;
     if (!geo) {
       setError("Geolocation is not supported");
       return;
     }
     //let watcher = geo.watchPosition(onChange, onError);
+    console.log("GEO OBJ: ", geo);
     let watcher = geo.getCurrentPosition(onChange, onError);
     return () => geo.clearWatch(watcher);
   }, []);
-  console.log("GOE SUPPERTED");
   return { ...position, error };
 };
 
 function isBigger(prev, next) {
-  console.log("Prev: ", prev);
-  console.log("Next: ", next);
 
   return prev.number === next.number || prev.number >= next.number;
   //   if (prev.number > next.number) {

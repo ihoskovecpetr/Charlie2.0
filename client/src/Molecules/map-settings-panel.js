@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   settingsPanel: {
     position: "absolute",
     top: 0,
-    height: 130,
+    height: 120,
     width: "100%",
     background: "rgba(0,0,0,0.2)",
     zIndex: 10
@@ -64,53 +64,64 @@ export default function MapSettingsPanel(props) {
   return (
     <Grid
       container
-      alignItems="center"
+      alignItems="flex-end"
       alignContent="flex-end"
       justify="flex-end"
       className={classes.settingsPanel}
     >
-      <Grid item>{props.loading && <Spinner height={40} width={40} />}</Grid>
-      <Grid item>
-        <IconButton disabled={props.loading ? true : false}>
-          <RemoveIcon
-            fontSize="large"
-            color={props.loading ? "disabled" : "secondary"}
-            onClick={() => {
-              minusDay();
-            }}
-          />
-        </IconButton>
-      </Grid>
 
       <Grid item>
-        <TextField
-          id="datetime-local"
-          //label="Choose day"
-          variant="outlined"
-          type="date"
-          color="secondary"
-          margin="dense"
-          value={props.dateState}
-          className={classes.textField}
-          InputProps={{
-            className: classes.inputTexFld
-          }}
-          InputLabelProps={{
-            shrink: true,
-            color: "white"
-          }}
-        />
-      </Grid>
-      <Grid item>
-        <IconButton disabled={props.loading ? true : false}>
-          <AddIcon
-            fontSize="large"
-            color={props.loading ? "disabled" : "secondary"}
-            onClick={() => {
+        <Grid
+          container
+          alignItems="center"
+          alignContent="flex-end"
+          justify="flex-end"
+
+        >
+          <Grid item>{props.loading && <Spinner height={40} width={40} />}</Grid>
+          <Grid item>
+            <IconButton disabled={props.loading ? true : false} onClick={() => {
+              minusDay();
+            }}>
+              <RemoveIcon
+                fontSize="large"
+                color={props.loading ? "disabled" : "secondary"}
+
+              />
+            </IconButton>
+          </Grid>
+
+          <Grid item>
+            <TextField
+              id="datetime-local"
+              //label="Choose day"
+              variant="outlined"
+              type="date"
+              color="secondary"
+              margin="dense"
+              value={props.dateState}
+              className={classes.textField}
+              InputProps={{
+                className: classes.inputTexFld
+              }}
+              InputLabelProps={{
+                shrink: true,
+                color: "white"
+              }}
+            />
+          </Grid>
+          <Grid item>
+            <IconButton disabled={props.loading ? true : false} onClick={() => {
               plusDay();
-            }}
-          />
-        </IconButton>
+            }}>
+              <AddIcon
+                fontSize="large"
+                color={props.loading ? "disabled" : "secondary"}
+
+              />
+            </IconButton>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
