@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function MapSettingsPanel(props) {
   const classes = useStyles();
-  useSet__vh();
+  const { vhcko } = useSet__vh();
   let den = new Date(props.dateState);
 
   const plusDay = () => {
@@ -132,8 +132,8 @@ export default function MapSettingsPanel(props) {
         </Grid>
       </Grid>
       <Grid container>
-        <div className="blue">XX</div>
-        <div className="green">YY</div>
+        <div className="blue">XX {vhcko}</div>
+        <div className="green">YY {window.innerHeight}</div>
       </Grid>
     </>
   );

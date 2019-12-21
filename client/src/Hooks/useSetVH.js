@@ -8,7 +8,7 @@ export const useSet__vh = () => {
       document
     );
   }, []);
-  return { message: "SETTED --vh" };
+  return { vhcko: window.innerHeight };
 };
 
 //export default Memoized;
