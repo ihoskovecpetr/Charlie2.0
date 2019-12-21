@@ -102,9 +102,11 @@ function App(props) {
   }
 
   if (latitude && longitude && !user.geolocationObj) {
-    setUser({
+    setUser(prev => {
+      return{ ...prev,
       geolocationObj: { lat: latitude, lng: longitude }
-    })
+    }
+  })
   }
 
 

@@ -50,6 +50,7 @@ function ModalJoin(props) {
       <Button
         variant="contained"
         color="primary"
+        className={classes.trueBtn}
         onClick={e => {
           e.preventDefault();
           handleOpen();
@@ -158,6 +159,10 @@ const useStyles = makeStyles(theme => ({
       margin: theme.spacing(1),
       width: 200
     }
+  },
+  trueBtn: {
+    width: "100%",
+    height: 60
   }
 }));
 

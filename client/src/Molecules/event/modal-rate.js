@@ -57,6 +57,10 @@ const useStyles = makeStyles(theme => ({
   },
   starContainer: {
     fontSize: 30
+  },
+  trueBtn: {
+    width: "100%",
+    height: 60
   }
 }));
 
@@ -93,6 +97,7 @@ function ModalRate(props) {
       <Button
         variant="contained"
         color="primary"
+        className={classes.trueBtn}
         onClick={e => {
           e.preventDefault();
           handleOpen();

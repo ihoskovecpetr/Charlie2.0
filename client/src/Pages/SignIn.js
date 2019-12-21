@@ -76,9 +76,9 @@ function SignIn(props) {
         </ModalLayout>
       );
     } else {
-      if (data.login.success) {
+      if (data.login.success && !user.name) {
+        console.log("XXman user: ", user);
         window.localStorage.setItem("token", data.login.token);
-        //console.log("LocalStorage: ", window.localStorage.getItem("token"));
         setUser({
           _id: data.login._id,
           success: data.login.success,

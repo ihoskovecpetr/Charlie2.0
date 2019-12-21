@@ -140,7 +140,11 @@ function EventButtons(props) {
 
           {props.data && props.data.getOneEvent.areYouAuthor && (
             <Grid item className={classes.buttonCls}>
-              <Button variant="contained" color="secondary">
+              <Button
+                variant="contained"
+                color="secondary"
+                className={classes.trueBtn}
+              >
                 Yours
               </Button>
             </Grid>
