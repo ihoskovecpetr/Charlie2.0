@@ -11,6 +11,7 @@ import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
+import { useSet__vh } from "../Hooks/useSetVH";
 import { usePosition } from "../Hooks/useGeolocation";
 import { usePositionStatic } from "../Hooks/useGeolocationStatic";
 
@@ -76,6 +77,7 @@ function MapPage(props) {
   const classes = useStyles();
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
+  useSet__vh();
   const { loading, error, data } = useQuery(ALL_EVENTS, {
     variables: { date: props.workingPose.date }
   });
