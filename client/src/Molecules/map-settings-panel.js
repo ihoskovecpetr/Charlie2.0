@@ -133,7 +133,19 @@ export default function MapSettingsPanel(props) {
       </Grid>
       <Grid container>
         <div className="blue">XX {vhcko}</div>
-        <div className="green">YY {window.innerHeight}</div>
+        <div
+          className="green"
+          onClick={() => {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty("--vh", `${vh}px`);
+            console.log(
+              "SET-VH document.documentElement.style. --vh setted: ",
+              window.innerHeight
+            );
+          }}
+        >
+          Click me {window.innerHeight}
+        </div>
       </Grid>
     </>
   );
