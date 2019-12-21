@@ -20,6 +20,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import { displayDate } from "../Services/transform-services";
+import { useSet__vh } from "../Hooks/useSetVH";
 
 import Spinner from "../Atoms/Spinner";
 
@@ -45,6 +46,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function MapSettingsPanel(props) {
   const classes = useStyles();
+  useSet__vh();
   let den = new Date(props.dateState);
 
   const plusDay = () => {
