@@ -24,8 +24,3 @@ a {
   text-decoration: none;
   color: inherit;
 }
-
-.main-map {
-  border: 5px solid green;
-  height: calc(var(--vh2, 1vh) * 100);
-}

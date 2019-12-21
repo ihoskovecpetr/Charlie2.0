@@ -3,7 +3,10 @@ export const useSet__vh = () => {
   useEffect(() => {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty("--vh", `${vh}px`);
-    console.log("SET-VH document.documentElement.style. --vh setted: ");
+    console.log(
+      "SET-VH document.documentElement.style. --vh setted: ",
+      document
+    );
   }, []);
   return { message: "SETTED --vh" };
 };
