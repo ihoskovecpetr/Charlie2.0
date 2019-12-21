@@ -94,7 +94,6 @@ function MapPage(props) {
 
   const dataMemo = useMemo(() => data, [data]);
 
-
   // dataMock = [
   //   {
   //     _id: "2sdf2sdfs2sfdsdfs2",
@@ -195,10 +194,9 @@ function MapPage(props) {
           UniqArr.push(dataDB[i]);
         }
       }
-
     }
 
-    map.addListener("idle", function () {
+    map.addListener("idle", function() {
       var bounds = map.getBounds();
       var center = map.getCenter();
 
@@ -232,7 +230,7 @@ function MapPage(props) {
       //console.log("Fetch points BoarDERS?");
     });
 
-    map.addListener("click", function (event) {
+    map.addListener("click", function(event) {
       console.log("Listener from MAP CLICK");
       console.log("previousMarker:", previousMarker);
 
@@ -277,7 +275,7 @@ function MapPage(props) {
       minWidth: 200,
       minHeight: 220
     });
-    console.log("UniqArr ", UniqArr)
+    console.log("UniqArr ", UniqArr);
     var AllMarkersArr = UniqArr.map((location, i) => {
       var urlNA =
         "https://res.cloudinary.com/party-images-app/image/upload/v1557626853/j4fot5g2fvldzh88h9u4.png";
@@ -286,20 +284,21 @@ function MapPage(props) {
         "https://res.cloudinary.com/party-images-app/image/upload/v1558048597/lo7digag5hz5alymniwz.png";
       var url = urlNA;
 
-      location.bookings && location.bookings.map((guest, index) => {
-        console.log("User indexOf: ", guest.user._id, user._id);
-        if (guest.user._id == user._id) {
-          console.log("Yes, GUEST");
-          {
-            !guest.cancelled && guest.confirmed && (url = urlAttend);
+      location.bookings &&
+        location.bookings.map((guest, index) => {
+          console.log("User indexOf: ", guest.user._id, user._id);
+          if (guest.user._id == user._id) {
+            console.log("Yes, GUEST");
+            {
+              !guest.cancelled && guest.confirmed && (url = urlAttend);
+            }
+          } else {
+            console.log("No, GUEST");
           }
-        } else {
-          console.log("No, GUEST");
-        }
-        // if (here.props.email.indexOf(guest.guest_email) !== -1 && guest.guest_confirmed == true) {
-        //   url = urlAttend
-        // }
-      });
+          // if (here.props.email.indexOf(guest.guest_email) !== -1 && guest.guest_confirmed == true) {
+          //   url = urlAttend
+          // }
+        });
       var image = {
         url: url,
         size: new window.google.maps.Size(48, 48),
@@ -319,7 +318,7 @@ function MapPage(props) {
         title: location.name
       });
 
-      marker.addListener("click", function () {
+      marker.addListener("click", function() {
         window.activeLocation_id = location._id;
 
         // if (previousMarker) {
@@ -353,7 +352,7 @@ function MapPage(props) {
   let LngLatCenter = { lat: 50.068645, lng: 15.457364 };
 
   if (user.geolocationObj) {
-    LngLatCenter = user.geolocationObj
+    LngLatCenter = user.geolocationObj;
   }
   // let LngLatCenter = { lat: latitude, lng: longitude };
   // if (!latitude) {
@@ -383,7 +382,7 @@ function MapPage(props) {
       <Map
         onMount={onMapMount}
         options={MapOptions}
-        className="Real-donald-domap"
+        className="main-map"
         styling={{
           height: "calc(var(--vh2, 1vh) * 100)",
           width: "100%",
@@ -409,7 +408,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center"
   },
   container: {
-    padding: 0,
+    padding: 0
   },
   avatar: {
     margin: theme.spacing(1),

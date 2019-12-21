@@ -62,67 +62,95 @@ export default function MapSettingsPanel(props) {
   console.log("Loading...", props.loading);
 
   return (
-    <Grid
-      container
-      alignItems="flex-end"
-      alignContent="flex-end"
-      justify="flex-end"
-      className={classes.settingsPanel}
-    >
+    <>
+      <Grid
+        container
+        alignItems="flex-end"
+        alignContent="flex-end"
+        justify="flex-end"
+        className={classes.settingsPanel}
+      >
+        <Grid item>
+          <Grid
+            container
+            alignItems="center"
+            alignContent="flex-end"
+            justify="flex-end"
+          >
+            <Grid item>
+              {props.loading && <Spinner height={40} width={40} />}
+            </Grid>
+            <Grid item>
+              <IconButton
+                disabled={props.loading ? true : false}
+                onClick={() => {
+                  minusDay();
+                }}
+              >
+                <RemoveIcon
+                  fontSize="large"
+                  color={props.loading ? "disabled" : "secondary"}
+                />
+              </IconButton>
+            </Grid>
 
-      <Grid item>
-        <Grid
-          container
-          alignItems="center"
-          alignContent="flex-end"
-          justify="flex-end"
-
-        >
-          <Grid item>{props.loading && <Spinner height={40} width={40} />}</Grid>
-          <Grid item>
-            <IconButton disabled={props.loading ? true : false} onClick={() => {
-              minusDay();
-            }}>
-              <RemoveIcon
-                fontSize="large"
-                color={props.loading ? "disabled" : "secondary"}
-
+            <Grid item>
+              <TextField
+                id="datetime-local"
+                //label="Choose day"
+                variant="outlined"
+                type="date"
+                color="secondary"
+                margin="dense"
+                value={props.dateState}
+                className={classes.textField}
+                InputProps={{
+                  className: classes.inputTexFld
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                  color: "white"
+                }}
               />
-            </IconButton>
-          </Grid>
-
-          <Grid item>
-            <TextField
-              id="datetime-local"
-              //label="Choose day"
-              variant="outlined"
-              type="date"
-              color="secondary"
-              margin="dense"
-              value={props.dateState}
-              className={classes.textField}
-              InputProps={{
-                className: classes.inputTexFld
-              }}
-              InputLabelProps={{
-                shrink: true,
-                color: "white"
-              }}
-            />
-          </Grid>
-          <Grid item>
-            <IconButton disabled={props.loading ? true : false} onClick={() => {
-              plusDay();
-            }}>
-              <AddIcon
-                fontSize="large"
-                color={props.loading ? "disabled" : "secondary"}
-
-              />
-            </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton
+                disabled={props.loading ? true : false}
+                onClick={() => {
+                  plusDay();
+                }}
+              >
+                <AddIcon
+                  fontSize="large"
+                  color={props.loading ? "disabled" : "secondary"}
+                />
+              </IconButton>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
+      <Grid container>
+        <div
+          style={{
+            height: "calc(var(--vh2, 1vh) * 10)",
+            width: "calc(var(--vh2, 1vh) * 10)",
+            background: "green",
+            zIndex: 10
+          }}
+        >
+          XX
+        </div>
+        <div
+          style={{
+            height: "10vh",
+            width: "10vh",
+            background: "blue",
+            zIndex: 10
+          }}
+        >
+          YY
+        </div>
+      </Grid>
+    </>
   );
 }
