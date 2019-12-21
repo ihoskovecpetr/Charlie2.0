@@ -2,3 +2,17 @@
   border: 5px solid blue;
   height: calc(var(--vh2, 1vh) * 100);
 }
+
+.blue {
+  height: calc(var(--vh2, 1vh) * 10);
+  width: calc(var(--vh2, 1vh) * 10);
+  background-color: blue;
+  z-index: 10;
+}
+
+.green {
+  height: 10vh;
+  width: 10vh;
+  background-color: green;
+  z-index: 10;
+}

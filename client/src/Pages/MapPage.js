@@ -387,7 +387,6 @@ function MapPage(props) {
         options={MapOptions}
         className="main-map"
         styling={{
-          height: "calc(var(--vh2, 1vh) * 100)",
           width: "100%",
           position: "absolute",
           top: 0,

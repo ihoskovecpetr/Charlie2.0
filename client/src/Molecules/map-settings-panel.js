@@ -130,26 +130,8 @@ export default function MapSettingsPanel(props) {
         </Grid>
       </Grid>
       <Grid container>
-        <div
-          style={{
-            height: "calc(var(--vh2, 1vh) * 10)",
-            width: "calc(var(--vh2, 1vh) * 10)",
-            background: "green",
-            zIndex: 10
-          }}
-        >
-          XX
-        </div>
-        <div
-          style={{
-            height: "10vh",
-            width: "10vh",
-            background: "blue",
-            zIndex: 10
-          }}
-        >
-          YY
-        </div>
+        <div className="blue">XX</div>
+        <div className="green">YY</div>
       </Grid>
     </>
   );
