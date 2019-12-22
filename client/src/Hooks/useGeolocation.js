@@ -19,7 +19,6 @@ export const usePosition = () => {
       return;
     }
     //let watcher = geo.watchPosition(onChange, onError);
-    console.log("GEO OBJ: ", geo);
     let watcher = geo.getCurrentPosition(onChange, onError);
     return () => geo.clearWatch(watcher);
   }, []);
@@ -27,7 +26,6 @@ export const usePosition = () => {
 };
 
 function isBigger(prev, next) {
-
   return prev.number === next.number || prev.number >= next.number;
   //   if (prev.number > next.number) {
   //     console.log("PLATI");

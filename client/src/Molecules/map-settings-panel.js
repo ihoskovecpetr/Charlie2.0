@@ -52,13 +52,15 @@ export default function MapSettingsPanel(props) {
   const plusDay = () => {
     den.setDate(den.getDate() + 1);
     let isoDen = den.toISOString().split("T")[0];
-    props.setWorkingPose({ date: isoDen });
+    props.clearMarkers();
+    props.setWorkDate(isoDen);
   };
 
   const minusDay = () => {
     den.setDate(den.getDate() - 1);
     let isoDen = den.toISOString().split("T")[0];
-    props.setWorkingPose({ date: isoDen });
+    props.clearMarkers();
+    props.setWorkDate(isoDen);
   };
 
   console.log("Loading...", props.loading);
@@ -83,15 +85,14 @@ export default function MapSettingsPanel(props) {
               {props.loading && <Spinner height={40} width={40} />}
             </Grid>
             <Grid item>
-              <IconButton
-                disabled={props.loading ? true : false}
-                onClick={() => {
-                  minusDay();
-                }}
-              >
+              <IconButton disabled={props.loading ? true : false}>
                 <RemoveIcon
                   fontSize="large"
                   color={props.loading ? "disabled" : "secondary"}
+                  onClick={() => {
+                    console.log("MINUS day");
+                    minusDay();
+                  }}
                 />
               </IconButton>
             </Grid>

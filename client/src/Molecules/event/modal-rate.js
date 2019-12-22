@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
 function ModalRate(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [message, setMessage] = React.useState("Hi, please let me in");
+  const [message, setMessage] = React.useState("You rock!");
   const [stars, setStars] = React.useState(1);
 
   const [rateEvent, rateEventState] = useMutation(RATE_EVENT);
@@ -168,7 +168,7 @@ function ModalRate(props) {
                     >
                       <TextField
                         id="outlined-basic"
-                        label="You rock!"
+                        label="Comment"
                         variant="outlined"
                         multiline={true}
                         rows={4}

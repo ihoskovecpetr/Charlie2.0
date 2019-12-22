@@ -47,7 +47,8 @@ function UpperStripe(props) {
       //fontSize: 20
     },
     ButtonAvatar: {
-      margin: "10px"
+      marginLeft: "10px",
+      marginRight: "10px"
     },
     buttonNavi: {
       fontWeight: "600 !important",
@@ -65,7 +66,7 @@ function UpperStripe(props) {
             justify="space-between" // Add it here :)
             alignItems="center"
             container
-            spacing={24}
+            spacing={0}
           >
             <Grid item>
               <IconButton
@@ -79,10 +80,13 @@ function UpperStripe(props) {
               </IconButton>
               <Typography variant="h5">
                 {props.ListOfNames.map((text, index) => (
-                  <Button color="inherit" className={classes.buttonToBeHidden}>
+                  <Button
+                    color="inherit"
+                    className={classes.buttonToBeHidden}
+                    key={index}
+                  >
                     <NavLink
                       to={`/${props.ListOfUrls[index]}`}
-                      key={index}
                       className={classes.title}
                     >
                       {text == "Charlie" ? (
@@ -122,9 +126,13 @@ function UpperStripe(props) {
                 <Button color="inherit" className={classes.buttonNavi}>
                   <NavLink to={`/signin`}>Sign In </NavLink>
                   {props.loading ? (
-                    <Spinner height={30} width={30} />
+                    <div className={classes.ButtonAvatar}>
+                      <Spinner height={30} width={30} />
+                    </div>
                   ) : (
-                    <AccountCircleIcon color="disabled" fontSize="large" />
+                    <div className={classes.ButtonAvatar}>
+                      <AccountCircleIcon color="disabled" fontSize="large" />
+                    </div>
                   )}
                 </Button>
               )}

@@ -109,6 +109,7 @@ function SignIn(props) {
             margin="normal"
             required
             fullWidth
+            defaultValue="test@gmail.com"
             id="email"
             label="Email Address"
             name="email"
@@ -120,6 +121,7 @@ function SignIn(props) {
             margin="normal"
             required
             fullWidth
+            defaultValue="heslo"
             name="password"
             label="Password"
             type="password"

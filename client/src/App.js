@@ -21,13 +21,13 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import ExploreIcon from "@material-ui/icons/Explore";
 import SubjectIcon from "@material-ui/icons/Subject";
 
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/core/styles";
 
 //import { withApollo } from "react-apollo";
 import gql from "graphql-tag";
-import { useQuery, useApolloClient } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/react-hooks";
 
 import UpperStripe from "./Atoms/upper-stripe";
 
@@ -84,9 +84,9 @@ function App(props) {
     name: false,
     geolocationObj: null
   });
-  const [workingPose, setWorkingPose] = useState({
+  const [workingPosition, setworkingPosition] = useState({
     date: new Date().toISOString().split("T")[0],
-    geolocation: [1, 2]
+    geolocation: null
   });
 
   if (data) {
@@ -103,14 +103,11 @@ function App(props) {
 
   if (latitude && longitude && !user.geolocationObj) {
     setUser(prev => {
-      return{ ...prev,
-      geolocationObj: { lat: latitude, lng: longitude }
-    }
-  })
+      return { ...prev, geolocationObj: { lat: latitude, lng: longitude } };
+    });
   }
 
-
-  console.log("App props START: props user ", props, user);
+  //console.log("App props START: props user ", props, user);
 
   const providerValue = useMemo(() => ({ user, setUser }), [user, setUser]);
 
@@ -131,23 +128,29 @@ function App(props) {
     : ["Charlie", "Create", "Map", "About"];
   const ListOfComponents = user.success
     ? [
-      <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
-      <Create />, //create
-      <MapPage workingPose={workingPose} setWorkingPose={setWorkingPose} />, //Map
-      <About />,
-      <UserModal />,
-      <Profile />,
-      <SignOut />
-    ]
+        <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
+        <Create />, //create
+        <MapPage
+          workingPosition={workingPosition}
+          setworkingPosition={setworkingPosition}
+        />, //Map
+        <About />,
+        <UserModal />,
+        <Profile />,
+        <SignOut LOGIN={LOGIN} />
+      ]
     : [
-      <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
-      <Create />,
-      <MapPage workingPose={workingPose} setWorkingPose={setWorkingPose} />,
-      <About />,
-      <UserModal />,
-      <SignUp />,
-      <SignIn />
-    ];
+        <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
+        <Create />,
+        <MapPage
+          workingPosition={workingPosition}
+          setworkingPosition={setworkingPosition}
+        />,
+        <About />,
+        <UserModal />,
+        <SignUp />,
+        <SignIn />
+      ];
   const drawer = (
     <div>
       <div className={classes.toolbar} />
@@ -162,21 +165,22 @@ function App(props) {
             }}
           >
             <ListItem button key={text}>
-
               {index === 0 && (
                 <ListItemIcon>
                   <Avatar
                     className={classes.avatarCharlie}
                     alt="Remy Sharp"
                     src="https://res.cloudinary.com/party-images-app/image/upload/v1557794256/ojkgl1hkiljwij69njbb.png"
-                  /></ListItemIcon>
+                  />
+                </ListItemIcon>
               )}
 
               {index === 1 && (
                 <ListItemIcon>
                   <Avatar className={classes.avatar}>
                     <AddCircleOutlineIcon />
-                  </Avatar></ListItemIcon>
+                  </Avatar>
+                </ListItemIcon>
               )}
               {index === 2 && (
                 <ListItemIcon>
@@ -192,7 +196,6 @@ function App(props) {
                   </Avatar>
                 </ListItemIcon>
               )}
-
 
               <ListItemText primary={text} />
             </ListItem>
@@ -248,7 +251,7 @@ function App(props) {
     justGoBack = true;
   }
 
-  console.log("APP, firstPrint a Modal: ", firstPrint, Modal);
+  //console.log("APP, firstPrint a Modal: ", firstPrint, Modal);
   return (
     <div className={classes.root}>
       <ThemeProvider theme={theme}>

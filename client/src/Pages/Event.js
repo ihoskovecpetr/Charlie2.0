@@ -17,6 +17,7 @@ import gql from "graphql-tag";
 import { displayDate } from "../Services/transform-services";
 
 import { UserContext } from "../userContext";
+
 import ModalLayout from "../Layouts/ModalLayout";
 import EventButtons from "../Molecules/event-buttons";
 import RatingCard from "../Molecules/rating-card";
@@ -99,6 +100,7 @@ const BOOKING = gql`
 const CANCELLING = gql`
   mutation cancelBooking($user_id: String!, $event_id: String!) {
     cancelBooking(user_id: $user_id, event_id: $event_id) {
+      _id
       success
     }
   }
@@ -502,7 +504,7 @@ const useStyles = makeStyles(theme => ({
   standardHeading: {
     //borderBottom: "solid 1px grey",
     fontWeight: 500,
-    color: "grey"
+    color: "lightgrey"
   },
   standardContent: {
     fontWeight: 400,

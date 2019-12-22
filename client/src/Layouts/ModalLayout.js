@@ -9,9 +9,10 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { withRouter, useHistory } from "react-router-dom";
 
-function Layout(props) {
-  let history = useHistory();
+import { useScrollDisable } from "../Hooks/useScrollDisable";
 
+function Layout(props) {
+  //useScrollDisable();
   const classes = useStyles();
 
   return (

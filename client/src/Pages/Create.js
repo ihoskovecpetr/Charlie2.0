@@ -2,19 +2,14 @@ import React, { useContext, useState, useRef, useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import clsx from "clsx";
 
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Switch from "@material-ui/core/Switch";
-import Link from "@material-ui/core/Link";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import "date-fns";
@@ -24,8 +19,6 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker
 } from "@material-ui/pickers";
-//import AddIcon from "@material-ui/icons/Add";
-//import RemoveIcon from "@material-ui/icons/Remove";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -34,7 +27,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 
-import { useMutation, useQuery, useApolloClient } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 
@@ -101,16 +94,17 @@ function Create(props) {
 
   const { user, setUser } = useContext(UserContext);
   const [customMapParam, setCustomMapParam] = useState();
-  const [currency, setCurrency] = React.useState("CZK");
+  //const [currency, setCurrency] = React.useState("CZK");
   //const [selectedDate, setSelectedDate] = useState(new Date());
   const [formValue, setFormValue] = useState({
     startDate: new Date(),
-    price: 22,
-    capacity: 13
+    price: 100,
+    capacity: 15,
+    currency: "CZK"
   });
 
   const [createEvent, { loading, error, data }] = useMutation(NEW_EVENT);
-  console.log("formValue: ", formValue);
+  //console.log("formValue: ", formValue);
   let history = useHistory();
   let den = new Date(formValue.startDate);
   //Day +- one day
@@ -132,9 +126,6 @@ function Create(props) {
   const plusHour = () => {
     den.setHours(den.getHours() + 1);
     let isoDen = den.toISOString().split(":")[0];
-    console.log("Split 0,1: ", isoDen);
-    //setSelectedDate(`${isoDen}:00:00.000Z`);
-
     setFormValue(prev => {
       return { ...prev, startDate: `${isoDen}:00:00.000Z` };
     });
@@ -142,11 +133,7 @@ function Create(props) {
 
   const minusHour = () => {
     den.setHours(den.getHours() - 1);
-    //let isoDen = den.toISOString();
     let isoDen = den.toISOString().split(":")[0];
-    console.log("Split 0,1: ", isoDen);
-    //setSelectedDate(`${isoDen}:00:00.000Z`);
-
     setFormValue(prev => {
       return { ...prev, startDate: `${isoDen}:00:00.000Z` };
     });
@@ -175,15 +162,14 @@ function Create(props) {
   };
 
   useEffect(() => {
-    console.log("Only first mount OF CREATE");
     window.scrollTo(0, 0);
   }, []);
 
   const inputName = useRef(null);
   const inputDate = useRef(null);
   const inputTime = useRef(null);
-  const inputCapacityMax = useRef(null);
-  const inputCurrency = useRef(null);
+  //const inputCapacityMax = useRef(null);
+  //const inputCurrency = useRef(null);
   const inputBYO = useRef(null);
   const inputDescription = useRef(null);
 
@@ -200,7 +186,7 @@ function Create(props) {
         eventType: 1,
         dateStart: formValue.startDate, //inputDate.current.value,
         price: formValue.price,
-        currency: inputCurrency.current.value,
+        currency: formValue.currency,
         capacityMax: formValue.capacity,
         BYO: inputBYO.current.checked,
         description: inputDescription.current.value,
@@ -215,8 +201,11 @@ function Create(props) {
     });
   };
 
-  const handleChange = event => {
-    setCurrency(event.target.value);
+  const handleChangeCurrency = event => {
+    //setCurrency(event.target.value);
+    setFormValue(prev => {
+      return { ...prev, currency: event.target.value };
+    });
   };
 
   if (loading) {
@@ -273,8 +262,8 @@ function Create(props) {
                 fullWidth
                 id="name"
                 inputRef={inputName}
-                //label="Event Name"
-                defaultValue="My First Party"
+                label="My First Party"
+                //defaultValue="My First Party"
                 name="name"
                 autoComplete="name"
                 autoFocus
@@ -309,14 +298,11 @@ function Create(props) {
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
-                onClick={props.handleDrawerToggle}
+                onClick={() => {
+                  minusDay();
+                }}
               >
-                <ArrowBackIosIcon
-                  color="primary"
-                  onClick={() => {
-                    minusDay();
-                  }}
-                />
+                <ArrowBackIosIcon color="primary" />
               </IconButton>
             </Grid>
             <Grid item>
@@ -342,14 +328,13 @@ function Create(props) {
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
-                onClick={props.handleDrawerToggle}
+                onClick={() => {
+                  plusDay();
+                }}
               >
                 <ArrowForwardIosIcon
                   //fontSize="large"
                   color="primary"
-                  onClick={() => {
-                    plusDay();
-                  }}
                 />
               </IconButton>
             </Grid>
@@ -370,14 +355,13 @@ function Create(props) {
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
-                onClick={props.handleDrawerToggle}
+                onClick={() => {
+                  minusHour();
+                }}
               >
                 <ArrowBackIosIcon
                   //fontSize="large"
                   color="primary"
-                  onClick={() => {
-                    minusHour();
-                  }}
                 />
               </IconButton>
             </Grid>
@@ -403,14 +387,13 @@ function Create(props) {
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
-                onClick={props.handleDrawerToggle}
+                onClick={() => {
+                  plusHour();
+                }}
               >
                 <ArrowForwardIosIcon
                   //fontSize="large"
                   color="primary"
-                  onClick={() => {
-                    plusHour();
-                  }}
                 />
               </IconButton>
             </Grid>
@@ -422,12 +405,36 @@ function Create(props) {
             className={clsx(classes.settingsPanel, classes.formRow)}
           >
             <Grid item>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={() => {
+                  minusPrice();
+                }}
+              >
+                <ArrowBackIosIcon color="primary" />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <Input
+                type="number"
+                value={formValue.price}
+                //onChange={handleChange("amount")}
+                startAdornment={
+                  <InputAdornment position="start">
+                    {formValue.currency}
+                  </InputAdornment>
+                }
+              />
+            </Grid>
+            <Grid item>
               <TextField
                 id="outlined-select-currency"
                 select
                 //label="Select"
-                value={currency}
-                onChange={handleChange}
+                value={formValue.currency}
+                onChange={handleChangeCurrency}
                 //helperText="Please select your currency"
                 //variant="outlined"
               >
@@ -438,47 +445,17 @@ function Create(props) {
                 ))}
               </TextField>
             </Grid>
+
             <Grid item>
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
-                onClick={props.handleDrawerToggle}
+                onClick={() => {
+                  plusPrice();
+                }}
               >
-                <ArrowBackIosIcon
-                  color="primary"
-                  onClick={() => {
-                    minusPrice();
-                  }}
-                />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <Input
-                id="standard-number"
-                //inputRef={inputPrice}
-                type="number"
-                value={formValue.price}
-                defaultValue={10}
-                //onChange={handleChange("amount")}
-                // startAdornment={
-                //   <InputAdornment position="start">$</InputAdornment>
-                // }
-              />
-            </Grid>
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={props.handleDrawerToggle}
-              >
-                <ArrowForwardIosIcon
-                  color="primary"
-                  onClick={() => {
-                    plusPrice();
-                  }}
-                />
+                <ArrowForwardIosIcon color="primary" />
               </IconButton>
             </Grid>
           </Grid>
@@ -488,23 +465,16 @@ function Create(props) {
             <Grid item>
               <IconButton
                 color="inherit"
-                aria-label="open drawer"
                 edge="start"
-                onClick={props.handleDrawerToggle}
+                onClick={() => {
+                  minusCapacity();
+                }}
               >
-                <ArrowBackIosIcon
-                  color="primary"
-                  onClick={() => {
-                    minusCapacity();
-                  }}
-                />
+                <ArrowBackIosIcon color="primary" />
               </IconButton>
             </Grid>
             <Grid>
               <TextField
-                id="standard-number"
-                //inputRef={inputCapacityMax}
-                //defaultValue={20}
                 value={formValue.capacity}
                 type="number"
                 InputProps={{
@@ -521,14 +491,11 @@ function Create(props) {
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
-                onClick={props.handleDrawerToggle}
+                onClick={() => {
+                  plusCapacity();
+                }}
               >
-                <ArrowForwardIosIcon
-                  color="primary"
-                  onClick={() => {
-                    plusCapacity();
-                  }}
-                />
+                <ArrowForwardIosIcon color="primary" />
               </IconButton>
             </Grid>
           </Grid>

@@ -5,8 +5,6 @@ export default function Map({ options, onMount, className, styling }) {
 
   useEffect(() => {
     const onLoad = () => {
-      console.log("Map loaded: have a look: ", window);
-      console.log(".env: ", process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
       if (typeof onMount === `function`) {
         //const map = new window.google.maps.Map(ref.current, options);
         const map = new window.google.maps.Map(
@@ -30,7 +28,6 @@ export default function Map({ options, onMount, className, styling }) {
       return () => script.removeEventListener(`load`, onLoad);
     } else onLoad();
   }, [onMount, options]);
-
 
   return (
     <div

@@ -161,9 +161,9 @@ export const resolvers = {
             { $set: { cancelled: false, confirmed: false } }
           );
           if (result.ok) {
-            return { success: true };
+            return { success: true, _id: result.electionId };
           } else {
-            return { success: false };
+            return { success: false, _id: result.electionId };
           }
         } else {
           console.log("Creating new BBking: ", existingBooking);
@@ -235,9 +235,9 @@ export const resolvers = {
 
         console.log("Cancelling finished: ", result);
         if (result.ok) {
-          return { success: true };
+          return { success: true, _id: result.electionId };
         } else {
-          return { success: false };
+          return { success: false, _id: result.electionId };
         }
       } catch (err) {
         throw err;
@@ -309,6 +309,7 @@ function newFunction() {
   }
 
   type Hlaska { 
+    _id: String
     success: Boolean
     message: String
   }

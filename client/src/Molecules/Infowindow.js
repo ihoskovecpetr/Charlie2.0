@@ -6,17 +6,13 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
-
 import { displayDate } from "../Services/transform-services";
-
-var alreadyAttending = false;
 
 function Infowindow(props) {
   console.log("props.location: ", props.location);
   let Pic = props.location.imagesArr[0];
   let Author = props.location.author;
 
-  const [spacing, setSpacing] = React.useState(2);
   const classes = useStyles();
 
   const openModalEvent = () => {
@@ -25,10 +21,8 @@ function Infowindow(props) {
     var youOwnerVar = false;
 
     if (props.location.creatorEmail == props.email) {
-      console.log("You are the OWNER!");
       youOwnerVar = true;
     } else {
-      console.log("You are NOT the owner!");
     }
     console.log("Event _id: ", props.location._id);
     var string = "/event/" + props.location._id;

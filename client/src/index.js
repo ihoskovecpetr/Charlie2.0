@@ -28,10 +28,9 @@ const httpLink = new HttpLink({
 
 var WS_ENDPOINT = `ws://localhost:4005/subs`;
 if (process.env.NODE_ENV == "production") {
-  console.log("Prod verze");
+  console.log("Production version");
   WS_ENDPOINT = `wss://${window.location.host}/subs`;
 }
-console.log("WS_ENDPOINT: ", WS_ENDPOINT);
 
 const wsLink = new WebSocketLink({
   uri: WS_ENDPOINT,
@@ -61,11 +60,23 @@ const link = split(
   authLink.concat(httpLink)
 );
 
+// const defaultOptions = {
+//   watchQuery: {
+//     fetchPolicy: "no-cache",
+//     errorPolicy: "ignore"
+//   },
+//   query: {
+//     fetchPolicy: "no-cache",
+//     errorPolicy: "all"
+//   }
+// };
+
 //const link = httpLink;
 
 const client = new ApolloClient({
   link,
   cache: new InMemoryCache()
+  //defaultOptions: defaultOptions
 });
 
 // const client = new ApolloClient({

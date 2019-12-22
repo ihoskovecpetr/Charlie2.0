@@ -1,22 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 //import GeolocationMarker from 'geolocation-marker'
-import { usePosition } from "../Hooks/useGeolocation";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+
+import { UserContext } from "../userContext";
+import { usePosition } from "../Hooks/useGeolocation";
 
 import Map from "../Atoms/Hook-map";
 
 function MapCreate(props) {
-  const { latitude, longitude, error } = usePosition();
+  //const { latitude, longitude, error } = usePosition();
+  const { user, setUser } = useContext(UserContext);
 
   let marker;
-  let markerGeoLoc = { lat: latitude, lng: longitude };
+  //let markerGeoLoc = { lat: latitude, lng: longitude };
   let geocoder;
 
-  console.log("RENDER CREATE MAP: position: ", markerGeoLoc)
+  //console.log("RENDER CREATE MAP: position: ", markerGeoLoc);
+
+  let LngLatCenter = { lat: 50.068645, lng: 14.457364 };
+
+  if (user.geolocationObj) {
+    LngLatCenter = user.geolocationObj;
+  }
 
   const MapOptions = {
-    center: { lat: latitude, lng: longitude },
+    center: LngLatCenter,
     zoom: 10,
     disableDefaultUI: true,
     zoomControl: true,
@@ -51,20 +60,20 @@ function MapCreate(props) {
       map.setZoom(props.customMapParam.zoom);
       document.getElementById("input-location").value =
         props.customMapParam.address;
-    } else if (markerGeoLoc) {
+    } else if (LngLatCenter) {
       console.log("MArker MGL");
-      marker.setPosition(markerGeoLoc);
-      map.panTo(markerGeoLoc);
-      geocodeLatLng(geocoder, map, markerGeoLoc.lat, markerGeoLoc.lng);
+      marker.setPosition(LngLatCenter);
+      map.panTo(LngLatCenter);
+      geocodeLatLng(geocoder, map, LngLatCenter.lat, LngLatCenter.lng);
     }
-    map.addListener('zoom_changed', function () {
-      console.log("ZOOM: ", map.zoom)
+    map.addListener("zoom_changed", function() {
+      console.log("ZOOM: ", map.zoom);
       props.setCustomMapParam(prev => {
         return {
           ...prev,
           zoom: map.zoom
         };
-      })
+      });
     });
 
     map.addListener("click", e => {
@@ -76,7 +85,7 @@ function MapCreate(props) {
       geocodeLatLng(geocoder, map, e.latLng.lat(), e.latLng.lng());
     });
 
-    autocomplete.addListener("place_changed", function () {
+    autocomplete.addListener("place_changed", function() {
       marker.setVisible(false);
       var place = autocomplete.getPlace();
       if (!place.geometry) {
@@ -91,11 +100,12 @@ function MapCreate(props) {
       if (place.geometry.viewport) {
         map.fitBounds(place.geometry.viewport);
       } else {
+        console.log("Setting here center: ", place.geometry.location);
         map.setCenter(place.geometry.location);
         map.setZoom(17);
       }
 
-      markerGeoLoc = {
+      LngLatCenter = {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng()
       };
@@ -108,13 +118,13 @@ function MapCreate(props) {
         address = [
           (place.address_components[0] &&
             place.address_components[0].short_name) ||
-          "",
+            "",
           (place.address_components[1] &&
             place.address_components[1].short_name) ||
-          "",
+            "",
           (place.address_components[2] &&
             place.address_components[2].short_name) ||
-          ""
+            ""
         ].join(" ");
       }
 
@@ -132,7 +142,7 @@ function MapCreate(props) {
   };
 
   const geocodeLatLng = (geocoder, map, lat, lng) => {
-    geocoder.geocode({ location: { lat: lat, lng: lng } }, function (
+    geocoder.geocode({ location: { lat: lat, lng: lng } }, function(
       results,
       status,
       error_message
@@ -197,4 +207,4 @@ function MapCreate(props) {
   );
 }
 
-export default React.memo(MapCreate)
+export default React.memo(MapCreate);

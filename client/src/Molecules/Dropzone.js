@@ -3,6 +3,8 @@ import { useDropzone } from "react-dropzone";
 import Gallery from "react-grid-gallery";
 import request from "superagent";
 import WallpaperIcon from "@material-ui/icons/Wallpaper";
+import { makeStyles } from "@material-ui/core/styles";
+
 import Spinner from "../Atoms/Spinner";
 
 const CLOUDINARY_UPLOAD_PRESET = "simple-preset-1";
@@ -11,12 +13,12 @@ const CLOUDINARY_UPLOAD_URL =
 let smallfile;
 
 function MyDropzone(props) {
+  const classes = useStyles();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [display, setDisplay] = useState(false);
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
-    console.log("Acc files: ", acceptedFiles);
 
     setIsUploading(true);
 
@@ -113,18 +115,17 @@ function MyDropzone(props) {
       <div
         {...getRootProps()}
         style={{
-          outline: "none",
-          margin: 10
+          outline: "none"
         }}
       >
         <input {...getInputProps()} />
         {isDragActive ? (
           <>
-            <WallpaperIcon fontSize="large" />
+            <WallpaperIcon fontSize="large" className={classes.uploadIcon} />
           </>
         ) : (
           <>
-            <WallpaperIcon fontSize="large" />
+            <WallpaperIcon fontSize="large" className={classes.uploadIcon} />
           </>
         )}
         {/* <p>Place HERE your pictures</p> */}
@@ -154,5 +155,14 @@ function MyDropzone(props) {
     </>
   );
 }
+
+const useStyles = makeStyles(theme => ({
+  uploadIcon: {
+    margin: 20,
+    "&:hover": {
+      cursor: "pointer"
+    }
+  }
+}));
 
 export default MyDropzone;

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
-import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -8,11 +8,6 @@ import Badge from "@material-ui/core/Badge";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -38,6 +33,7 @@ const USER_EVENTS = gql`
       name
       _id
       dateStart
+      description
       author {
         name
         picture
@@ -88,6 +84,7 @@ const HOST_RATINGS = gql`
   query showRatings($host_id: ID!) {
     showRatings(host_id: $host_id) {
       guest {
+        _id
         picture
         name
       }
@@ -289,22 +286,51 @@ function Profile() {
           axis={theme.direction === "rtl" ? "x-reverse" : "x"}
           index={value}
           onChangeIndex={handleChangeIndex}
+          style={{ width: "100%" }}
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
             {bookingStates.loading && <Spinner height={100} width={100} />}
-            {bookingStates.data &&
-              bookingStates.data.showUserBookings &&
-              bookingStates.data.showUserBookings.map(event => (
-                <EventCard event={event.event} />
-              ))}
+            <Grid
+              container
+              justify="center"
+              direction="column"
+              alignItems="center"
+              alignContent="center"
+              style={{ width: "100%" }}
+            >
+              {bookingStates.data &&
+                bookingStates.data.showUserBookings &&
+                bookingStates.data.showUserBookings.map(event => (
+                  <Grid item style={{ width: "100%" }}>
+                    <EventCard event={event.event} />
+                  </Grid>
+                ))}
+            </Grid>
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
             {loading && <Spinner />}
-            {data &&
-              data.userEvents &&
-              data.userEvents.map(event => <EventCard event={event} />)}
+            <Grid
+              container
+              justify="center"
+              direction="column"
+              alignItems="center"
+              alignContent="center"
+            >
+              {data &&
+                data.userEvents &&
+                data.userEvents.map(event => (
+                  <Grid item style={{ width: "100%" }}>
+                    <EventCard event={event} />
+                  </Grid>
+                ))}
+            </Grid>
           </TabPanel>
-          <TabPanel value={value} index={2} dir={theme.direction}>
+          <TabPanel
+            value={value}
+            index={2}
+            dir={theme.direction}
+            style={{ width: "100%" }}
+          >
             Item Three
             {ratingStates.loading && <Spinner height={100} width={100} />}
             {ratingStates.data &&

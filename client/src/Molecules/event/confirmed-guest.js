@@ -8,6 +8,7 @@ import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import Tooltip from "@material-ui/core/Tooltip";
 
 import { NavLink } from "react-router-dom";
+import { ALL_EVENTS } from "../../Services/GQL";
 
 function ConfirmedGuest(props) {
   const classes = useStyles();
@@ -18,11 +19,11 @@ function ConfirmedGuest(props) {
     <Grid container justify="flex-start" alignItems="center" direction="row">
       {props.event.areYouAuthor ? (
         <>
-          {props.bookings.map(booking => {
+          {props.bookings.map((booking, index) => {
             if (booking.confirmed && !booking.cancelled) {
               return (
                 <>
-                  <Grid item>
+                  <Grid item key={index}>
                     {props.cancelledState.loading && (
                       <Chip
                         className={classes.chip}
@@ -65,6 +66,14 @@ function ConfirmedGuest(props) {
                               {
                                 query: props.ONE_EVENT,
                                 variables: { id: props.event._id }
+                              },
+                              {
+                                query: ALL_EVENTS,
+                                variables: {
+                                  date: new Date(props.event.dateStart)
+                                    .toISOString()
+                                    .split("T")[0]
+                                }
                               }
                             ]
                           });

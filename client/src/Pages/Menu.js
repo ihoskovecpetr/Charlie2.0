@@ -63,6 +63,9 @@ export default function Menu(props) {
     }
   );
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
   // const ratings = useQuery(USER_NEW_BOOKINGS, {
   //   variables: { user_id: user._id }
   //   //skip: !id,
@@ -70,18 +73,13 @@ export default function Menu(props) {
   // });
 
   if (user.success) {
-    console.log("YESUSR: ", user);
     {
       !loading && !data && newBookingsArr();
     }
   } else {
-    console.log("NO USR: ", user);
+    //console.log("NO USR: ", user);
   }
-  console.log("Menu props: ", props);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  //console.log("Menu props: ", props);
 
   return (
     <div className={classes.wrapContainer}>
@@ -183,16 +181,15 @@ export default function Menu(props) {
         </Grid>
 
         <Grid item>
-          <Grid justify="center" container>
-            <Grid item>
+          <Grid justify="center" container style={{ width: "100%" }}>
+            <Grid item style={{ width: "90%" }}>
               {!loading && !data && <p>No data</p>}
               {loading && <Spinner height={100} width={100} />}
               {data &&
                 data.newestUserBookings &&
-                data.newestUserBookings.map(event => {
+                data.newestUserBookings.map((event, index) => {
                   if (new Date(event.event.dateStart) >= new Date()) {
-                    console.log("FUTUR EVENT: ", event.event);
-                    return <EventCard event={event.event} />;
+                    return <EventCard event={event.event} key={index} />;
                   } else {
                     console.log("PAST EVENT: ", event.event.dateStart);
                     return null;
@@ -249,13 +246,23 @@ export default function Menu(props) {
             <Typography variant="h6" gutterBottom>
               Find your favourite event and enjoy evening
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              <ul>
-                <li>JOIN event</li>
-                <li>Bring your own drinks</li>
-                <li>ENJOY evening</li>
-              </ul>
-            </Typography>
+            <ul>
+              <li>
+                <Typography variant="body1" gutterBottom>
+                  JOIN event
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body1" gutterBottom>
+                  Bring your own drinks
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body1" gutterBottom>
+                  ENJOY evening
+                </Typography>
+              </li>
+            </ul>
           </Grid>
         </Grid>
         <Grid
@@ -286,13 +293,24 @@ export default function Menu(props) {
             <Typography variant="h6" gutterBottom>
               Create your first CHARLIE event and start earning
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              <ul>
-                <li>CREATE event</li>
-                <li>Welcomme guests</li>
-                <li>EARN entry fee</li>
-              </ul>
-            </Typography>
+
+            <ul>
+              <li>
+                <Typography variant="body1" gutterBottom>
+                  CREATE event
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body1" gutterBottom>
+                  Welcomme guests
+                </Typography>
+              </li>
+              <li>
+                <Typography variant="body1" gutterBottom>
+                  EARN entry fee
+                </Typography>
+              </li>
+            </ul>
           </Grid>
         </Grid>
         <Grid item>

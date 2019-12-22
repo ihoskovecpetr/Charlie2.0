@@ -45,7 +45,7 @@ function SignIn(props) {
       token: null
     });
     setTimeout(() => {
-      history.goBack();
+      history.push("/");
     }, 100);
   };
 

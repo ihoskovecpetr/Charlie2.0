@@ -24,7 +24,6 @@ function MyDropzone(props) {
   const [display, setDisplay] = useState(false);
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
-    console.log("Acc files: ", acceptedFiles);
 
     setIsUploading(true);
 
@@ -47,27 +46,21 @@ function MyDropzone(props) {
 
       img.onload = () => {
         const elem = document.createElement("canvas");
-        console.log("IMG width: ", img.width);
-        console.log("IMG width: ", img.height);
+
         let TumbWidth = img.width;
         let TumbHeight = img.height;
 
         if (img.width > 200 && img.height > 200) {
-          console.log("Both dimensions BIGGER");
           if (img.width > img.height) {
-            console.log("Wider: ");
             let hRatio = img.height / 200;
             TumbWidth = img.width / hRatio;
             TumbHeight = 200;
           } else if (img.width < img.height) {
-            console.log("Higher: ");
             let wRatio = img.width / 200;
             TumbWidth = 200;
             TumbHeight = img.height / wRatio;
           }
         }
-
-        console.log("Výsledné rozměry: ", TumbWidth, TumbHeight);
 
         elem.width = TumbWidth;
         elem.height = TumbHeight;

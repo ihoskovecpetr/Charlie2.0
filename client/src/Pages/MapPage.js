@@ -4,83 +4,35 @@ import "./mapPage.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import "date-fns";
 
-import { useMutation, useQuery, useApolloClient } from "@apollo/react-hooks";
-import gql from "graphql-tag";
+import { useQuery } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
 import { useSet__vh } from "../Hooks/useSetVH";
-import { usePosition } from "../Hooks/useGeolocation";
-import { usePositionStatic } from "../Hooks/useGeolocationStatic";
 
 import mapSetup from "../Services/map-settings";
+import { ALL_EVENTS } from "../Services/GQL";
 import Map from "../Atoms/Hook-map";
 import InfoWindow from "../Molecules/Infowindow";
 import MapSettingsPanel from "../Molecules/map-settings-panel";
 
-const ALL_EVENTS = gql`
-  query eventGeoDay(
-    $date: String!
-    $ne: Float
-    $nw: Float
-    $se: Float
-    $sw: Float
-  ) {
-    eventGeoDay(date: $date, geoObj: { ne: $ne, nw: $nw, se: $se, sw: $sw }) {
-      _id
-      name
-      confirmed
-      author {
-        name
-        picture
-      }
-      dateStart
-      dateEnd
-      geometry {
-        coordinates
-      }
-      address
-      capacityMax
-      price
-      description
-      BYO
-      freeSnack
-      imagesArr {
-        caption
-        src
-        thumbnail
-        thumbnailHeight
-        thumbnailWidth
-        scaletwidth
-        marginLeft
-        vwidth
-      }
-      bookings {
-        confirmed
-        cancelled
-        user {
-          _id
-        }
-      }
-    }
-  }
-`;
-
 let infoBubble;
 let InfoBevent = false;
 let previousMarker;
-let MarkersArr;
+var AllMarkersArr;
 
 function MapPage(props) {
   const classes = useStyles();
   let history = useHistory();
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const [workDate, setWorkDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
   useSet__vh();
   const { loading, error, data } = useQuery(ALL_EVENTS, {
-    variables: { date: props.workingPose.date }
+    variables: { date: workDate }
   });
 
   useEffect(() => {
@@ -88,7 +40,22 @@ function MapPage(props) {
       window.AppHistory = history;
     }
   }, []);
+  console.log("dat", data);
+  console.log("load", loading);
+  console.log("err", error);
 
+  const clearMarkers = () => {
+    console.log("Creal Markers: AllMarkersArr", AllMarkersArr);
+    console.log("dataEvents", data);
+    console.log("loadingEvents", loading);
+    for (let i = 0; i < AllMarkersArr.length; i++) {
+      AllMarkersArr[i].setMap(null);
+    }
+  };
+
+  // if (error) {
+  //   alert("Unable to load Events...");
+  // }
   const redirectLogin = () => {
     history.push("/signin");
   };
@@ -186,7 +153,7 @@ function MapPage(props) {
     } else if (dataMemo) {
       dataDB = dataMemo.eventGeoDay;
     }
-    // if(dataMock){
+
     if (dataDB) {
       for (var i = 0; i < dataDB.length; i++) {
         if (
@@ -234,14 +201,14 @@ function MapPage(props) {
     });
 
     map.addListener("click", function(event) {
-      console.log("Listener from MAP CLICK");
-      console.log("previousMarker:", previousMarker);
+      //console.log("Listener from MAP CLICK");
+      //console.log("previousMarker:", previousMarker);
 
       //here.setState({confirmedPressed: false})
 
       if (previousMarker && !InfoBevent) {
         //close the last new location marker and window on click on map
-        console.log("EVENT from Map previousMarker && !InfoBevent");
+        //console.log("EVENT from Map previousMarker && !InfoBevent");
         infoBubble.close();
         setTimeout(() => {
           if (document.getElementById("infoWindow")) {
@@ -254,7 +221,7 @@ function MapPage(props) {
         previousMarker = undefined;
       }
       if (previousMarker) {
-        console.log("EVENT from Map outside Infobubble");
+        //console.log("EVENT from Map outside Infobubble");
         infoBubble.close();
         previousMarker = undefined;
       }
@@ -278,79 +245,83 @@ function MapPage(props) {
       minWidth: 200,
       minHeight: 220
     });
-    console.log("UniqArr ", UniqArr);
-    var AllMarkersArr = UniqArr.map((location, i) => {
-      var urlNA =
-        "https://res.cloudinary.com/party-images-app/image/upload/v1557626853/j4fot5g2fvldzh88h9u4.png";
-      //var urlAttend = "https://res.cloudinary.com/party-images-app/image/upload/v1557648350/caacy89b65efjmwjiho8.png"
-      var urlAttend =
-        "https://res.cloudinary.com/party-images-app/image/upload/v1558048597/lo7digag5hz5alymniwz.png";
-      var url = urlNA;
+    {
+      if (!loading) {
+        console.log("Rendering MARKERS ", UniqArr);
+        AllMarkersArr = UniqArr.map((location, i) => {
+          var urlNA =
+            "https://res.cloudinary.com/party-images-app/image/upload/v1557626853/j4fot5g2fvldzh88h9u4.png";
+          //var urlAttend = "https://res.cloudinary.com/party-images-app/image/upload/v1557648350/caacy89b65efjmwjiho8.png"
+          var urlAttend =
+            "https://res.cloudinary.com/party-images-app/image/upload/v1558048597/lo7digag5hz5alymniwz.png";
+          var url = urlNA;
 
-      location.bookings &&
-        location.bookings.map((guest, index) => {
-          console.log("User indexOf: ", guest.user._id, user._id);
-          if (guest.user._id == user._id) {
-            console.log("Yes, GUEST");
-            {
-              !guest.cancelled && guest.confirmed && (url = urlAttend);
-            }
-          } else {
-            console.log("No, GUEST");
-          }
-          // if (here.props.email.indexOf(guest.guest_email) !== -1 && guest.guest_confirmed == true) {
-          //   url = urlAttend
-          // }
+          location.bookings &&
+            location.bookings.map((guest, index) => {
+              //console.log("User indexOf: ", guest.user._id, user._id);
+              if (guest.user._id == user._id) {
+                //console.log("Yes, GUEST");
+                {
+                  !guest.cancelled && guest.confirmed && (url = urlAttend);
+                }
+              } else {
+                //console.log("No, GUEST");
+              }
+              // if (here.props.email.indexOf(guest.guest_email) !== -1 && guest.guest_confirmed == true) {
+              //   url = urlAttend
+              // }
+            });
+          var image = {
+            url: url,
+            size: new window.google.maps.Size(48, 48),
+            origin: new window.google.maps.Point(0, 0),
+            anchor: new window.google.maps.Point(24, 48),
+            scaledSize: new window.google.maps.Size(48, 48)
+          };
+
+          var marker = new window.google.maps.Marker({
+            position: {
+              lat: location.geometry.coordinates[0],
+              lng: location.geometry.coordinates[1]
+            },
+            map: map,
+            icon: image,
+            animation: window.google.maps.Animation.DROP,
+            title: location.name
+          });
+
+          marker.addListener("click", function() {
+            window.activeLocation_id = location._id;
+
+            // if (previousMarker) {
+            //       infoBubble.close()
+            //       previousMarker = undefined
+            // } else{
+            infoBubble.addListener("domready", e => {
+              setTimeout(() => {
+                ReactDOM.render(
+                  //<p>Infowindow</p>
+                  <InfoWindow
+                    lat={location.geometry.coordinates[1]}
+                    lng={location.geometry.coordinates[0]}
+                    id={location._id}
+                    location={location}
+                    user={user}
+                    redirectLogin={redirectLogin}
+                  />,
+                  document.getElementById("infoWindow")
+                );
+              }, 100);
+            });
+            infoBubble.open(map, marker);
+            previousMarker = location;
+            // }
+          });
+
+          return marker;
         });
-      var image = {
-        url: url,
-        size: new window.google.maps.Size(48, 48),
-        origin: new window.google.maps.Point(0, 0),
-        anchor: new window.google.maps.Point(24, 48),
-        scaledSize: new window.google.maps.Size(48, 48)
-      };
-
-      var marker = new window.google.maps.Marker({
-        position: {
-          lat: location.geometry.coordinates[0],
-          lng: location.geometry.coordinates[1]
-        },
-        map: map,
-        icon: image,
-        animation: window.google.maps.Animation.DROP,
-        title: location.name
-      });
-
-      marker.addListener("click", function() {
-        window.activeLocation_id = location._id;
-
-        // if (previousMarker) {
-        //       infoBubble.close()
-        //       previousMarker = undefined
-        // } else{
-        infoBubble.addListener("domready", e => {
-          setTimeout(() => {
-            ReactDOM.render(
-              //<p>Infowindow</p>
-              <InfoWindow
-                lat={location.geometry.coordinates[1]}
-                lng={location.geometry.coordinates[0]}
-                id={location._id}
-                location={location}
-                user={user}
-                redirectLogin={redirectLogin}
-              />,
-              document.getElementById("infoWindow")
-            );
-          }, 100);
-        });
-        infoBubble.open(map, marker);
-        previousMarker = location;
-        // }
-      });
-
-      return marker;
-    });
+      }
+    }
   };
   let LngLatCenter = { lat: 50.068645, lng: 15.457364 };
 
@@ -378,8 +349,9 @@ function MapPage(props) {
     <div component="main" className={classes.container}>
       <CssBaseline />
       <MapSettingsPanel
-        dateState={props.workingPose.date}
-        setWorkingPose={props.setWorkingPose}
+        dateState={workDate}
+        setWorkDate={setWorkDate}
+        clearMarkers={clearMarkers}
         loading={loading}
       />
       <Map

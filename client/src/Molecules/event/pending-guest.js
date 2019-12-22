@@ -12,6 +12,8 @@ import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 
+import { ALL_EVENTS } from "../../Services/GQL";
+
 const CONFIRM_BOOKING = gql`
   mutation confirmBooking($event_id: ID!, $user_id: ID!) {
     confirmBooking(event_id: $event_id, user_id: $user_id) {
@@ -80,6 +82,14 @@ export default function PendingGuest(props) {
                 {
                   query: props.ONE_EVENT,
                   variables: { id: props.event._id }
+                },
+                {
+                  query: ALL_EVENTS,
+                  variables: {
+                    date: new Date(props.event.dateStart)
+                      .toISOString()
+                      .split("T")[0]
+                  }
                 }
               ]
             });

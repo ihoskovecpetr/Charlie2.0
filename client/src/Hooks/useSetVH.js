@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 export const useSet__vh = () => {
   window.addEventListener("resize", () => {
     // We execute the same script as before
@@ -16,5 +16,3 @@ export const useSet__vh = () => {
   }, []);
   return { vhcko: window.innerHeight };
 };
-
-//export default Memoized;

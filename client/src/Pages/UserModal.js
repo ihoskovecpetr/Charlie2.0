@@ -1,31 +1,21 @@
-import React, { useContext } from "react";
-import CssBaseline from "@material-ui/core/CssBaseline";
+import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Avatar from "@material-ui/core/Avatar";
-import Divider from "@material-ui/core/Divider";
-import Chip from "@material-ui/core/Chip";
 import CloseIcon from "@material-ui/icons/Close";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 
-import { withRouter, useHistory, NavLink } from "react-router-dom";
-import { useMutation, useQuery } from "@apollo/react-hooks";
-import Gallery from "react-grid-gallery";
+import { withRouter, useHistory } from "react-router-dom";
+import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { displayDate } from "../Services/transform-services";
 
-import { UserContext } from "../userContext";
 import ModalLayout from "../Layouts/ModalLayout";
-import EventButtons from "../Molecules/event-buttons";
 import RatingCard from "../Molecules/rating-card";
 import Spinner from "../Atoms/Spinner";
-import PendingGuest from "../Molecules/event/pending-guest";
-import ConfirmedGuest from "../Molecules/event/confirmed-guest";
 import Copyright from "../Atoms/copyright";
 
 const GET_USER = gql`
@@ -245,7 +235,7 @@ const useStyles = makeStyles(theme => ({
   standardHeading: {
     //borderBottom: "solid 1px grey",
     fontWeight: 600,
-    color: "grey"
+    color: "lightgrey"
   },
 
   ratingContainer: {

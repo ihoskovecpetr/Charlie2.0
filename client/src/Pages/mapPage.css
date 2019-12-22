@@ -1,9 +1,9 @@
 .main-map {
-  border: 5px solid blue;
+  /* border: 5px solid blue; */
   height: calc(var(--vh2, 1vh) * 100);
 }
 
-.blue {
+/* .blue {
   height: calc(var(--vh2, 1vh) * 10);
   width: calc(var(--vh2, 1vh) * 10);
   background-color: blue;
@@ -15,4 +15,4 @@
   width: 10vh;
   background-color: green;
   z-index: 10;
-}
+} */

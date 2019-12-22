@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 export const useScrollDisable = () => {
   const preventDefault = e => {
-    console.log("S!");
     e = e || window.event;
     if (e.preventDefault) e.preventDefault();
     e.returnValue = false;

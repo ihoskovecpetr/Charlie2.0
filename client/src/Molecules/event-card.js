@@ -22,7 +22,7 @@ import { displayDate } from "../Services/transform-services";
 
 const useStyles = makeStyles(theme => ({
   card: {
-    maxWidth: 345,
+    maxWidth: 500,
     width: "100%",
     marginBottom: 5
   },
@@ -68,9 +68,11 @@ export default function RecipeReviewCard(props) {
           </NavLink>
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+          <NavLink to={`/event/${props.event._id}`}>
+            <IconButton aria-label="settings">
+              <MoreVertIcon />
+            </IconButton>
+          </NavLink>
         }
         title={
           <NavLink to={`/event/${props.event._id}`}>{props.event.name}</NavLink>

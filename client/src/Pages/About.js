@@ -7,10 +7,10 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import ExploreIcon from "@material-ui/icons/Explore";
-import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
-import { withTheme } from "@material-ui/styles";
+//import IconButton from "@material-ui/core/IconButton";
+//import ExploreIcon from "@material-ui/icons/Explore";
+//import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
+//import { withTheme } from "@material-ui/styles";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { NavLink } from "react-router-dom";
@@ -37,7 +37,6 @@ const useStyles = makeStyles(theme => ({
     height: 200,
     paddingTop: "56.25%" // 16:9
   },
-
 
   text: {
     height: 0,
@@ -68,7 +67,7 @@ const useStyles = makeStyles(theme => ({
 export default function Menu(props) {
   const classes = useStyles();
 
-  console.log("Menu props: ", props);
+  //console.log("Menu props: ", props);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -77,7 +76,6 @@ export default function Menu(props) {
   return (
     <>
       <Container maxWidth="sm" className={classes.aboutContainer}>
-
         <Grid item>
           <Typography
             variant="h5"
@@ -90,7 +88,11 @@ export default function Menu(props) {
         <Grid item>
           <Paper className={classes.basicPaper}>
             <Typography component="p">
-            Have you ever seen house on the beach or flat in a skyscraper and wonder how would it be to enjoy a drink in there? Then this is your chance, dont go to that same old bar you know already good enought, just have a look and join some event in your neighbourhood.
+              Have you ever seen house on the beach or flat in a skyscraper and
+              wonder how would it be to enjoy a drink in there? Then this is
+              your chance, dont go to that same old bar you know already good
+              enought, just have a look and join some event in your
+              neighbourhood.
             </Typography>
           </Paper>
         </Grid>
@@ -106,39 +108,36 @@ export default function Menu(props) {
             </Typography>
           </Grid>
           <Grid item>
-          <Paper className={classes.basicPaper}>
-          <Typography
-              variant="h6"
-              component="h6"
-            >
-              How to start?
-            </Typography>
-            <Typography component="p">
-            Go to create section of Charlie, fill up short form with all the important questinos and press PREVIEW > Confirm, you will get notification on your email anytime you gained some guest. Easy!
-            </Typography>
-          </Paper>
-          <Paper className={classes.basicPaper}>
-          <Typography
-              variant="h6"
-              component="h6"
-            >
-              How to colect the admission fee?
-            </Typography>
-            <Typography component="p">
-            At this stage of Charlie development you will collect fee from your guests by yourself.
-            </Typography>
-          </Paper>
+            <Paper className={classes.basicPaper}>
+              <Typography variant="h6" component="h6">
+                How to start?
+              </Typography>
+              <Typography component="p">
+                Go to create section of Charlie, fill up short form with all the
+                important questinos and press PREVIEW > Confirm, you will get
+                notification on your email anytime you gained some guest. Easy!
+              </Typography>
+            </Paper>
+            <Paper className={classes.basicPaper}>
+              <Typography variant="h6" component="h6">
+                How to colect the admission fee?
+              </Typography>
+              <Typography component="p">
+                At this stage of Charlie development you will collect fee from
+                your guests by yourself.
+              </Typography>
+            </Paper>
 
-          <Paper className={classes.basicPaper}>
-          <Typography
-              variant="h6"
-              component="h6"
-            >
-              Is my place good enought to host Charlie event?
-            </Typography>
-            <Typography component="p">
-            It is only up to you how much time/efford/money will you invest into creating event or improving your place and how much you want to earn per each guest.. only guests will decide :)            </Typography>
-          </Paper>
+            <Paper className={classes.basicPaper}>
+              <Typography variant="h6" component="h6">
+                Is my place good enought to host Charlie event?
+              </Typography>
+              <Typography component="p">
+                It is only up to you how much time/efford/money will you invest
+                into creating event or improving your place and how much you
+                want to earn per each guest.. only guests will decide :){" "}
+              </Typography>
+            </Paper>
           </Grid>
         </Grid>
 
@@ -199,20 +198,20 @@ export default function Menu(props) {
             direction="column"
           >
             <SocialLine color="secondary" />
-                       <CardMedia
+            <CardMedia
               className={classes.cardMediaBottom}
               image="https://res.cloudinary.com/party-images-app/image/upload/v1559960064/uvic6vretl0zabrk570z.png"
               title="Paella dish"
             />
             <SocialLine color="secondary" />
             <Grid item>
-            <NavLink to={`/privacy-policy`}>
+              <NavLink to={`/privacy-policy`}>
                 <Grid item>
                   <Typography variant="subtitle2">Privacy policy</Typography>
                 </Grid>
               </NavLink>
-              </Grid>
-              <Grid item>
+            </Grid>
+            <Grid item>
               <NavLink to={`/about`}>
                 <Grid item>
                   <Typography variant="subtitle2">About</Typography>

@@ -8,53 +8,13 @@ import gql from "graphql-tag";
 import ModalJoin from "./event/modal-join";
 import ModalRate from "./event/modal-rate";
 
-const ALL_EVENTS = gql`
-  query eventGeoDay(
-    $date: String!
-    $ne: Float
-    $nw: Float
-    $se: Float
-    $sw: Float
-  ) {
-    eventGeoDay(date: $date, geoObj: { ne: $ne, nw: $nw, se: $se, sw: $sw }) {
-      _id
-      name
-      confirmed
-      author {
-        name
-        picture
-      }
-      dateStart
-      dateEnd
-      geometry {
-        coordinates
-      }
-      address
-      capacityMax
-      price
-      description
-      BYO
-      freeSnack
-      imagesArr {
-        caption
-        src
-        thumbnail
-        thumbnailHeight
-        thumbnailWidth
-        scaletwidth
-        marginLeft
-        vwidth
-      }
-    }
-  }
-`;
+import { ALL_EVENTS } from "../Services/GQL";
 
 function EventButtons(props) {
   const classes = useStyles();
   let userIsAttending = false;
   let userRequestedBooking = false;
   let eventIsPast = false;
-  console.log("EventButtons: ", props.data);
 
   // const sendBookingRequest = message => {
   //   props.createReqBooking({
@@ -94,8 +54,6 @@ function EventButtons(props) {
     } else {
       eventIsPast = true;
     }
-
-    console.log("TIME evaluace: ", eventIsPast, props.data.dateStart);
   }
 
   if (props.data && props.data.showBookings) {
@@ -114,8 +72,6 @@ function EventButtons(props) {
 
   {
     if (eventIsPast) {
-      console.log("PASSSt: ", eventIsPast);
-      console.log("userIsAttending: ", userIsAttending);
       return (
         <>
           {userIsAttending ? (
@@ -203,6 +159,14 @@ function EventButtons(props) {
                   {
                     query: props.ONE_EVENT,
                     variables: { id: props.match.params.id }
+                  },
+                  {
+                    query: ALL_EVENTS,
+                    variables: {
+                      date: new Date(props.data.getOneEvent.dateStart)
+                        .toISOString()
+                        .split("T")[0]
+                    }
                   }
                 ]
               });
@@ -228,7 +192,7 @@ function EventButtons(props) {
                 refetchQueries: () => [
                   {
                     query: ALL_EVENTS,
-                    variables: { date: "2019-11-11" }
+                    variables: { date: "2019-11-11" } //TODO..
                   }
                 ]
               });

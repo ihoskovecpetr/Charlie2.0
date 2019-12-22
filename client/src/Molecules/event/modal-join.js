@@ -1,12 +1,14 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
+import Grid from "@material-ui/core/Grid";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useHistory } from "react-router-dom";
 import gql from "graphql-tag";
 import { withRouter } from "react-router-dom";
 
@@ -25,6 +27,7 @@ const BOOKING_REQ = gql`
       guest_name: $guest_name
       message: $message
     ) {
+      _id
       success
       message
     }
@@ -33,6 +36,7 @@ const BOOKING_REQ = gql`
 
 function ModalJoin(props) {
   const classes = useStyles();
+  let history = useHistory();
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState("Hi, please let me in");
   const [createReqBooking, bookingReqStates] = useMutation(BOOKING_REQ);
@@ -44,6 +48,12 @@ function ModalJoin(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  if (bookingReqStates.data && bookingReqStates.data.requestBookEvent.success) {
+    setTimeout(() => {
+      setOpen(false);
+    }, 500);
+  }
 
   return (
     <div>
@@ -75,65 +85,79 @@ function ModalJoin(props) {
             {bookingReqStates.loading && <Spinner height={100} width={100} />}
             {bookingReqStates.data &&
               bookingReqStates.data.requestBookEvent.success && (
-                <div>Finished, success</div>
+                <div>
+                  Finished, success. Redirecting back...{" "}
+                  <Spinner height={30} width={30} />
+                </div>
               )}
             {bookingReqStates.data &&
               !bookingReqStates.data.requestBookEvent.success && (
                 <div>Finished, FAIL</div>
               )}
             {!bookingReqStates.loading && !bookingReqStates.data && (
-              <>
-                <h2 id="transition-modal-title">
-                  Request Author for admission
-                </h2>
-
-                <form className={classes.root} noValidate autoComplete="off">
+              <Grid
+                container
+                justify="center"
+                direction="column"
+                alignItems="center"
+                alignContent="center"
+                className={classes.mainGrid}
+              >
+                <Grid item>
+                  <h2 id="transition-modal-title">
+                    Request Author for admission
+                  </h2>
+                </Grid>
+                <Grid item className={classes.textItem}>
                   <TextField
                     id="outlined-basic"
-                    label="Please let me in"
+                    label="Comment"
                     variant="outlined"
                     multiline={true}
                     rows={5}
                     value={message}
+                    style={{ minWidth: 250 }}
                     onChange={e => {
                       setMessage(e.target.value);
                     }}
                   />
-                </form>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    //props.sendBookingRequest(message);
-                    createReqBooking({
-                      variables: {
-                        guest_id: props.user._id,
-                        guest_name: props.user.name,
-                        event_id: props.event._id,
-                        message: message
-                      },
-                      refetchQueries: () => [
-                        {
-                          query: props.ONE_EVENT,
-                          variables: { id: props.match.params.id }
-                        }
-                      ]
-                    });
-                  }}
-                >
-                  SEND YOUR REQUEST
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={e => {
-                    e.preventDefault();
-                    handleClose();
-                  }}
-                >
-                  CLOSE
-                </Button>
-              </>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      //props.sendBookingRequest(message);
+                      createReqBooking({
+                        variables: {
+                          guest_id: props.user._id,
+                          guest_name: props.user.name,
+                          event_id: props.event._id,
+                          message: message
+                        },
+                        refetchQueries: () => [
+                          {
+                            query: props.ONE_EVENT,
+                            variables: { id: props.match.params.id }
+                          }
+                        ]
+                      });
+                    }}
+                  >
+                    SEND
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={e => {
+                      e.preventDefault();
+                      handleClose();
+                    }}
+                  >
+                    CLOSE
+                  </Button>
+                </Grid>
+              </Grid>
             )}
           </div>
         </Fade>
@@ -152,12 +176,17 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3)
+    padding: theme.spacing(2, 4, 3),
+    outline: "0 !important",
+    minWidth: 400
   },
-  root: {
+  mainGrid: {
+    width: "100%"
+  },
+  textItem: {
     "& > *": {
       margin: theme.spacing(1),
-      width: 200
+      width: "100%"
     }
   },
   trueBtn: {
