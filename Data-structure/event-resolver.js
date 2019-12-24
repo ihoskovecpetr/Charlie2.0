@@ -86,7 +86,9 @@ export const resolvers = {
     },
     userEvents: async (_, _args, __) => {
       try {
-        const userEvents = await Event.find({ author: _args.user_id });
+        const userEvents = await Event.find({ author: _args.user_id }).sort(
+          "dateStart"
+        );
         if (userEvents) {
           return userEvents.map(event => {
             //let result = await transformEvent(event);

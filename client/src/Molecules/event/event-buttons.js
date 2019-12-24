@@ -5,10 +5,10 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import { withRouter, NavLink } from "react-router-dom";
 import gql from "graphql-tag";
-import ModalJoin from "./event/modal-join";
-import ModalRate from "./event/modal-rate";
+import ModalJoin from "./modal-join";
+import ModalRate from "./modal-rate";
 
-import { ALL_EVENTS } from "../Services/GQL";
+import { ALL_EVENTS } from "../../Services/GQL";
 
 function EventButtons(props) {
   const classes = useStyles();
@@ -216,7 +216,8 @@ const useStyles = makeStyles(theme => ({
   },
   trueBtn: {
     width: "100%",
-    height: 60
+    height: 60,
+    borderRadius: 0
   }
 }));
 

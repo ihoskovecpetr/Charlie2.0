@@ -63,12 +63,17 @@ export const resolvers = {
     },
     showUserBookings: async (_, _args, __) => {
       try {
-        let bookings = await Booking.find({ user: _args.user_id });
+        let bookings = await Booking.find({ user: _args.user_id }).sort({
+          "event.dateStart": -1
+        });
         console.log("ShowBookings: ", bookings);
-        return bookings;
-        // return await bookings.map(async booking => {
-        //   return await transformBooking(booking);
-        // });
+        //return bookings;
+        return bookings.map(async (booking, index) => {
+          return {
+            ...booking._doc,
+            createdAt: new Date(booking._doc.createdAt).toISOString()
+          };
+        });
       } catch (err) {
         throw err;
       }
@@ -125,7 +130,7 @@ export const resolvers = {
         let bookings = await Booking.find({
           user: _args.user_id,
           confirmed: true
-        }).sort("-event.dateStart");
+        }).sort("-dateStart");
         console.log("Bookings count: ", bookings);
         // return {
         //   ...bookings,

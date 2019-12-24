@@ -19,7 +19,7 @@ import { displayDate } from "../Services/transform-services";
 import { UserContext } from "../userContext";
 
 import ModalLayout from "../Layouts/ModalLayout";
-import EventButtons from "../Molecules/event-buttons";
+import EventButtons from "../Molecules/event/event-buttons";
 import RatingCard from "../Molecules/rating-card";
 import Spinner from "../Atoms/Spinner";
 import PendingGuest from "../Molecules/event/pending-guest";
@@ -485,7 +485,7 @@ const useStyles = makeStyles(theme => ({
     overflow: "scroll",
     borderBottomRightRadius: 5,
     borderBottomLeftRadius: 5,
-    boxShadow: "0px -2px 4px 0px rgba(255,255,255,0.2)"
+    boxShadow: "0px -2px 8px 0px rgba(255,255,255,0.3)"
   },
   closeButton: {
     background: theme.palette.violetova,

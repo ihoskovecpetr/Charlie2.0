@@ -148,6 +148,7 @@ function MapPage(props) {
     let uniqueArrayOfId = [];
     let UniqArr = [];
     let dataDB;
+    console.log("Map Mounted:: ")
     if (dataMock) {
       dataDB = dataMock;
     } else if (dataMemo) {

@@ -104,7 +104,7 @@ function ModalJoin(props) {
                 className={classes.mainGrid}
               >
                 <Grid item>
-                  <h2 id="transition-modal-title">
+                  <h2 id="transition-modal- title">
                     Request Author for admission
                   </h2>
                 </Grid>
@@ -191,7 +191,8 @@ const useStyles = makeStyles(theme => ({
   },
   trueBtn: {
     width: "100%",
-    height: 60
+    height: 60,
+    borderRadius: 0
   }
 }));
 

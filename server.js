@@ -17,6 +17,30 @@ app.get("/", function(req, res, next) {
   res.sendFile(path.join(__dirname, "build/index.html"));
 });
 
+app.get("/map", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "build/index.html"));
+});
+
+app.get("/about", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "build/index.html"));
+});
+
+app.get("/create", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "build/index.html"));
+});
+
+app.get("/user", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "build/index.html"));
+});
+
+app.get("/signup", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "build/index.html"));
+});
+
+app.get("/signin", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "build/index.html"));
+});
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS");
@@ -52,8 +76,7 @@ server.installSubscriptionHandlers(httpServer);
 mongoose
   .connect(
     `mongodb+srv://${process.env.MONGO_user}:${process.env.MONGO_password}@cluster0-5xb1t.mongodb.net/${process.env.MONGO_DB_NAME}?retryWrites=true&w=majority`,
-    { useNewUrlParser: true,
-      useUnifiedTopology: true }
+    { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {
     const PORT = process.env.PORT || 4005;

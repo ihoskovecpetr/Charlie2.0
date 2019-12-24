@@ -8,6 +8,8 @@ import {
   split,
   gql
 } from "apollo-boost";
+import { BatchHttpLink } from "apollo-link-batch-http";
+
 import { ApolloProvider } from "@apollo/react-hooks";
 import { WebSocketLink } from "apollo-link-ws";
 import { setContext } from "apollo-link-context";
@@ -19,7 +21,7 @@ var GQL_ENDPOINT = `http://localhost:4005/graphql`;
 if (process.env.NODE_ENV == "production") {
   GQL_ENDPOINT = `https://${window.location.host}/graphql`;
 }
-const httpLink = new HttpLink({
+const httpLink = new BatchHttpLink({
   uri: GQL_ENDPOINT,
   headers: {
     authorization: window.localStorage.getItem("token")
@@ -60,30 +62,30 @@ const link = split(
   authLink.concat(httpLink)
 );
 
-// const defaultOptions = {
-//   watchQuery: {
-//     fetchPolicy: "no-cache",
-//     errorPolicy: "ignore"
-//   },
-//   query: {
-//     fetchPolicy: "no-cache",
-//     errorPolicy: "all"
-//   }
-// };
+const defaultOptions = {
+  // watchQuery: {
+  //   fetchPolicy: "no-cache",
+  //   errorPolicy: "ignore"
+  // },
+  query: {
+    fetchPolicy: "network-only",
+    errorPolicy: "all"
+  }
+};
 
 //const link = httpLink;
 
 const client = new ApolloClient({
   link,
-  cache: new InMemoryCache()
-  //defaultOptions: defaultOptions
+  cache: new InMemoryCache(),
+  defaultOptions: defaultOptions
 });
 
 // const client = new ApolloClient({
 //     uri: "http://localhost:8008", cache: new InMemoryCache()
 //   });
 
-ReactDOM.render(
+ReactDOM.hydrate(
   <ApolloProvider client={client}>
     <App />
   </ApolloProvider>,

@@ -79,6 +79,23 @@ export default function Menu(props) {
   } else {
     //console.log("NO USR: ", user);
   }
+
+  console.log("ToBeSroted PRE: ", data);
+  let Sorted = [];
+  if (data) {
+    Sorted = data.newestUserBookings.sort(function(a, b) {
+      let aDate = new Date(a.event.dateStart);
+      let bDate = new Date(b.event.dateStart);
+      if (aDate > bDate) {
+        return 1;
+      }
+      if (aDate < bDate) {
+        return -1;
+      }
+    });
+  }
+
+  console.log("ToBeSroted: AFTER", Sorted);
   //console.log("Menu props: ", props);
 
   return (
@@ -185,16 +202,14 @@ export default function Menu(props) {
             <Grid item style={{ width: "90%" }}>
               {!loading && !data && <p>No data</p>}
               {loading && <Spinner height={100} width={100} />}
-              {data &&
-                data.newestUserBookings &&
-                data.newestUserBookings.map((event, index) => {
-                  if (new Date(event.event.dateStart) >= new Date()) {
-                    return <EventCard event={event.event} key={index} />;
-                  } else {
-                    console.log("PAST EVENT: ", event.event.dateStart);
-                    return null;
-                  }
-                })}
+              {Sorted.map((event, index) => {
+                if (new Date(event.event.dateStart) >= new Date()) {
+                  return <EventCard event={event.event} key={index} />;
+                } else {
+                  console.log("PAST EVENT: ", event.event.dateStart);
+                  return null;
+                }
+              })}
             </Grid>
           </Grid>
         </Grid>

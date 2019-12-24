@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "apollo-link-batch-http": "^1.2.13",
     "apollo-server": "^2.9.9",
     "apollo-server-express": "^2.9.9",
     "bcryptjs": "^2.4.3",

@@ -26,12 +26,66 @@ import Spinner from "../Atoms/Spinner";
 import EventCard from "../Molecules/event-card";
 import RatingCard from "../Molecules/rating-card";
 
-const USER_EVENTS = gql`
-  query userEvents($user_id: ID!) {
-    userEvents(user_id: $user_id) {
+// const USER_EVENTS = gql`
+//   query userEvents($user_id: ID!) {
+//     userEvents(user_id: $user_id) {
+//       _id
+//       success
+//       name
+//       dateStart
+//       description
+//       author {
+//         name
+//         picture
+//       }
+//       imagesArr {
+//         caption
+//         src
+//         thumbnail
+//         thumbnailHeight
+//         thumbnailWidth
+//         scaletwidth
+//         marginLeft
+//         vwidth
+//       }
+//     }
+//   }
+// `;
+
+// const USER_BOOKING = gql`
+//   query showUserBookings($user_id: ID!) {
+//     showUserBookings(user_id: $user_id) {
+//       event {
+//         _id
+//         name
+//         description
+//         dateStart
+//         imagesArr {
+//           caption
+//           src
+//           thumbnail
+//           thumbnailHeight
+//           thumbnailWidth
+//           scaletwidth
+//           marginLeft
+//           vwidth
+//         }
+//         author {
+//           _id
+//           name
+//           picture
+//         }
+//       }
+//     }
+//   }
+// `;
+
+const HOST_RATINGS = gql`
+  query showRatings($host_id: ID!) {
+    userEvents(user_id: $host_id) {
+      _id
       success
       name
-      _id
       dateStart
       description
       author {
@@ -49,12 +103,17 @@ const USER_EVENTS = gql`
         vwidth
       }
     }
-  }
-`;
-
-const USER_BOOKING = gql`
-  query showUserBookings($user_id: ID!) {
-    showUserBookings(user_id: $user_id) {
+    showRatings(host_id: $host_id) {
+      guest {
+        _id
+        picture
+        name
+      }
+      message
+      ratingValue
+      createdAt
+    }
+    showUserBookings(user_id: $host_id) {
       event {
         _id
         name
@@ -80,24 +139,208 @@ const USER_BOOKING = gql`
   }
 `;
 
-const HOST_RATINGS = gql`
-  query showRatings($host_id: ID!) {
-    showRatings(host_id: $host_id) {
-      guest {
-        _id
-        picture
-        name
-      }
-      message
-      ratingValue
-      createdAt
-    }
-  }
-`;
-
 // function tryLogin() {
 //   console.log("Mutation data: ", data);
 // }
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <Typography
+      component="div"
+      role="tabpanel"
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box p={3}>{children}</Box>}
+    </Typography>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired
+};
+
+function a11yProps(index) {
+  return {
+    id: `full-width-tab-${index}`,
+    "aria-controls": `full-width-tabpanel-${index}`
+  };
+}
+
+function Profile() {
+  const classes = useStyles();
+  const theme = useTheme();
+  let history = useHistory();
+  const { user, setUser } = useContext(UserContext);
+
+  // const hostingStates = useQuery(USER_EVENTS, {
+  //   variables: { user_id: user._id }
+  // });
+  // const bookingStates = useQuery(USER_BOOKING, {
+  //   variables: { user_id: user._id }
+  // });
+
+  const { loading, error, data } = useQuery(HOST_RATINGS, {
+    variables: { host_id: user._id }
+  });
+
+  //const { loadingB, errorB, dataB } = bookingStates;
+
+  //const [newUser, { loading, error, data }] = useMutation(NEW_USER);
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleChangeIndex = index => {
+    setValue(index);
+  };
+
+  console.log(
+    "Rerendering PROFILE: ",
+    // hostingStates.data,
+    // bookingStates.data,
+    data
+  );
+
+  return (
+    <div className={classes.profileWrap}>
+      <CssBaseline />
+      <Paper className={classes.paper}>
+        <Avatar className={classes.avatar} src={user.picture}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          {user.name}
+        </Typography>
+        <Typography variant="body">{user.email}</Typography>
+        <Button color="inherit" className={classes.buttonNavi}>
+          <NavLink to={`/signout`}>
+            <Typography variant="subtitle2">Sign out</Typography>
+            <ExitToAppIcon />
+          </NavLink>
+        </Button>
+        <AppBar position="static" color="default" className={classes.appBar}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+            aria-label="full width tabs example"
+          >
+            <Tab
+              label={
+                <Badge
+                  className={classes.padding}
+                  color="secondary"
+                  badgeContent={data && data.showUserBookings.length}
+                >
+                  ATTENDING
+                </Badge>
+              }
+              {...a11yProps(0)}
+            />
+            <Tab
+              label={
+                <Badge
+                  className={classes.padding}
+                  color="secondary"
+                  badgeContent={data && data.userEvents.length}
+                >
+                  HOSTING
+                </Badge>
+              }
+              {...a11yProps(1)}
+            />
+
+            <Tab
+              label={
+                <Badge
+                  className={classes.padding}
+                  color="secondary"
+                  badgeContent={data && data.showRatings.length}
+                >
+                  RATING
+                </Badge>
+              }
+              {...a11yProps(2)}
+            />
+          </Tabs>
+        </AppBar>
+        <SwipeableViews
+          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+          index={value}
+          onChangeIndex={handleChangeIndex}
+          style={{ width: "100%" }}
+        >
+          <TabPanel value={value} index={0} dir={theme.direction}>
+            {loading && <Spinner height={100} width={100} />}
+            <Grid
+              container
+              justify="center"
+              direction="column"
+              alignItems="center"
+              alignContent="center"
+              style={{ width: "100%" }}
+            >
+              {data &&
+                data.showUserBookings &&
+                data.showUserBookings.map(event => (
+                  <Grid item style={{ width: "100%" }}>
+                    <EventCard event={event.event} />
+                  </Grid>
+                ))}
+            </Grid>
+          </TabPanel>
+          <TabPanel value={value} index={1} dir={theme.direction}>
+            {loading && <Spinner />}
+            <Grid
+              container
+              justify="center"
+              direction="column"
+              alignItems="center"
+              alignContent="center"
+            >
+              {data &&
+                data.userEvents &&
+                data.userEvents.map(event => (
+                  <Grid item style={{ width: "100%" }}>
+                    <EventCard event={event} />
+                  </Grid>
+                ))}
+            </Grid>
+          </TabPanel>
+          <TabPanel
+            value={value}
+            index={2}
+            dir={theme.direction}
+            style={{ width: "100%" }}
+          >
+            Ratings...
+            {loading && <Spinner height={100} width={100} />}
+            {data &&
+              data.showRatings &&
+              data.showRatings.map((rating, index) => (
+                <RatingCard rating={rating} key={index} />
+              ))}
+          </TabPanel>
+        </SwipeableViews>
+      </Paper>
+      <Box mt={8}>
+        <Copyright />
+      </Box>
+    </div>
+  );
+}
 
 const useStyles = makeStyles(theme => ({
   "@global": {
@@ -142,210 +385,5 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 10
   }
 }));
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box p={3}>{children}</Box>}
-    </Typography>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired
-};
-
-function a11yProps(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    "aria-controls": `full-width-tabpanel-${index}`
-  };
-}
-
-function Profile() {
-  const classes = useStyles();
-  const theme = useTheme();
-  let history = useHistory();
-  const { user, setUser } = useContext(UserContext);
-  const { loading, error, data } = useQuery(USER_EVENTS, {
-    variables: { user_id: user._id }
-  });
-  const bookingStates = useQuery(USER_BOOKING, {
-    variables: { user_id: user._id }
-  });
-
-  const ratingStates = useQuery(HOST_RATINGS, {
-    variables: { host_id: user._id }
-  });
-
-  //const { loadingB, errorB, dataB } = bookingStates;
-
-  //const [newUser, { loading, error, data }] = useMutation(NEW_USER);
-
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const handleChangeIndex = index => {
-    setValue(index);
-  };
-
-  console.log("user Events: ", data);
-
-  return (
-    <div className={classes.profileWrap}>
-      <CssBaseline />
-      <Paper className={classes.paper}>
-        <Avatar className={classes.avatar} src={user.picture}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          {user.name}
-        </Typography>
-        <Typography variant="body">{user.email}</Typography>
-        <Button color="inherit" className={classes.buttonNavi}>
-          <NavLink to={`/signout`}>
-            <Typography variant="subtitle2">Sign out</Typography>
-            <ExitToAppIcon />
-          </NavLink>
-        </Button>
-        {/* </Paper>
-      <Paper className={classes.paper}> */}
-        <AppBar position="static" color="default" className={classes.appBar}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="fullWidth"
-            aria-label="full width tabs example"
-          >
-            <Tab
-              // label={
-              //   bookingStates.data && bookingStates.data.showUserBookings
-              //     ? `ATTENDING (${bookingStates.data.showUserBookings.length})`
-              //     : "ATTENDING"
-              // }
-              label={
-                <Badge
-                  className={classes.padding}
-                  color="secondary"
-                  badgeContent={
-                    bookingStates.data &&
-                    bookingStates.data.showUserBookings.length
-                  }
-                >
-                  ATTENDING
-                </Badge>
-              }
-              {...a11yProps(0)}
-            />
-            <Tab
-              label={
-                <Badge
-                  className={classes.padding}
-                  color="secondary"
-                  badgeContent={data && data.userEvents.length}
-                >
-                  HOSTING
-                </Badge>
-              }
-              {...a11yProps(1)}
-            />
-
-            <Tab
-              label={
-                <Badge
-                  className={classes.padding}
-                  color="secondary"
-                  badgeContent={
-                    ratingStates.data && ratingStates.data.showRatings.length
-                  }
-                >
-                  RATING
-                </Badge>
-              }
-              {...a11yProps(2)}
-            />
-          </Tabs>
-        </AppBar>
-        <SwipeableViews
-          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-          index={value}
-          onChangeIndex={handleChangeIndex}
-          style={{ width: "100%" }}
-        >
-          <TabPanel value={value} index={0} dir={theme.direction}>
-            {bookingStates.loading && <Spinner height={100} width={100} />}
-            <Grid
-              container
-              justify="center"
-              direction="column"
-              alignItems="center"
-              alignContent="center"
-              style={{ width: "100%" }}
-            >
-              {bookingStates.data &&
-                bookingStates.data.showUserBookings &&
-                bookingStates.data.showUserBookings.map(event => (
-                  <Grid item style={{ width: "100%" }}>
-                    <EventCard event={event.event} />
-                  </Grid>
-                ))}
-            </Grid>
-          </TabPanel>
-          <TabPanel value={value} index={1} dir={theme.direction}>
-            {loading && <Spinner />}
-            <Grid
-              container
-              justify="center"
-              direction="column"
-              alignItems="center"
-              alignContent="center"
-            >
-              {data &&
-                data.userEvents &&
-                data.userEvents.map(event => (
-                  <Grid item style={{ width: "100%" }}>
-                    <EventCard event={event} />
-                  </Grid>
-                ))}
-            </Grid>
-          </TabPanel>
-          <TabPanel
-            value={value}
-            index={2}
-            dir={theme.direction}
-            style={{ width: "100%" }}
-          >
-            Item Three
-            {ratingStates.loading && <Spinner height={100} width={100} />}
-            {ratingStates.data &&
-              ratingStates.data.showRatings &&
-              ratingStates.data.showRatings.map((rating, index) => (
-                <RatingCard rating={rating} key={index} />
-              ))}
-          </TabPanel>
-        </SwipeableViews>
-      </Paper>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </div>
-  );
-}
 
 export default Profile;
