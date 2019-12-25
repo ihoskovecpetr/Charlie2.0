@@ -443,7 +443,7 @@ export default function Menu(props) {
               required
               fullWidth
               //color="secondary"
-              id="email"
+
               //inputRef={inputName}
               label="Your Email"
               name="email"

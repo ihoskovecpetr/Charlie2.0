@@ -55,7 +55,10 @@ export default function MapSettingsPanel(props) {
     console.log("++ den : ", den);
     let isoDen = den.toISOString().split("T")[0];
     props.clearMarkers();
-    props.setWorkDate(isoDen);
+    props.handleScrollLocTime(isoDen);
+    // props.setWorkDate(prev => {
+    //   return { ...prev, date: isoDen };
+    // });
   };
 
   const minusDay = () => {
@@ -63,10 +66,10 @@ export default function MapSettingsPanel(props) {
     console.log("-- den : ", den);
     let isoDen = den.toISOString().split("T")[0];
     props.clearMarkers();
-    props.setWorkDate(isoDen);
+    props.handleScrollLocTime(isoDen);
   };
 
-  console.log("Loading...", props.loading);
+  //console.log("Loading...", props.loading);
 
   return (
     <>

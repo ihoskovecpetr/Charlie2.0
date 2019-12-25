@@ -182,7 +182,7 @@ function SignUp() {
             margin="normal"
             required
             fullWidth
-            id="email"
+            id="emailSignUp"
             label="Email Address"
             name="email"
             autoComplete="email"
@@ -222,17 +222,9 @@ function SignUp() {
             className={classes.submit}
             onClick={e => {
               e.preventDefault();
-              console.log("sumbitHandler: ", e);
-              console.log(
-                "email: ",
-                document.getElementById("email").value,
-                document.getElementById("password").value
-              );
               let name = document.getElementById("name").value;
-              let email = document.getElementById("email").value;
+              let email = document.getElementById("emailSignUp").value;
               let password = document.getElementById("password").value;
-              console.log("email: ", document.getElementById("password").value);
-
               newUser({
                 variables: {
                   name: name,

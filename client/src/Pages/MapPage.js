@@ -21,18 +21,19 @@ import MapSettingsPanel from "../Molecules/map-settings-panel";
 let infoBubble;
 let InfoBevent = false;
 let previousMarker;
-var AllMarkersArr;
+let AllMarkersArr;
+let MapObject;
 
 function MapPage(props) {
   const classes = useStyles();
   let history = useHistory();
   const { user } = useContext(UserContext);
-  const [workDate, setWorkDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  // const [workDate, setWorkDate] = useState(
+  //   new Date().toISOString().split("T")[0]
+  // );
   useSet__vh();
   const { loading, error, data } = useQuery(ALL_EVENTS, {
-    variables: { date: workDate }
+    variables: { date: props.workingPosition.date }
   });
 
   useEffect(() => {
@@ -53,11 +54,19 @@ function MapPage(props) {
     }
   };
 
-  // if (error) {
-  //   alert("Unable to load Events...");
-  // }
+  if (error) {
+    alert("Unable to load Events...");
+  }
   const redirectLogin = () => {
     history.push("/signin");
+  };
+
+  const handleScrollLocTime = isoDate => {
+    let center = MapObject.getCenter();
+    props.setWorkingPosition({
+      geometry: { lng: center.lng(), lat: center.lat() },
+      date: isoDate
+    });
   };
 
   let dataMock;
@@ -148,7 +157,10 @@ function MapPage(props) {
     let uniqueArrayOfId = [];
     let UniqArr = [];
     let dataDB;
-    console.log("Map Mounted:: ");
+    //console.log("Map Mounted:: ");
+
+    MapObject = map;
+
     if (dataMock) {
       dataDB = dataMock;
     } else if (dataMemo) {
@@ -195,7 +207,7 @@ function MapPage(props) {
 
       // SumPoly = polygon.union(...SumPolyWork , POLY_A);
       // console.log("SumPoly", SumPoly)
-      console.log("Setting current: ");
+      //console.log("Setting current: ");
       // props.setWorkingPosition({
       //   geometry: { lat: center.lat(), lng: center.lng() },
       //   zoom: map.getZoom()
@@ -251,7 +263,7 @@ function MapPage(props) {
     });
     {
       if (!loading) {
-        console.log("Rendering MARKERS ", UniqArr);
+        //console.log("Rendering MARKERS ", UniqArr);
         AllMarkersArr = UniqArr.map((location, i) => {
           var urlNA =
             "https://res.cloudinary.com/party-images-app/image/upload/v1557626853/j4fot5g2fvldzh88h9u4.png";
@@ -332,10 +344,16 @@ function MapPage(props) {
   if (user.geolocationObj) {
     LngLatCenter = user.geolocationObj;
   }
+
+  if (props.workingPosition.geometry) {
+    LngLatCenter = props.workingPosition.geometry;
+  }
   // let LngLatCenter = { lat: latitude, lng: longitude };
   // if (!latitude) {
   //   LngLatCenter = { lat: 50.068645, lng: 15.457364 };
   // }
+
+  console.log("MapPage: workingPosition ", props.workingPosition);
 
   const MapOptions = {
     center: LngLatCenter,
@@ -357,6 +375,7 @@ function MapPage(props) {
         dateState={props.workingPosition.date}
         positionState={props.workingPosition.geometry}
         setWorkDate={props.setWorkingPosition}
+        handleScrollLocTime={handleScrollLocTime}
         clearMarkers={clearMarkers}
         loading={loading}
       />
