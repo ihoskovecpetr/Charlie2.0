@@ -89,6 +89,7 @@ const HOST_RATINGS = gql`
       dateStart
       description
       author {
+        _id
         name
         picture
       }
@@ -109,6 +110,7 @@ const HOST_RATINGS = gql`
         picture
         name
       }
+      _id
       message
       ratingValue
       createdAt
@@ -186,6 +188,8 @@ function Profile() {
   //   variables: { user_id: user._id }
   // });
 
+  console.log("user.name: PROFILE ", user.name);
+
   const { loading, error, data } = useQuery(HOST_RATINGS, {
     variables: { host_id: user._id }
   });
@@ -208,7 +212,9 @@ function Profile() {
     "Rerendering PROFILE: ",
     // hostingStates.data,
     // bookingStates.data,
-    data
+    data,
+    loading,
+    error
   );
 
   return (
@@ -221,13 +227,14 @@ function Profile() {
         <Typography component="h1" variant="h5">
           {user.name}
         </Typography>
-        <Typography variant="body">{user.email}</Typography>
+        <Typography variant="body1">{user.email}</Typography>
         <Button color="inherit" className={classes.buttonNavi}>
           <NavLink to={`/signout`}>
             <Typography variant="subtitle2">Sign out</Typography>
             <ExitToAppIcon />
           </NavLink>
         </Button>
+        {error && <h1>ERROR</h1>}
         <AppBar position="static" color="default" className={classes.appBar}>
           <Tabs
             value={value}

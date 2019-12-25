@@ -148,7 +148,7 @@ function MapPage(props) {
     let uniqueArrayOfId = [];
     let UniqArr = [];
     let dataDB;
-    console.log("Map Mounted:: ")
+    console.log("Map Mounted:: ");
     if (dataMock) {
       dataDB = dataMock;
     } else if (dataMemo) {
@@ -195,8 +195,11 @@ function MapPage(props) {
 
       // SumPoly = polygon.union(...SumPolyWork , POLY_A);
       // console.log("SumPoly", SumPoly)
-
-      //here.props.setScrolledPosition([center.lat(), center.lng()], map.getZoom())
+      console.log("Setting current: ");
+      // props.setWorkingPosition({
+      //   geometry: { lat: center.lat(), lng: center.lng() },
+      //   zoom: map.getZoom()
+      // });
       //here.fetchBoundariesSingle(ne,sw)
       //console.log("Fetch points BoarDERS?");
     });
@@ -350,8 +353,10 @@ function MapPage(props) {
     <div component="main" className={classes.container}>
       <CssBaseline />
       <MapSettingsPanel
-        dateState={workDate}
-        setWorkDate={setWorkDate}
+        //dateState={workDate}
+        dateState={props.workingPosition.date}
+        positionState={props.workingPosition.geometry}
+        setWorkDate={props.setWorkingPosition}
         clearMarkers={clearMarkers}
         loading={loading}
       />

@@ -19,6 +19,8 @@ import Spinner from "./Spinner";
 function UpperStripe(props) {
   const { user, setUser } = useContext(UserContext);
 
+  console.log("Rendering UPPER STRIPE");
+
   const useStyles = makeStyles(theme => ({
     menuButton: {
       marginRight: theme.spacing(2),

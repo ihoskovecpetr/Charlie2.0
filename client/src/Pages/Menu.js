@@ -206,7 +206,7 @@ export default function Menu(props) {
                 if (new Date(event.event.dateStart) >= new Date()) {
                   return <EventCard event={event.event} key={index} />;
                 } else {
-                  console.log("PAST EVENT: ", event.event.dateStart);
+                  //console.log("PAST EVENT: ", event.event.dateStart);
                   return null;
                 }
               })}

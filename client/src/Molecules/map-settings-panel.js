@@ -47,10 +47,12 @@ const useStyles = makeStyles(theme => ({
 export default function MapSettingsPanel(props) {
   const classes = useStyles();
   const { vhcko } = useSet__vh();
+  console.log("props.dateState: ", props.dateState);
   let den = new Date(props.dateState);
 
   const plusDay = () => {
     den.setDate(den.getDate() + 1);
+    console.log("++ den : ", den);
     let isoDen = den.toISOString().split("T")[0];
     props.clearMarkers();
     props.setWorkDate(isoDen);
@@ -58,6 +60,7 @@ export default function MapSettingsPanel(props) {
 
   const minusDay = () => {
     den.setDate(den.getDate() - 1);
+    console.log("-- den : ", den);
     let isoDen = den.toISOString().split("T")[0];
     props.clearMarkers();
     props.setWorkDate(isoDen);

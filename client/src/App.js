@@ -84,7 +84,7 @@ function App(props) {
     name: false,
     geolocationObj: null
   });
-  const [workingPosition, setworkingPosition] = useState({
+  const [workingPosition, setWorkingPosition] = useState({
     date: new Date().toISOString().split("T")[0],
     geolocation: null
   });
@@ -109,7 +109,10 @@ function App(props) {
 
   //console.log("App props START: props user ", props, user);
 
-  const providerValue = useMemo(() => ({ user, setUser }), [user, setUser]);
+  const providerValue = useMemo(() => {
+    console.log("Update CONTEXT:");
+    return { user, setUser };
+  }, [user, setUser]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -132,7 +135,7 @@ function App(props) {
         <Create />, //create
         <MapPage
           workingPosition={workingPosition}
-          setworkingPosition={setworkingPosition}
+          setWorkingPosition={setWorkingPosition}
         />, //Map
         <About />,
         <UserModal />,
@@ -144,7 +147,7 @@ function App(props) {
         <Create />,
         <MapPage
           workingPosition={workingPosition}
-          setworkingPosition={setworkingPosition}
+          setWorkingPosition={setWorkingPosition}
         />,
         <About />,
         <UserModal />,

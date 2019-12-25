@@ -104,6 +104,7 @@ function newFunction() {
   }
 
   type Rating { 
+    _id: ID
     event: Event!
     host: ID!
     guest: User!
