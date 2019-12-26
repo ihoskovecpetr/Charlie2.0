@@ -22,7 +22,7 @@ function Layout(props) {
         () => {} //history.goBack()
       }
     >
-      <div fixed={true} className={classes.modalWrap}>
+      <div className={classes.modalWrap}>
         <CssBaseline />
         <Grid
           container

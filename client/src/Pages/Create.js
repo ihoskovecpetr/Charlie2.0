@@ -172,6 +172,7 @@ function Create(props) {
   //const inputCurrency = useRef(null);
   const inputBYO = useRef(null);
   const inputDescription = useRef(null);
+  const inputMarker = useRef(null);
 
   const onSubmit = e => {
     e.preventDefault();
@@ -255,24 +256,40 @@ function Create(props) {
 
           <Grid container className={clsx(classes.formRow)}>
             <Grid item style={{ width: "100%" }}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="name"
-                inputRef={inputName}
-                label="My First Party"
-                //defaultValue="My First Party"
-                name="name"
-                autoComplete="name"
-                autoFocus
-                style={{
-                  background: "rgba(255,255,255,0.9)",
-                  borderRadius: 5,
-                  boxShadow: "5px 5px 5px 0px rgba(0,0,0,0.75)"
-                }}
-              />
+              {user.success ? (
+                <TextField
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="name"
+                  inputRef={inputName}
+                  label="My First Party"
+                  name="name"
+                  autoComplete="name"
+                  autoFocus
+                  style={{
+                    background: "rgba(255,255,255,0.9)",
+                    borderRadius: 5,
+                    boxShadow: "5px 5px 5px 0px rgba(0,0,0,0.75)"
+                  }}
+                />
+              ) : (
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  style={{ marginTop: 30 }}
+                  onClick={() => {
+                    setTimeout(() => {
+                      history.push(`/signin`);
+                    }, 200);
+                  }}
+                >
+                  {" "}
+                  LOGIN FIRST{" "}
+                </Button>
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -283,6 +300,7 @@ function Create(props) {
           <MapCreate
             customMapParam={customMapParam}
             setCustomMapParam={setCustomMapParam}
+            inputMarker={inputMarker}
           />
 
           <InputLabel htmlFor="standard-adornment-amount">DATE</InputLabel>

@@ -4,6 +4,7 @@ export default function Map({ options, onMount, className, styling }) {
   const ref = useRef();
 
   useEffect(() => {
+    console.log("ReRENDER MAPHUUK");
     const onLoad = () => {
       if (typeof onMount === `function`) {
         //const map = new window.google.maps.Map(ref.current, options);

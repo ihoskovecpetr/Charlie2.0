@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useMemo, useCallback } from "react";
 //import GeolocationMarker from 'geolocation-marker'
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
@@ -8,33 +8,36 @@ import { usePosition } from "../Hooks/useGeolocation";
 
 import Map from "../Atoms/Hook-map";
 
+let LngLatCenter = { lat: 50.068645, lng: 14.457364 };
+
 function MapCreate(props) {
   //const { latitude, longitude, error } = usePosition();
   const { user, setUser } = useContext(UserContext);
-
+  const [addressTxt, setAddressTxt] = useState("Write address");
   let marker;
   //let markerGeoLoc = { lat: latitude, lng: longitude };
   let geocoder;
 
   //console.log("RENDER CREATE MAP: position: ", markerGeoLoc);
 
-  let LngLatCenter = { lat: 50.068645, lng: 14.457364 };
-
   if (user.geolocationObj) {
     LngLatCenter = user.geolocationObj;
   }
 
-  const MapOptions = {
-    center: LngLatCenter,
-    zoom: 10,
-    disableDefaultUI: true,
-    zoomControl: true,
-    //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
-    clickableIcons: false,
-    gestureHandling: "cooperative"
-  };
+  const MapOptions = useCallback(() => {
+    console.log("MAP OPTions @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    return {
+      center: LngLatCenter,
+      zoom: 10,
+      disableDefaultUI: true,
+      zoomControl: true,
+      //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+      clickableIcons: false,
+      gestureHandling: "cooperative"
+    };
+  }, [LngLatCenter]);
 
-  const onMapMount = map => {
+  const onMapMount = useCallback(map => {
     console.log("onMapMount fce ");
 
     marker = new window.google.maps.Marker({
@@ -98,7 +101,10 @@ function MapCreate(props) {
 
       // If the place has a geometry, then present it on a map.
       if (place.geometry.viewport) {
+        console.log("Found place");
         map.fitBounds(place.geometry.viewport);
+        marker.setPosition(place.geometry.location);
+        marker.setVisible(true);
       } else {
         console.log("Setting here center: ", place.geometry.location);
         map.setCenter(place.geometry.location);
@@ -110,11 +116,13 @@ function MapCreate(props) {
         lng: place.geometry.location.lng()
       };
 
-      marker.setVisible(true);
-
       let address = "";
 
       if (place.address_components) {
+        console.log(
+          "Tohle place ma addresu: ",
+          place.address_components[0].short_name
+        );
         address = [
           (place.address_components[0] &&
             place.address_components[0].short_name) ||
@@ -134,12 +142,12 @@ function MapCreate(props) {
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
           address: address,
-          //zoom: map.zoom
-          zoom: 16
+          zoom: map.zoom,
+          uncontrolledAdr: false
         };
       });
     });
-  };
+  }, []);
 
   const geocodeLatLng = (geocoder, map, lat, lng) => {
     geocoder.geocode({ location: { lat: lat, lng: lng } }, function(
@@ -147,8 +155,15 @@ function MapCreate(props) {
       status,
       error_message
     ) {
-      var spl = results[0].formatted_address.split(" ");
-      var shortAddress = [spl[0], spl[1], spl[2], spl[3]].join(" ");
+      console.log("results: ", results, status, error_message);
+      var shortAddress;
+      if (results) {
+        var spl = results[0].formatted_address.split(" ");
+        shortAddress = [spl[0], spl[1], spl[2], spl[3]].join(" ");
+      } else {
+        shortAddress = "Just decide please!!";
+      }
+
       status &&
         props.setCustomMapParam(prev => {
           return {
@@ -156,19 +171,36 @@ function MapCreate(props) {
             address: shortAddress,
             lat: lat,
             lng: lng,
-            zoom: map.zoom
+            zoom: map.zoom,
+            uncontrolledAdr: false
           };
         });
       if (error_message) {
         window.alert("Geocoder failed due to: " + status);
         console.log("results: ", results);
         //this.setState({addressOffer: "No address in your location"})
-        props.setCustomMapParam(prev => {
-          return { ...prev, address: "Failed to localize you" };
-        });
+        // props.setCustomMapParam(prev => {
+        //   return { ...prev, address: "Failed to localize you" };
+        // });
       }
     });
   };
+
+  const MapAtom = useMemo(
+    () => (
+      <Map
+        onMount={onMapMount}
+        options={MapOptions()}
+        className="Create-hell-of-a-party"
+        styling={{
+          height: "200px",
+          width: "100%",
+          marginBottom: 20
+        }}
+      />
+    ),
+    [onMapMount, MapOptions]
+  );
 
   return (
     <>
@@ -180,29 +212,58 @@ function MapCreate(props) {
             required
             fullWidth
             id="input-location"
-            //value={props.customMapParam && props.customMapParam.address}
-            //label="Enter a location"
-            //placeholder="Enter a location"
-            name="name"
-            autoComplete="name"
-            style={{ marginBottom: 0 }}
+            name="address"
+            autoComplete="address"
+            style={{
+              marginBottom: 0,
+              display:
+                props.customMapParam && props.customMapParam.uncontrolledAdr
+                  ? "block"
+                  : "none"
+            }}
             onKeyPress={e => {
               if (e.key === "Enter") e.preventDefault();
             }}
             autoFocus
           />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="input-location-controlled"
+            value={
+              props.customMapParam && props.customMapParam.address
+                ? props.customMapParam.address
+                : "no address yet"
+            }
+            //label="Enter a location"
+            //placeholder="Enter a location"
+            name="address"
+            style={{
+              marginBottom: 0,
+              display:
+                props.customMapParam &&
+                props.customMapParam.uncontrolledAdr &&
+                "none"
+            }}
+            disabled
+            onKeyPress={e => {
+              if (e.key === "Enter") e.preventDefault();
+            }}
+            onClick={() => {
+              props.setCustomMapParam(prev => {
+                return {
+                  ...prev,
+                  uncontrolledAdr: true
+                };
+              });
+            }}
+            autoFocus
+          />
         </Grid>
       </Grid>
-      <Map
-        onMount={onMapMount}
-        options={MapOptions}
-        className="Create-hell-of-a-party"
-        styling={{
-          height: "200px",
-          width: "100%",
-          marginBottom: 20
-        }}
-      />
+      {MapAtom}
     </>
   );
 }
