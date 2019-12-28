@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
-export default function Map({ options, onMount, className, styling }) {
+function Map({ options, onMount, className, styling }) {
   const ref = useRef();
 
   useEffect(() => {
@@ -46,3 +46,5 @@ Map.defaultProps = {
     zoom: 5
   }
 };
+
+export default React.memo(Map);

@@ -2,6 +2,7 @@ import React, { useContext, useState, useRef, useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import clsx from "clsx";
 
@@ -212,7 +213,15 @@ function Create(props) {
   if (loading) {
     return (
       <ModalLayout>
-        <Spinner height={50} width={50} />
+        <Container maxWidth="sm" className={classes.paper1}>
+          <Paper style={{ width: "100%", marginBottom: 20, padding: 10 }}>
+            <Grid container justify="center">
+              <Grid item>
+                <Spinner height={50} width={50} />
+              </Grid>
+            </Grid>
+          </Paper>
+        </Container>
       </ModalLayout>
     );
   }
@@ -221,10 +230,30 @@ function Create(props) {
     console.log("SUCCESS and redirect");
     setTimeout(() => {
       history.push(`/event/${data.createEvent._id}`);
-    }, 3000);
+    }, 500);
     return (
       <ModalLayout>
-        <Typography> SUCCESS </Typography>
+        <Container maxWidth="sm" className={classes.paper1}>
+          <Paper style={{ width: "100%", marginBottom: 20, padding: 10 }}>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              spacing={5}
+              direction="column"
+            >
+              <Grid item>
+                <Typography> SUCCESS </Typography>
+              </Grid>
+              <Grid item>
+                <Spinner height={50} width={50} />
+              </Grid>
+              <Grid item>
+                <Typography> redirecting... </Typography>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Container>
       </ModalLayout>
     );
   }

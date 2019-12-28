@@ -1,4 +1,11 @@
-import React, { useContext, useState, useRef, useEffect, useMemo } from "react";
+import React, {
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback
+} from "react";
 import ReactDOM from "react-dom";
 import "./mapPage.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -23,6 +30,7 @@ let InfoBevent = false;
 let previousMarker;
 let AllMarkersArr;
 let MapObject;
+let LngLatCenter = { lat: 50.068645, lng: 14.457364 }; //Default position
 
 function MapPage(props) {
   const classes = useStyles();
@@ -41,14 +49,14 @@ function MapPage(props) {
       window.AppHistory = history;
     }
   }, []);
-  console.log("dat", data);
-  console.log("load", loading);
-  console.log("err", error);
+  // console.log("dat", data);
+  // console.log("load", loading);
+  // console.log("err", error);
 
   const clearMarkers = () => {
-    console.log("Creal Markers: AllMarkersArr", AllMarkersArr);
-    console.log("dataEvents", data);
-    console.log("loadingEvents", loading);
+    // console.log("Creal Markers: AllMarkersArr", AllMarkersArr);
+    // console.log("dataEvents", data);
+    // console.log("loadingEvents", loading);
     for (let i = 0; i < AllMarkersArr.length; i++) {
       AllMarkersArr[i].setMap(null);
     }
@@ -153,7 +161,7 @@ function MapPage(props) {
   //   }
   // ];
 
-  const onMapMount = map => {
+  const onMapMount = useCallback(map => {
     let uniqueArrayOfId = [];
     let UniqArr = [];
     let dataDB;
@@ -338,15 +346,12 @@ function MapPage(props) {
         });
       }
     }
-  };
-  let LngLatCenter = { lat: 50.068645, lng: 15.457364 };
-
-  if (user.geolocationObj) {
-    LngLatCenter = user.geolocationObj;
-  }
+  });
 
   if (props.workingPosition.geometry) {
     LngLatCenter = props.workingPosition.geometry;
+  } else if (user.geolocationObj) {
+    LngLatCenter = user.geolocationObj;
   }
   // let LngLatCenter = { lat: latitude, lng: longitude };
   // if (!latitude) {
@@ -355,17 +360,36 @@ function MapPage(props) {
 
   console.log("MapPage: workingPosition ", props.workingPosition);
 
-  const MapOptions = {
-    center: LngLatCenter,
-    zoom: 10,
-    disableDefaultUI: true,
-    zoomControl: true,
-    //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
-    clickableIcons: false,
-    gestureHandling: "cooperative",
-    backgroundColor: "#242323",
-    styles: mapSetup
-  };
+  const MapOptions = useCallback(() => {
+    return {
+      center: LngLatCenter,
+      zoom: 10,
+      disableDefaultUI: true,
+      zoomControl: true,
+      //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+      clickableIcons: false,
+      gestureHandling: "cooperative",
+      backgroundColor: "#242323",
+      styles: mapSetup
+    };
+  });
+
+  const MapAtom = useMemo(
+    () => (
+      <Map
+        onMount={onMapMount}
+        options={MapOptions()}
+        className="main-map"
+        styling={{
+          width: "100%",
+          position: "absolute",
+          top: 0,
+          background: "black"
+        }}
+      />
+    ),
+    [onMapMount, MapOptions]
+  );
 
   return (
     <div component="main" className={classes.container}>
@@ -379,17 +403,7 @@ function MapPage(props) {
         clearMarkers={clearMarkers}
         loading={loading}
       />
-      <Map
-        onMount={onMapMount}
-        options={MapOptions}
-        className="main-map"
-        styling={{
-          width: "100%",
-          position: "absolute",
-          top: 0,
-          background: "black"
-        }}
-      />
+      {MapAtom}
     </div>
   );
 }

@@ -193,7 +193,7 @@ export default function Menu(props) {
         </Grid>
         <Grid item>
           <Typography className={classes.defaultHeader}>
-            YOUR <b>NEXT</b> EVENT
+            YOUR <b>NEXT</b> EVENTS
           </Typography>
         </Grid>
 

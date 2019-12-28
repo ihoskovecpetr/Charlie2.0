@@ -290,7 +290,13 @@ function Profile() {
           style={{ width: "100%" }}
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
-            {loading && <Spinner height={100} width={100} />}
+            {loading && (
+              <Grid container justify="center">
+                <Grid item>
+                  <Spinner height={100} width={100} />
+                </Grid>
+              </Grid>
+            )}
             <Grid
               container
               justify="center"

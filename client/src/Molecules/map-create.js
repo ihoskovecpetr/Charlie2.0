@@ -24,8 +24,8 @@ function MapCreate(props) {
     LngLatCenter = user.geolocationObj;
   }
 
-  const MapOptions = useCallback(() => {
-    console.log("MAP OPTions @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  const MapOptions = useMemo(() => {
+    console.log("MAP OPTions RERENDER");
     return {
       center: LngLatCenter,
       zoom: 10,
@@ -38,7 +38,7 @@ function MapCreate(props) {
   }, [LngLatCenter]);
 
   const onMapMount = useCallback(map => {
-    console.log("onMapMount fce ");
+    console.log("onMapMount fce RERENDER ");
 
     marker = new window.google.maps.Marker({
       map: map,
@@ -51,7 +51,6 @@ function MapCreate(props) {
     autocomplete.bindTo("bounds", map);
 
     if (props.customMapParam) {
-      console.log("MArker CL: ", props.customMapParam);
       marker.setPosition({
         lng: props.customMapParam.lng,
         lat: props.customMapParam.lat
@@ -64,13 +63,11 @@ function MapCreate(props) {
       document.getElementById("input-location").value =
         props.customMapParam.address;
     } else if (LngLatCenter) {
-      console.log("MArker MGL");
       marker.setPosition(LngLatCenter);
       map.panTo(LngLatCenter);
       geocodeLatLng(geocoder, map, LngLatCenter.lat, LngLatCenter.lng);
     }
     map.addListener("zoom_changed", function() {
-      console.log("ZOOM: ", map.zoom);
       props.setCustomMapParam(prev => {
         return {
           ...prev,
@@ -101,12 +98,11 @@ function MapCreate(props) {
 
       // If the place has a geometry, then present it on a map.
       if (place.geometry.viewport) {
-        console.log("Found place");
         map.fitBounds(place.geometry.viewport);
         marker.setPosition(place.geometry.location);
         marker.setVisible(true);
       } else {
-        console.log("Setting here center: ", place.geometry.location);
+        //console.log("Setting here center: ", place.geometry.location);
         map.setCenter(place.geometry.location);
         map.setZoom(17);
       }
@@ -119,10 +115,10 @@ function MapCreate(props) {
       let address = "";
 
       if (place.address_components) {
-        console.log(
-          "Tohle place ma addresu: ",
-          place.address_components[0].short_name
-        );
+        // console.log(
+        //   "Tohle place ma addresu: ",
+        //   place.address_components[0].short_name
+        // );
         address = [
           (place.address_components[0] &&
             place.address_components[0].short_name) ||
@@ -155,7 +151,7 @@ function MapCreate(props) {
       status,
       error_message
     ) {
-      console.log("results: ", results, status, error_message);
+      //console.log("results: ", results, status, error_message);
       var shortAddress;
       if (results) {
         var spl = results[0].formatted_address.split(" ");
@@ -177,7 +173,6 @@ function MapCreate(props) {
         });
       if (error_message) {
         window.alert("Geocoder failed due to: " + status);
-        console.log("results: ", results);
         //this.setState({addressOffer: "No address in your location"})
         // props.setCustomMapParam(prev => {
         //   return { ...prev, address: "Failed to localize you" };
@@ -190,7 +185,7 @@ function MapCreate(props) {
     () => (
       <Map
         onMount={onMapMount}
-        options={MapOptions()}
+        options={MapOptions}
         className="Create-hell-of-a-party"
         styling={{
           height: "200px",

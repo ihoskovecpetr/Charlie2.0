@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Avatar from "@material-ui/core/Avatar";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import Badge from "@material-ui/core/Badge";
 
 import { Route, NavLink } from "react-router-dom";
 import { UserContext } from "../userContext";
@@ -125,18 +126,31 @@ function UpperStripe(props) {
               )}
 
               {!props.userApp.success && !user.name && (
-                <Button color="inherit" className={classes.buttonNavi}>
-                  <NavLink to={`/signin`}>Sign In </NavLink>
-                  {props.loading ? (
-                    <div className={classes.ButtonAvatar}>
-                      <Spinner height={30} width={30} />
-                    </div>
-                  ) : (
-                    <div className={classes.ButtonAvatar}>
-                      <AccountCircleIcon color="disabled" fontSize="large" />
-                    </div>
-                  )}
-                </Button>
+                <Badge
+                  color="primary"
+                  badgeContent={
+                    <p style={{ margin: 0 }}>
+                      <b>START HERE</b>
+                    </p>
+                  }
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left"
+                  }}
+                >
+                  <Button color="inherit" className={classes.buttonNavi}>
+                    <NavLink to={`/signin`}>Sign In </NavLink>
+                    {props.loading ? (
+                      <div className={classes.ButtonAvatar}>
+                        <Spinner height={30} width={30} />
+                      </div>
+                    ) : (
+                      <div className={classes.ButtonAvatar}>
+                        <AccountCircleIcon color="disabled" fontSize="large" />
+                      </div>
+                    )}
+                  </Button>
+                </Badge>
               )}
               {props.userApp.success && (
                 <NavLink to={`/profile`}>

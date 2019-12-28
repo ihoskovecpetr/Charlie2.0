@@ -9,6 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Badge from "@material-ui/core/Badge";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useMutation, useQuery, useApolloClient } from "@apollo/react-hooks";
@@ -159,7 +160,22 @@ function SignIn(props) {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/signup">Don't have an account? Sign In</Link>
+              <Badge
+                color="secondary"
+                badgeContent={
+                  <p style={{ margin: 0 }}>
+                    <b>OR SIGN UP</b>
+                  </p>
+                }
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right"
+                }}
+              >
+                <Link href="/signup" className={classes.linkClass}>
+                  Don't have an account? Sign In
+                </Link>
+              </Badge>
             </Grid>
           </Grid>
         </form>
@@ -201,6 +217,9 @@ const useStyles = makeStyles(theme => ({
     "&:hover": {
       textDecoration: "underline"
     }
+  },
+  linkClass: {
+    paddingBottom: 10
   }
 }));
 
