@@ -82,13 +82,21 @@ function ModalJoin(props) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            {bookingReqStates.loading && <Spinner height={100} width={100} />}
+            {bookingReqStates.loading && (
+              <Grid container justify="center">
+                <Grid item>
+                  <Spinner height={100} width={100} />
+                </Grid>
+              </Grid>
+            )}
             {bookingReqStates.data &&
               bookingReqStates.data.requestBookEvent.success && (
-                <div>
-                  Finished, success. Redirecting back...{" "}
-                  <Spinner height={30} width={30} />
-                </div>
+                <Grid container direction="column" alignItems="center">
+                  <Grid item>Finished, success. Redirecting back... </Grid>
+                  <Grid item>
+                    <Spinner height={30} width={30} />
+                  </Grid>
+                </Grid>
               )}
             {bookingReqStates.data &&
               !bookingReqStates.data.requestBookEvent.success && (

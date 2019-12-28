@@ -485,7 +485,7 @@ const useStyles = makeStyles(theme => ({
     overflow: "scroll",
     borderBottomRightRadius: 5,
     borderBottomLeftRadius: 5,
-    boxShadow: "0px -2px 8px 0px rgba(255,255,255,0.3)"
+    boxShadow: "0px -2px 5px 0px rgba(200,200,200,0.3)"
   },
   closeButton: {
     background: theme.palette.violetova,
