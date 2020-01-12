@@ -77,6 +77,8 @@ function App(props) {
   });
   const { latitude, longitude, err } = usePosition();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [finishedAnimation, setFinishedAnimation] = useState(false);
+
   const { loading, error, data } = useQuery(LOGIN);
   const { container } = props;
   const [user, setUser] = useState({
@@ -107,7 +109,7 @@ function App(props) {
     });
   }
 
-  //console.log("App props START: props user ", props, user);
+  console.log("App render");
 
   const providerValue = useMemo(() => {
     console.log("Update CONTEXT:");
@@ -131,7 +133,8 @@ function App(props) {
     : ["Charlie", "Create", "Map", "About"];
   const ListOfComponents = user.success
     ? [
-        <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
+        <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} finishedAnimation={finishedAnimation}
+        setFinishedAnimation={setFinishedAnimation} />,
         <Create />, //create
         <MapPage
           workingPosition={workingPosition}
@@ -143,7 +146,8 @@ function App(props) {
         <SignOut LOGIN={LOGIN} />
       ]
     : [
-        <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />,
+        <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} finishedAnimation={finishedAnimation}
+        setFinishedAnimation={setFinishedAnimation} />,
         <Create />,
         <MapPage
           workingPosition={workingPosition}

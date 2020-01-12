@@ -24,3 +24,11 @@ a {
   text-decoration: none;
   color: inherit;
 }
+
+.move {
+  transform: translateY(0vh) !important;
+}
+
+.out {
+  transform: translateY(100vh);
+}

@@ -307,8 +307,8 @@ function Profile() {
             >
               {data &&
                 data.showUserBookings &&
-                data.showUserBookings.map(event => (
-                  <Grid item style={{ width: "100%" }}>
+                data.showUserBookings.map((event, index) => (
+                  <Grid item key={index} style={{ width: "100%" }}>
                     <EventCard event={event.event} />
                   </Grid>
                 ))}
@@ -325,8 +325,8 @@ function Profile() {
             >
               {data &&
                 data.userEvents &&
-                data.userEvents.map(event => (
-                  <Grid item style={{ width: "100%" }}>
+                data.userEvents.map((event, index) => (
+                  <Grid item key={index} style={{ width: "100%" }}>
                     <EventCard event={event} />
                   </Grid>
                 ))}

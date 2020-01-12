@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
@@ -20,7 +20,14 @@ import Spinner from "./Spinner";
 function UpperStripe(props) {
   const { user, setUser } = useContext(UserContext);
 
-  console.log("Rendering UPPER STRIPE");
+  // useEffect(() => {
+
+  // addEventListener('scroll')
+
+  //   return(
+
+  //   )
+  // }, [])
 
   const useStyles = makeStyles(theme => ({
     menuButton: {
@@ -32,7 +39,7 @@ function UpperStripe(props) {
     appBar: {
       marginLeft: props.drawerWidth,
       color: "black",
-      background: "white"
+      background: "rgba(255,255,255,0.3)"
       // [theme.breakpoints.up("sm")]: {
       //   width: `calc(100% - ${props.drawerWidth}px)`
       // }

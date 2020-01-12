@@ -1,0 +1,15 @@
+.section {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: #fff;
+}
+
+.s2 {
+  background: #242323 !important;
+}
+
+@media (max-width: 558px) {
+  .section {
+    background-size: contain;
+  }
+}
