@@ -1,6 +1,6 @@
-.fullpage-wrapper{
-position: absolute !important;
-top: 0;
+.fullpage-wrapper {
+  position: absolute !important;
+  top: 0;
 }
 
 .section {
@@ -10,6 +10,7 @@ top: 0;
 }
 
 .s2 {
+  height: 50vh !important;
   background: #242323 !important;
 }
 
@@ -17,5 +18,8 @@ top: 0;
   .section {
     background-size: contain;
     background-position: center center;
+  }
+  .s2 {
+    height: 100vh;
   }
 }
