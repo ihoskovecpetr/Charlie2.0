@@ -39,7 +39,7 @@ function UpperStripe(props) {
     appBar: {
       marginLeft: props.drawerWidth,
       color: "black",
-      background: "rgba(255,255,255,0.3)"
+      background: "rgba(255,255,255,0.6)"
       // [theme.breakpoints.up("sm")]: {
       //   width: `calc(100% - ${props.drawerWidth}px)`
       // }

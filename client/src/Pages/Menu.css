@@ -1,3 +1,8 @@
+.fullpage-wrapper{
+position: absolute !important;
+top: 0;
+}
+
 .section {
   background-size: cover;
   background-repeat: no-repeat;
@@ -11,5 +16,6 @@
 @media (max-width: 558px) {
   .section {
     background-size: contain;
+    background-position: center center;
   }
 }

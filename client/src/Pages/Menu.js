@@ -23,22 +23,12 @@ import gql from "graphql-tag";
 import { NavLink } from "react-router-dom";
 
 import { UserContext } from "../userContext";
-import Spinner from "../Atoms/Spinner";
-import EventCard from "../Molecules/event-card";
 import Carousel from "../Atoms/carousel";
 import Copyright from "../Atoms/copyright";
 import SocialLine from "../Atoms/social-line";
-import FlippingLogo from "../Atoms/Flipping-logo/logo";
-import MainScreen from "../Molecules/MainScreen";
-
-import SurfImage from "../Images/srf.jpg";
-//import SunsetBig from "../Images/Sunset_big.jpg";
-import Empire from "../Images/empire-wide.png";
-import EmpireOriginal from "../Images/empire.jpg";
-//import SunsetSmall from "../Images/Sunset_small.jpg";
-//import SunsetSmall from "../Images/sunset_sml.png";
-//import Empire from "../Images/empire_mobile.png";
-//import BackgroundSmall from "../Images/empire_mobile.png";
+import Screen1 from "../Molecules/menu/screen_1";
+import Screen2 from "../Molecules/menu/screen_2";
+import Screen3 from "../Molecules/menu/screen_3";
 
 const USER_NEW_BOOKINGS = gql`
   mutation newestUserBookings($user_id: ID!) {
@@ -89,37 +79,8 @@ export default function Menu(props) {
     {
       !loading && !data && newBookingsArr();
     }
-  } else {
-    //console.log("NO USR: ", user);
   }
 
-  const MainScreenMemo = useMemo(
-    () => (
-      <MainScreen
-        finishedAnimation={props.finishedAnimation}
-        setFinishedAnimation={props.setFinishedAnimation}
-      />
-    ),
-    [props.finishedAnimation, props.setFinishedAnimation]
-  );
-
-  console.log("ToBeSroted PRE: ", data);
-  let Sorted = [];
-  if (data) {
-    Sorted = data.newestUserBookings.sort(function(a, b) {
-      let aDate = new Date(a.event.dateStart);
-      let bDate = new Date(b.event.dateStart);
-      if (aDate > bDate) {
-        return 1;
-      }
-      if (aDate < bDate) {
-        return -1;
-      }
-    });
-  }
-
-  console.log("ToBeSroted: AFTER", Sorted);
-  //console.log("Menu props: ", props);
 
   const fullpageOptions = {
     anchors: ["firstPage", "secondPage", "thirdPage"],
@@ -137,176 +98,12 @@ export default function Menu(props) {
         return (
           <div>
             <div id="fullpage-wrapper">
-              <div
-                className="section s1"
-                style={{ backgroundImage: `url(${EmpireOriginal})` }}
-              >
-                <Container maxWidth="md" className={classes.container_1}>
-                  {
-                    //MainScreenMemo
-                  }
-                  <Grid container>
-                    <Grid item xs={12} sm={6} className={classes.quarter_grid}>
-                      <Grid
-                        container
-                        justify="center"
-                        direction="row"
-                        alignItems="flex-end"
-                        className={classes.menuGrid_1}
-                      >
-                        <Grid item xs={6}>
-                          <Typography variant="h5" className={classes.charlie}>
-                            CHARLIE
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Typography variant="h5" className={classes.party}>
-                            PARTY
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
+              <Screen1 />
+              <Screen2 />
+              <Screen3 loading={loading} data={data} />
 
-                    <Grid item xs={12} sm={6} className={classes.quarter_grid}>
-                      <Grid
-                        container
-                        justify="center"
-                        alignItems="flex-end"
-                        className={classes.menuGrid_2}
-                      >
-                        <Grid item>
-                          {/* <Grid container justify="center">
-                        <Avatar
-                          className={classes.avatar}
-                          alt="Remy Sharp"
-                          src="https://res.cloudinary.com/party-images-app/image/upload/v1557794256/ojkgl1hkiljwij69njbb.png"
-                        />
-                      </Grid> */}
-                          <FlippingLogo height={100} width={100} />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} className={classes.quarter_grid}>
-                      <Grid
-                        container
-                        justify="center"
-                        direction="row"
-                        className={classes.menuGrid_3}
-                      >
-                        <NavLink to={`/map`}>
-                          <Grid item>
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              className={classes.button}
-                            >
-                              MAP
-                            </Button>
-                          </Grid>
-                        </NavLink>
-                        <NavLink to={`/create`}>
-                          <Grid item>
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              className={classes.button}
-                            >
-                              CREATE
-                            </Button>
-                          </Grid>
-                        </NavLink>
-                      </Grid>
-                    </Grid>
-
-                    <Grid item xs={12} sm={6} className={classes.quarter_grid}>
-                      <Grid
-                        container
-                        justify="center"
-                        direction="row"
-                        className={classes.menuGrid_3}
-                      >
-                        <Grid item>
-                          <Typography
-                            variant="subtitle1"
-                            component="h6"
-                            className={classes.text}
-                          >
-                            “Have you ever seen house on the beach or flat in a
-                            skyscraper and wonder how would it be to enjoy a
-                            drink in there?”
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Container>
-              </div>
-              <div className="section s2">
+              <div className="section s4">
                 <Container maxWidth="xl" className={classes.contentWrap}>
-                  <Grid container>
-                    <Grid item>
-                      <Typography className={classes.defaultHeader}>
-                        CHARLIE <b>INTRO</b>
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid container className={classes.containerIframe}>
-                    <Grid item className={classes.iFrame}>
-                      <iframe
-                        src="https://www.youtube.com/embed/PogfNxsugF0"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        className={classes.iFrame}
-                      ></iframe>
-                    </Grid>
-                  </Grid>
-                </Container>
-              </div>
-
-              <div className="section s3">
-                <Container maxWidth="xl" className={classes.contentWrap}>
-                  <Grid item>
-                    <Typography className={classes.defaultHeader}>
-                      YOUR <b>NEXT</b> EVENTS
-                    </Typography>
-                  </Grid>
-
-                  <Grid item>
-                    <Grid justify="center" container style={{ width: "100%" }}>
-                      <Grid item style={{ width: "90%" }}>
-                        {!loading && !data && <p>No data</p>}
-                        {loading && <Spinner height={100} width={100} />}
-                        {Sorted.map((event, index) => {
-                          if (new Date(event.event.dateStart) >= new Date()) {
-                            return (
-                              <EventCard event={event.event} key={index} />
-                            );
-                          } else {
-                            //console.log("PAST EVENT: ", event.event.dateStart);
-                            return null;
-                          }
-                        })}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid container>
-                    <Grid item>
-                      <Typography className={classes.defaultHeader}>
-                        MAIN <b>MISSION</b>
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography
-                        variant="subtitle2"
-                        className={classes.defaultContent}
-                      >
-                        Charlie is here to connect owners or renters of
-                        miscelanous places with guest for a joyfull evening
-                      </Typography>
-                    </Grid>
-                  </Grid>
 
                   <Grid container>
                     <Grid item>
@@ -415,7 +212,7 @@ export default function Menu(props) {
                 </Container>
               </div>
 
-              <div className="section s4">
+              <div className="section s5">
                 <Container maxWidth="xl" className={classes.container_4}>
                   <Grid item>
                     <Typography className={classes.defaultHeader}>
@@ -549,7 +346,7 @@ export default function Menu(props) {
                 </Container>
               </div>
 
-              <div className="section s5">
+              <div className="section s6">
                 <Container maxWidth="md" className={classes.contentWrap}>
                   <Grid item>
                     <Typography className={classes.defaultHeader}>
@@ -745,13 +542,6 @@ const useStyles = makeStyles(theme => ({
   defaultContent: {
     margin: 20,
     fontWeight: 500
-  },
-  containerIframe: {
-    width: "100%"
-  },
-  iFrame: {
-    width: "100%",
-    height: 250
   },
   form: {
     width: "100%", // Fix IE 11 issue.
