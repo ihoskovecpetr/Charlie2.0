@@ -13,6 +13,8 @@ import Badge from "@material-ui/core/Badge";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { useMutation, useQuery, useApolloClient } from "@apollo/react-hooks";
+import { Animated } from "react-animated-css";
+
 import gql from "graphql-tag";
 import { useHistory, NavLink } from "react-router-dom";
 
@@ -57,78 +59,127 @@ function SignIn(props) {
     );
   }
 
-  if (loading)
-    return (
-      <ModalLayout>
-        <Paper className={classes.paper}>
-          <Spinner height={50} width={50} />
-        </Paper>
-      </ModalLayout>
-    );
+  // if (loading)
+  //   return (
+  //     <ModalLayout>
+  //       <Paper className={classes.paper}>
+  //         <Spinner height={50} width={50} />
+  //       </Paper>
+  //     </ModalLayout>
+  //   );
 
-  if (data) {
-    console.log("DATA LOGIN: ", data);
-    if (data.login.success == false) {
-      return (
-        <ModalLayout>
-          <Paper className={classes.paper}>
-            <p>Wrong combination Email and password</p>
-          </Paper>
-        </ModalLayout>
-      );
-    } else {
-      if (data.login.success && !user.name) {
-        console.log("XXman user: ", user);
-        window.localStorage.setItem("token", data.login.token);
-        setUser({
-          _id: data.login._id,
-          success: data.login.success,
-          name: data.login.name,
-          email: data.login.email,
-          picture: data.login.picture,
-          token: data.login.token
-        });
-      }
-      console.log("seTTTING USER: ", user);
+  console.log("DATA LOGIN: ", data);
 
-      return <p>Success, welcone {user.name}</p>;
-    }
+  if (data && data.login.success && !user.name) {
+    console.log("XXman user: ", user);
+    window.localStorage.setItem("token", data.login.token);
+    setUser({
+      _id: data.login._id,
+      success: data.login.success,
+      name: data.login.name,
+      email: data.login.email,
+      picture: data.login.picture,
+      token: data.login.token
+    });
   }
 
   return (
     <ModalLayout>
       <Paper className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+        {!loading && (
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+        )}
+
+        {loading && (
+          <div className={classes.spinner}>
+            <Spinner height={40} width={40} />
+          </div>
+        )}
+
         <Typography component="h1" variant="h5">
-          Sign in
+          {loading ? "Loading.." : "Sign in"}
         </Typography>
+
         <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            defaultValue="test@gmail.com"
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            defaultValue="heslo"
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
+          {!data && (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              defaultValue="test@gmail.com"
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+          )}
+          {data && !data.success && (
+            <Animated
+              animationIn="shake"
+              animationOut="fadeOut"
+              animationInDelay={0}
+              animationInDuration={800}
+              isVisible={true}
+            >
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                defaultValue="test@gmail.com"
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                error={data ? data && !data.success : false}
+              />
+            </Animated>
+          )}
+          {data && !data.success && (
+            <Animated
+              animationIn="shake"
+              animationOut="fadeOut"
+              animationInDelay={0}
+              animationInDuration={1000}
+              isVisible={true}
+            >
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                defaultValue="heslo"
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                error={data ? data && !data.success : false}
+              />
+            </Animated>
+          )}
+
+          {!data && (
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              defaultValue="heslo"
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              error={data ? data && !data.success : false}
+            />
+          )}
+
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
@@ -143,6 +194,7 @@ function SignIn(props) {
               e.preventDefault();
               let email = document.getElementById("email").value;
               let password = document.getElementById("password").value;
+              console.log("pass + email: ", password, email);
               login({
                 variables: {
                   email: email,
@@ -203,6 +255,9 @@ const useStyles = makeStyles(theme => ({
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
+  },
+  spinner: {
+    margin: theme.spacing(1)
   },
   form: {
     width: "100%", // Fix IE 11 issue.

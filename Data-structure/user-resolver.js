@@ -64,6 +64,9 @@ export const resolvers = {
       try {
         let foundUser = await User.findOne({ email: _args.email });
         console.log("found> ", foundUser);
+        if (!foundUser) {
+          return { success: false };
+        }
         const isEqual = await bcrypt.compare(
           _args.password,
           foundUser.password
@@ -82,7 +85,7 @@ export const resolvers = {
         }
         return { success: false };
       } catch (err) {
-        throw err;
+        return { success: false };
       }
     }
   },
