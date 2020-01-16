@@ -14,6 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 
 import "../../Pages/Menu.css";
+import BluredCity from "../../Images/bluredCity.png";
 
 import Copyright from "../../Atoms/copyright";
 import SocialLine from "../../Atoms/social-line";
@@ -24,11 +25,11 @@ export default function Screen1() {
   return (
     <div className="section s6">
       <Container maxWidth="sm" className={classes.container_6}>
-        <Grid item>
+
           <Typography className={classes.defaultHeader}>
             <b>CONTACT</b> US
           </Typography>
-        </Grid>
+
         <Grid container>
           <form className={classes.form} noValidate>
             <TextField
@@ -50,7 +51,7 @@ export default function Screen1() {
               required
               fullWidth
               multiline
-              rows="5"
+              rows="4"
               //color="secondary"
               id="question"
               //inputRef={inputName}
@@ -70,57 +71,64 @@ export default function Screen1() {
               Send
             </Button>
           </form>
-          <Grid
+
+        </Grid>
+      </Container>
+      <Container maxWidth="xl" className={classes.footer_container}>
+      <Container maxWidth="xs" style={{height: '100%'}}>
+      <Grid
             container
             justify="center"
             alignItems="center"
-            direction="column"
+            direction="row"
+            className={classes.grid_foot_container}
           >
-            <Grid item>
+            <Grid item xs={12}>
               <Typography variant="body2">GET IN TOUCH</Typography>
             </Grid>
 
-            <Grid item>
+            <Grid item xs={12}>
               <Typography variant="body2">Sydney NSW, Australia</Typography>
             </Grid>
-            <Grid item>
+            <Grid item xs={12}>
               <Typography variant="body2">charliepartyapp@gmail.com</Typography>
             </Grid>
-            <Grid item>
+            <Grid item xs={12}>
               <Typography variant="body2">0435-388-698</Typography>
             </Grid>
+            <Grid item xs={12}>
             <SocialLine color="secondary" />
-          </Grid>
-        </Grid>
-      </Container>
-      <Container maxWidth="xl">
-        <CardMedia
-          className={classes.cardMediaBottom}
-          image="https://res.cloudinary.com/party-images-app/image/upload/v1559960064/uvic6vretl0zabrk570z.png"
-          title="Paella dish"
-        />
-      </Container>
-      <Container maxWidth="sm">
-        <Grid container>
-          <SocialLine color="secondary" />
-          <Grid item>
-            <NavLink to={`/privacy-policy`}>
-              <Grid item>
-                <Typography variant="subtitle2">PRIVACY POLICY</Typography>
+            </Grid>
+            <Grid item xs={12} alignItems="center">
+            <Grid container 
+            justify="center"
+            direction="row"
+            spacing={5}
+            alignItems="center">
+                <Grid item>
+                  <NavLink to={`/privacy-policy`}>
+                    <Grid item>
+                      <Typography variant="subtitle2">PRIVACY POLICY</Typography>
+                    </Grid>
+                  </NavLink>
+                </Grid>
+                <Grid item>
+                  <NavLink to={`/faq`}>
+                    <Grid item>
+                      <Typography variant="subtitle2">F.A.Q.</Typography>
+                    </Grid>
+                  </NavLink>
+                </Grid>
+            </Grid>
+              <Grid item xs={12}>
+                <Box mt={2}>
+                  <Copyright />
+                </Box>
               </Grid>
-            </NavLink>
+            </Grid>
           </Grid>
-          <Grid item>
-            <NavLink to={`/faq`}>
-              <Grid item>
-                <Typography variant="subtitle2">F.A.Q.</Typography>
-              </Grid>
-            </NavLink>
-          </Grid>
-        </Grid>
-        <Box mt={8}>
-          <Copyright />
-        </Box>
+
+          </Container>
       </Container>
     </div>
   );
@@ -130,45 +138,14 @@ const useStyles = makeStyles(theme => ({
   container_6: {
     color: "black",
     //background: "rgba(25,25,25,0.3)"
-    paddingTop: "4vh"
-  },
-  cardMediaBottom: {
-    width: "100%",
-    height: 200,
-    paddingTop: "56.25%" // 16:9
-  },
-  menuButton: {
-    background: "white"
-  },
-  avatar: {
-    width: 100,
-    height: 100
-  },
-  gridLogo: {
-    textAlign: "center"
-  },
-  button: {
-    width: 100,
-    margin: 10,
-    fontWeight: "700 !important"
-  },
-  text: {
-    color: "black",
-    fontWeight: 400
-  },
-  blackContainer: {
-    background: theme.palette.darkGrey,
-    color: "white",
-    padding: 10,
-    marginBottom: 20
+    paddingTop: "10vh"
   },
 
   defaultHeader: {
     color: theme.palette.charliePink,
     fontWeight: 300,
-    paddingTop: 20,
     fontSize: 20,
-    margin: 10
+    height: '4vh'
   },
   defaultContent: {
     margin: 20,
@@ -177,6 +154,19 @@ const useStyles = makeStyles(theme => ({
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(0),
-    marginBottom: theme.spacing(5)
+    marginBottom: theme.spacing(5),
+    height: '41vh'
+  },
+  footer_container: {
+    flexGrow: 1,
+    backgroundImage: `url(${BluredCity})`,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    height: '39vh'
+  },
+  grid_foot_container: {
+    background: 'rgba(0,0,0,0.4)',
+    color: 'white',
+    height: '100%',
   }
 }));

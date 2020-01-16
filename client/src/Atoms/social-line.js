@@ -12,7 +12,7 @@ export default function SocialLine(props) {
       direction="row"
       justify="center"
       spacing={7}
-      style={{ paddingTop: 20, paddingBottom: 20, width: "100%" }}
+      style={{ paddingTop: 10, paddingBottom: 10}}
     >
       <Grid item>
         <InstagramIcon fontSize="large" color={props.color} />
