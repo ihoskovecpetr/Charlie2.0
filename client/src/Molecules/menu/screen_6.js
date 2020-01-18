@@ -25,10 +25,9 @@ export default function Screen1() {
   return (
     <div className="section s6">
       <Container maxWidth="sm" className={classes.container_6}>
-
-          <Typography className={classes.defaultHeader}>
-            <b>CONTACT</b> US
-          </Typography>
+        <Typography className={classes.defaultHeader}>
+          <b>CONTACT</b> US
+        </Typography>
 
         <Grid container>
           <form className={classes.form} noValidate>
@@ -71,12 +70,11 @@ export default function Screen1() {
               Send
             </Button>
           </form>
-
         </Grid>
       </Container>
       <Container maxWidth="xl" className={classes.footer_container}>
-      <Container maxWidth="xs" style={{height: '100%'}}>
-      <Grid
+        <Container maxWidth="xs" style={{ height: "100%" }}>
+          <Grid
             container
             justify="center"
             alignItems="center"
@@ -97,18 +95,22 @@ export default function Screen1() {
               <Typography variant="body2">0435-388-698</Typography>
             </Grid>
             <Grid item xs={12}>
-            <SocialLine color="secondary" />
+              <SocialLine color="secondary" />
             </Grid>
-            <Grid item xs={12} alignItems="center">
-            <Grid container 
-            justify="center"
-            direction="row"
-            spacing={5}
-            alignItems="center">
+            <Grid item xs={12}>
+              <Grid
+                container
+                justify="center"
+                direction="row"
+                spacing={5}
+                alignItems="center"
+              >
                 <Grid item>
                   <NavLink to={`/privacy-policy`}>
                     <Grid item>
-                      <Typography variant="subtitle2">PRIVACY POLICY</Typography>
+                      <Typography variant="subtitle2">
+                        PRIVACY POLICY
+                      </Typography>
                     </Grid>
                   </NavLink>
                 </Grid>
@@ -119,7 +121,7 @@ export default function Screen1() {
                     </Grid>
                   </NavLink>
                 </Grid>
-            </Grid>
+              </Grid>
               <Grid item xs={12}>
                 <Box mt={2}>
                   <Copyright />
@@ -127,8 +129,7 @@ export default function Screen1() {
               </Grid>
             </Grid>
           </Grid>
-
-          </Container>
+        </Container>
       </Container>
     </div>
   );
@@ -145,7 +146,7 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.charliePink,
     fontWeight: 300,
     fontSize: 20,
-    height: '4vh'
+    height: "5vh"
   },
   defaultContent: {
     margin: 20,
@@ -155,18 +156,18 @@ const useStyles = makeStyles(theme => ({
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(0),
     marginBottom: theme.spacing(5),
-    height: '41vh'
+    height: "41vh"
   },
   footer_container: {
     flexGrow: 1,
     backgroundImage: `url(${BluredCity})`,
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    height: '39vh'
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    height: "40vh"
   },
   grid_foot_container: {
-    background: 'rgba(0,0,0,0.4)',
-    color: 'white',
-    height: '100%',
+    background: "rgba(0,0,0,0.4)",
+    color: "white",
+    height: "100%"
   }
 }));

@@ -4,8 +4,8 @@ import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import clsx from "clsx";
 
+import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
@@ -20,18 +20,22 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker
 } from "@material-ui/pickers";
+
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import CloudDoneIcon from "@material-ui/icons/CloudDone";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 
+import clsx from "clsx";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 
+import { findEmpty } from "../Services/functions";
 import { UserContext } from "../userContext";
 import ModalLayout from "../Layouts/ModalLayout";
 import Copyright from "../Atoms/copyright";
@@ -48,6 +52,7 @@ const NEW_EVENT = gql`
     $author: String!
     $dateStart: String
     $price: Float
+    $currency: String
     $capacityMax: Int
     $BYO: Boolean
     $description: String
@@ -62,15 +67,22 @@ const NEW_EVENT = gql`
         author: $author
         dateStart: $dateStart
         price: $price
+        currency: $currency
         capacityMax: $capacityMax
         BYO: $BYO
         description: $description
         imagesArr: $imagesArr
       }
     ) {
-      _id
-      name
-      success
+      dataOut {
+        _id
+        name
+        success
+      }
+      errorOut {
+        name
+        message
+      }
     }
   }
 `;
@@ -92,21 +104,29 @@ const currencies = [
 
 function Create(props) {
   const classes = useStyles();
+  let history = useHistory();
 
   const { user, setUser } = useContext(UserContext);
   const [customMapParam, setCustomMapParam] = useState();
-  //const [currency, setCurrency] = React.useState("CZK");
-  //const [selectedDate, setSelectedDate] = useState(new Date());
   const [formValue, setFormValue] = useState({
     startDate: new Date(),
     price: 100,
     capacity: 15,
-    currency: "CZK"
+    currency: "CZK",
+    BYO: false
   });
-
-  const [createEvent, { loading, error, data }] = useMutation(NEW_EVENT);
+  const [FEerrors, setFEerrors] = useState([]);
+  const [createEvent, { loading, error, data }] = useMutation(NEW_EVENT, {
+    onCompleted: () => {
+      setFEerrors([]);
+    }
+  });
   //console.log("formValue: ", formValue);
-  let history = useHistory();
+  const { dataOut } = data ? data.createEvent : { dataOut: undefined };
+  console.log("DATA LOGIN: ", dataOut);
+  const { errorOut } = data ? data.createEvent : { errorOut: undefined };
+  console.log("ERROR LOGIN: ", errorOut);
+
   let den = new Date(formValue.startDate);
   //Day +- one day
   const plusDay = () => {
@@ -169,8 +189,6 @@ function Create(props) {
   const inputName = useRef(null);
   const inputDate = useRef(null);
   const inputTime = useRef(null);
-  //const inputCapacityMax = useRef(null);
-  //const inputCurrency = useRef(null);
   const inputBYO = useRef(null);
   const inputDescription = useRef(null);
   const inputMarker = useRef(null);
@@ -178,23 +196,37 @@ function Create(props) {
   const onSubmit = e => {
     e.preventDefault();
 
-    createEvent({
-      variables: {
-        name: inputName.current.value,
-        lng: customMapParam.lng,
-        lat: customMapParam.lat,
-        address: customMapParam.address,
-        author: user._id,
-        eventType: 1,
-        dateStart: formValue.startDate, //inputDate.current.value,
-        price: formValue.price,
-        currency: formValue.currency,
-        capacityMax: formValue.capacity,
-        BYO: inputBYO.current.checked,
-        description: inputDescription.current.value,
-        imagesArr: formValue.ImagesArr
-      }
-    });
+    console.log("inputName: ", inputName);
+
+    let load = {
+      name: inputName.current.value ? inputName.current.value : null,
+      lng: customMapParam.lng,
+      lat: customMapParam.lat,
+      address: customMapParam.address,
+      author: user._id,
+      eventType: 1,
+      dateStart: formValue.startDate, //inputDate.current.value,
+      price: formValue.price,
+      currency: formValue.currency,
+      capacityMax: formValue.capacity,
+      BYO: inputBYO.current.checked,
+      description: inputDescription.current.value
+        ? inputDescription.current.value
+        : null,
+      imagesArr: formValue.ImagesArr
+    };
+
+    const empty = findEmpty(load);
+    console.log("Empty result> ", empty);
+
+    if (empty.length == 0) {
+      console.log("Sending this LOAD>> ", load);
+      createEvent({
+        variables: load
+      });
+    } else {
+      setFEerrors(empty);
+    }
   };
 
   const handleDateChange = date => {
@@ -210,52 +242,10 @@ function Create(props) {
     });
   };
 
-  if (loading) {
-    return (
-      <ModalLayout>
-        <Container maxWidth="sm" className={classes.paper1}>
-          <Paper style={{ width: "100%", marginBottom: 20, padding: 10 }}>
-            <Grid container justify="center">
-              <Grid item>
-                <Spinner height={50} width={50} />
-              </Grid>
-            </Grid>
-          </Paper>
-        </Container>
-      </ModalLayout>
-    );
-  }
-
-  if (data && data.createEvent.success) {
-    console.log("SUCCESS and redirect");
+  if (dataOut) {
     setTimeout(() => {
-      history.push(`/event/${data.createEvent._id}`);
+      history.push(`/event/${dataOut._id}`);
     }, 500);
-    return (
-      <ModalLayout>
-        <Container maxWidth="sm" className={classes.paper1}>
-          <Paper style={{ width: "100%", marginBottom: 20, padding: 10 }}>
-            <Grid
-              container
-              justify="center"
-              alignItems="center"
-              spacing={5}
-              direction="column"
-            >
-              <Grid item>
-                <Typography> SUCCESS </Typography>
-              </Grid>
-              <Grid item>
-                <Spinner height={50} width={50} />
-              </Grid>
-              <Grid item>
-                <Typography> redirecting... </Typography>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Container>
-      </ModalLayout>
-    );
   }
 
   return (
@@ -315,8 +305,7 @@ function Create(props) {
                     }, 200);
                   }}
                 >
-                  {" "}
-                  LOGIN FIRST{" "}
+                  LOGIN FIRST
                 </Button>
               )}
             </Grid>
@@ -597,6 +586,21 @@ function Create(props) {
               <Dropzone setFormValue={setFormValue} />
             </Grid>
           </Grid>
+
+          {errorOut &&
+            errorOut.map(item => (
+              <Alert severity="error" key={item.message}>
+                {item.message}
+              </Alert>
+            ))}
+
+          {FEerrors &&
+            FEerrors.map(item => (
+              <Alert severity="error" key={item}>
+                {item} is empty
+              </Alert>
+            ))}
+
           <Button
             type="submit"
             fullWidth
@@ -604,13 +608,14 @@ function Create(props) {
             color="primary"
             className={classes.submit}
             onClick={e => onSubmit(e)}
-            disabled={
-              formValue.ImagesArr && formValue.ImagesArr.length ? false : true
-            }
+            // disabled={
+            //   formValue.ImagesArr && formValue.ImagesArr.length ? false : true
+            // }
+            disabled={loading}
           >
-            {formValue.ImagesArr && formValue.ImagesArr.length
-              ? "Create Party"
-              : "Add images first"}
+            {dataOut && <CloudDoneIcon />}
+            {loading && <Spinner hieght={20} width={20} />}
+            Create Party
           </Button>
         </form>
       </Container>
@@ -634,7 +639,7 @@ const useStyles = makeStyles(theme => ({
       "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
   },
   paper1: {
-    marginTop: theme.spacing(7),
+    marginTop: 66,
     padding: 10,
     paddingTop: 50,
     paddingBottom: 0,
@@ -643,7 +648,10 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    background: "#E8045D"
+    background: "#E8045D",
+    [theme.breakpoints.down("xs")]: {
+      marginTop: "56px !important"
+    }
   },
   paper: {
     padding: 10,

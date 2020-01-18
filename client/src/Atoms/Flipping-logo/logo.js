@@ -24,7 +24,7 @@ function Logo(props) {
 
   function rotate() {
     console.log(count);
-    if (count < 4) {
+    if (count < 4 && document.getElementById("main_logo")) {
       if (
         document.getElementById("main_logo").classList.value.includes("flipped")
       ) {

@@ -1,18 +1,24 @@
 import User from "../Models-Mongo/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { userYupSchema } from "./Utils/userYupSchema.js";
+import { formatYupError } from "./Utils/formatError.js";
+import {
+  duplicate_email_Error,
+  mismatch_login_Error,
+  server_Error
+} from "./Utils/errorPile";
 
 export const typeDef = `
   extend type Query {
-    getUsers(_id: ID name: String): [User]
     getOneUser(user_id: ID): User
     getLoggedInUser: User
     deleteAllUsers: String
   }
 
   extend type Mutation {
-    newUser(name: String! password: String! email: String! picture: String): User
-    login(email: String! password: String!): User
+    newUser(name: String! password: String! email: String! picture: String): ResponseUser
+    login(email: String! password: String!): ResponseUser
   }
 
   type User {
@@ -25,24 +31,31 @@ export const typeDef = `
     picture: String
     createdEvents: [Event!]
   }
+
+  type ResponseUser {
+    dataOut: User
+    errorOut:[Error]
+  }
 `;
 export const resolvers = {
   Mutation: {
     newUser: async (_, _args, __) => {
       console.log("NeWUser args: ", _args);
       try {
+        await userYupSchema.validate(_args, { abortEarly: false });
+      } catch (err) {
+        return formatYupError(err);
+      }
+      try {
         let existing = await User.find({ email: _args.email });
         if (existing.length) {
-          console.log("Found existing one: ", existing);
-          return { success: false };
+          return duplicate_email_Error;
         } else {
-          let picture;
-          console.log("!_args.picture: ", !_args.picture);
           if (!_args.picture) {
-            picture =
+            var picture =
               "http://www.queensland-photo.com/wp-content/uploads/2013/01/surfing-burleigh-1024x538.jpg";
           } else {
-            picture = _args.picture;
+            var picture = _args.picture;
           }
           const hashedPassword = await bcrypt.hash(_args.password, 12);
           let newUser = new User({
@@ -54,7 +67,7 @@ export const resolvers = {
 
           const result = await newUser.save();
           console.log("Saved: ", result);
-          return { ...result._doc, success: true };
+          return { dataOut: { ...result._doc, success: true } };
         }
       } catch (err) {
         throw err;
@@ -65,7 +78,7 @@ export const resolvers = {
         let foundUser = await User.findOne({ email: _args.email });
         console.log("found> ", foundUser);
         if (!foundUser) {
-          return { success: false };
+          return mismatch_login_Error;
         }
         const isEqual = await bcrypt.compare(
           _args.password,
@@ -81,11 +94,14 @@ export const resolvers = {
               expiresIn: "1h"
             }
           );
-          return { ...foundUser._doc, success: true, token: token };
+          return {
+            dataOut: { ...foundUser._doc, success: true, token: token }
+          };
         }
-        return { success: false };
+        return mismatch_login_Error;
       } catch (err) {
-        return { success: false };
+        console.log(err);
+        return server_Error;
       }
     }
   },
@@ -110,15 +126,6 @@ export const resolvers = {
       try {
         let user = await User.findById(_args.user_id);
         return { ...user._doc, success: true };
-      } catch (err) {
-        throw err;
-      }
-    },
-    getUsers: async (_, _args, __) => {
-      try {
-        let users = await User.find({});
-        console.log("fount all: ", users);
-        return users;
       } catch (err) {
         throw err;
       }

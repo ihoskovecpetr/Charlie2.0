@@ -2,19 +2,13 @@ import Event from "../Models-Mongo/Event.js";
 import User from "../Models-Mongo/User.js";
 import Booking from "../Models-Mongo/Booking.js";
 import { transformEvent } from "./merge.js";
+import { eventYupSchema } from "./Utils/eventYupSchema.js";
+import { formatYupError } from "./Utils/formatError.js";
+import { duplicate_name_Error, server_Error } from "./Utils/errorPile";
 
 export const typeDef = newFunction();
 export const resolvers = {
   Query: {
-    // events: async () => {
-    //   try {
-    //     let allEvents = await Event.find({});
-    //     console.log("allEvents: ", allEvents);
-    //     return allEvents;
-    //   } catch (err) {
-    //     throw err;
-    //   }
-    // },
     getOneEvent: async (_, _args, context) => {
       try {
         console.log("getOneEvent context isAuth?? : ", context.reqO.req.isAuth);
@@ -24,12 +18,6 @@ export const resolvers = {
           let oneEvent = await Event.findOne({ _id: _args.id });
           if (oneEvent) {
             let areYourAuthor = oneEvent.author == context.reqO.req.userId;
-            // let transform1 = {
-            //   ...oneEvent._doc,
-            //   success: true,
-            //   areYouAuthor: areYourAuthor
-            // };
-            //return transformEvent(oneEvent, true, areYourAuthor);
             return {
               ...oneEvent._doc,
               dateStart: new Date(oneEvent._doc.dateStart).toISOString(),
@@ -105,13 +93,19 @@ export const resolvers = {
   },
   Mutation: {
     createEvent: async (_, _args, __) => {
-      console.log("createEvent MUTATION hitttt: ", _args);
+      console.log("createEvent FIRST ", _args);
+      try {
+        await eventYupSchema.validate(_args.eventInput, { abortEarly: false });
+      } catch (err) {
+        return formatYupError(err);
+      }
       try {
         let existing = await Event.find({ name: _args.eventInput.name });
         if (existing.length) {
           console.log("Duplicate of EVENT NAME");
-          return { success: false };
+          return duplicate_name_Error;
         } else {
+          console.log("CRE-ENT: curry ", _args.eventInput.currency);
           let newEvent = new Event({
             name: _args.eventInput.name,
             author: _args.eventInput.author,
@@ -123,6 +117,7 @@ export const resolvers = {
             dateStart: _args.eventInput.dateStart,
             dateEnd: _args.eventInput.dateEnd,
             price: _args.eventInput.price,
+            currency: _args.eventInput.currency,
             capacityMax: _args.eventInput.capacityMax,
             BYO: _args.eventInput.BYO,
             repeatWeek: _args.eventInput.repeatWeek,
@@ -132,14 +127,15 @@ export const resolvers = {
             imagesArr: _args.eventInput.imagesArr,
             description: _args.eventInput.description,
             confirmed: true,
-            hide: _args.eventInput.hide
+            hide: false
           });
           const result = await newEvent.save();
           console.log("Saved: ", result);
-          return { ...result._doc, success: true };
+          return { dataOut: { ...result._doc, success: true } };
         }
       } catch (err) {
-        throw err;
+        console.log(err);
+        return server_Error;
       }
     },
     deleteOneEvent: async (_, _args, __) => {
@@ -187,8 +183,13 @@ function newFunction() {
   }
 
   extend type Mutation {
-    createEvent(eventInput: EventInput!): Event
+    createEvent(eventInput: EventInput!): ResponseEvent
     deleteOneEvent(delete_id: ID!): Hlaska
+  }
+
+  type ResponseEvent {
+    dataOut: Event
+    errorOut:[Error]
   }
 
   input EventInput {
@@ -203,6 +204,7 @@ function newFunction() {
     dateStart: String
     dateEnd: String
     price: Float
+    currency: String
     capacityMax: Int
     BYO: Boolean
     repeatWeek: Boolean
@@ -248,6 +250,7 @@ function newFunction() {
     dateStart: String
     dateEnd: String
     price: Float
+    currency: String
     capacityMax: Int
     BYO: Boolean
     repeatWeek: Boolean

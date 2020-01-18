@@ -1,8 +1,12 @@
 .flip-card {
   margin: auto;
+  /* border-radius: calc(50%);
+  box-shadow: 3px 6px 8px black; */
 }
 .flip-card-front img {
   width: 100%;
+  border-radius: calc(50%);
+  box-shadow: 3px 6px 8px black;
 }
 
 .flip-card-back {
@@ -12,6 +16,8 @@
   transform: rotateY(180deg);
   z-index: 1;
   backface-visibility: hidden;
+  border-radius: calc(50%);
+  box-shadow: 3px 6px 8px black;
 }
 
 .flip-card-back img {

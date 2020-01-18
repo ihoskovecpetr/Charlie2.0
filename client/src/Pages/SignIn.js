@@ -1,13 +1,15 @@
 import React, { useContext } from "react";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Paper from "@material-ui/core/Paper";
+
 import Avatar from "@material-ui/core/Avatar";
+import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Badge from "@material-ui/core/Badge";
 import Typography from "@material-ui/core/Typography";
@@ -28,12 +30,18 @@ import Copyright from "../Atoms/copyright";
 const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
-      _id
-      success
-      name
-      email
-      picture
-      token
+      dataOut {
+        _id
+        success
+        name
+        email
+        picture
+        token
+      }
+      errorOut {
+        name
+        message
+      }
     }
   }
 `;
@@ -45,6 +53,12 @@ function SignIn(props) {
   const { user, setUser } = useContext(UserContext);
   const [login, { loading, error, data }] = useMutation(LOGIN);
   console.log("useMutation(LOGIN: ", loading, error, data);
+
+  const { dataOut } = data ? data.login : { dataOut: undefined };
+  console.log("DATA LOGIN: ", dataOut);
+
+  const { errorOut } = data ? data.login : { errorOut: undefined };
+  console.log("ERROR LOGIN: ", errorOut);
 
   if (user.success) {
     setTimeout(() => {
@@ -59,27 +73,16 @@ function SignIn(props) {
     );
   }
 
-  // if (loading)
-  //   return (
-  //     <ModalLayout>
-  //       <Paper className={classes.paper}>
-  //         <Spinner height={50} width={50} />
-  //       </Paper>
-  //     </ModalLayout>
-  //   );
-
-  console.log("DATA LOGIN: ", data);
-
-  if (data && data.login.success && !user.name) {
+  if (dataOut && dataOut.success && !user.name) {
     console.log("XXman user: ", user);
-    window.localStorage.setItem("token", data.login.token);
+    window.localStorage.setItem("token", dataOut.token);
     setUser({
-      _id: data.login._id,
-      success: data.login.success,
-      name: data.login.name,
-      email: data.login.email,
-      picture: data.login.picture,
-      token: data.login.token
+      _id: dataOut._id,
+      success: dataOut.success,
+      name: dataOut.name,
+      email: dataOut.email,
+      picture: dataOut.picture,
+      token: dataOut.token
     });
   }
 
@@ -91,18 +94,22 @@ function SignIn(props) {
             <LockOutlinedIcon />
           </Avatar>
         )}
-
         {loading && (
           <div className={classes.spinner}>
             <Spinner height={40} width={40} />
           </div>
         )}
-
         <Typography component="h1" variant="h5">
           {loading ? "Loading.." : "Sign in"}
         </Typography>
 
         <form className={classes.form} noValidate>
+          {errorOut &&
+            errorOut.map(item => (
+              <Alert severity="error" key={item.message}>
+                {item.message}
+              </Alert>
+            ))}
           {!data && (
             <TextField
               variant="outlined"
@@ -117,7 +124,7 @@ function SignIn(props) {
               autoFocus
             />
           )}
-          {data && !data.success && (
+          {errorOut && (
             <Animated
               animationIn="shake"
               animationOut="fadeOut"
@@ -136,11 +143,11 @@ function SignIn(props) {
                 name="email"
                 autoComplete="email"
                 autoFocus
-                error={data ? data && !data.success : false}
+                error
               />
             </Animated>
           )}
-          {data && !data.success && (
+          {errorOut && (
             <Animated
               animationIn="shake"
               animationOut="fadeOut"
@@ -159,7 +166,7 @@ function SignIn(props) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                error={data ? data && !data.success : false}
+                error
               />
             </Animated>
           )}

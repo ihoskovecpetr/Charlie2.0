@@ -72,7 +72,16 @@ function App(props) {
       // Used to shift a color's luminance by approximately
       // two indexes within its tonal palette.
       // E.g., shift from Red 500 to Red 300 or Red 700.
-      tonalOffset: 0.2
+      tonalOffset: 0.2,
+      success: {
+        main: "#E8045D"
+      },
+      info: {
+        main: "#600328"
+      },
+      warning: {
+        main: "#242323"
+      }
     }
   });
   const { latitude, longitude, err } = usePosition();
@@ -133,8 +142,12 @@ function App(props) {
     : ["Charlie", "Create", "Map", "About"];
   const ListOfComponents = user.success
     ? [
-        <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} finishedAnimation={finishedAnimation}
-        setFinishedAnimation={setFinishedAnimation} />,
+        <Menu
+          ListOfNames={ListOfNames}
+          ListOfUrls={ListOfUrls}
+          finishedAnimation={finishedAnimation}
+          setFinishedAnimation={setFinishedAnimation}
+        />,
         <Create />, //create
         <MapPage
           workingPosition={workingPosition}
@@ -146,8 +159,12 @@ function App(props) {
         <SignOut LOGIN={LOGIN} />
       ]
     : [
-        <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} finishedAnimation={finishedAnimation}
-        setFinishedAnimation={setFinishedAnimation} />,
+        <Menu
+          ListOfNames={ListOfNames}
+          ListOfUrls={ListOfUrls}
+          finishedAnimation={finishedAnimation}
+          setFinishedAnimation={setFinishedAnimation}
+        />,
         <Create />,
         <MapPage
           workingPosition={workingPosition}

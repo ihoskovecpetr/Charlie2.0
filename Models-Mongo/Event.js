@@ -23,6 +23,7 @@ const EventSchema = new Schema({
   dateStart: { type: Date },
   dateEnd: { type: Date },
   price: { type: Number },
+  currency: { type: String },
   capacityMax: { type: Number },
   BYO: { type: Boolean },
   repeatWeek: { type: Boolean },

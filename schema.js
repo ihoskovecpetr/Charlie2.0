@@ -17,6 +17,7 @@ import {
 } from "./Data-structure/rating-resolver.js";
 // If you had Query fields not associated with a
 // specific type you could put them here
+
 console.log("Schema hitted");
 const Mutation = `
   type Mutation {
@@ -30,17 +31,14 @@ const Query = `
   type Query {
     _empty: Prazdno
   }
+  type Error {
+    name: String
+    message: String
+  }
 `;
 const resolversLoc = {
-  Mutation: {
-    new: () => {
-      console.log("New Muta");
-      return "NEW";
-    }
-  },
   Query: {
     _empty: () => {
-      console.log("_empty");
       return { obsah: "Kde nic, ani cigan nebere" };
     }
   }
