@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
+import React, { useContext, useState, useRef, useEffect, useMemo } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -42,6 +42,7 @@ import Copyright from "../Atoms/copyright";
 import Dropzone from "../Molecules/dropzone";
 import Spinner from "../Atoms/Spinner";
 import MapCreate from "../Molecules/map-create";
+import LoginFirstButton from "../Atoms/LoginFirstButton";
 
 const NEW_EVENT = gql`
   mutation createEvent(
@@ -294,19 +295,7 @@ function Create(props) {
                   }}
                 />
               ) : (
-                <Button
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  style={{ marginTop: 30 }}
-                  onClick={() => {
-                    setTimeout(() => {
-                      history.push(`/signin`);
-                    }, 200);
-                  }}
-                >
-                  LOGIN FIRST
-                </Button>
+                <LoginFirstButton />
               )}
             </Grid>
           </Grid>
