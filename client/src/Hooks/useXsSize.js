@@ -1,12 +1,17 @@
 import React, { useState, useEffect, useMemo } from "react";
 
-export function useWindowWidth() {
-  const [width, setWidth] = useState(window.innerWidth);
-  const [xs_size, setXs_size] = useState();
+export function useXsSize() {
+  const [xs_size, setXs_size] = useState(false);
+
+  useEffect(() => {
+    if(window.innerWidth <= 600){
+      setXs_size(true)
+    }
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
-      setWidth(window.innerWidth);
+
       if(window.innerWidth <= 600){
         if(!xs_size) {
           console.log("CHANGE TO XS_SIZE TRUE")
@@ -31,5 +36,5 @@ export function useWindowWidth() {
   }, [xs_size])
 
 
-  return { width, xs_size_memo };
+  return { xs_size_memo };
 }

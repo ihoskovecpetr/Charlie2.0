@@ -14,7 +14,8 @@
   background: #242323 !important;
 }
 
-@media (max-width: 558px) {
+
+@media (max-width: 585px) {
   .section {
     background-size: contain;
     background-position: center center;

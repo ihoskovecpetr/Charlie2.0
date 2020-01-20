@@ -21,6 +21,8 @@ import gql from "graphql-tag";
 import { NavLink } from "react-router-dom";
 
 import { UserContext } from "../userContext";
+import { useXsSize } from "../Hooks/useXsSize";
+
 import Carousel from "../Atoms/carousel";
 import Screen1 from "../Molecules/menu/screen_1";
 import Screen2 from "../Molecules/menu/screen_2";
@@ -65,7 +67,7 @@ export default function Menu(props) {
   const classes = useStyles();
 
   const { user, setUser } = useContext(UserContext);
-
+  const { xs_size_memo } = useXsSize()
   const [newBookingsArr, { loading, error, data }] = useMutation(
     USER_NEW_BOOKINGS,
     {
@@ -75,7 +77,7 @@ export default function Menu(props) {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    console.log("rerender Menu");
+    //console.log("rerender Menu");
   });
 
   if (user.success) {
@@ -83,6 +85,8 @@ export default function Menu(props) {
       !loading && !data && newBookingsArr();
     }
   }
+
+  console.log("xs_size? ", xs_size_memo);
 
   const fullpageOptions = {
     anchors: ["firstPage", "secondPage", "thirdPage"],
@@ -95,7 +99,7 @@ export default function Menu(props) {
     <ReactFullpage
       {...props}
       render={({ state, fullpageApi }) => {
-        console.log("render prop change", state); // eslint-disable-line no-console
+        //console.log("render prop change", state); // eslint-disable-line no-console
 
         return (
           <div>
@@ -104,25 +108,28 @@ export default function Menu(props) {
               <Screen2 />
               <Screen3 loading={loading} data={data} />
               <Screen4 props={props} />
-              <div className={classes.only_xs}>
-                <div className="section s6">
+              {xs_size_memo && <div className="section s6">
                   <Container maxWidth="md">
                     <BlogPost1 />
                   </Container>
-                </div>
-                <div className="section s7">
-                  <BlogPost2 />
-                </div>
-                <div className="section s8">
-                  <BlogPost3 />
-                </div>
-              </div>
+                </div>}
 
-              <div className="section s6">
-                <div className={classes.except_xs}>
+                {xs_size_memo && <div className="section s7">
+                <Container maxWidth="md">
+                  <BlogPost2 />
+                  </Container>
+                </div>}
+
+                {xs_size_memo && <div className="section s8">
+                  <BlogPost3 />
+                </div>}
+              
+
+                {!xs_size_memo && <div className="section s9">
+                
                   <Posts />
-                </div>
-              </div>
+                
+              </div>}
 
               <Screen6 />
             </div>
@@ -134,18 +141,7 @@ export default function Menu(props) {
 }
 
 const useStyles = makeStyles(theme => ({
-  only_xs: {
-    display: "none",
-    [theme.breakpoints.down("xs")]: {
-      display: "block"
-    }
-  },
-  except_xs: {
-    display: "block",
-    [theme.breakpoints.down("xs")]: {
-      display: "none"
-    }
-  },
+
   cardMediaBottom: {
     width: "100%",
     height: 200,
