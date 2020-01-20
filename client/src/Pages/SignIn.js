@@ -117,7 +117,8 @@ function SignIn(props) {
               required
               fullWidth
               defaultValue="test@gmail.com"
-              id="email"
+              id="email1"
+              data-test-id="cypressMail"
               label="Email Address"
               name="email"
               autoComplete="email"
@@ -126,7 +127,7 @@ function SignIn(props) {
           )}
           {errorOut && (
             <Animated
-              animationIn="shake"
+              animationIn={errorOut ? "" : "shake"}
               animationOut="fadeOut"
               animationInDelay={0}
               animationInDuration={800}
@@ -152,7 +153,7 @@ function SignIn(props) {
               animationIn="shake"
               animationOut="fadeOut"
               animationInDelay={0}
-              animationInDuration={1000}
+              animationInDuration={errorOut ? 1000 : 0}
               isVisible={true}
             >
               <TextField
@@ -171,21 +172,29 @@ function SignIn(props) {
             </Animated>
           )}
 
-          {!data && (
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              defaultValue="heslo"
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              error={data ? data && !data.success : false}
-            />
-          )}
+          {!data || errorOut ? (
+            <Animated
+              animationIn={errorOut ? "shake" : " "}
+              animationOut="fadeOut"
+              animationInDelay={0}
+              animationInDuration={errorOut ? 1000 : 0}
+              isVisible={true}
+            >
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                defaultValue="heslo"
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                error={data ? data && !data.success : false}
+              />
+            </Animated>
+          ) : null}
 
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -193,13 +202,14 @@ function SignIn(props) {
           />
           <Button
             type="submit"
+            id="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
             onClick={e => {
               e.preventDefault();
-              let email = document.getElementById("email").value;
+              let email = document.getElementById("email1").value;
               let password = document.getElementById("password").value;
               console.log("pass + email: ", password, email);
               login({
