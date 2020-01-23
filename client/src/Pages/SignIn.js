@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
@@ -47,18 +47,17 @@ const LOGIN = gql`
 `;
 
 function SignIn(props) {
+  useScrollDisable();
   const classes = useStyles();
   let history = useHistory();
-  useScrollDisable();
   const { user, setUser } = useContext(UserContext);
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
   const [login, { loading, error, data }] = useMutation(LOGIN);
   console.log("useMutation(LOGIN: ", loading, error, data);
 
   const { dataOut } = data ? data.login : { dataOut: undefined };
-  console.log("DATA LOGIN: ", dataOut);
-
   const { errorOut } = data ? data.login : { errorOut: undefined };
-  console.log("ERROR LOGIN: ", errorOut);
 
   if (user.success) {
     setTimeout(() => {
@@ -86,6 +85,46 @@ function SignIn(props) {
     });
   }
 
+  const Pass = ({ data }) => {
+    return (
+      <TextField
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        defaultValue="heslo"
+        name="password"
+        label="Password"
+        type="password"
+        id="password"
+        autoComplete="current-password"
+        error={data ? data && !data.success : false}
+      />
+    );
+  };
+
+  const Email = ({ data, cy }) => {
+    return (
+      <TextField
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        data-cy={cy}
+        onChange={e => {
+          console.log("E? ", e.target.value);
+          setEmail(e.target.value);
+        }}
+        value={email}
+        label="Email Address"
+        name="email"
+        autoComplete="email"
+        autoFocus
+        error={data ? data && !data.success : false}
+      />
+    );
+  };
+
   return (
     <ModalLayout>
       <Paper className={classes.paper}>
@@ -110,91 +149,32 @@ function SignIn(props) {
                 {item.message}
               </Alert>
             ))}
-          {!data && (
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              defaultValue="test@gmail.com"
-              id="email1"
-              data-test-id="cypressMail"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-          )}
-          {errorOut && (
-            <Animated
-              animationIn={errorOut ? "" : "shake"}
-              animationOut="fadeOut"
-              animationInDelay={0}
-              animationInDuration={800}
-              isVisible={true}
-            >
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                defaultValue="test@gmail.com"
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                error
-              />
-            </Animated>
-          )}
+
+          {!data && <Email data={data} cy={"emailSignIn"} />}
           {errorOut && (
             <Animated
               animationIn="shake"
               animationOut="fadeOut"
               animationInDelay={0}
-              animationInDuration={errorOut ? 1000 : 0}
+              animationInDuration={800}
               isVisible={true}
             >
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                defaultValue="heslo"
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                error
-              />
+              <Email data={data} />
             </Animated>
           )}
 
-          {!data || errorOut ? (
+          {!data && <Pass data={data} />}
+          {errorOut && (
             <Animated
-              animationIn={errorOut ? "shake" : " "}
+              animationIn="shake"
               animationOut="fadeOut"
               animationInDelay={0}
-              animationInDuration={errorOut ? 1000 : 0}
+              animationInDuration={1000}
               isVisible={true}
             >
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                defaultValue="heslo"
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                error={data ? data && !data.success : false}
-              />
+              <Pass data={data} />
             </Animated>
-          ) : null}
+          )}
 
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -209,7 +189,7 @@ function SignIn(props) {
             className={classes.submit}
             onClick={e => {
               e.preventDefault();
-              let email = document.getElementById("email1").value;
+              //let email = document.getElementById("email").value;
               let password = document.getElementById("password").value;
               console.log("pass + email: ", password, email);
               login({
