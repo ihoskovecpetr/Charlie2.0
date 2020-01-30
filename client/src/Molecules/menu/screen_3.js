@@ -15,8 +15,11 @@ import EventCard from "../../Molecules/event-card";
 
 export default function Screen3(props) {
   const classes = useStyles();
-
   let Sorted = [];
+  console.log("props.idx: ", props.idx);
+  if (props.idx === 3) {
+    console.log("Ano podminka");
+  }
   if (props.data) {
     Sorted = props.data.newestUserBookings.sort(function(a, b) {
       let aDate = new Date(a.event.dateStart);
@@ -34,9 +37,17 @@ export default function Screen3(props) {
     <div className="section s3">
       <Container maxWidth="sm" className={classes.container_2}>
         <Grid item>
-          <Typography className={classes.defaultHeader}>
-            YOUR <b>NEXT</b> EVENTS
-          </Typography>
+          <Animated
+            animationIn="bounceInLeft"
+            animationOut="fadeOut"
+            animationInDelay={500}
+            animationInDuration={1000}
+            isVisible={true}
+          >
+            <Typography className={classes.defaultHeader}>
+              YOUR <b>NEXT</b> EVENTS
+            </Typography>
+          </Animated>
         </Grid>
 
         <Grid item>

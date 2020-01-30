@@ -37,6 +37,8 @@ import { useHistory } from "react-router-dom";
 
 import { findEmpty } from "../Services/functions";
 import { UserContext } from "../userContext";
+import { useViewPort } from "../Hooks/useViewPort";
+
 import ModalLayout from "../Layouts/ModalLayout";
 import Copyright from "../Atoms/copyright";
 import Dropzone from "../Molecules/dropzone";
@@ -106,7 +108,7 @@ const currencies = [
 function Create(props) {
   const classes = useStyles();
   let history = useHistory();
-
+  useViewPort();
   const { user, setUser } = useContext(UserContext);
   const [customMapParam, setCustomMapParam] = useState();
   const [formValue, setFormValue] = useState({

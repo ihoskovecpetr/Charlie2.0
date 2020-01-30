@@ -20,10 +20,18 @@ export default function Screen4(props) {
     <div className="section s4">
       <Container maxWidth="sm" className={classes.container_4}>
         <Grid container className={classes.header_be_gone}>
-          <Grid item>
-            <Typography className={classes.defaultHeader}>
-              SUMMMARY OF <b>KEY FEATURES</b>
-            </Typography>
+          <Grid item id="rollIn" style={{ display: "none" }}>
+            <Animated
+              animationIn="bounceInLeft"
+              animationOut="fadeOut"
+              animationInDelay={500}
+              animationInDuration={1000}
+              isVisible={true}
+            >
+              <Typography className={classes.defaultHeader}>
+                SUMMMARY OF <b>KEY FEATURES</b>
+              </Typography>
+            </Animated>
           </Grid>
         </Grid>
         <Grid

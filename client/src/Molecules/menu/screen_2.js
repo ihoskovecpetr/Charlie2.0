@@ -23,17 +23,36 @@ export default function Screen2() {
   return (
     <div className="section s2">
       <Container maxWidth="sm" className={classes.container_2}>
-        <Grid container>
+        <Grid container id="s_2_id" style={{ display: "none" }}>
           <Grid item>
-            <Typography className={classes.defaultHeader}>
-              MAIN <b>MISSION</b>
-            </Typography>
+            <Animated
+              animationIn="bounceInLeft"
+              animationOut="fadeOut"
+              animationInDelay={0}
+              animationInDuration={1000}
+              isVisible={true}
+            >
+              <Typography className={classes.defaultHeader}>
+                MAIN <b>MISSION</b>
+              </Typography>
+            </Animated>
           </Grid>
           <Grid item>
-            <Typography variant="subtitle2" className={classes.defaultContent}>
-              Charlie is here to connect owners or renters of miscelanous places
-              with guest for a joyfull evening
-            </Typography>
+            <Animated
+              animationIn="bounceInRight"
+              animationOut="fadeOut"
+              animationInDelay={500}
+              animationInDuration={1000}
+              isVisible={true}
+            >
+              <Typography
+                variant="subtitle2"
+                className={classes.defaultContent}
+              >
+                Charlie is here to connect owners or renters of miscelanous
+                places with guest for a joyfull evening
+              </Typography>
+            </Animated>
           </Grid>
         </Grid>
         <Grid container className={classes.defaultHeader}>

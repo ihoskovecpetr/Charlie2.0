@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
@@ -218,7 +218,7 @@ function Profile() {
   );
 
   return (
-    <div className={classes.profileWrap}>
+    <div className={classes.profileWrap} id="base">
       <CssBaseline />
       <Paper className={classes.paper}>
         <Avatar className={classes.avatar} src={user.picture}>

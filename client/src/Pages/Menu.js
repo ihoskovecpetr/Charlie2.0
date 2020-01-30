@@ -22,6 +22,7 @@ import { NavLink } from "react-router-dom";
 
 import { UserContext } from "../userContext";
 import { useXsSize } from "../Hooks/useXsSize";
+import { useViewPort } from "../Hooks/useViewPort";
 
 import Carousel from "../Atoms/carousel";
 import Screen1 from "../Molecules/menu/screen_1";
@@ -67,7 +68,9 @@ export default function Menu(props) {
   const classes = useStyles();
 
   const { user, setUser } = useContext(UserContext);
-  const { xs_size_memo } = useXsSize()
+  const { xs_size_memo } = useXsSize();
+  useViewPort();
+
   const [newBookingsArr, { loading, error, data }] = useMutation(
     USER_NEW_BOOKINGS,
     {
@@ -79,6 +82,25 @@ export default function Menu(props) {
     window.scrollTo(0, 0);
     //console.log("rerender Menu");
   });
+
+  useEffect(() => {
+    console.log("UseEffect screen 3");
+    window.addEventListener(
+      "scroll",
+      () => {
+        console.log(
+          "UseEffect screen 3: ",
+          document.getElementById("rollIn").getBoundingClientRect()
+        );
+      },
+      false
+    );
+    //document.addEventListener("wheel", preventDefault, { passive: false });
+    return () => {
+      //window.removeEventListener("scroll", ro(), false);
+      //document.removeEventListener("wheel", preventDefault, { passive: false });
+    };
+  }, []);
 
   if (user.success) {
     {
@@ -98,38 +120,77 @@ export default function Menu(props) {
   return (
     <ReactFullpage
       {...props}
+      slidesNavigation={false}
+      navigation={true}
+      //navigationTooltips={["firstSlide", "secondSlide"]}
+      onLeave={function(origin, destination, direction) {
+        console.log("OnLeave index", destination.index);
+        switch (destination.index) {
+          case 1:
+            document.getElementById("s_2_id").style.display = "block";
+            break;
+          case 2:
+            // code block
+            break;
+          case 3:
+            // code block
+            break;
+          default:
+          // code block
+        }
+
+        if (destination.index === 3) {
+          console.log("rollInHide", document.getElementById("rollIn"));
+          document.getElementById("rollIn").style.display = "block";
+          console.log("rollInHide", document.getElementById("rollIn"));
+        }
+      }}
       render={({ state, fullpageApi }) => {
-        //console.log("render prop change", state); // eslint-disable-line no-console
+        console.log("render prop change", state); // eslint-disable-line no-console
+        //fullpageApi.;
 
         return (
           <div>
             <div id="fullpage-wrapper">
               <Screen1 />
               <Screen2 />
-              <Screen3 loading={loading} data={data} />
+              <Screen3
+                loading={loading}
+                data={data}
+                // idx={
+                //   state &&
+                //   state.destination & state.destination.index &&
+                //   state.destination.index === 3
+                // }
+              />
               <Screen4 props={props} />
-              {xs_size_memo && <div className="section s6">
+              {xs_size_memo && (
+                <div className="section s6">
                   <Container maxWidth="md">
                     <BlogPost1 />
                   </Container>
-                </div>}
+                </div>
+              )}
 
-                {xs_size_memo && <div className="section s7">
-                <Container maxWidth="md">
-                  <BlogPost2 />
+              {xs_size_memo && (
+                <div className="section s7">
+                  <Container maxWidth="md">
+                    <BlogPost2 />
                   </Container>
-                </div>}
+                </div>
+              )}
 
-                {xs_size_memo && <div className="section s8">
+              {xs_size_memo && (
+                <div className="section s8">
                   <BlogPost3 />
-                </div>}
-              
+                </div>
+              )}
 
-                {!xs_size_memo && <div className="section s9">
-                
+              {!xs_size_memo && (
+                <div className="section s9">
                   <Posts />
-                
-              </div>}
+                </div>
+              )}
 
               <Screen6 />
             </div>
@@ -141,7 +202,6 @@ export default function Menu(props) {
 }
 
 const useStyles = makeStyles(theme => ({
-
   cardMediaBottom: {
     width: "100%",
     height: 200,
