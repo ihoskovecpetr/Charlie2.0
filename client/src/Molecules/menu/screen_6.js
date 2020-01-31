@@ -94,6 +94,7 @@ export default function Screen1() {
             <Grid item xs={12}>
               <Typography variant="body2">0435-388-698</Typography>
             </Grid>
+            
             <Grid item xs={12}>
               <SocialLine color="secondary" />
             </Grid>

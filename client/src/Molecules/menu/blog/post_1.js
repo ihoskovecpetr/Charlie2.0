@@ -17,7 +17,14 @@ export default function BlogPosts() {
   const classes = useStyles();
 
   return (
-    <>
+    <div id="s_post_1_id" style={{ display: "none" }}>
+      <Animated
+              animationIn="bounceInUp"
+              animationOut="fadeOut"
+              animationInDelay={0}
+              animationInDuration={1000}
+              isVisible={true}
+            >
       <Grid item>
         <Typography className={classes.defaultHeader}>
           CHARLIE <b>BLOG</b>
@@ -51,7 +58,8 @@ export default function BlogPosts() {
           "https://res.cloudinary.com/party-images-app/image/upload/v1553559427/xbugpqhcehvfatnpdrxi.png"
         ]}
       />
-    </>
+      </Animated>
+    </div>
   );
 }
 

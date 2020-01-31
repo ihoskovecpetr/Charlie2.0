@@ -83,24 +83,24 @@ export default function Menu(props) {
     //console.log("rerender Menu");
   });
 
-  useEffect(() => {
-    console.log("UseEffect screen 3");
-    window.addEventListener(
-      "scroll",
-      () => {
-        console.log(
-          "UseEffect screen 3: ",
-          document.getElementById("rollIn").getBoundingClientRect()
-        );
-      },
-      false
-    );
-    //document.addEventListener("wheel", preventDefault, { passive: false });
-    return () => {
-      //window.removeEventListener("scroll", ro(), false);
-      //document.removeEventListener("wheel", preventDefault, { passive: false });
-    };
-  }, []);
+  // useEffect(() => {
+  //   console.log("UseEffect screen 3");
+  //   window.addEventListener(
+  //     "scroll",
+  //     () => {
+  //       console.log(
+  //         "UseEffect screen 3: ",
+  //         document.getElementById("rollIn").getBoundingClientRect()
+  //       );
+  //     },
+  //     false
+  //   );
+  //   //document.addEventListener("wheel", preventDefault, { passive: false });
+  //   return () => {
+  //     //window.removeEventListener("scroll", ro(), false);
+  //     //document.removeEventListener("wheel", preventDefault, { passive: false });
+  //   };
+  // }, []);
 
   if (user.success) {
     {
@@ -130,20 +130,35 @@ export default function Menu(props) {
             document.getElementById("s_2_id").style.display = "block";
             break;
           case 2:
-            // code block
+            document.getElementById("s_3_id").style.display = "block";
             break;
           case 3:
-            // code block
+            console.log(document.getElementById("s_4_id"))
+            document.getElementById("s_4_id").style.display = "block";
             break;
+          case 4:
+            console.log(document.getElementById("s_posts_id"))
+            if(document.getElementById("s_posts_id")) {
+              document.getElementById("s_posts_id").style.display = "block"
+            } else{
+              document.getElementById("s_post_1_id").style.display = "block"
+            }
+            break;
+          case 5:
+                document.getElementById("s_post_2_id").style.display = "block"
+              break;
+          case 6:
+                document.getElementById("s_post_3_id").style.display = "block"
+              break;
           default:
           // code block
         }
 
-        if (destination.index === 3) {
-          console.log("rollInHide", document.getElementById("rollIn"));
-          document.getElementById("rollIn").style.display = "block";
-          console.log("rollInHide", document.getElementById("rollIn"));
-        }
+        // if (destination.index === 3) {
+        //   console.log("rollInHide", document.getElementById("rollIn"));
+          
+        //   console.log("rollInHide", document.getElementById("rollIn"));
+        // }
       }}
       render={({ state, fullpageApi }) => {
         console.log("render prop change", state); // eslint-disable-line no-console
@@ -157,13 +172,9 @@ export default function Menu(props) {
               <Screen3
                 loading={loading}
                 data={data}
-                // idx={
-                //   state &&
-                //   state.destination & state.destination.index &&
-                //   state.destination.index === 3
-                // }
               />
               <Screen4 props={props} />
+
               {xs_size_memo && (
                 <div className="section s6">
                   <Container maxWidth="md">
@@ -187,8 +198,10 @@ export default function Menu(props) {
               )}
 
               {!xs_size_memo && (
-                <div className="section s9">
+                <div className="section s9" >
+                
                   <Posts />
+                  
                 </div>
               )}
 

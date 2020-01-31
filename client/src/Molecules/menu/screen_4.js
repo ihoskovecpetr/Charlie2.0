@@ -18,13 +18,13 @@ export default function Screen4(props) {
 
   return (
     <div className="section s4">
-      <Container maxWidth="sm" className={classes.container_4}>
+      <Container maxWidth="sm" className={classes.container_4} id="s_4_id" style={{ display: "none" }}>
         <Grid container className={classes.header_be_gone}>
-          <Grid item id="rollIn" style={{ display: "none" }}>
+          <Grid item >
             <Animated
               animationIn="bounceInLeft"
               animationOut="fadeOut"
-              animationInDelay={500}
+              animationInDelay={0}
               animationInDuration={1000}
               isVisible={true}
             >
@@ -34,6 +34,13 @@ export default function Screen4(props) {
             </Animated>
           </Grid>
         </Grid>
+        <Animated
+              animationIn="bounceInUp"
+              animationOut="fadeOut"
+              animationInDelay={500}
+              animationInDuration={1000}
+              isVisible={true}
+            >
         <Grid
           container
           justify="center"
@@ -80,6 +87,14 @@ export default function Screen4(props) {
             </ul>
           </Grid>
         </Grid>
+        </Animated>
+        <Animated
+              animationIn="bounceInUp"
+              animationOut="fadeOut"
+              animationInDelay={700}
+              animationInDuration={1000}
+              isVisible={true}
+            >
         <Grid
           container
           justify="center"
@@ -129,6 +144,7 @@ export default function Screen4(props) {
             </ul>
           </Grid>
         </Grid>
+        </Animated>
       </Container>
     </div>
   );

@@ -89,7 +89,7 @@ const FullpageWrapper = fullpageProps => {
                         MAIN <b>MISSION</b>
                       </Typography>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={12}>
                       <Paper className={classes.basicPaper}>
                         <Typography component="p">
                           Have you ever seen house on the beach or flat in a
@@ -100,6 +100,9 @@ const FullpageWrapper = fullpageProps => {
                         </Typography>
                       </Paper>
                     </Grid>
+                    <Grid item xs={12}>
+              <Typography variant="body2">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></Typography>
+            </Grid>
                   </Grid>
                 </Container>
               </div>

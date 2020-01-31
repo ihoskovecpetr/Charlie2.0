@@ -23,16 +23,40 @@ export default function BlogPosts() {
   const classes = useStyles();
 
   return (
-    <Container maxWidth="xl" className={classes.container_4}>
+    <Container maxWidth="xl" className={classes.container_4}  id="s_posts_id" style={{ display: "none" }} >
       <Grid container>
         <Grid item xs={4} className={classes.quarter_grid}>
+        <Animated
+              animationIn="bounceInUp"
+              animationOut="fadeOut"
+              animationInDelay={500}
+              animationInDuration={1000}
+              isVisible={true}
+            >
           <BlogPost1 />
+          </Animated>
         </Grid>
         <Grid item xs={4} className={classes.quarter_grid}>
+        <Animated
+              animationIn="bounceInDown"
+              animationOut="fadeOut"
+              animationInDelay={500}
+              animationInDuration={1000}
+              isVisible={true}
+            >
           <BlogPost2 />
+          </Animated>
         </Grid>
         <Grid item xs={4} className={classes.quarter_grid}>
+        <Animated
+              animationIn="bounceInUp"
+              animationOut="fadeOut"
+              animationInDelay={500}
+              animationInDuration={1000}
+              isVisible={true}
+            >
           <BlogPost3 />
+          </Animated>
         </Grid>
       </Grid>
     </Container>

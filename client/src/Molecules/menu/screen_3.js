@@ -11,6 +11,7 @@ import clsx from "clsx";
 import "../../Pages/Menu.css";
 
 import Spinner from "../../Atoms/Spinner";
+import LoginFirstBoard from "../../Atoms/LoginFirstBoard";
 import EventCard from "../../Molecules/event-card";
 
 export default function Screen3(props) {
@@ -36,7 +37,7 @@ export default function Screen3(props) {
   return (
     <div className="section s3">
       <Container maxWidth="sm" className={classes.container_2}>
-        <Grid item>
+        <Grid item id="s_3_id" style={{ display: "none" }}>
           <Animated
             animationIn="bounceInLeft"
             animationOut="fadeOut"
@@ -45,7 +46,7 @@ export default function Screen3(props) {
             isVisible={true}
           >
             <Typography className={classes.defaultHeader}>
-              YOUR <b>NEXT</b> EVENTS
+              YOUR <b>NEXT</b> EVENT
             </Typography>
           </Animated>
         </Grid>
@@ -53,7 +54,7 @@ export default function Screen3(props) {
         <Grid item>
           <Grid justify="center" container style={{ width: "100%" }}>
             <Grid item style={{ width: "90%" }}>
-              {!props.loading && !props.data && <p>No data</p>}
+              {!props.loading && !props.data && <LoginFirstBoard />}
               {props.loading && <Spinner height={100} width={100} />}
               {Sorted.map((event, index) => {
                 if (new Date(event.event.dateStart) >= new Date()) {
