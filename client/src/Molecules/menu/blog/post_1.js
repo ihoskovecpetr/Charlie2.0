@@ -17,47 +17,47 @@ export default function BlogPosts() {
   const classes = useStyles();
 
   return (
-    <div id="s_post_1_id" style={{ display: "none" }}>
+    <div>
       <Animated
-              animationIn="bounceInUp"
-              animationOut="fadeOut"
-              animationInDelay={0}
-              animationInDuration={1000}
-              isVisible={true}
-            >
-      <Grid item>
-        <Typography className={classes.defaultHeader}>
-          CHARLIE <b>BLOG</b>
-        </Typography>
-      </Grid>
-      <Grid container justify="center" alignItems="center" direction="column">
+        animationIn="bounceInUp"
+        animationOut="fadeOut"
+        animationInDelay={0}
+        animationInDuration={1000}
+        isVisible={true}
+      >
         <Grid item>
-          <Avatar
-            alt="Author"
-            sizes="large"
-            src="https://res.cloudinary.com/party-images-app/image/upload/v1553553202/eredff7zmlr65fm3bbue.png"
-          />
-        </Grid>
-        <Grid item>
-          <Typography variant="h5">
-            ‘Its all about the view from my balcony’
+          <Typography className={classes.defaultHeader}>
+            CHARLIE <b>BLOG</b>
           </Typography>
         </Grid>
-        <Grid item>
-          <Typography variant="body2" className={classes.defaultContent}>
-            I do have nice flat in the Sydney and I love to share this place
-            with other people via Charlie. I do offer bbq nights twice a week
-            and it alone can pay my rent in this beautiful place
-          </Typography>
+        <Grid container justify="center" alignItems="center" direction="column">
+          <Grid item>
+            <Avatar
+              alt="Author"
+              sizes="large"
+              src="https://res.cloudinary.com/party-images-app/image/upload/v1553553202/eredff7zmlr65fm3bbue.png"
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="h5">
+              ‘Its all about the view from my balcony’
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2" className={classes.defaultContent}>
+              I do have nice flat in the Sydney and I love to share this place
+              with other people via Charlie. I do offer bbq nights twice a week
+              and it alone can pay my rent in this beautiful place
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
-      <Carousel
-        images={[
-          "https://res.cloudinary.com/party-images-app/image/upload/v1553554542/ixgdwwuaasm5f49cfhpb.png",
-          "https://res.cloudinary.com/party-images-app/image/upload/v1553554542/ukwkr5wraaezjeipbrgr.png",
-          "https://res.cloudinary.com/party-images-app/image/upload/v1553559427/xbugpqhcehvfatnpdrxi.png"
-        ]}
-      />
+        <Carousel
+          images={[
+            "https://res.cloudinary.com/party-images-app/image/upload/v1553554542/ixgdwwuaasm5f49cfhpb.png",
+            "https://res.cloudinary.com/party-images-app/image/upload/v1553554542/ukwkr5wraaezjeipbrgr.png",
+            "https://res.cloudinary.com/party-images-app/image/upload/v1553559427/xbugpqhcehvfatnpdrxi.png"
+          ]}
+        />
       </Animated>
     </div>
   );

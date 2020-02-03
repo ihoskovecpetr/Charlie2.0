@@ -10,13 +10,13 @@ export const useViewPort = element => {
   };
 
   useEffect(() => {
-    window.addEventListener(
-      "scroll",
-      () => {
-        console.log("Print useViewPort");
-      },
-      false
-    );
+    // window.addEventListener(
+    //   "scroll",
+    //   () => {
+    //     console.log("Print useViewPort");
+    //   },
+    //   false
+    // );
     //document.addEventListener("wheel", preventDefault, { passive: false });
     return () => {
       //window.removeEventListener("scroll", ro(), false);

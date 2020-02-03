@@ -23,7 +23,6 @@ function Logo(props) {
   }, []);
 
   function rotate() {
-    console.log(count);
     if (count < 4 && document.getElementById("main_logo")) {
       if (
         document.getElementById("main_logo").classList.value.includes("flipped")
@@ -42,6 +41,7 @@ function Logo(props) {
     <>
       <div
         className="flip-card"
+        data-testid="logo"
         style={{ height: props.height, width: props.width }}
       >
         <div className="flip-card-inner" id="main_logo">

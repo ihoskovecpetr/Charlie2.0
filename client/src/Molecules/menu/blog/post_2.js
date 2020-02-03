@@ -17,48 +17,48 @@ export default function BlogPosts() {
   const classes = useStyles();
 
   return (
-    <div id="s_post_2_id" style={{ display: "none" }}>
+    <div>
       <Animated
         animationIn="bounceInUp"
         animationOut="fadeOut"
-        animationInDelay={0}
+        animationInDelay={500}
         animationInDuration={1000}
         isVisible={true}
       >
-      <Grid item>
-        <Typography className={classes.defaultHeader}>
-          CHARLIE <b>BLOG</b>
-        </Typography>
-      </Grid>
-      <Grid container justify="center" alignItems="center" direction="column">
-        <Grid item></Grid>
         <Grid item>
-          <Avatar
-            alt="Author"
-            sizes="large"
-            src="https://res.cloudinary.com/party-images-app/image/upload/v1553557168/cgnjfgxcbegttvftwbox.png"
-          />
-        </Grid>
-        <Grid item>
-          <Typography variant="h5">‘People like my food’</Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="body2" className={classes.defaultContent}>
-            I do not have the best flat with view on the bay, but I know how to
-            make delicious food which make all the guests happy and they love to
-            come again and again.
+          <Typography className={classes.defaultHeader}>
+            CHARLIE <b>BLOG</b>
           </Typography>
         </Grid>
-      </Grid>
-      <Carousel
-        images={[
-          "https://res.cloudinary.com/party-images-app/image/upload/v1553558709/hdyqsmvfmye0abxbmo6v.png",
+        <Grid container justify="center" alignItems="center" direction="column">
+          <Grid item></Grid>
+          <Grid item>
+            <Avatar
+              alt="Author"
+              sizes="large"
+              src="https://res.cloudinary.com/party-images-app/image/upload/v1553557168/cgnjfgxcbegttvftwbox.png"
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="h5">‘People like my food’</Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="body2" className={classes.defaultContent}>
+              I do not have the best flat with view on the bay, but I know how
+              to make delicious food which make all the guests happy and they
+              love to come again and again.
+            </Typography>
+          </Grid>
+        </Grid>
+        <Carousel
+          images={[
+            "https://res.cloudinary.com/party-images-app/image/upload/v1553558709/hdyqsmvfmye0abxbmo6v.png",
 
-          "https://res.cloudinary.com/party-images-app/image/upload/v1553558710/kuh7whsezyjnbbtlphg2.png",
+            "https://res.cloudinary.com/party-images-app/image/upload/v1553558710/kuh7whsezyjnbbtlphg2.png",
 
-          "https://res.cloudinary.com/party-images-app/image/upload/v1553558710/fh4mqii1zzgtd2sircza.png"
-        ]}
-      />
+            "https://res.cloudinary.com/party-images-app/image/upload/v1553558710/fh4mqii1zzgtd2sircza.png"
+          ]}
+        />
       </Animated>
     </div>
   );

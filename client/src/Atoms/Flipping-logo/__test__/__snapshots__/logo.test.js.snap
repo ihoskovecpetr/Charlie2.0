@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Matches snapshot 1`] = `
+<div
+  className="flip-card"
+  data-testid="logo"
+  style={
+    Object {
+      "height": 80,
+      "width": 80,
+    }
+  }
+>
+  <div
+    className="flip-card-inner"
+    id="main_logo"
+  >
+    <div
+      className="flip-card-front"
+    >
+      <img
+        src="charlie.png"
+      />
+    </div>
+    <div
+      className="flip-card-back"
+    >
+      <img
+        src="charlie.png"
+      />
+    </div>
+  </div>
+</div>
+`;

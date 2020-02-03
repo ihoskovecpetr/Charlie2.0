@@ -12,42 +12,47 @@ import { withRouter, useHistory } from "react-router-dom";
 import { useScrollDisable } from "../Hooks/useScrollDisable";
 
 function Layout(props) {
-  //useScrollDisable();
+  useScrollDisable("layout_id");
   const classes = useStyles();
 
   return (
-    <div
-      className={classes.opaque}
-      onClick={
-        () => {} //history.goBack()
-      }
-    >
-      <div className={classes.modalWrap}>
-        <CssBaseline />
-        <Grid
-          container
-          justify="flex-start"
-          alignItems="flex-start"
-          alignContent="flex-start"
-          direction="column"
-          spacing={2}
-          className={classes.gridClose}
-        >
-          <Grid item>
-            <Button
-              variant="contained"
-              //color={theme.background}
-              size="small"
-              className={classes.closeButton}
-              onClick={() => {
-                props.history.goBack();
-              }}
-            >
-              <CloseIcon fontSize="large" />
-            </Button>
+    <div id="layout_id">
+      <div
+        className={classes.opaque}
+        onClick={
+          () => {} //history.goBack()
+        }
+        onscroll={() => {
+          console.log("'ONscroll event");
+        }}
+      >
+        <div className={classes.modalWrap}>
+          <CssBaseline />
+          <Grid
+            container
+            justify="flex-start"
+            alignItems="flex-start"
+            alignContent="flex-start"
+            direction="column"
+            spacing={2}
+            className={classes.gridClose}
+          >
+            <Grid item>
+              <Button
+                variant="contained"
+                //color={theme.background}
+                size="small"
+                className={classes.closeButton}
+                onClick={() => {
+                  props.history.goBack();
+                }}
+              >
+                <CloseIcon fontSize="large" />
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-        <Container maxWidth="xs">{props.children}</Container>
+          <Container maxWidth="xs">{props.children}</Container>
+        </div>
       </div>
     </div>
   );

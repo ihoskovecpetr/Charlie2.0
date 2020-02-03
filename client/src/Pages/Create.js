@@ -199,8 +199,6 @@ function Create(props) {
   const onSubmit = e => {
     e.preventDefault();
 
-    console.log("inputName: ", inputName);
-
     let load = {
       name: inputName.current.value ? inputName.current.value : null,
       lng: customMapParam.lng,
@@ -223,7 +221,7 @@ function Create(props) {
     console.log("Empty result> ", empty);
 
     if (empty.length == 0) {
-      console.log("Sending this LOAD>> ", load);
+      console.log("SUBMIT: ", load);
       createEvent({
         variables: load
       });
@@ -252,7 +250,11 @@ function Create(props) {
   }
 
   return (
-    <div component="main" className={classes.profileWrap}>
+    <div
+      component="main"
+      className={classes.profileWrap}
+      style={{ position: user.freezScroll ? "absolute" : "fixed" }}
+    >
       <CssBaseline />
       <Container maxWidth="sm" className={classes.paper1}>
         <Grid
@@ -619,7 +621,6 @@ function Create(props) {
 
 const useStyles = makeStyles(theme => ({
   profileWrap: {
-    position: "absolute",
     top: 0,
     minHeight: "100vh",
     width: "100%",

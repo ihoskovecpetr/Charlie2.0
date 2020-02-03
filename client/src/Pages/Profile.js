@@ -14,6 +14,13 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import Zoom from "@material-ui/core/Zoom";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
+import UpIcon from "@material-ui/icons/KeyboardArrowUp";
+import { green } from "@material-ui/core/colors";
+import clsx from "clsx";
 
 import SwipeableViews from "react-swipeable-views";
 import { useMutation, useQuery } from "@apollo/react-hooks";
@@ -180,7 +187,7 @@ function Profile() {
   const theme = useTheme();
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
-
+  const [value, setValue] = React.useState(0);
   // const hostingStates = useQuery(USER_EVENTS, {
   //   variables: { user_id: user._id }
   // });
@@ -193,12 +200,6 @@ function Profile() {
   const { loading, error, data } = useQuery(HOST_RATINGS, {
     variables: { host_id: user._id }
   });
-
-  //const { loadingB, errorB, dataB } = bookingStates;
-
-  //const [newUser, { loading, error, data }] = useMutation(NEW_USER);
-
-  const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -218,7 +219,11 @@ function Profile() {
   );
 
   return (
-    <div className={classes.profileWrap} id="base">
+    <div
+      className={classes.profileWrap}
+      id="base"
+      style={{ position: user.freezScroll ? "absolute" : "fixed" }}
+    >
       <CssBaseline />
       <Paper className={classes.paper}>
         <Avatar className={classes.avatar} src={user.picture}>
@@ -354,7 +359,6 @@ function Profile() {
     </div>
   );
 }
-
 const useStyles = makeStyles(theme => ({
   "@global": {
     body: {
@@ -366,7 +370,6 @@ const useStyles = makeStyles(theme => ({
     width: 500
   },
   profileWrap: {
-    position: "absolute",
     top: 0,
     minHeight: "100vh",
     width: "100%",

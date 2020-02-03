@@ -9,6 +9,11 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Badge from "@material-ui/core/Badge";
+import SwipeableViews from "react-swipeable-views";
+import PropTypes from "prop-types";
 
 import { withRouter, useHistory, NavLink } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/react-hooks";
@@ -182,6 +187,7 @@ function Event(props) {
     //skip: !id,
     //pollInterval: 500
   });
+  const [value, setValue] = React.useState(0);
   const ratings = useQuery(EVENT_RATINGS, {
     variables: { event_id: props.match.params.id }
     //skip: !id,
@@ -192,21 +198,6 @@ function Event(props) {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    if (document.getElementById("paper_scrollable")) {
-      document
-        .getElementById("paper_scrollable")
-        .addEventListener("scroll", () => {
-          console.log("Parent scroll");
-        });
-      document
-        .getElementById("paper_scrollable")
-        .addEventListener("click", () => {
-          console.log("Parent click");
-        });
-    }
-  });
-
   if (deleteState.data && deleteState.data.deleteOneEvent.success == true) {
     history.push("/map");
   }
@@ -215,6 +206,14 @@ function Event(props) {
 
   const PaperEvent = props => {
     return <Paper className={classes.paper}>{props.children}</Paper>;
+  };
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleChangeIndex = index => {
+    setValue(index);
   };
 
   // if (bookingStates.loading) {
@@ -248,177 +247,110 @@ function Event(props) {
   //   );
   // }
 
-  console.log("DATA EVENT jsou tady: ", dataDB);
-  console.log("RATING data: ", ratings.data);
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <Typography
+        component="div"
+        role="tabpanel"
+        hidden={value !== index}
+        id={`full-width-tabpanel-${index}`}
+        aria-labelledby={`full-width-tab-${index}`}
+        {...other}
+      >
+        {value === index && <Box p={3}>{children}</Box>}
+      </Typography>
+    );
+  }
+
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired
+  };
+
+  function a11yProps(index) {
+    return {
+      id: `full-width-tab-${index}`,
+      "aria-controls": `full-width-tabpanel-${index}`
+    };
+  }
 
   if (dataDB && dataDB.getOneEvent.success) {
     return (
       <ModalLayout>
         <div id="paper_scrollable">
           <PaperEvent>
-            <Grid item className={classes.nameGrid} md={12}>
-              <Box textAlign="center" m={1}>
-                <Typography component="h5" variant="h5">
-                  {dataDB.getOneEvent.name}
-                </Typography>
-              </Box>
-              <Divider />
-            </Grid>
-
-            <Grid
-              container
-              justify="flex-start"
-              alignItems="flex-start"
-              alignContent="flex-start"
-              direction="column"
-              spacing={2}
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              indicatorColor="primary"
+              textColor="primary"
+              variant="fullWidth"
+              aria-label="full width tabs example"
             >
-              <Grid item className={classes.galleryGrid}>
-                <Gallery
-                  images={dataDB.getOneEvent.imagesArr}
-                  rowHeight={100}
-                  display={true}
-                  backdropClosesModal={true}
-                />
-              </Grid>
-
-              <Grid item>
-                <Typography component="div" className={classes.standardHeading}>
-                  DESCRIPTION
-                </Typography>
-                <Box textAlign="justify" m={1}>
-                  <Typography component="p" className={classes.standardContent}>
-                    {dataDB.getOneEvent.description}
-                  </Typography>
-                </Box>
-              </Grid>
-
-              <Grid item>
-                <Typography component="div" className={classes.standardHeading}>
-                  DATE
-                </Typography>
-                <Box textAlign="left" m={1}>
-                  <Typography component="p" className={classes.standardContent}>
-                    {dataDB.getOneEvent.dateStart &&
-                      displayDate(dataDB.getOneEvent.dateStart)}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Typography component="div" className={classes.standardHeading}>
-                PRICE
-              </Typography>
-              <Grid item>
-                <Box textAlign="left" m={1}>
-                  <Typography component="p" className={classes.standardContent}>
-                    {dataDB.getOneEvent.price}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item>
-                <Typography component="div" className={classes.standardHeading}>
-                  BYO
-                </Typography>
-                <Box textAlign="left" m={1}>
-                  <Typography component="p" className={classes.standardContent}>
-                    {dataDB.getOneEvent.BYO ? "YES" : "NO"}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item>
-                <Typography component="div" className={classes.standardHeading}>
-                  ATTENDEES
-                </Typography>
-                <Box textAlign="left" m={1}>
-                  <ConfirmedGuest
-                    bookings={dataDB.showBookings}
-                    cancelBooking={cancelBooking}
-                    cancelledState={cancelledState}
-                    event={dataDB.getOneEvent}
-                    ONE_EVENT={ONE_EVENT}
-                  />
-
-                  {bookingStates.loading && (
-                    <Spinner height={100} width={100} />
-                  )}
-                </Box>
-              </Grid>
-              <Grid item>
-                {dataDB.getOneEvent.areYouAuthor && (
-                  <>
-                    <Typography
-                      component="div"
-                      className={classes.standardHeading}
-                    >
-                      PENDING
-                    </Typography>
-                    <Grid container>
-                      <Box textAlign="left" m={1}>
-                        <Grid container direction="row">
-                          {dataDB.showBookings.map(booking => {
-                            if (!booking.confirmed && !booking.cancelled) {
-                              return (
-                                <Grid item>
-                                  <PendingGuest
-                                    booking={booking}
-                                    event={dataDB.getOneEvent}
-                                    ONE_EVENT={ONE_EVENT}
-                                  />
-                                </Grid>
-                              );
-                            }
-                            return null;
-                          })}
-                        </Grid>
-                        {bookingStates.loading && (
-                          <Spinner height={100} width={100} />
-                        )}
-                      </Box>
-                    </Grid>
-                  </>
-                )}
-              </Grid>
-              <Typography component="div" className={classes.standardHeading}>
-                AUTHOR
-              </Typography>
-              <Grid
-                container
-                justify="center"
-                className={classes.authorContainer}
-              >
-                <Grid item>
-                  <UserCard author={dataDB.getOneEvent.author} />
-                </Grid>
-              </Grid>
-              <Typography component="div" className={classes.standardHeading}>
-                ADDRESS
-              </Typography>
-              <Grid item>
-                <Box textAlign="left" m={1}>
-                  <Typography component="p" className={classes.standardContent}>
-                    {dataDB.getOneEvent.address}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Typography component="div" className={classes.standardHeading}>
-                RATING
-              </Typography>
-
-              <Grid
-                container
-                justify="center"
-                alignItems="center"
-                alignContent="center"
-                direction="column"
-                className={classes.ratingContainer}
-              >
-                {ratings.data &&
-                  ratings.data.showRatings.map((rating, index) => (
+              <Tab label="Galery" {...a11yProps(0)} />
+              <Tab label="Info" {...a11yProps(1)} />
+            </Tabs>
+            <SwipeableViews
+              axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+              index={value}
+              onChangeIndex={handleChangeIndex}
+              style={{ width: "100%" }}
+            >
+              <TabPanel value={value} index={0} dir={theme.direction}>
+                {loading && (
+                  <Grid container justify="center">
                     <Grid item>
-                      <RatingCard rating={rating} key={index} />
+                      <Spinner height={100} width={100} />
                     </Grid>
-                  ))}
-              </Grid>
-            </Grid>
+                  </Grid>
+                )}
+                <Grid
+                  container
+                  justify="center"
+                  direction="column"
+                  alignItems="center"
+                  alignContent="center"
+                  style={{ width: "100%", color: "green" }}
+                >
+                  Tab 1
+                  {dataDB && (
+                    <Grid item className={classes.galleryGrid}>
+                      <Gallery
+                        images={dataDB.getOneEvent.imagesArr}
+                        rowHeight={180}
+                        display={true}
+                        backdropClosesModal={true}
+                      />
+                    </Grid>
+                  )}
+                </Grid>
+              </TabPanel>
+              <TabPanel value={value} index={1} dir={theme.direction}>
+                {loading && <Spinner />}
+                <Grid
+                  container
+                  justify="center"
+                  direction="column"
+                  alignItems="center"
+                  alignContent="center"
+                >
+                  Tab 3
+                </Grid>
+              </TabPanel>
+              <TabPanel
+                value={value}
+                index={2}
+                dir={theme.direction}
+                style={{ width: "100%" }}
+              >
+                Ratings...
+                {loading && <Spinner height={100} width={100} />}
+                tab 3
+              </TabPanel>
+            </SwipeableViews>
           </PaperEvent>
         </div>
         <Grid
@@ -474,7 +406,7 @@ const useStyles = makeStyles(theme => ({
     background: "black",
     color: "white",
     marginTop: "10vh",
-    padding: theme.spacing(3, 2),
+
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -515,10 +447,10 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 15
   },
   galleryGrid: {
-    width: "100%",
-    background: "rgba(255,255,255,0.2)",
-    borderRadius: 4,
-    padding: theme.spacing(3, 2)
+    width: "100%"
+    //background: "rgba(255,255,255,0.2)",
+    //borderRadius: 4,
+    //padding: theme.spacing(3, 2)
   },
   standardHeading: {
     //borderBottom: "solid 1px grey",

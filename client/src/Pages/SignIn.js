@@ -11,6 +11,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import Badge from "@material-ui/core/Badge";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -58,18 +59,11 @@ function SignIn(props) {
 
   const { dataOut } = data ? data.login : { dataOut: undefined };
   const { errorOut } = data ? data.login : { errorOut: undefined };
-
+  console.log("DataOut: ", dataOut);
   if (user.success) {
     setTimeout(() => {
       history.goBack();
     }, 100);
-    return (
-      <ModalLayout>
-        <Paper className={classes.paper}>
-          <p>Ahoj {user.name}</p>
-        </Paper>
-      </ModalLayout>
-    );
   }
 
   if (dataOut && dataOut.success && !user.name) {
@@ -85,13 +79,14 @@ function SignIn(props) {
     });
   }
 
-  const Pass = ({ data }) => {
+  const Pass = ({ data, disabled }) => {
     return (
       <TextField
         variant="outlined"
         margin="normal"
         required
         fullWidth
+        disabled={disabled}
         defaultValue="heslo"
         name="password"
         label="Password"
@@ -103,12 +98,13 @@ function SignIn(props) {
     );
   };
 
-  const Email = ({ data, cy }) => {
+  const Email = ({ data, cy, disabled }) => {
     return (
       <TextField
         variant="outlined"
         margin="normal"
         required
+        disabled={disabled}
         fullWidth
         data-cy={cy}
         onChange={e => {
@@ -128,7 +124,12 @@ function SignIn(props) {
   return (
     <ModalLayout>
       <Paper className={classes.paper}>
-        {!loading && (
+        {dataOut && dataOut.success && (
+          <Avatar className={classes.avatarSuccess}>
+            <CheckCircleOutlineIcon />
+          </Avatar>
+        )}
+        {!loading && !dataOut && (
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
@@ -151,6 +152,9 @@ function SignIn(props) {
             ))}
 
           {!data && <Email data={data} cy={"emailSignIn"} />}
+          {dataOut && dataOut.success && (
+            <Email data={data} cy={"emailSignIn"} disabled={true} />
+          )}
           {errorOut && (
             <Animated
               animationIn="shake"
@@ -164,6 +168,7 @@ function SignIn(props) {
           )}
 
           {!data && <Pass data={data} />}
+          {dataOut && dataOut.success && <Pass data={data} disabled={true} />}
           {errorOut && (
             <Animated
               animationIn="shake"
@@ -252,6 +257,10 @@ const useStyles = makeStyles(theme => ({
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
+  },
+  avatarSuccess: {
+    margin: theme.spacing(1),
+    backgroundColor: "green"
   },
   spinner: {
     margin: theme.spacing(1)

@@ -30,6 +30,7 @@ import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
 
 import UpperStripe from "./Atoms/upper-stripe";
+import FloatingBubbleCards from "./Atoms/FloatingBubbleCards";
 
 import { UserContext } from "./userContext";
 import { usePosition } from "./Hooks/useGeolocation";
@@ -44,6 +45,7 @@ import Event from "./Pages/Event";
 import Profile from "./Pages/Profile";
 import About from "./Pages/About";
 import UserModal from "./Pages/UserModal";
+import EventCards from "./Pages/EventCards";
 
 const drawerWidth = 240;
 let prevLocation;
@@ -93,7 +95,8 @@ function App(props) {
   const [user, setUser] = useState({
     success: false,
     name: false,
-    geolocationObj: null
+    geolocationObj: null,
+    freezScroll: true
   });
   const [workingPosition, setWorkingPosition] = useState({
     date: new Date().toISOString().split("T")[0],
@@ -245,18 +248,24 @@ function App(props) {
   let firstPrint = false;
   let Modal = false;
 
-  if (pathSet[1] == "event") {
+  if (
+    pathSet[1] == "event" ||
+    pathSet[1] == "user" ||
+    pathSet[1] == "signin" ||
+    pathSet[1] == "signout" ||
+    pathSet[1] == "play" 
+  ) {
     Modal = true;
   }
-  if (pathSet[1] == "user") {
-    Modal = true;
-  }
-  if (pathSet[1] == "signin") {
-    Modal = true;
-  }
-  if (pathSet[1] == "signout") {
-    Modal = true;
-  }
+  // if (pathSet[1] == "user") {
+  //   Modal = true;
+  // }
+  // if (pathSet[1] == "signin") {
+  //   Modal = true;
+  // }
+  // if (pathSet[1] == "signout") {
+  //   Modal = true;
+  // }
 
   if (!Modal) {
     prevLocation = props.location;
@@ -277,7 +286,7 @@ function App(props) {
 
   //console.log("APP, firstPrint a Modal: ", firstPrint, Modal);
   return (
-    <div className={classes.root}>
+    <div className={classes.root} id="wrap_full">
       <ThemeProvider theme={theme}>
         <UserContext.Provider value={providerValue}>
           <nav className={classes.drawer} aria-label="mailbox folders">
@@ -330,6 +339,27 @@ function App(props) {
                     <main className={classes.content}>
                       <div className={classes.toolbar} />
                       <Event />
+                    </main>
+                  </>
+                )}
+              />
+                            <Route
+                exact
+                path={`/play/:id`}
+                render={() => (
+                  <>
+                    <UpperStripe
+                      //bringOwnUser?? true??
+                      loading={loading}
+                      userApp={false}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <EventCards />
                     </main>
                   </>
                 )}
@@ -489,12 +519,34 @@ function App(props) {
             </>
           )}
           {!Modal && (
-            <Switch location={prevLocation}>
-              {ListOfUrls.map((text, index) => (
+            <>
+              <Switch location={prevLocation}>
+                {ListOfUrls.map((text, index) => (
+                  <Route
+                    exact
+                    path={`/${text}`}
+                    key={index}
+                    render={() => (
+                      <>
+                        <UpperStripe
+                          loading={loading}
+                          userApp={user}
+                          ListOfNames={ListOfNames}
+                          ListOfUrls={ListOfUrls}
+                          handleDrawerToggle={handleDrawerToggle}
+                          drawerWidth={drawerWidth}
+                        />
+                        <main className={classes.content}>
+                          <div className={classes.toolbar} />
+                          {returnComponent(index)}
+                        </main>
+                      </>
+                    )}
+                  />
+                ))}
                 <Route
-                  exact
-                  path={`/${text}`}
-                  key={index}
+                  path={`/`}
+                  key={"xc"}
                   render={() => (
                     <>
                       <UpperStripe
@@ -507,34 +559,18 @@ function App(props) {
                       />
                       <main className={classes.content}>
                         <div className={classes.toolbar} />
-                        {returnComponent(index)}
+                        <Menu
+                          ListOfNames={ListOfNames}
+                          ListOfUrls={ListOfUrls}
+                        />
+                        ,
                       </main>
                     </>
                   )}
                 />
-              ))}
-              <Route
-                path={`/`}
-                key={"xc"}
-                render={() => (
-                  <>
-                    <UpperStripe
-                      loading={loading}
-                      userApp={user}
-                      ListOfNames={ListOfNames}
-                      ListOfUrls={ListOfUrls}
-                      handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
-                    />
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />
-                      ,
-                    </main>
-                  </>
-                )}
-              />
-            </Switch>
+              </Switch>
+              <FloatingBubbleCards />
+            </>
           )}
         </UserContext.Provider>
       </ThemeProvider>

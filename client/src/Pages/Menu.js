@@ -1,18 +1,8 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useEffect, useContext, useMemo } from "react";
 import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import CardMedia from "@material-ui/core/CardMedia";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-
-import { withTheme } from "@material-ui/styles";
 import { makeStyles } from "@material-ui/core/styles";
+
 import ReactFullpage from "@fullpage/react-fullpage";
-import clsx from "clsx";
 
 import "./Menu.css";
 
@@ -69,6 +59,8 @@ export default function Menu(props) {
 
   const { user, setUser } = useContext(UserContext);
   const { xs_size_memo } = useXsSize();
+  const [value, setValue] = React.useState(0);
+
   useViewPort();
 
   const [newBookingsArr, { loading, error, data }] = useMutation(
@@ -83,32 +75,18 @@ export default function Menu(props) {
     //console.log("rerender Menu");
   });
 
-  // useEffect(() => {
-  //   console.log("UseEffect screen 3");
-  //   window.addEventListener(
-  //     "scroll",
-  //     () => {
-  //       console.log(
-  //         "UseEffect screen 3: ",
-  //         document.getElementById("rollIn").getBoundingClientRect()
-  //       );
-  //     },
-  //     false
-  //   );
-  //   //document.addEventListener("wheel", preventDefault, { passive: false });
-  //   return () => {
-  //     //window.removeEventListener("scroll", ro(), false);
-  //     //document.removeEventListener("wheel", preventDefault, { passive: false });
-  //   };
-  // }, []);
+  useEffect(() => {
+    console.log(
+      "UseEffect MANU: ",
+      "onclick" in document.createElement("div") ? "Joo" : "Noo"
+    );
+  }, []);
 
   if (user.success) {
     {
       !loading && !data && newBookingsArr();
     }
   }
-
-  console.log("xs_size? ", xs_size_memo);
 
   const fullpageOptions = {
     anchors: ["firstPage", "secondPage", "thirdPage"],
@@ -121,10 +99,9 @@ export default function Menu(props) {
     <ReactFullpage
       {...props}
       slidesNavigation={false}
-      navigation={true}
+      navigation={!xs_size_memo}
       //navigationTooltips={["firstSlide", "secondSlide"]}
       onLeave={function(origin, destination, direction) {
-        console.log("OnLeave index", destination.index);
         switch (destination.index) {
           case 1:
             document.getElementById("s_2_id").style.display = "block";
@@ -133,50 +110,47 @@ export default function Menu(props) {
             document.getElementById("s_3_id").style.display = "block";
             break;
           case 3:
-            console.log(document.getElementById("s_4_id"))
             document.getElementById("s_4_id").style.display = "block";
             break;
           case 4:
-            console.log(document.getElementById("s_posts_id"))
-            if(document.getElementById("s_posts_id")) {
-              document.getElementById("s_posts_id").style.display = "block"
-            } else{
-              document.getElementById("s_post_1_id").style.display = "block"
+            if (document.getElementById("s_posts_id")) {
+              document.getElementById("s_posts_id").style.display = "block";
+            } else {
+              document.getElementById("s_post_1_id").style.display = "block";
             }
             break;
           case 5:
-                document.getElementById("s_post_2_id").style.display = "block"
-              break;
+            if (document.getElementById("s_post_2_id")) {
+              document.getElementById("s_post_2_id").style.display = "block";
+            }
+            break;
           case 6:
-                document.getElementById("s_post_3_id").style.display = "block"
-              break;
-          default:
-          // code block
+            if (document.getElementById("s_post_3_id")) {
+              document.getElementById("s_post_3_id").style.display = "block";
+            }
+            break;
         }
-
-        // if (destination.index === 3) {
-        //   console.log("rollInHide", document.getElementById("rollIn"));
-          
-        //   console.log("rollInHide", document.getElementById("rollIn"));
-        // }
       }}
       render={({ state, fullpageApi }) => {
         console.log("render prop change", state); // eslint-disable-line no-console
-        //fullpageApi.;
+        if (fullpageApi) {
+          fullpageApi.setAllowScrolling(user.freezScroll);
+        }
 
         return (
           <div>
             <div id="fullpage-wrapper">
               <Screen1 />
               <Screen2 />
-              <Screen3
-                loading={loading}
-                data={data}
-              />
+              <Screen3 loading={loading} data={data} />
               <Screen4 props={props} />
 
               {xs_size_memo && (
-                <div className="section s6">
+                <div
+                  className="section s6"
+                  id="s_post_1_id"
+                  style={{ display: "none" }}
+                >
                   <Container maxWidth="md">
                     <BlogPost1 />
                   </Container>
@@ -184,7 +158,11 @@ export default function Menu(props) {
               )}
 
               {xs_size_memo && (
-                <div className="section s7">
+                <div
+                  className="section s7"
+                  id="s_post_2_id"
+                  style={{ display: "none" }}
+                >
                   <Container maxWidth="md">
                     <BlogPost2 />
                   </Container>
@@ -192,16 +170,18 @@ export default function Menu(props) {
               )}
 
               {xs_size_memo && (
-                <div className="section s8">
+                <div
+                  className="section s8"
+                  id="s_post_3_id"
+                  style={{ display: "none" }}
+                >
                   <BlogPost3 />
                 </div>
               )}
 
               {!xs_size_memo && (
-                <div className="section s9" >
-                
+                <div className="section s9">
                   <Posts />
-                  
                 </div>
               )}
 
