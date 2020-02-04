@@ -118,60 +118,100 @@ const DELETE = gql`
   }
 `;
 let dataMock;
-// dataMock = {
-//   getOneEvent: {
-//     _id: "12321",
-//     success: true,
-//     author: {
-//       _id: "12321",
-//       name: "Petr H. McOcker",
-//       picture:
-//         "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
-//     },
-//     name: "Mock data Party",
-//     geometry: { coordinates: [50.040112099, 14.428] },
-//     lng: 14.45,
-//     lat: 50,
-//     addressGoogle: "addressGoogle",
-//     addressCustom: "addressCustom",
-//     address: "address",
-//     eventType: 1,
-//     dateStart: "2019-10-10",
-//     price: 12,
-//     capacityMax: 20,
-//     BYO: true,
-//     imagesArr: [
-//       {
-//         caption: "No more pictures for this Event",
-//         src:
-//           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-//         thumbnail:
-//           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-//         thumbnailHeight: 10,
-//         thumbnailWidth: 10,
-//         scaletwidth: 100,
-//         marginLeft: 0,
-//         vwidth: 100,
-//         isSelected: false
-//       }
-//     ],
-//     description: "Desc Mocks data",
-//     confirmed: true,
-//     hide: false
-//   },
-//   showBookings: [
-//     {
-//       confrimed: true,
-//       user: {
-//         name: "Mock Guy",
-//         email: "mock@email.com",
-//         picture:
-//           "https://www.ixxiyourworld.com/media/2389064/ixxi-paul-fuentes-pink-rocket.jpg?mode=crop&width=562&height=832",
-//         _id: "232hj23h24h234"
-//       }
-//     }
-//   ]
-// };
+dataMock = {
+  getOneEvent: {
+    _id: "12321",
+    success: true,
+    author: {
+      _id: "12321",
+      name: "Petr H. McOcker",
+      picture:
+        "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
+    },
+    name: "Mock data Party",
+    geometry: { coordinates: [50.040112099, 14.428] },
+    lng: 14.45,
+    lat: 50,
+    addressGoogle: "addressGoogle",
+    addressCustom: "addressCustom",
+    address: "address",
+    eventType: 1,
+    dateStart: "2019-10-10",
+    price: 12,
+    capacityMax: 20,
+    BYO: true,
+    imagesArr: [
+      {
+        caption: "No more pictures for this Event",
+        src:
+          "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+        thumbnail:
+          "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
+        thumbnailHeight: 10,
+        thumbnailWidth: 10,
+        scaletwidth: 100,
+        marginLeft: 0,
+        vwidth: 100,
+        isSelected: false
+      },
+      {
+        caption: "No more pictures for this Event",
+        src:
+          "https://res.cloudinary.com/party-images-app/image/upload/v1580823218/ahenvnazw6wm44o5fqvr.jpg",
+        thumbnail:
+          "https://res.cloudinary.com/party-images-app/image/upload/v1580823218/ahenvnazw6wm44o5fqvr.jpg",
+        thumbnailHeight: 10,
+        thumbnailWidth: 10,
+        scaletwidth: 100,
+        marginLeft: 0,
+        vwidth: 100,
+        isSelected: false
+      },
+      {
+        caption: "No more pictures for this Event",
+        src:
+          "https://res.cloudinary.com/party-images-app/image/upload/v1580823217/kvcjvh7bokf2oameodtm.png",
+        thumbnail:
+          "https://res.cloudinary.com/party-images-app/image/upload/v1580823217/kvcjvh7bokf2oameodtm.png",
+        thumbnailHeight: 5,
+        thumbnailWidth: 10,
+        scaletwidth: 100,
+        marginLeft: 0,
+        vwidth: 100,
+        isSelected: false
+      },
+      {
+        caption: "No more pictures for this Event",
+        src:
+          "https://res.cloudinary.com/party-images-app/image/upload/v1580823218/b0lqrn5nrnaeafhfv0rk.png",
+        thumbnail:
+          "https://res.cloudinary.com/party-images-app/image/upload/v1580823218/b0lqrn5nrnaeafhfv0rk.png",
+        thumbnailHeight: 15,
+        thumbnailWidth: 7,
+        scaletwidth: 100,
+        marginLeft: 0,
+        vwidth: 100,
+        isSelected: false
+      }
+
+    ],
+    description: "Desc Mocks data",
+    confirmed: true,
+    hide: false
+  },
+  showBookings: [
+    {
+      confrimed: true,
+      user: {
+        name: "Mock Guy",
+        email: "mock@email.com",
+        picture:
+          "https://www.ixxiyourworld.com/media/2389064/ixxi-paul-fuentes-pink-rocket.jpg?mode=crop&width=562&height=832",
+        _id: "232hj23h24h234"
+      }
+    }
+  ]
+};
 
 function Event(props) {
   const classes = useStyles();
@@ -290,30 +330,35 @@ function Event(props) {
               variant="fullWidth"
               aria-label="full width tabs example"
             >
-              <Tab label="Galery" {...a11yProps(0)} />
+              <div onClick={() => {handleChangeIndex(0)}} id={`full-width-tab-${0}`}> ---- </div>
+              <Tab {...a11yProps(0)} />
               <Tab label="Info" {...a11yProps(1)} />
             </Tabs>
             <SwipeableViews
               axis={theme.direction === "rtl" ? "x-reverse" : "x"}
               index={value}
               onChangeIndex={handleChangeIndex}
-              style={{ width: "100%" }}
             >
-              <TabPanel value={value} index={0} dir={theme.direction}>
-                {loading && (
-                  <Grid container justify="center">
-                    <Grid item>
-                      <Spinner height={100} width={100} />
+ 
+                    <Grid item className={classes.galleryGrid}>
+                      <p style={{height: 0, margin: 0, zIndex: 100}}> - </p>
+                      <Gallery
+                        images={dataDB.getOneEvent.imagesArr}
+                        rowHeight={180}
+                        display={true}
+                        backdropClosesModal={true}
+                        style={{ zIndex: 10}}
+                      />
                     </Grid>
-                  </Grid>
-                )}
+
+              {/* <TabPanel value={value} index={3} dir={theme.direction} style={{ width: "100%", padding: "0" }}>
                 <Grid
                   container
                   justify="center"
                   direction="column"
                   alignItems="center"
                   alignContent="center"
-                  style={{ width: "100%", color: "green" }}
+                  style={{ width: "100%", color: "green", padding: "0" }}
                 >
                   Tab 1
                   {dataDB && (
@@ -327,9 +372,16 @@ function Event(props) {
                     </Grid>
                   )}
                 </Grid>
-              </TabPanel>
+              </TabPanel> */}
               <TabPanel value={value} index={1} dir={theme.direction}>
                 {loading && <Spinner />}
+                {loading && (
+                  <Grid container justify="center">
+                    <Grid item>
+                      <Spinner height={100} width={100} />
+                    </Grid>
+                  </Grid>
+                )}
                 <Grid
                   container
                   justify="center"
@@ -417,6 +469,9 @@ const useStyles = makeStyles(theme => ({
     borderBottomRightRadius: 0,
     borderBottomLeftRadius: 0
   },
+  "MuiBox-root":{
+    padding: 0
+  },
   gridClose: {
     position: "absolute",
     top: "10vh",
@@ -447,7 +502,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 15
   },
   galleryGrid: {
-    width: "100%"
+    width: "100%",
+    padding: 0
     //background: "rgba(255,255,255,0.2)",
     //borderRadius: 4,
     //padding: theme.spacing(3, 2)
@@ -472,7 +528,7 @@ const useStyles = makeStyles(theme => ({
   eventButtons: {
     position: "absolute",
     bottom: 0
-  }
+  },
 }));
 
 export default withRouter(Event);
