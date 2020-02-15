@@ -23,7 +23,7 @@ export default function Screen1() {
   const classes = useStyles();
 
   return (
-    <div className="section s6">
+    <div className="section s8">
       <Container maxWidth="sm" className={classes.container_6}>
         <Typography className={classes.defaultHeader}>
           <b>CONTACT</b> US

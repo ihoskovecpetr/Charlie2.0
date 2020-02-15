@@ -102,6 +102,9 @@ const FullpageWrapper = fullpageProps => {
                     </Grid>
                     <Grid item xs={12}>
               <Typography variant="body2">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></Typography>
+              <Typography variant="body2">Icons made by <a href="https://www.flaticon.com/authors/icongeek26" title="Icongeek26">Icongeek26</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></Typography>
+            
+              
             </Grid>
                   </Grid>
                 </Container>

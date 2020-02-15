@@ -1,32 +1,37 @@
 import React, { useEffect, useRef } from "react";
 
+let scriptAdded = false;
 function Map({ options, onMount, className, styling }) {
   const ref = useRef();
 
   useEffect(() => {
-    console.log("ReRENDER MAPHUUK");
+    console.log("ReRENDER MAPHUUK", options);
     const onLoad = () => {
-      if (typeof onMount === `function`) {
+      if (typeof onMount === `function` && window.google) {
         //const map = new window.google.maps.Map(ref.current, options);
         const map = new window.google.maps.Map(
           //document.getElementById("map-create"),
           ref.current,
           options
         );
-
         onMount(map);
       }
     };
-    if (!window.google) {
+
+    if (!window.google && !scriptAdded) {
+      console.log("CRATING cript");
+      scriptAdded = true;
       const script = document.createElement(`script`);
       script.type = `text/javascript`;
       script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=geometry,places`;
-      //`https://maps.googleapis.com/maps/api/js?key=` +
-      //process.env.GOOGLE_MAPS_API_KEY;
+
       const headScript = document.getElementsByTagName(`script`)[0];
       headScript.parentNode.insertBefore(script, headScript);
       script.addEventListener(`load`, onLoad);
-      return () => script.removeEventListener(`load`, onLoad);
+      return () => {
+        console.log("Returning script");
+        return script.removeEventListener(`load`, onLoad);
+      }
     } else onLoad();
   }, [onMount, options]);
 
@@ -40,11 +45,11 @@ function Map({ options, onMount, className, styling }) {
   );
 }
 
-Map.defaultProps = {
-  options: {
-    center: { lat: 50, lng: 15 },
-    zoom: 5
-  }
-};
+// Map.defaultProps = {
+//   options: {
+//     center: { lat: 50, lng: 15 },
+//     zoom: 5
+//   }
+// };
 
 export default React.memo(Map);

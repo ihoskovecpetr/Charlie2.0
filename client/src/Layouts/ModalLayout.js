@@ -22,7 +22,7 @@ function Layout(props) {
         onClick={
           () => {} //history.goBack()
         }
-        onscroll={() => {
+        onScroll={() => {
           console.log("'ONscroll event");
         }}
       >

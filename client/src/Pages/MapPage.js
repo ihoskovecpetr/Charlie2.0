@@ -7,7 +7,6 @@ import React, {
   useCallback
 } from "react";
 import ReactDOM from "react-dom";
-import "./mapPage.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { makeStyles } from "@material-ui/core/styles";

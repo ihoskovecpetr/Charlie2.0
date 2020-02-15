@@ -32,3 +32,8 @@ a {
 .out {
   transform: translateY(100vh);
 }
+
+.main-map {
+  /* border: 5px solid blue; */
+  height: calc(var(--vh2, 1vh) * 100);
+}

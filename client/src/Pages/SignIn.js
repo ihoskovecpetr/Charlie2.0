@@ -105,6 +105,7 @@ function SignIn(props) {
         margin="normal"
         required
         disabled={disabled}
+        defaultValue="test@gmail.com"
         fullWidth
         data-cy={cy}
         onChange={e => {

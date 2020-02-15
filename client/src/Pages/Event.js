@@ -281,7 +281,6 @@ function Event(props) {
                   backdropClosesModal={true}
                 />
               </Grid>
-
               <Grid item>
                 <Typography component="div" className={classes.standardHeading}>
                   DESCRIPTION

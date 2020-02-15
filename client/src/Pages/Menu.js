@@ -134,12 +134,12 @@ export default function Menu(props) {
       render={({ state, fullpageApi }) => {
         console.log("render prop change", state); // eslint-disable-line no-console
         if (fullpageApi) {
-          fullpageApi.setAllowScrolling(user.freezScroll);
+          //fullpageApi.setAllowScrolling(user.freezScroll);
         }
 
         return (
           <div>
-            <div id="fullpage-wrapper">
+            <div id="fullpage-wrapper" >
               <Screen1 />
               <Screen2 />
               <Screen3 loading={loading} data={data} />
@@ -147,9 +147,9 @@ export default function Menu(props) {
 
               {xs_size_memo && (
                 <div
-                  className="section s6"
+                  className="section s5"
                   id="s_post_1_id"
-                  style={{ display: "none" }}
+                  //style={{ display: "none" }}
                 >
                   <Container maxWidth="md">
                     <BlogPost1 />
@@ -159,9 +159,9 @@ export default function Menu(props) {
 
               {xs_size_memo && (
                 <div
-                  className="section s7"
+                  className="section s6"
                   id="s_post_2_id"
-                  style={{ display: "none" }}
+                  //style={{ display: "none" }}
                 >
                   <Container maxWidth="md">
                     <BlogPost2 />
@@ -171,16 +171,16 @@ export default function Menu(props) {
 
               {xs_size_memo && (
                 <div
-                  className="section s8"
+                  className="section s7"
                   id="s_post_3_id"
-                  style={{ display: "none" }}
+                  //style={{ display: "none" }}
                 >
                   <BlogPost3 />
                 </div>
               )}
 
               {!xs_size_memo && (
-                <div className="section s9">
+                <div className="section s5">
                   <Posts />
                 </div>
               )}

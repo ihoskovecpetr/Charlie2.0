@@ -7,8 +7,7 @@ import Fade from "@material-ui/core/Fade";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
-import { useMutation, useQuery } from "@apollo/react-hooks";
-import { useHistory } from "react-router-dom";
+import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { withRouter } from "react-router-dom";
 
@@ -36,7 +35,6 @@ const BOOKING_REQ = gql`
 
 function ModalJoin(props) {
   const classes = useStyles();
-  let history = useHistory();
   const [open, setOpen] = React.useState(false);
   const [message, setMessage] = React.useState("Hi, please let me in");
   const [createReqBooking, bookingReqStates] = useMutation(BOOKING_REQ);

@@ -7,7 +7,6 @@ import { NavLink } from "react-router-dom";
 import { Animated } from "react-animated-css";
 
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 
 import "../../Pages/Menu.css";
 

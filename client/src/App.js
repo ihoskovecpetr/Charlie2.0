@@ -45,7 +45,7 @@ import Event from "./Pages/Event";
 import Profile from "./Pages/Profile";
 import About from "./Pages/About";
 import UserModal from "./Pages/UserModal";
-import EventCards from "./Pages/EventCards";
+import Play from "./Pages/Play";
 
 const drawerWidth = 240;
 let prevLocation;
@@ -343,7 +343,7 @@ function App(props) {
                   </>
                 )}
               />
-                            <Route
+            <Route
                 exact
                 path={`/play/:id`}
                 render={() => (
@@ -359,7 +359,7 @@ function App(props) {
                     />
                     <main className={classes.content}>
                       <div className={classes.toolbar} />
-                      <EventCards />
+                      <Play />
                     </main>
                   </>
                 )}
@@ -465,6 +465,13 @@ function App(props) {
                   <>
                     <SignOut />
                   </>
+                )}
+              />
+              <Route
+                exact
+                path={`/play/:id`}
+                render={() => (
+                      <Play />
                 )}
               />
               <Switch location={prevLocation}>
@@ -602,7 +609,8 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
     width: 40,
-    height: 40
+    height: 40,
+    margin: 0
   },
   avatar: {
     margin: theme.spacing(1),

@@ -19,11 +19,8 @@ function ConfirmedGuest(props) {
     <Grid container justify="flex-start" alignItems="center" direction="row">
       {props.event.areYouAuthor ? (
         <>
-          {props.bookings.map((booking, index) => {
-            if (booking.confirmed && !booking.cancelled) {
-              return (
-                <>
-                  <Grid item key={index}>
+          {props.bookings.map((booking, index) => 
+            booking.confirmed && !booking.cancelled && <Grid item key={index}>
                     {props.cancelledState.loading && (
                       <Chip
                         className={classes.chip}
@@ -99,10 +96,7 @@ function ConfirmedGuest(props) {
                         />
                       )}
                   </Grid>
-                </>
-              );
-            }
-          })}
+   )}
         </>
       ) : (
         <Grid container>
@@ -111,12 +105,12 @@ function ConfirmedGuest(props) {
               {props.bookings.map((booking, index) => {
                 if (booking.confirmed) {
                   countGuests++;
-                  console.log("countGuests: ", countGuests);
                   if (index <= 2) {
                     return (
                       <NavLink
                         to={`/user/${booking.user._id}`}
                         className={classes.noBorder}
+                        key={index}
                       >
                         <Avatar alt="Remy Sharp" src={booking.user.picture} />
                       </NavLink>

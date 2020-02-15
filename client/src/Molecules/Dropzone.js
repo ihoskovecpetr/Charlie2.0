@@ -29,8 +29,8 @@ function MyDropzone(props) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const handleImageUpload = file => {
-    const width = 200;
-    const height = 100;
+    const width = 350;
+    const height = 350;
     const fileName = file.name;
     const reader = new FileReader();
     reader.readAsDataURL(file);

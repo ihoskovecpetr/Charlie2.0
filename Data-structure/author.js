@@ -11,13 +11,13 @@ export const typeDef = `
 `;
 export const resolvers = {
   Query: {
-    author: () => { console.log("Query author")
+    author: () => {
         return{firstName: "Author naprimo"} 
 },
   },
   Author: {
-    books: () => { console.log("Query ěě")
-        return[{title: "XX porn"}]
+    books: () => { 
+        return[{title: "XX FAKE"}]
  },
   }
 };
