@@ -4,13 +4,13 @@ import Gallery from "react-grid-gallery";
 import { makeStyles } from "@material-ui/core/styles";
 
 
-const PlayPageGallery = ({dataDB}) => {
+const PlayPageGallery = ({event}) => {
     const classes = useStyles();
 
     return(
         <Grid item className={classes.galleryGrid}>
             <Gallery
-            images={dataDB.getOneEvent.imagesArr}
+            images={event.imagesArr}
             rowHeight={250}
             //display={visible === 1 ? true : false}
             backdropClosesModal={true}
@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
    
     galleryGrid: {
       width: "100%",
-      padding: 0
+      padding: 0,
     }
   }));
 

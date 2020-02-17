@@ -13,7 +13,7 @@ import ConfirmedGuest from "../../Molecules/event/confirmed-guest";
 import { displayDate } from "../../Services/transform-services";
 
 
-const PlayPageList = ({dataDB, ONE_EVENT,cancelBooking, cancelledState, bookingStates}) => {
+const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledState, bookingStates}) => {
     const classes = useStyles();
 
     return(
@@ -27,12 +27,12 @@ const PlayPageList = ({dataDB, ONE_EVENT,cancelBooking, cancelledState, bookingS
       >
       <Grid item xs={12}>
           <Typography variant="h4" className={classes.mainHeader}>
-          {dataDB.getOneEvent.name}
+          {event.name}
           </Typography>
         </Grid>
         <Grid item xs={12}>
             <Typography component="p" className={classes.standardDescription}>
-              {dataDB.getOneEvent.description}
+              {event.description}
             </Typography>
   
         </Grid>
@@ -48,8 +48,8 @@ const PlayPageList = ({dataDB, ONE_EVENT,cancelBooking, cancelledState, bookingS
             </Grid>
             <Grid item xs={9}>
                 <Typography component="div" className={clsx(classes.standardContent)}>
-                  {dataDB.getOneEvent.dateStart &&
-                    displayDate(dataDB.getOneEvent.dateStart)}
+                  {event.dateStart &&
+                    displayDate(event.dateStart)}
                 </Typography>
             </Grid>
           </Grid>
@@ -64,7 +64,7 @@ const PlayPageList = ({dataDB, ONE_EVENT,cancelBooking, cancelledState, bookingS
             </Grid>
             <Grid item xs={9}>
               <Typography component="p" className={classes.standardContent}>
-                {dataDB.getOneEvent.price} {dataDB.getOneEvent.currency}
+                {event.price} {event.currency}
               </Typography>
             </Grid>
           </Grid>
@@ -80,7 +80,7 @@ const PlayPageList = ({dataDB, ONE_EVENT,cancelBooking, cancelledState, bookingS
           </Grid>
           <Grid item xs={9}>
             <Typography component="p" className={classes.standardContent}>
-              {dataDB.getOneEvent.BYO ? "YES" : "NO"}
+              {event.BYO ? "YES" : "NO"}
             </Typography>
         </Grid>
         </Grid>
@@ -95,13 +95,13 @@ const PlayPageList = ({dataDB, ONE_EVENT,cancelBooking, cancelledState, bookingS
           </Grid>
           <Grid item xs={9}>
           <Box textAlign="left" m={1}>
-            <ConfirmedGuest
-              bookings={dataDB.showBookings}
+            {/* <ConfirmedGuest
+              bookings={showBookings}
               cancelBooking={cancelBooking}
               cancelledState={cancelledState}
-              event={dataDB.getOneEvent}
+              event={event}
               ONE_EVENT={ONE_EVENT}
-            />
+            /> */}
 
             {bookingStates.loading && (
               <Spinner height={100} width={100} />
@@ -111,7 +111,7 @@ const PlayPageList = ({dataDB, ONE_EVENT,cancelBooking, cancelledState, bookingS
         </Grid>
         </Grid>
         <Grid item xs={12}>
-          {dataDB.getOneEvent.areYouAuthor && (
+          {event.areYouAuthor && (
             <>
               <Typography
                 component="div"
@@ -122,13 +122,13 @@ const PlayPageList = ({dataDB, ONE_EVENT,cancelBooking, cancelledState, bookingS
               <Grid container>
                 <Box textAlign="left" m={1}>
                   <Grid container direction="row">
-                    {dataDB.showBookings.map(booking => {
+                    {showBookings && showBookings.map(booking => {
                       if (!booking.confirmed && !booking.cancelled) {
                         return (
                           <Grid item>
                             <PendingGuest
                               booking={booking}
-                              event={dataDB.getOneEvent}
+                              event={event}
                               ONE_EVENT={ONE_EVENT}
                             />
                           </Grid>

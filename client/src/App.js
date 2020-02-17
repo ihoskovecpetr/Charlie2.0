@@ -20,6 +20,8 @@ import Avatar from "@material-ui/core/Avatar";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import ExploreIcon from "@material-ui/icons/Explore";
 import SubjectIcon from "@material-ui/icons/Subject";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
@@ -30,7 +32,7 @@ import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
 
 import UpperStripe from "./Atoms/upper-stripe";
-import FloatingBubbleCards from "./Atoms/FloatingBubbleCards";
+import FloatingPlayBtn from "./Atoms/FloatingPlayBtn";
 
 import { UserContext } from "./userContext";
 import { usePosition } from "./Hooks/useGeolocation";
@@ -58,6 +60,7 @@ const LOGIN = gql`
       name
       email
       picture
+      description
     }
   }
 `;
@@ -92,11 +95,12 @@ function App(props) {
 
   const { loading, error, data } = useQuery(LOGIN);
   const { container } = props;
+  console.log("CONT: ", container);
   const [user, setUser] = useState({
     success: false,
     name: false,
     geolocationObj: null,
-    freezScroll: true
+    freezScroll: false
   });
   const [workingPosition, setWorkingPosition] = useState({
     date: new Date().toISOString().split("T")[0],
@@ -110,7 +114,8 @@ function App(props) {
         success: data.getLoggedInUser.success,
         name: data.getLoggedInUser.name,
         email: data.getLoggedInUser.email,
-        picture: data.getLoggedInUser.picture
+        picture: data.getLoggedInUser.picture,
+        description: data.getLoggedInUser.description
       });
     }
   }
@@ -138,11 +143,11 @@ function App(props) {
   }, []);
 
   const ListOfUrls = user.success
-    ? ["", "create", "map", "about", "user", "profile", "signout"]
-    : ["", "create", "map", "about", "user", "signup", "signin"];
+    ? ["", "create", "map", "about", "signout", "play", "user", "profile"]
+    : ["", "create", "map", "about", "signin", "play", "user", "signup"];
   const ListOfNames = user.success
-    ? ["Charlie", "Create", "Map", "About"]
-    : ["Charlie", "Create", "Map", "About"];
+    ? ["Charlie", "Create", "Map", "About", "Sign Out", "Play"]
+    : ["Charlie", "Create", "Map", "About", "Sign In", "Play"];
   const ListOfComponents = user.success
     ? [
         <Menu
@@ -157,9 +162,11 @@ function App(props) {
           setWorkingPosition={setWorkingPosition}
         />, //Map
         <About />,
+        <SignOut LOGIN={LOGIN} />,
+        <Play />,
         <UserModal />,
         <Profile />,
-        <SignOut LOGIN={LOGIN} />
+
       ]
     : [
         <Menu
@@ -174,9 +181,10 @@ function App(props) {
           setWorkingPosition={setWorkingPosition}
         />,
         <About />,
+        <SignIn />,
+        <Play />,
         <UserModal />,
         <SignUp />,
-        <SignIn />
       ];
   const drawer = (
     <div>
@@ -223,6 +231,23 @@ function App(props) {
                   </Avatar>
                 </ListItemIcon>
               )}
+              {index === 4 && (
+                <ListItemIcon>
+                  <Avatar className={classes.avatar}>
+                    <AccountCircleIcon/>
+                  </Avatar>
+                </ListItemIcon>
+              )}
+              {index === 5 && (
+                <ListItemIcon>
+                  <Avatar className={classes.avatar}>
+                    <PlayArrowIcon/>
+                  </Avatar>
+                </ListItemIcon>
+              )}
+
+
+
 
               <ListItemText primary={text} />
             </ListItem>
@@ -252,8 +277,8 @@ function App(props) {
     pathSet[1] == "event" ||
     pathSet[1] == "user" ||
     pathSet[1] == "signin" ||
-    pathSet[1] == "signout" ||
-    pathSet[1] == "play" 
+    pathSet[1] == "signout" 
+    //|| pathSet[1] == "play" 
   ) {
     Modal = true;
   }
@@ -308,17 +333,6 @@ function App(props) {
                 {drawer}
               </Drawer>
             </Hidden>
-            {/* <Hidden xsDown implementation="css">
-            <Drawer
-              classes={{
-                paper: classes.drawerPaper
-              }}
-              variant="permanent"
-              open
-            >
-              {drawer}
-            </Drawer>
-          </Hidden> */}
           </nav>
           {firstPrint && Modal && (
             <>
@@ -339,27 +353,6 @@ function App(props) {
                     <main className={classes.content}>
                       <div className={classes.toolbar} />
                       <Event />
-                    </main>
-                  </>
-                )}
-              />
-            <Route
-                exact
-                path={`/play/:id`}
-                render={() => (
-                  <>
-                    <UpperStripe
-                      //bringOwnUser?? true??
-                      loading={loading}
-                      userApp={false}
-                      ListOfNames={ListOfNames}
-                      ListOfUrls={ListOfUrls}
-                      handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
-                    />
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      <Play />
                     </main>
                   </>
                 )}
@@ -452,11 +445,13 @@ function App(props) {
               <Route
                 exact
                 path={`/signin`}
-                render={() => (
+                render={() => {
+                  console.log("SIGN IN ROUTR")
+                  return (
                   <>
                     <SignIn />
                   </>
-                )}
+                )}}
               />
               <Route
                 exact
@@ -465,13 +460,6 @@ function App(props) {
                   <>
                     <SignOut />
                   </>
-                )}
-              />
-              <Route
-                exact
-                path={`/play/:id`}
-                render={() => (
-                      <Play />
                 )}
               />
               <Switch location={prevLocation}>
@@ -576,7 +564,7 @@ function App(props) {
                   )}
                 />
               </Switch>
-              <FloatingBubbleCards />
+              {pathSet[1] !== "play" && <FloatingPlayBtn />}
             </>
           )}
         </UserContext.Provider>
@@ -609,8 +597,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
     width: 40,
-    height: 40,
-    margin: 0
+    height: 40
   },
   avatar: {
     margin: theme.spacing(1),

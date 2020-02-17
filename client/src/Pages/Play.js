@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from '@material-ui/icons/Close';
@@ -25,9 +26,9 @@ import EventButtons from "../Molecules/event/event-buttons";
 import Spinner from "../Atoms/Spinner";
 
 
-const ONE_EVENT = gql`
-  query getOneEvent($id: ID!) {
-    getOneEvent(id: $id) {
+const PLAY_EVENTS = gql`
+  query getPlayEvents {
+    getPlayEvents {
       _id
       success
       message
@@ -61,19 +62,21 @@ const ONE_EVENT = gql`
       confirmed
       areYouAuthor
     }
-    showBookings(id: $id) {
-      confirmed
-      cancelled
-      message
-      user {
-        _id
-        name
-        email
-        picture
-      }
-    }
+
   }
 `;
+
+// showBookings(id: $id) {
+//   confirmed
+//   cancelled
+//   message
+//   user {
+//     _id
+//     name
+//     email
+//     picture
+//   }
+// }
 
 const EVENT_RATINGS = gql`
   query showRatings($event_id: ID!) {
@@ -216,12 +219,12 @@ function Play(props) {
   const [createBooking, bookingStates] = useMutation(BOOKING);
   const [cancelBooking, cancelledState] = useMutation(CANCELLING);
   const [deleteOneEvent, deleteState] = useMutation(DELETE);
-  const { loading, error, data, refetch } = useQuery(ONE_EVENT, {
+  const { loading, error, data, refetch } = useQuery(PLAY_EVENTS, {
     variables: { id: props.match.params.id }
     //skip: !id,
     //pollInterval: 500
   });
-  const [position, setPosition] = React.useState(1);
+  const [playIndex, setPlayIndex] = React.useState(0);
   const ratings = useQuery(EVENT_RATINGS, {
     variables: { event_id: props.match.params.id }
     //skip: !id,
@@ -238,116 +241,147 @@ function Play(props) {
     history.push("/map");
   }
 
-  let dataDB;
 
   const PaperEvent = props => {
-    return <Paper className={classes.paper}>{props.children}</Paper>;
+    return (
+    <div
+      component="main"
+      className={classes.profileWrap}
+      style={{ position: user.freezScroll ? "fixed" : "absolute" }}
+    >
+      <Container maxWidth="xs" >
+    
+          {props.children}
+
+      </Container>
+    </div>
+    )
+
   };
 
-  // if (bookingStates.loading) {
-  //   return <>Creating Booking</>;
-  // }
-
-  // if (bookingStates.data) {
-  //   refetch();
-  // }
+  let dataDB;
 
   if (dataMock) {
     dataDB = dataMock;
   } else if (data) {
     dataDB = data;
+    var {getPlayEvents} = dataDB
   }
+
+  console.log("PLAY:" , data ? getPlayEvents : "Not defined yet")
 
   if (loading) {
     return (
-      <PlayLayout>
         <PaperEvent>
-          <Spinner height={100} width={100} />
+          <Paper className={classes.paper}>
+            <Spinner height={100} width={100} />
+          </Paper>
         </PaperEvent>
-      </PlayLayout>
     );
   }
 
-  if (dataDB && dataDB.getOneEvent.success) {
-    return (
-      <PlayLayout>
-          <PaperEvent>
-          <CarouselWrap setPosition={setPosition} >
 
-            <PlayPageMap dataDB={dataDB} ratings={ratings}  />
+  if (data && getPlayEvents[playIndex]) {
+    return (<>
+        <PaperEvent>
 
-            <PlayPageGallery dataDB={dataDB}  />
+        <Paper className={classes.paper}>
+          <CarouselWrap >
 
+            <PlayPageMap 
+                event={getPlayEvents[playIndex]} 
+                showBookings={null} //showBookings
+                ratings={ratings}  />
+            <PlayPageGallery event={getPlayEvents[playIndex]} />
             <PlayPageList 
-              dataDB={dataDB}  
-              ONE_EVENT={ONE_EVENT}
+              event={getPlayEvents[playIndex]}
+              showBookings={null} //showBookings  
+              ONE_EVENT={PLAY_EVENTS}
               cancelBooking={cancelBooking}
               cancelledState={cancelledState}
               bookingStates={bookingStates}
                 />
-
           </CarouselWrap>
+        </Paper>
+        <Container maxWidth="xs" >
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              alignContent="center"
+              className={classes.gridButtons}
+            >
+              <Grid item xs={4} onClick={() => {history.push('/')}}>
+                <Grid container justify="center">
+                  <Grid item className={classes.actionClose}>
+                    <CloseIcon style={{height: "40px", width: "40px", margin: "5px"}} />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={4}>
+                <Grid container justify="center">
+                  <Grid item className={classes.actionJoin}>
+                    <CheckCircleOutlineIcon style={{height: "40px", width: "40px", margin: "18px"}} />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={4} onClick={() => {setPlayIndex(prev => prev + 1 )}}>
+                <Grid container justify="center">
+                  <Grid item className={classes.actionNext}>
+                    <RedoIcon style={{height: "30px", width: "30px", margin: "10px"}} />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+        </Container>
 
           </PaperEvent>
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          alignItems="center"
-          alignContent="center"
-          className={classes.gridButtons}
-        >
-          <Grid item xs={4} onClick={() => {history.push('/')}}>
-            <Grid container justify="center">
-              <Grid item className={classes.actionClose}>
-                <CloseIcon style={{height: "40px", width: "40px", margin: "5px"}} />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={4}>
-            <Grid container justify="center">
-              <Grid item className={classes.actionJoin}>
-                <CheckCircleOutlineIcon style={{height: "40px", width: "40px", margin: "18px"}} />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={4}>
-            <Grid container justify="center">
-              <Grid item className={classes.actionNext}>
-                <RedoIcon style={{height: "40px", width: "40px", margin: "5px"}} />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </PlayLayout>
+         
+      </>
     );
   }
-  if (dataDB && dataDB.getOneEvent.success == false) {
+  if (dataDB && !getPlayEvents[playIndex]) {
     return (
-      <PlayLayout>
         <PaperEvent>
-        <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              props.history.push('/signin');
-            }}
-          >
-            Login
-            </Button>
-          <Paper>
+           <Paper className={classes.paper}>
+              <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    props.history.push('/signin');
+                  }}
+                >
+                  Login
+                  </Button>
+                  <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                >
+                  Reload
+                  </Button>
             <Typography component="div">
-              {dataDB.getOneEvent.message}
+              No More upcomming events
             </Typography>
-          </Paper>
+           </Paper>
         </PaperEvent>
-      </PlayLayout>
     );
   }
   return <p>Reload please</p>;
 }
 
 const useStyles = makeStyles(theme => ({
+  profileWrap: {
+    backgroundColor: "black",
+    width: "100%",
+    posirtion: "absolute",
+    //zIndex: 10,
+    top: 0,
+    height: "100vh"
+  },
   paper: {
     background: "#454242", // "#FCCD30",
     color: "black",
@@ -357,7 +391,8 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     alignItems: "center",
     height: "80vh",
-    overflow: "scroll",
+    // overflow: "scroll",
+    overflow: "auto",
     borderRadius: 20,
   },
   gridButtons: {
@@ -367,9 +402,8 @@ const useStyles = makeStyles(theme => ({
     //padding: theme.spacing(3, 2),
     display: "flex",
     position: "relative",
-    top: "-80px",
-    height: "80px",
-    overflow: "scroll",
+    top: "-40px",
+    height: "0px",
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
     //boxShadow: "0px -2px 5px 0px rgba(200,200,200,0.3)"
@@ -390,6 +424,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: "25px",
     position: "relative",
     top: "10px",
+    boxShadow: "5px 5px 10px 0px rgba(0,0,0,0.7)"
 
   },
   actionJoin: {
@@ -398,15 +433,20 @@ const useStyles = makeStyles(theme => ({
     height: "76px",
     width: "76px",
     borderRadius: "40px",
+    boxShadow: "5px 5px 10px 0px rgba(0,0,0,0.7)"
   },
   actionNext: {
-    backgroundColor: "#B9B6B6",
+    backgroundColor: "#696565",
+    '&:hover': {
+      backgroundColor: "#242323",
+    },
     alignContent: "center",
     height: "50px",
     width: "50px",
     borderRadius: "25px",
     position: "relative",
     top: "10px",
+    boxShadow: "5px 5px 10px 0px rgba(0,0,0,0.7)"
   }
 }));
 

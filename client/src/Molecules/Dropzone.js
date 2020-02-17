@@ -115,7 +115,9 @@ function MyDropzone(props) {
       <div
         {...getRootProps()}
         style={{
-          outline: "none"
+          outline: "none",
+          cursor: "pointer",
+          border: "1px dashed grey"
         }}
       >
         <input {...getInputProps()} />

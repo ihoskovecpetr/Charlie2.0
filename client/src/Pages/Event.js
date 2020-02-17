@@ -531,7 +531,6 @@ const useStyles = makeStyles(theme => ({
   authorContainer: {
     width: "100%"
   },
-
   ratingContainer: {
     width: "100%",
     overflow: "scroll"

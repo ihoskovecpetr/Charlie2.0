@@ -15,6 +15,9 @@ function Layout(props) {
   useScrollDisable("layout_id");
   const classes = useStyles();
 
+  console.log("props.location: on BAXCK ", props.location);
+  console.log("window.previousLocation: on BAXCK ", window.previousLocation);
+
   return (
     <div id="layout_id">
       <div

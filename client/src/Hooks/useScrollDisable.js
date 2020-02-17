@@ -4,36 +4,37 @@ import { UserContext } from "../userContext";
 export const useScrollDisable = id => {
   const { user, setUser } = useContext(UserContext);
 
-  const stopPropagation = e => {
-    console.log("Hook event type: ", e.type);
-    e = e || window.event;
-    if (e.stopPropagation()) {
-      console.log("Hooks stopPropagation");
-      e.stopPropagation();
-    }
-    e.returnValue = false;
-  };
+  // const stopPropagation = e => {
+  //   console.log("Hook event type: ", e.type);
+  //   e = e || window.event;
+  //   if (e.stopPropagation()) {
+  //     console.log("Hooks stopPropagation");
+  //     e.stopPropagation();
+  //   }
+  //   e.returnValue = false;
+  // };
 
-  const preventDefault = e => {
-    e = e || window.event;
-    if (e.preventDefault()) {
-      console.log("Hooks stopPropagation");
-      e.preventDefault();
-    }
-    e.returnValue = false;
-  };
+  // const preventDefault = e => {
+  //   e = e || window.event;
+  //   if (e.preventDefault()) {
+  //     console.log("Hooks stopPropagation");
+  //     e.preventDefault();
+  //   }
+  //   e.returnValue = false;
+  // };
 
-  var events = [
-    "mousewheel",
-    "DOMMouseScroll",
-    "touchstart",
-    "touchend",
-    "touchmove",
-    "dblclick",
-    "contextmenu",
-    "wheel",
-    "scroll"
-  ];
+  // var events = [
+  //   "mousewheel",
+  //   "DOMMouseScroll",
+  //   "touchstart",
+  //   "touchend",
+  //   "touchmove",
+  //   "dblclick",
+  //   "contextmenu",
+  //   "wheel",
+  //   "scroll"
+  // ];
+
   useEffect(() => {
     console.log("disable Scroll FreezApp ", id);
     // const el = document.getElementById(id);
@@ -53,12 +54,13 @@ export const useScrollDisable = id => {
     // }
 
     setUser(prev => {
-      return { ...prev, freezScroll: false };
+      return { ...prev, freezScroll: true };
     });
     //document.addEventListener("wheel", preventDefault, { passive: false });
     return () => {
+      console.log("UnFreezing")
       setUser(prev => {
-        return { ...prev, freezScroll: true };
+        return { ...prev, freezScroll: false };
       });
       //window.removeEventListener("DOMMouseScroll", preventDefault, false);
       // if (el) {

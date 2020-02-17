@@ -10,40 +10,41 @@ import UserCard from "../../Molecules/event/user-card";
 import RatingCard from "../../Molecules/rating-card";
 
 
-const PlayPageMap = ({dataDB, ratings}) => {
+const PlayPageMap = ({event, ratings}) => {
     const classes = useStyles();
 
     console.log("Play_Page_Map rdr");
 
     return(
         <Grid container className={classes.mapContainer}>
-        <PlayMap event={dataDB.getOneEvent} />
-        <Grid container>
-      <Typography component="div" className={classes.standardHeading}>
-            AUTHOR
-          </Typography>
-          <Grid
-            container
-            justify="center"
-            className={classes.authorContainer}
-          >
-            <Grid item>
-              <UserCard author={dataDB.getOneEvent.author} />
-            </Grid>
-          </Grid>
-
-        <Typography component="div" className={classes.standardHeading}>
-          RATING
-        </Typography>
-
+        <PlayMap event={event} />
         <Grid
           container
           justify="center"
           alignItems="center"
           alignContent="center"
-          direction="column"
-          className={classes.ratingContainer}
+          direction="row"
+          className={classes.ratingAuthorContainer}
         >
+          <Grid item xs={12}>
+                      <Grid
+            container
+            justify="center"
+            className={classes.authorContainer}
+          >
+            <Grid item>
+              <UserCard author={event.author} />
+            </Grid>
+          </Grid>
+          </Grid>
+
+          <Grid item xs={3}>
+        <Typography component="div" className={classes.standardHeading}>
+          RATING
+        </Typography>
+        </Grid>
+
+        <Grid item xs={3}>
           {ratings.data &&
             ratings.data.showRatings.map((rating, index) => (
               <Grid item key={index}>
@@ -51,19 +52,30 @@ const PlayPageMap = ({dataDB, ratings}) => {
               </Grid>
             ))}
         </Grid>
+        </Grid>
 
       </Grid>  
-    </Grid>
     )
 }
 
 
 const useStyles = makeStyles(theme => ({
    
-    galleryGrid: {
-      width: "100%",
-      padding: 0
-    }
+  ratingAuthorContainer: {
+      padding: '40px',
+      paddingTop: '5px',
+      paddingBottom: '0px',
+      width: '100%',
+      color: 'white'
+    },
+    standardHeading: {
+      fontWeight: 500,
+      color: "grey",
+      textAlign: 'left'
+    },
+    authorContainer: {
+      width: "100%"
+    },
   }));
 
 export default PlayPageMap

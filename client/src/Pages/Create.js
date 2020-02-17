@@ -218,7 +218,6 @@ function Create(props) {
     };
 
     const empty = findEmpty(load);
-    console.log("Empty result> ", empty);
 
     if (empty.length == 0) {
       console.log("SUBMIT: ", load);
@@ -253,7 +252,7 @@ function Create(props) {
     <div
       component="main"
       className={classes.profileWrap}
-      style={{ position: user.freezScroll ? "absolute" : "fixed" }}
+      style={{ position: user.freezScroll ? "fixed" : "absolute" }} // fixed is freezed, absolute is scrollable
     >
       <CssBaseline />
       <Container maxWidth="sm" className={classes.paper1}>
@@ -530,6 +529,7 @@ function Create(props) {
           </Grid>
           <InputLabel htmlFor="standard-adornment-amount">BYO Event</InputLabel>
           <FormControlLabel
+            className={classes.switchBYO}
             control={
               <Switch
                 //checked={formValue.checkedA}
@@ -560,8 +560,7 @@ function Create(props) {
                 inputRef={inputDescription}
                 //label="Description"
                 name="decsription"
-                autoComplete="false" //imporvizace
-                autoFocus
+                autoComplete="false" //improvisation, should be "off", or random "string"
               />
             </Grid>
           </Grid>
@@ -677,8 +676,6 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1)
   },
   pinkBack: {
-    //background: "red",
-
     width: "100%"
   },
   submit: {
@@ -694,6 +691,10 @@ const useStyles = makeStyles(theme => ({
   formRow: {
     marginTop: 10,
     marginBottom: 40
+  },
+  switchBYO: {
+    marginBottom: "20px",
+    marginLeft: "10px"
   },
   descriptionContainer: {
     width: "100%"

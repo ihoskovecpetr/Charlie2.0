@@ -9,7 +9,12 @@ export const Item = styled.div`
   height: 80vh;
   background-image: ${props => `url(${props.img})`};
   background-size: cover;
-  overflow: scroll;
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+    },
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
 `;
 
 export const CarouselContainer = styled.div`

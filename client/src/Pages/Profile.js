@@ -1,5 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import PropTypes from "prop-types";
+
+import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -221,10 +223,11 @@ function Profile() {
   return (
     <div
       className={classes.profileWrap}
-      id="base"
-      style={{ position: user.freezScroll ? "absolute" : "fixed" }}
+      style={{ position: user.freezScroll ? "fixed" : "absolute" }}
     >
-      <CssBaseline />
+    <Container
+      maxWidth="sm"
+    >
       <Paper className={classes.paper}>
         <Avatar className={classes.avatar} src={user.picture}>
           <LockOutlinedIcon />
@@ -239,6 +242,7 @@ function Profile() {
             <ExitToAppIcon />
           </NavLink>
         </Button>
+        <Typography variant="body1">{user.description}</Typography>
         {error && <h1>ERROR</h1>}
         <AppBar position="static" color="default" className={classes.appBar}>
           <Tabs
@@ -356,19 +360,11 @@ function Profile() {
       <Box mt={8}>
         <Copyright />
       </Box>
+    </Container>
     </div>
   );
 }
 const useStyles = makeStyles(theme => ({
-  "@global": {
-    body: {
-      backgroundColor: theme.palette.common.white
-    }
-  },
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    width: 500
-  },
   profileWrap: {
     top: 0,
     minHeight: "100vh",
@@ -385,7 +381,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    maxWidth: 500,
+    width: "100%",
     background: "rgba(255,255,255,0.5)"
   },
   avatar: {

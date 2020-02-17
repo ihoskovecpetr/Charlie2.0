@@ -17,7 +17,7 @@ export const typeDef = `
   }
 
   extend type Mutation {
-    newUser(name: String! password: String! email: String! picture: String): ResponseUser
+    newUser(name: String! password: String! email: String! description: String!  picture: String): ResponseUser
     login(email: String! password: String!): ResponseUser
   }
 
@@ -25,10 +25,11 @@ export const typeDef = `
     _id: ID
     success: Boolean
     name: String
-    email: String
-    token: String
     password: String
+    description: String
+    email: String
     picture: String
+    token: String
     createdEvents: [Event!]
   }
 
@@ -61,6 +62,7 @@ export const resolvers = {
           let newUser = new User({
             name: _args.name,
             email: _args.email,
+            description: _args.description,
             password: hashedPassword,
             picture: picture
           });
@@ -76,17 +78,13 @@ export const resolvers = {
     login: async (_, _args, __) => {
       try {
         let foundUser = await User.findOne({ email: _args.email });
-        console.log("found> ", foundUser);
+
         if (!foundUser) {
           return mismatch_login_Error;
         }
-        const isEqual = await bcrypt.compare(
-          _args.password,
-          foundUser.password
-        );
-        console.log("Is Equal?: ", isEqual);
+        const isEqual = await bcrypt.compare( _args.password, foundUser.password );
+
         if (isEqual) {
-          console.log("Is Equal");
           const token = jwt.sign(
             { userId: foundUser.id, email: foundUser.email },
             "somesupersecretkeyEvenMore",

@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from "react";
 
 import Avatar from "@material-ui/core/Avatar";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import AddBoxIcon from "@material-ui/icons/AddBox";
+
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import CropFreeIcon from '@material-ui/icons/CropFree';
 
 import { useDropzone } from "react-dropzone";
 import Gallery from "react-grid-gallery";
@@ -132,7 +132,7 @@ function MyDropzone(props) {
 
   return (
     <>
-      <div {...getRootProps()} style={{ outline: "none" }}>
+      <div {...getRootProps()} style={{ padding: "5px", outline: "dashed", cursor: "pointer"}}>
         <input {...getInputProps()} />
         {urlTumb && !isUploading ? (
           // <Avatar style={{ background: "green" }}>
@@ -145,8 +145,8 @@ function MyDropzone(props) {
           ></Avatar>
         ) : null}
         {!urlTumb && !isUploading ? (
-          <Avatar style={{ background: "red", height: 100, width: 100 }}>
-            <PersonAddIcon fontSize="large" />
+          <Avatar style={{ background: "lightgrey", height: 100, width: 100 }}>
+            <CropFreeIcon fontSize="large" />
           </Avatar>
         ) : null}
         {isUploading ? <Spinner height={100} width={100} /> : null}

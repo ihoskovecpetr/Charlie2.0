@@ -12,6 +12,7 @@ import Avatar from "@material-ui/core/Avatar";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Badge from "@material-ui/core/Badge";
 
+import { withRouter, useHistory } from "react-router-dom";
 import { Route, NavLink } from "react-router-dom";
 import { UserContext } from "../userContext";
 import { useWindowWidth } from "../Hooks/useWindowWidth";
@@ -19,6 +20,7 @@ import Spinner from "./Spinner";
 
 function UpperStripe(props) {
   const { user, setUser } = useContext(UserContext);
+  let history = useHistory();
 
   // useEffect(() => {
 
@@ -49,12 +51,12 @@ function UpperStripe(props) {
         width: `calc(100% - ${props.drawerWidth}px)`,
         display: "none",
         fontWeight: "400 !important"
-      }
-    },
-    title: {
-      flexGrow: 1,
-      fontWeight: "550 !important"
-      //fontSize: 20
+      },
+      // padding: "0px",
+      // margin: "5px",
+      // marginLeft: "2px",
+      // marginRight: "2px",
+      fontWeight: "550 !important",
     },
     ButtonAvatar: {
       marginLeft: "10px",
@@ -90,16 +92,14 @@ function UpperStripe(props) {
               </IconButton>
               <Typography variant="h5">
                 {props.ListOfNames.map((text, index) => (
+                <NavLink to={`/${props.ListOfUrls[index]}`} key={index}>
                   <Button
                     color="inherit"
                     className={classes.buttonToBeHidden}
-                    key={index}
+                   //onClick={() => {history.push(`/${props.ListOfUrls[index]}`)}}
                   >
-                    <NavLink
-                      to={`/${props.ListOfUrls[index]}`}
-                      className={classes.title}
-                    >
-                      {text == "Charlie" ? (
+                    
+                       {text == "Charlie" ? (
                         <Avatar
                           className={classes.avatarCharlie}
                           alt="Remy Sharp"
@@ -108,16 +108,14 @@ function UpperStripe(props) {
                       ) : (
                         text
                       )}
-                    </NavLink>
-                  </Button>
+                    </Button>
+                  </NavLink>
                 ))}
               </Typography>
             </Grid>
             <Grid item>
               {!props.userApp && user && user.name && (
-                <>
-                  <NavLink to={`/profile`}>
-                    <Button color="inherit" className={classes.buttonNavi}>
+                    <Button color="inherit" className={classes.buttonNavi} onClick={history.push(`/profile`)}>
                       {user.name}
 
                       <Avatar
@@ -128,8 +126,6 @@ function UpperStripe(props) {
                         x
                       </Avatar>
                     </Button>
-                  </NavLink>
-                </>
               )}
 
               {!props.userApp.success && !user.name && (
@@ -145,8 +141,11 @@ function UpperStripe(props) {
                     horizontal: "left"
                   }}
                 >
-                  <Button color="inherit" className={classes.buttonNavi}>
-                    <NavLink to={`/signin`}>Sign In </NavLink>
+                  <Button 
+                      color="inherit" 
+                      className={classes.buttonNavi}
+                    onClick={() => {history.push("/signin")}}>
+                    SIGN IN
                     {props.loading ? (
                       <div className={classes.ButtonAvatar}>
                         <Spinner height={30} width={30} />
@@ -181,4 +180,4 @@ function UpperStripe(props) {
   );
 }
 
-export default UpperStripe;
+export default withRouter(UpperStripe);

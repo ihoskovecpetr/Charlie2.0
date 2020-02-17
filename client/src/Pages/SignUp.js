@@ -1,24 +1,26 @@
-import React, { useContext, useEffect, useState } from "react";
-import Avatar from "@material-ui/core/Avatar";
+import React, { useContext, useEffect, useState, useRef } from "react";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
+
+import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import InputLabel from "@material-ui/core/InputLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import Typography from "@material-ui/core/Typography";
+
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import { useMutation } from "@apollo/react-hooks";
 
 import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 import { UserContext } from "../userContext";
 import { useScrollDisable } from "../Hooks/useScrollDisable";
+import { findEmpty } from "../Services/functions";
 
 import ModalLayout from "../Layouts/ModalLayout";
 import Copyright from "../Atoms/copyright";
@@ -29,20 +31,25 @@ const NEW_USER = gql`
     $name: String!
     $email: String!
     $password: String!
+    $description: String!
     $picture: String
   ) {
     newUser(
       name: $name
       email: $email
       password: $password
+      description: $description
       picture: $picture
     ) {
+      dataOut{
       success
       name
       _id
       token
       password
       email
+      }
+
     }
   }
 `;
@@ -51,64 +58,56 @@ const NEW_USER = gql`
 //   console.log("Mutation data: ", data);
 // }
 
-const useStyles = makeStyles(theme => ({
-  "@global": {
-    body: {
-      backgroundColor: theme.palette.common.white
-    }
-  },
-  paper: {
-    marginTop: theme.spacing(8),
-    padding: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-    // background:
-    //   "linear-gradient(180deg, rgba(200,100,155,0.5) 30%, rgba(255,0,100,0.5) 100%)"
-  },
-  avatar: {
-    margin: theme.spacing(4),
-    backgroundColor: theme.palette.secondary.main,
-    height: 100,
-    width: 100
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
-  },
-  standardHeading: {
-    //borderBottom: "solid 1px grey",
-    //fontWeight: 600,
-  },
-  gridDropzone: {
-    width: "100%",
-    margin: theme.spacing(3, 0, 2)
-  },
-  mainHeading: {
-    marginTop: 10
-  }
-}));
 
 function SignUp() {
   const classes = useStyles();
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
-  useScrollDisable();
+
+  const [formValue, setFormValue] = useState({ picture: null });
+  const [feErrors, setFEerrors] = useState([]);
   const [newUser, { loading, error, data }] = useMutation(NEW_USER);
-  const [formValue, setFormValue] = useState({
-    picture: null //"https://res.cloudinary.com/party-images-app/image/upload/v1575981578/wc9pd4wxm3cgor6v2yls.jpg",
-  });
+
+  const { errorOut } = data ? data.newUser : { errorOut: undefined };
+  
+  useScrollDisable();
+  const inputDescRef = useRef(null);
 
   useEffect(() => {
-    console.log("Only first mount OF CREATE");
     window.scrollTo(0, 0);
   }, []);
 
-  console.log("Context: ", user);
 
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    let load = {
+      name: document.getElementById("name").value == "" ? null : document.getElementById("name").value,
+      email: document.getElementById("emailSignUp").value == "" ? null : document.getElementById("emailSignUp").value,
+      password: document.getElementById("password").value == "" ? null : document.getElementById("password").value,
+      password2: document.getElementById("password2").value == "" ? null : document.getElementById("password2").value,
+      picture: formValue.picture,
+      description: inputDescRef.current.value
+          ? inputDescRef.current.value
+          : null,
+      };
+    let empty = findEmpty(load);
+    empty = empty.map(item => `${item} is Empty`)
+    if(load.password != load.password2) empty.push("Not matching passwords")
+
+    console.log("Empty ones: ", empty);
+
+  if (empty.length == 0) {
+      console.log("SUBMIT: ", load);
+      newUser({
+        variables: load
+      });
+  } else {
+      setFEerrors(empty);
+    }
+    
+}
+
+  
   if (loading) {
     return (
       <ModalLayout>
@@ -123,38 +122,47 @@ function SignUp() {
     return (
       <ModalLayout>
         <Paper className={classes.paper}>
-          <p>Error</p>
+          <Typography variant="h4">Error, something went wrong</Typography>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => {
+              history.push("/")
+            }}
+          >
+            MENU
+          </Button>
         </Paper>
       </ModalLayout>
     );
   }
 
-  if (data) {
-    if (data.newUser.success == true) {
-      setTimeout(() => {
-        history.push("/");
-      }, 1000);
-      return (
-        <ModalLayout>
-          <Paper className={classes.paper}>
-            <p>successfull signup! redirecting to Login</p>
-          </Paper>
-        </ModalLayout>
-      );
-    }
+
+  if(data && data.newUser.success == true ){
+          setTimeout(() => {
+          history.push("/");
+        }, 1000);
+        return (
+          <ModalLayout>
+            <Paper className={classes.paper}>
+              <p>Success! Redirecting..</p>
+            </Paper>
+          </ModalLayout>
+        );
   }
+
   return (
     <ModalLayout>
       <Paper className={classes.paper}>
         <CssBaseline />
-        {data && !data.newUser.success && (
+        {errorOut && (
           <h1>Error, this email is already taken!!</h1>
         )}
         <Typography variant="h6" className={classes.mainHeading}>
           Sign UP
         </Typography>
 
-        <form className={classes.form} noValidate>
+        
           <Grid
             container
             justify="center"
@@ -166,30 +174,35 @@ function SignUp() {
               <Dropzone setFormValue={setFormValue} formValue={formValue} />
             </Grid>
           </Grid>
+          <form className={classes.form} noValidate autocomplete="off">
+
+          {errorOut &&
+            errorOut.map(item => (
+              <Alert severity="error" key={item.message}>
+                {item.message}
+              </Alert>
+            ))}
           <TextField
-            variant="outlined"
             margin="normal"
             required
             fullWidth
             id="name"
             label="User name"
             name="name"
-            autoComplete="name"
             autoFocus
+            autocomplete="off"
           />
           <TextField
-            variant="outlined"
             margin="normal"
             required
             fullWidth
             id="emailSignUp"
             label="Email Address"
             name="email"
-            autoComplete="email"
-            autoFocus
+            //autoComplete="email"
           />
           <TextField
-            variant="outlined"
+            variant="filled"
             margin="normal"
             required
             fullWidth
@@ -197,23 +210,49 @@ function SignUp() {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
           />
           <TextField
-            variant="outlined"
+            variant="filled"
             margin="normal"
             required
             fullWidth
             name="password2"
             label="Confirm password"
             type="password"
-            id="password"
-            autoComplete="current-password"
+            id="password2"
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
+           <InputLabel htmlFor="standard-adornment-amount">
+            DESCRIBE YOURSELF
+          </InputLabel>
+          <Grid
+            container
+            className={classes.descriptionContainer}
+            xs={12}
+          >
+            <Grid item className={classes.descriptionItem}  xs={12}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="decsription"
+                defaultValue="Hi there, I am an upcomming enterpreneur commig to the sceen, join and witness my rise."
+                multiline
+                rows="4"
+                inputRef={inputDescRef}
+                //label="Description"
+                name="decsription"
+                autoComplete="false" //imporvizace
+              />
+            </Grid>
+          </Grid>
+
+          {feErrors &&
+            feErrors.map(item => (
+              <Alert severity="error" key={item}>
+                {item}
+              </Alert>
+            ))}
           <Button
             type="submit"
             fullWidth
@@ -221,18 +260,7 @@ function SignUp() {
             color="primary"
             className={classes.submit}
             onClick={e => {
-              e.preventDefault();
-              let name = document.getElementById("name").value;
-              let email = document.getElementById("emailSignUp").value;
-              let password = document.getElementById("password").value;
-              newUser({
-                variables: {
-                  name: name,
-                  email: email,
-                  password: password,
-                  picture: formValue.picture
-                }
-              });
+              onSubmitHandler(e)
             }}
           >
             Sign Up
@@ -240,12 +268,12 @@ function SignUp() {
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
-                Forgot password?
+                
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/signup" variant="body2">
-                Have an account? Sign Up
+              <Link href="/signin" variant="body2">
+                Have an account? Sign In
               </Link>
             </Grid>
           </Grid>
@@ -278,5 +306,46 @@ function SignUp() {
 
 //   return {};
 // };
+
+const useStyles = makeStyles(theme => ({
+  "@global": {
+    body: {
+      backgroundColor: theme.palette.common.white
+    }
+  },
+  paper: {
+    marginTop: "10vh",
+    padding: theme.spacing(2),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    height: "75vh",
+    overflow: "scroll"
+  },
+  avatar: {
+    margin: theme.spacing(4),
+    backgroundColor: theme.palette.secondary.main,
+    height: 100,
+    width: 100
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1)
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2)
+  },
+  standardHeading: {
+    //borderBottom: "solid 1px grey",
+    //fontWeight: 600,
+  },
+  gridDropzone: {
+    width: "100%",
+    margin: theme.spacing(3, 0, 2)
+  },
+  mainHeading: {
+    marginTop: 10
+  }
+}));
 
 export default SignUp;

@@ -37,6 +37,7 @@ const LOGIN = gql`
         name
         email
         picture
+        description
         token
       }
       errorOut {
@@ -75,33 +76,14 @@ function SignIn(props) {
       name: dataOut.name,
       email: dataOut.email,
       picture: dataOut.picture,
+      description: dataOut.description,
       token: dataOut.token
     });
   }
 
-  const Pass = ({ data, disabled }) => {
-    return (
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        disabled={disabled}
-        defaultValue="heslo"
-        name="password"
-        label="Password"
-        type="password"
-        id="password"
-        autoComplete="current-password"
-        error={data ? data && !data.success : false}
-      />
-    );
-  };
-
   const Email = ({ data, cy, disabled }) => {
     return (
       <TextField
-        variant="outlined"
         margin="normal"
         required
         disabled={disabled}
@@ -117,6 +99,24 @@ function SignIn(props) {
         name="email"
         autoComplete="email"
         autoFocus
+        error={data ? data && !data.success : false}
+      />
+    );
+  };
+
+  const Pass = ({ data, disabled }) => {
+    return (
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        disabled={disabled}
+        defaultValue="heslo"
+        name="password"
+        label="Password"
+        type="password"
+        id="password"
+        autoComplete="current-password"
         error={data ? data && !data.success : false}
       />
     );
@@ -219,7 +219,7 @@ function SignIn(props) {
                 color="secondary"
                 badgeContent={
                   <p style={{ margin: 0 }}>
-                    <b>OR SIGN UP</b>
+                    <b>HERE</b>
                   </p>
                 }
                 anchorOrigin={{
@@ -228,7 +228,7 @@ function SignIn(props) {
                 }}
               >
                 <Link href="/signup" className={classes.linkClass}>
-                  Don't have an account? Sign In
+                  Sign In here!
                 </Link>
               </Badge>
             </Grid>
@@ -253,11 +253,13 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(3, 2),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    color: "white",
+    backgroundColor: theme.palette.darkGrey
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.charliePink
   },
   avatarSuccess: {
     margin: theme.spacing(1),

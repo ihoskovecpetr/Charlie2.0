@@ -39,7 +39,7 @@ export default function Screen1() {
                 <Animated
                   animationIn="bounceInLeft"
                   animationOut="fadeOut"
-                  animationInDelay={500}
+                  animationInDelay={200}
                   animationInDuration={1000}
                   isVisible={true}
                 >
@@ -52,7 +52,7 @@ export default function Screen1() {
                 <Animated
                   animationIn="bounceInLeft"
                   animationOut="fadeOut"
-                  animationInDelay={500}
+                  animationInDelay={200}
                   animationInDuration={1000}
                   isVisible={true}
                 >
@@ -76,7 +76,7 @@ export default function Screen1() {
                 <Animated
                   animationIn="bounceInRight"
                   animationOut="fadeOut"
-                  animationInDelay={700}
+                  animationInDelay={600}
                   animationInDuration={1000}
                   isVisible={true}
                 >
@@ -92,7 +92,7 @@ export default function Screen1() {
             <Animated
               animationIn="bounceInLeft"
               animationOut="fadeOut"
-              animationInDelay={2000}
+              animationInDelay={1000}
               animationInDuration={1000}
               isVisible={true}
             >
@@ -139,7 +139,7 @@ export default function Screen1() {
                 <Animated
                   animationIn="bounceInRight"
                   animationOut="fadeOut"
-                  animationInDelay={1800}
+                  animationInDelay={1200}
                   animationInDuration={1000}
                   isVisible={true}
                 >

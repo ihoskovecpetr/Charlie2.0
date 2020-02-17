@@ -11,9 +11,6 @@ export const resolvers = {
   Query: {
     getOneEvent: async (_, _args, context) => {
       try {
-        console.log("getOneEvent context isAuth?? : ", context.reqO.req.isAuth);
-        console.log("2 ++ userId: ", context.reqO.req.userId);
-        console.log("2 ++ email: ", context.reqO.req.email);
         if (context.reqO.req.isAuth) {
           let oneEvent = await Event.findOne({ _id: _args.id });
           if (oneEvent) {
@@ -24,6 +21,41 @@ export const resolvers = {
               success: true,
               areYouAuthor: areYourAuthor
             };
+          } else {
+            return {
+              success: false,
+              message: "This event is worhere to be seen, check url and repeat"
+            };
+          }
+        } else {
+          return {
+            success: false,
+            message: "You are not authorised, login first to continue"
+          };
+        }
+      } catch (err) {
+        throw err;
+      }
+    },
+    getPlayEvents: async (_, _args, context) => {
+      try {
+         if (context.reqO.req.isAuth) {
+          let playEvents = await Event.find({}).sort(
+            "dateStart"
+          )
+          console.log("playEvents", playEvents)
+          if (playEvents) {
+            //let areYourAuthor = oneEvent.author == context.reqO.req.userId;
+            let filtered = playEvents.filter((item) => item.dateStart > new Date()) 
+            return filtered.map(event => {
+              return transformEvent(event);
+            });
+            // return {
+            //   ...oneEvent._doc,
+            //   dateStart: new Date(oneEvent._doc.dateStart).toISOString(),
+            //   success: true,
+            //   areYouAuthor: areYourAuthor
+            // };
           } else {
             return {
               success: false,
@@ -177,6 +209,7 @@ function newFunction() {
   extend type Query {
     events(name: String ): [Event]
     getOneEvent(id: ID): Event
+    getPlayEvents: [Event]
     deleteEvents: String
     eventGeoDay(date: String, geoObj: BoundsInput ): [Event]
     userEvents(user_id: ID!): [Event]
