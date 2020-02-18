@@ -385,7 +385,7 @@ const useStyles = makeStyles(theme => ({
   profileWrap: {
     backgroundColor: "black",
     width: "100%",
-    position: "fixed",
+    position: "absolute",
     //zIndex: 10,
     top: 0,
   },
