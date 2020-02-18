@@ -35,6 +35,10 @@ const Carousel = ({children, setPosition, heightHook}) => {
       dispatch({ type: "stopSliding" });
     }, 50);
   };
+
+  document.getElementById("paperEvent").style.touchAction = "none";
+  console.log("DD ", document.getElementById("paperEvent").style)
+
   const handlers = useSwipeable({
     onSwipedLeft: () => slide(NEXT),
     onSwipedRight: () => slide(PREV),
@@ -71,6 +75,7 @@ const Carousel = ({children, setPosition, heightHook}) => {
             <CarouselSlot
               key={index}
               order={getOrder({ index: index, pos: state.pos, numItems })}
+              sliding={state.sliding}
             >
               {child}
             </CarouselSlot>

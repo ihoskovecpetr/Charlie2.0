@@ -6,6 +6,7 @@ export const PREV = "PREV";
 export const Item = styled.div`
   text-align: center;
   padding: 0px;
+  touch-action: inherit;
   height: ${(props) => `${0.86*props.heightHook}px`};
   background-image: ${props => `url(${props.img})`};
   background-size: cover;
@@ -30,6 +31,15 @@ export const CarouselContainer = styled.div`
   }};
 `;
 
+export const CarouselSlot = styled.div`
+  touch-action: ${props => (props.sliding ? "none" : "auto")};
+  flex: 1 0 100%;
+  flex-basis: 100%;
+  margin-right: 0px;
+  order: ${props => props.order};
+`;
+
+
 export const Wrapper = styled.div`
   width: 100%;
   //height: 100%;
@@ -37,15 +47,6 @@ export const Wrapper = styled.div`
   box-shadow: 5px 5px 20px 7px rgba(168, 168, 168, 1);
 `;
 
-
-
-export const CarouselSlot = styled.div`
-  
-  flex: 1 0 100%;
-  flex-basis: 100%;
-  margin-right: 0px;
-  order: ${props => props.order};
-`;
 
 export const ButtonBlock = styled.div`
   position: relative;

@@ -245,6 +245,7 @@ function Play(props) {
     return (
     <div
       component="main"
+      id="paperEvent"
       className={classes.profileWrap}
       style={{ height: windowSize.height }}
     >
