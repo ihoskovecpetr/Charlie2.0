@@ -246,7 +246,7 @@ function Play(props) {
     <div
       component="main"
       className={classes.profileWrap}
-      style={{ position: user.freezScroll ? "fixed" : "absolute", height: windowSize.height }}
+      style={{ height: windowSize.height }}
     >
       <Container maxWidth="xs" >
     
@@ -385,7 +385,7 @@ const useStyles = makeStyles(theme => ({
   profileWrap: {
     backgroundColor: "black",
     width: "100%",
-    position: "absolute",
+    position: "fixed",
     //zIndex: 10,
     top: 0,
   },
