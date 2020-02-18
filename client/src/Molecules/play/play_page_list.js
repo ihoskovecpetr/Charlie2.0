@@ -9,13 +9,14 @@ import clsx from 'clsx'
 import Spinner from "../../Atoms/Spinner";
 import PendingGuest from "../../Molecules/event/pending-guest";
 import ConfirmedGuest from "../../Molecules/event/confirmed-guest";
+import { useWindowSize } from "../../Hooks/useWindowSize";
 
 import { displayDate } from "../../Services/transform-services";
 
 
 const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledState, bookingStates}) => {
     const classes = useStyles();
-
+    const windowSize = useWindowSize()
     return(
         <Grid
         container
@@ -54,12 +55,13 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
             </Grid>
           </Grid>
         </Grid>
-        <p className={classes.thisLine}></p>
+        <p className={classes.thisLine} style={{width: windowSize.height/10}}></p>
+        <p className={classes.thisLine} style={{width: '10vh'}}></p>
         <Grid item xs={12} className={classes.listRow}>
           <Grid container item xs={12}>
             <Grid item xs={3}>
               <Typography component="div" className={classes.standardHeading}>
-                PRICE
+                PRICE {windowSize.width}px / {windowSize.height}px
               </Typography>
             </Grid>
             <Grid item xs={9}>
@@ -163,8 +165,8 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
       },
       thisLine:{
-        height: '1px',
-        width: '100%',
+        height: '2px',
+        //width: '100%',
         marginTop: '2px',
         backgroundColor: "lightgrey"
       },

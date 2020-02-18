@@ -108,7 +108,7 @@ const currencies = [
 function Create(props) {
   const classes = useStyles();
   let history = useHistory();
-  useViewPort();
+  //useViewPort();
   const { user, setUser } = useContext(UserContext);
   const [customMapParam, setCustomMapParam] = useState();
   const [formValue, setFormValue] = useState({
@@ -124,7 +124,7 @@ function Create(props) {
       setFEerrors([]);
     }
   });
-  //console.log("formValue: ", formValue);
+  
   const { dataOut } = data ? data.createEvent : { dataOut: undefined };
   console.log("DATA LOGIN: ", dataOut);
   const { errorOut } = data ? data.createEvent : { errorOut: undefined };

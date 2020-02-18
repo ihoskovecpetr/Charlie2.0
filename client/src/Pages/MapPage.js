@@ -35,10 +35,7 @@ function MapPage(props) {
   const classes = useStyles();
   let history = useHistory();
   const { user } = useContext(UserContext);
-  // const [workDate, setWorkDate] = useState(
-  //   new Date().toISOString().split("T")[0]
-  // );
-  useSet__vh();
+  const { vhcko } = useSet__vh();
   const { loading, error, data } = useQuery(ALL_EVENTS, {
     variables: { date: props.workingPosition.date }
   });
@@ -408,11 +405,6 @@ function MapPage(props) {
 }
 
 const useStyles = makeStyles(theme => ({
-  "@global": {
-    body: {
-      backgroundColor: theme.palette.common.white
-    }
-  },
   paper: {
     marginTop: theme.spacing(2),
     display: "flex",
