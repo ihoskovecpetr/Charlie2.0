@@ -21,7 +21,7 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 const getOrder = ({ index, pos, numItems }) => {
   return index - pos < 0 ? numItems - Math.abs(index - pos) : index - pos;
 };
-const initialState = { pos: 0, sliding: false, dir: NEXT };
+const initialState = { pos: 0, sliding: false, transforming: false, dir: NEXT };
 
 const Carousel = ({children, setPosition, heightHook}) => {
   const classes = useStyles();
@@ -34,6 +34,9 @@ const Carousel = ({children, setPosition, heightHook}) => {
     setTimeout(() => {
       dispatch({ type: "stopSliding" });
     }, 50);
+    setTimeout(() => {
+      dispatch({ type: "stopTransforming" });
+    }, 1000);
   };
 
   document.getElementById("paperEvent").style.touchAction = "none";
@@ -75,7 +78,7 @@ const Carousel = ({children, setPosition, heightHook}) => {
             <CarouselSlot
               key={index}
               order={getOrder({ index: index, pos: state.pos, numItems })}
-              sliding={state.sliding}
+              transforming={state.transforming}
             >
               {child}
             </CarouselSlot>
@@ -107,6 +110,7 @@ function reducer(state, { type, numItems }) {
         ...state,
         dir: PREV,
         sliding: true,
+        transforming: true,
         pos: state.pos === 0 ? numItems - 1 : state.pos - 1
       };
     case NEXT:
@@ -114,10 +118,13 @@ function reducer(state, { type, numItems }) {
         ...state,
         dir: NEXT,
         sliding: true,
+        transforming: true,
         pos: state.pos === numItems - 1 ? 0 : state.pos + 1
       };
     case "stopSliding":
       return { ...state, sliding: false };
+    case "stopTransforming":
+      return { ...state, transforming: false };
     default:
       return state;
   }

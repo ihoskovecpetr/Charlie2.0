@@ -32,7 +32,7 @@ export const CarouselContainer = styled.div`
 `;
 
 export const CarouselSlot = styled.div`
-  touch-action: ${props => (props.sliding ? "none" : "auto")};
+  touch-action: ${props => (props.transforming ? "none" : "auto")};
   flex: 1 0 100%;
   flex-basis: 100%;
   margin-right: 0px;
