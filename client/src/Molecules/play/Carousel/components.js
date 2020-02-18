@@ -11,6 +11,7 @@ export const Item = styled.div`
   background-image: ${props => `url(${props.img})`};
   background-size: cover;
   width: 100%;
+
   overflow-y: scroll;
 
   ::-webkit-scrollbar {

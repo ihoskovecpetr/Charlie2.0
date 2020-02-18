@@ -8,15 +8,17 @@ import { makeStyles } from "@material-ui/core/styles";
 import PlayMap from "../../Molecules/play/Carousel/play-map";
 import UserCard from "../../Molecules/event/user-card";
 import RatingCard from "../../Molecules/rating-card";
+import { useWindowSize } from "../../Hooks/useWindowSize";
 
 
 const PlayPageMap = ({event, ratings}) => {
     const classes = useStyles();
-
-    console.log("Play_Page_Map rdr");
+    const windowSize = useWindowSize()
 
     return(
-        <Grid container className={classes.mapContainer}>
+        <Grid container 
+              className={classes.mapContainer}
+              style={{height: `${0.86*windowSize.height}px`, touchAction: "inherit"}}>
         <PlayMap event={event} />
         <Grid
           container
@@ -36,6 +38,28 @@ const PlayPageMap = ({event, ratings}) => {
               <UserCard author={event.author} />
             </Grid>
           </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid
+              container
+              justify="center"
+              className={classes.authorContainer}
+            >
+              <Grid item>
+                <UserCard author={event.author} />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid
+              container
+              justify="center"
+              className={classes.authorContainer}
+            >
+              <Grid item>
+                <UserCard author={event.author} />
+              </Grid>
+            </Grid>
           </Grid>
 
           <Grid item xs={3}>
@@ -60,7 +84,9 @@ const PlayPageMap = ({event, ratings}) => {
 
 
 const useStyles = makeStyles(theme => ({
-
+  mapContainer: {
+    width: '100%',
+  },
   ratingAuthorContainer: {
       padding: '40px',
       paddingTop: '5px',
