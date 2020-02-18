@@ -36,7 +36,7 @@ const Carousel = ({children, setPosition, heightHook}) => {
     }, 50);
     setTimeout(() => {
       dispatch({ type: "stopTransforming" });
-    }, 1000);
+    }, 500);
   };
 
   const handlers = useSwipeable({
