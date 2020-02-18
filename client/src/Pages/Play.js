@@ -395,7 +395,7 @@ const useStyles = makeStyles(theme => ({
     // marginTop: "10vh",
     // height: "80vh",
     //paddingBottom: "80px",
-    display: "flex",
+    display: "fixed",
     flexDirection: "column",
     alignItems: "center",
     // overflow: "scroll",

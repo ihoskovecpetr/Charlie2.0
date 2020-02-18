@@ -6,12 +6,12 @@ export const PREV = "PREV";
 export const Item = styled.div`
   text-align: center;
   padding: 0px;
-  height: 80vh;
   height: ${(props) => `${0.86*props.heightHook}px`};
   background-image: ${props => `url(${props.img})`};
   background-size: cover;
-  background-color: pink;
+  width: 100%;
   overflow-y: scroll;
+
   ::-webkit-scrollbar {
     display: none;
     },

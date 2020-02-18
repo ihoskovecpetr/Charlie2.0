@@ -23,8 +23,8 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
         justify="flex-start"
         alignItems="flex-start"
         alignContent="flex-start"
-        direction="column"
         className={classes.mainContainer}
+        style={{height: `${0.86*windowSize.height}px`}}
       >
       <Grid item xs={12}>
           <Typography variant="h4" className={classes.mainHeader}>
@@ -37,6 +37,22 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
             </Typography>
   
         </Grid>
+        <Grid item xs={12}>
+            <Typography component="p" className={classes.standardDescription}>
+              {event.description}
+            </Typography>
+  
+        </Grid>
+        <Grid item xs={12}>
+            <Typography component="p" className={classes.standardDescription}>
+              {event.description}
+              {event.description}
+              {event.description}
+            </Typography>
+  
+        </Grid>
+
+
 
         <p className={classes.thisLine}></p>
 
@@ -55,13 +71,13 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
             </Grid>
           </Grid>
         </Grid>
-        <p className={classes.thisLine} style={{width: windowSize.height/10}}></p>
-        <p className={classes.thisLine} style={{width: '10vh'}}></p>
+        <p className={classes.thisLine}></p>
+        <p className={classes.thisLine}></p>
         <Grid item xs={12} className={classes.listRow}>
           <Grid container item xs={12}>
             <Grid item xs={3}>
               <Typography component="div" className={classes.standardHeading}>
-                PRICE {windowSize.width}px / {windowSize.height}px
+                PRICE
               </Typography>
             </Grid>
             <Grid item xs={9}>
@@ -158,9 +174,10 @@ const useStyles = makeStyles(theme => ({
         padding: '40px',
         paddingTop: '5px',
         paddingBottom: '0px',
-        width: '90%',
+        width: '100%',
         color: 'white',
         backgroundColor: "green",
+        overflowY: 'scroll'
       },
       listRow:{
         width: '100%',

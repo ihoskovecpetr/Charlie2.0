@@ -39,7 +39,7 @@ export const resolvers = {
     },
     getPlayEvents: async (_, _args, context) => {
       try {
-         if (context.reqO.req.isAuth) {
+        //  if (context.reqO.req.isAuth) {
           let playEvents = await Event.find({}).sort(
             "dateStart"
           )
@@ -56,12 +56,12 @@ export const resolvers = {
             //   success: true,
             //   areYouAuthor: areYourAuthor
             // };
-          } else {
+          // } else {
             return {
               success: false,
               message: "This event is worhere to be seen, check url and repeat"
             };
-          }
+          // }
         } else {
           return {
             success: false,
