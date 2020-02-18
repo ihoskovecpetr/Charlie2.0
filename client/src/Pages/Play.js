@@ -385,7 +385,7 @@ const useStyles = makeStyles(theme => ({
   profileWrap: {
     backgroundColor: "black",
     width: "100%",
-    posirtion: "fixed",
+    position: "fixed",
     //zIndex: 10,
     top: 0,
   },
@@ -399,7 +399,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     alignItems: "center",
     // overflow: "scroll",
-    overflow: "auto",
+    overflow: "hidden",
     borderRadius: 20,
   },
   gridButtons: {
