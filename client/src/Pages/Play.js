@@ -272,7 +272,12 @@ function Play(props) {
   if (loading) {
     return (
         <PaperEvent>
-          <Paper className={classes.paper}>
+          <Paper  className={classes.paper}
+                  style={{ 
+                    marginTop: 0.12 * windowSize.height,
+                    height: 0.86 * windowSize.height
+                    }}>
+                      
             <Spinner height={100} width={100} />
           </Paper>
         </PaperEvent>
@@ -286,8 +291,8 @@ function Play(props) {
 
         <Paper className={classes.paper} 
         style={{ 
-          marginTop: 0.1 * windowSize.height,
-          height: 0.8 * windowSize.height
+          marginTop: 0.12 * windowSize.height,
+          height: 0.86 * windowSize.height
           }}>
           <CarouselWrap >
 

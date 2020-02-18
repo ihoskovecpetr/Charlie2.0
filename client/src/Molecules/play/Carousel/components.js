@@ -7,6 +7,7 @@ export const Item = styled.div`
   text-align: center;
   padding: 0px;
   height: 80vh;
+  height: ${(props) => `${0.86*props.heightHook}px`};
   background-image: ${props => `url(${props.img})`};
   background-size: cover;
   overflow-y: scroll;
@@ -19,7 +20,7 @@ export const Item = styled.div`
 
 export const CarouselContainer = styled.div`
   display: flex;
-  height: 80vh;
+  height: ${(props) => `${0.86*props.heightHook}px`};
   transition: ${props => (props.sliding ? "none" : "transform 1s ease")};
   transform: ${props => {
     if (!props.sliding) return "translateX(calc(-100%))";

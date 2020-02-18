@@ -16,13 +16,16 @@ import Grid from "@material-ui/core/Grid";
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
+
+
 const getOrder = ({ index, pos, numItems }) => {
   return index - pos < 0 ? numItems - Math.abs(index - pos) : index - pos;
 };
 const initialState = { pos: 0, sliding: false, dir: NEXT };
 
-const Carousel = ({children, setPosition}) => {
+const Carousel = ({children, setPosition, heightHook}) => {
   const classes = useStyles();
+
   const [state, dispatch] = React.useReducer(reducer, initialState);
   const numItems = React.Children.count(children);
 
@@ -63,7 +66,7 @@ const Carousel = ({children, setPosition}) => {
             </Grid>
           </Grid>
           </div>
-        <CarouselContainer dir={state.dir} sliding={state.sliding}>
+        <CarouselContainer dir={state.dir} sliding={state.sliding} heightHook={heightHook}>
           {React.Children.map(children, (child, index) => (
             <CarouselSlot
               key={index}
