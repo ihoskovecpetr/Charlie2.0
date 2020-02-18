@@ -6,7 +6,6 @@ import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from '@material-ui/icons/Close';
-import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import RedoIcon from '@material-ui/icons/Redo';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import PropTypes from "prop-types";
@@ -17,14 +16,12 @@ import gql from "graphql-tag";
 import { UserContext } from "../userContext";
 
 import CarouselWrap from "../Molecules/play/Carousel/CarouselWrap";
-import PlayLayout from "../Layouts/PlayLayout";
 import PlayPageGallery from "../Molecules/play/play_page_gallery";
 import PlayPageList from "../Molecules/play/play_page_list";
 import PlayPageMap from "../Molecules/play/play_page_map";
+import { useWindowSize } from "../Hooks/useWindowSize";
 
-import EventButtons from "../Molecules/event/event-buttons";
 import Spinner from "../Atoms/Spinner";
-
 
 const PLAY_EVENTS = gql`
   query getPlayEvents {
@@ -216,6 +213,8 @@ function Play(props) {
   const theme = useTheme();
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
+  const windowSize = useWindowSize()
+
   const [createBooking, bookingStates] = useMutation(BOOKING);
   const [cancelBooking, cancelledState] = useMutation(CANCELLING);
   const [deleteOneEvent, deleteState] = useMutation(DELETE);
@@ -247,7 +246,7 @@ function Play(props) {
     <div
       component="main"
       className={classes.profileWrap}
-      style={{ position: user.freezScroll ? "fixed" : "absolute" }}
+      style={{ position: user.freezScroll ? "fixed" : "absolute", height: windowSize.height }}
     >
       <Container maxWidth="xs" >
     
@@ -285,7 +284,11 @@ function Play(props) {
     return (<>
         <PaperEvent>
 
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper} 
+        style={{ 
+          marginTop: 0.1 * windowSize.height,
+          height: 0.8 * windowSize.height
+          }}>
           <CarouselWrap >
 
             <PlayPageMap 
@@ -380,23 +383,21 @@ const useStyles = makeStyles(theme => ({
     posirtion: "absolute",
     //zIndex: 10,
     top: 0,
-    height: "100vh"
   },
   paper: {
     background: "#454242", // "#FCCD30",
     color: "black",
-    marginTop: "10vh",
+    // marginTop: "10vh",
+    // height: "80vh",
     //paddingBottom: "80px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    height: "80vh",
     // overflow: "scroll",
     overflow: "auto",
     borderRadius: 20,
   },
   gridButtons: {
-    //background: "#707070",
     color: "white",
     marginTop: "0 !important",
     //padding: theme.spacing(3, 2),
