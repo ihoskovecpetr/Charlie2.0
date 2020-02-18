@@ -158,8 +158,9 @@ const useStyles = makeStyles(theme => ({
         padding: '40px',
         paddingTop: '5px',
         paddingBottom: '0px',
-        width: '100%',
-        color: 'white'
+        width: '90%',
+        color: 'white',
+        backgroundColor: "green",
       },
       listRow:{
         width: '100%',

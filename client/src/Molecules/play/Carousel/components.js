@@ -10,6 +10,7 @@ export const Item = styled.div`
   height: ${(props) => `${0.86*props.heightHook}px`};
   background-image: ${props => `url(${props.img})`};
   background-size: cover;
+  background-color: pink;
   overflow-y: scroll;
   ::-webkit-scrollbar {
     display: none;

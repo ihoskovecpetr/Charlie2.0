@@ -277,7 +277,7 @@ function Play(props) {
                     marginTop: 0.12 * windowSize.height,
                     height: 0.86 * windowSize.height
                     }}>
-                      
+
             <Spinner height={100} width={100} />
           </Paper>
         </PaperEvent>
@@ -385,7 +385,7 @@ const useStyles = makeStyles(theme => ({
   profileWrap: {
     backgroundColor: "black",
     width: "100%",
-    posirtion: "absolute",
+    posirtion: "fixed",
     //zIndex: 10,
     top: 0,
   },
