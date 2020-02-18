@@ -39,9 +39,6 @@ const Carousel = ({children, setPosition, heightHook}) => {
     }, 1000);
   };
 
-  document.getElementById("paperEvent").style.touchAction = "none";
-  console.log("DD ", document.getElementById("paperEvent").style)
-
   const handlers = useSwipeable({
     onSwipedLeft: () => slide(NEXT),
     onSwipedRight: () => slide(PREV),
