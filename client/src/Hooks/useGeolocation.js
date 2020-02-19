@@ -28,7 +28,6 @@ export const usePosition = () => {
 function isBigger(prev, next) {
   return prev.number === next.number || prev.number >= next.number;
   //   if (prev.number > next.number) {
-  //     console.log("PLATI");
   //     return true; // Not rendering
   //   }
   //   return false;

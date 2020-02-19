@@ -95,7 +95,6 @@ function App(props) {
 
   const { loading, error, data } = useQuery(LOGIN);
   const { container } = props;
-  console.log("CONT: ", container);
   const [user, setUser] = useState({
     success: false,
     name: false,
@@ -126,10 +125,7 @@ function App(props) {
     });
   }
 
-  console.log("App render");
-
   const providerValue = useMemo(() => {
-    console.log("Update CONTEXT:");
     return { user, setUser };
   }, [user, setUser]);
 
@@ -165,8 +161,7 @@ function App(props) {
         <SignOut LOGIN={LOGIN} />,
         <Play />,
         <UserModal />,
-        <Profile />,
-
+        <Profile />
       ]
     : [
         <Menu
@@ -184,7 +179,7 @@ function App(props) {
         <SignIn />,
         <Play />,
         <UserModal />,
-        <SignUp />,
+        <SignUp />
       ];
   const drawer = (
     <div>
@@ -234,20 +229,17 @@ function App(props) {
               {index === 4 && (
                 <ListItemIcon>
                   <Avatar className={classes.avatar}>
-                    <AccountCircleIcon/>
+                    <AccountCircleIcon />
                   </Avatar>
                 </ListItemIcon>
               )}
               {index === 5 && (
                 <ListItemIcon>
                   <Avatar className={classes.avatar}>
-                    <PlayArrowIcon/>
+                    <PlayArrowIcon />
                   </Avatar>
                 </ListItemIcon>
               )}
-
-
-
 
               <ListItemText primary={text} />
             </ListItem>
@@ -267,7 +259,6 @@ function App(props) {
   // } else if (pathSet[1] == "signin") {
   // } else if (pathSet[1] == "signout") {
   // } else {
-  //   console.log("OOO next loc in Switch");
   //   prevLocation = props.location;
   // }
   let firstPrint = false;
@@ -277,8 +268,8 @@ function App(props) {
     pathSet[1] == "event" ||
     pathSet[1] == "user" ||
     pathSet[1] == "signin" ||
-    pathSet[1] == "signout" 
-    //|| pathSet[1] == "play" 
+    pathSet[1] == "signout"
+    //|| pathSet[1] == "play"
   ) {
     Modal = true;
   }
@@ -309,7 +300,6 @@ function App(props) {
     justGoBack = true;
   }
 
-  //console.log("APP, firstPrint a Modal: ", firstPrint, Modal);
   return (
     <div className={classes.root} id="wrap_full">
       <ThemeProvider theme={theme}>
@@ -446,12 +436,12 @@ function App(props) {
                 exact
                 path={`/signin`}
                 render={() => {
-                  console.log("SIGN IN ROUTR")
                   return (
-                  <>
-                    <SignIn />
-                  </>
-                )}}
+                    <>
+                      <SignIn />
+                    </>
+                  );
+                }}
               />
               <Route
                 exact

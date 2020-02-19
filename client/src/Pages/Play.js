@@ -5,9 +5,9 @@ import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import CloseIcon from '@material-ui/icons/Close';
-import RedoIcon from '@material-ui/icons/Redo';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import CloseIcon from "@material-ui/icons/Close";
+import RedoIcon from "@material-ui/icons/Redo";
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import PropTypes from "prop-types";
 
 import { withRouter, useHistory, NavLink } from "react-router-dom";
@@ -59,7 +59,6 @@ const PLAY_EVENTS = gql`
       confirmed
       areYouAuthor
     }
-
   }
 `;
 
@@ -213,7 +212,7 @@ function Play(props) {
   const theme = useTheme();
   let history = useHistory();
   const { user, setUser } = useContext(UserContext);
-  const windowSize = useWindowSize()
+  const windowSize = useWindowSize();
 
   const [createBooking, bookingStates] = useMutation(BOOKING);
   const [cancelBooking, cancelledState] = useMutation(CANCELLING);
@@ -240,23 +239,17 @@ function Play(props) {
     history.push("/map");
   }
 
-
   const PaperEvent = props => {
     return (
-    <div
-      component="main"
-      id="paperEvent"
-      className={classes.profileWrap}
-      style={{ height: windowSize.height }}
-    >
-      <Container maxWidth="xs" >
-    
-          {props.children}
-
-      </Container>
-    </div>
-    )
-
+      <div
+        component="main"
+        id="paperEvent"
+        className={classes.profileWrap}
+        style={{ height: windowSize.height }}
+      >
+        <Container maxWidth="xs">{props.children}</Container>
+      </div>
+    );
   };
 
   let dataDB;
@@ -265,54 +258,56 @@ function Play(props) {
     dataDB = dataMock;
   } else if (data) {
     dataDB = data;
-    var {getPlayEvents} = dataDB
+    var { getPlayEvents } = dataDB;
   }
 
-  console.log("PLAY:" , data ? getPlayEvents : "Not defined yet")
+  console.log("PLAY:", data ? getPlayEvents : "Not defined yet");
 
   if (loading) {
     return (
-        <PaperEvent>
-          <Paper  className={classes.paper}
-                  style={{ 
-                    marginTop: 0.12 * windowSize.height,
-                    height: 0.86 * windowSize.height
-                    }}>
-
-            <Spinner height={100} width={100} />
-          </Paper>
-        </PaperEvent>
+      <PaperEvent>
+        <Paper
+          className={classes.paper}
+          style={{
+            marginTop: 0.12 * windowSize.height,
+            height: 0.86 * windowSize.height
+          }}
+        >
+          <Spinner height={100} width={100} />
+        </Paper>
+      </PaperEvent>
     );
   }
 
-
   if (data && getPlayEvents[playIndex]) {
-    return (<>
+    return (
+      <>
         <PaperEvent>
-
-        <Paper className={classes.paper} 
-        style={{ 
-          marginTop: 0.12 * windowSize.height,
-          height: 0.86 * windowSize.height
-          }}>
-          <CarouselWrap >
-
-            <PlayPageMap 
-                event={getPlayEvents[playIndex]} 
+          <Paper
+            className={classes.paper}
+            style={{
+              marginTop: 0.12 * windowSize.height,
+              height: 0.86 * windowSize.height
+            }}
+          >
+            <CarouselWrap>
+              <PlayPageMap
+                event={getPlayEvents[playIndex]}
                 showBookings={null} //showBookings
-                ratings={ratings}  />
-            <PlayPageGallery event={getPlayEvents[playIndex]} />
-            <PlayPageList 
-              event={getPlayEvents[playIndex]}
-              showBookings={null} //showBookings  
-              ONE_EVENT={PLAY_EVENTS}
-              cancelBooking={cancelBooking}
-              cancelledState={cancelledState}
-              bookingStates={bookingStates}
-                />
-          </CarouselWrap>
-        </Paper>
-        <Container maxWidth="xs" >
+                ratings={ratings}
+              />
+              <PlayPageGallery event={getPlayEvents[playIndex]} />
+              <PlayPageList
+                event={getPlayEvents[playIndex]}
+                showBookings={null} //showBookings
+                ONE_EVENT={PLAY_EVENTS}
+                cancelBooking={cancelBooking}
+                cancelledState={cancelledState}
+                bookingStates={bookingStates}
+              />
+            </CarouselWrap>
+          </Paper>
+          <Container maxWidth="xs">
             <Grid
               container
               direction="row"
@@ -321,62 +316,130 @@ function Play(props) {
               alignContent="center"
               className={classes.gridButtons}
             >
-              <Grid item xs={4} onClick={() => {history.push('/')}}>
+              <Grid
+                item
+                xs={4}
+                onClick={() => {
+                  history.push("/");
+                }}
+              >
                 <Grid container justify="center">
                   <Grid item className={classes.actionClose}>
-                    <CloseIcon style={{height: "40px", width: "40px", margin: "5px"}} />
+                    <CloseIcon
+                      style={{ height: "40px", width: "40px", margin: "5px" }}
+                    />
                   </Grid>
                 </Grid>
               </Grid>
               <Grid item xs={4}>
                 <Grid container justify="center">
                   <Grid item className={classes.actionJoin}>
-                    <CheckCircleOutlineIcon style={{height: "40px", width: "40px", margin: "18px"}} />
+                    <CheckCircleOutlineIcon
+                      style={{ height: "40px", width: "40px", margin: "18px" }}
+                    />
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={4} onClick={() => {setPlayIndex(prev => prev + 1 )}}>
+              <Grid
+                item
+                xs={4}
+                onClick={() => {
+                  setPlayIndex(prev => prev + 1);
+                }}
+              >
                 <Grid container justify="center">
                   <Grid item className={classes.actionNext}>
-                    <RedoIcon style={{height: "30px", width: "30px", margin: "10px"}} />
+                    <RedoIcon
+                      style={{ height: "30px", width: "30px", margin: "10px" }}
+                    />
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
-        </Container>
-
-          </PaperEvent>
-         
+          </Container>
+        </PaperEvent>
       </>
     );
   }
   if (dataDB && !getPlayEvents[playIndex]) {
     return (
-        <PaperEvent>
-           <Paper className={classes.paper}>
-              <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    props.history.push('/signin');
-                  }}
-                >
-                  Login
-                  </Button>
+      <PaperEvent>
+        <Paper
+          className={classes.paper}
+          style={{
+            marginTop: 0.12 * windowSize.height,
+            height: 0.86 * windowSize.height
+          }}
+        >
+          <Grid container justify="center" xs={12}>
+            <Grid item xs={12}>
+              <Grid container justify="center">
+                <Grid item>
                   <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    window.location.reload();
-                  }}
-                >
-                  Reload
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      props.history.push("/signin");
+                    }}
+                  >
+                    Login
                   </Button>
-            <Typography component="div">
-              No More upcomming events
-            </Typography>
-           </Paper>
-        </PaperEvent>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container justify="center">
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      window.location.reload();
+                    }}
+                  >
+                    Reload
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container justify="center">
+                <Grid item>
+                  <Typography component="div">
+                    No More upcomming events
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Paper>
+        <Container maxWidth="xs">
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            alignContent="center"
+            className={classes.gridButtons}
+          >
+            <Grid
+              item
+              xs={4}
+              onClick={() => {
+                history.push("/");
+              }}
+            >
+              <Grid container justify="center">
+                <Grid item className={classes.actionClose}>
+                  <CloseIcon
+                    style={{ height: "40px", width: "40px", margin: "5px" }}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Container>
+      </PaperEvent>
     );
   }
   return <p>Reload please</p>;
@@ -388,7 +451,7 @@ const useStyles = makeStyles(theme => ({
     width: "100%",
     position: "fixed",
     //zIndex: 10,
-    top: 0,
+    top: 0
   },
   paper: {
     background: "#454242", // "#FCCD30",
@@ -401,7 +464,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     // overflow: "scroll",
     overflow: "hidden",
-    borderRadius: 20,
+    borderRadius: 20
   },
   gridButtons: {
     color: "white",
@@ -412,7 +475,7 @@ const useStyles = makeStyles(theme => ({
     top: "-40px",
     height: "0px",
     borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20,
+    borderBottomLeftRadius: 20
     //boxShadow: "0px -2px 5px 0px rgba(200,200,200,0.3)"
   },
   eventButtons: {
@@ -422,8 +485,8 @@ const useStyles = makeStyles(theme => ({
   },
   actionClose: {
     backgroundColor: "#600328",
-    '&:hover': {
-      backgroundColor: "#7C2849",
+    "&:hover": {
+      backgroundColor: "#7C2849"
     },
     alignContent: "center",
     height: "50px",
@@ -432,7 +495,6 @@ const useStyles = makeStyles(theme => ({
     position: "relative",
     top: "10px",
     boxShadow: "5px 5px 10px 0px rgba(0,0,0,0.7)"
-
   },
   actionJoin: {
     backgroundColor: "#F50057",
@@ -444,8 +506,8 @@ const useStyles = makeStyles(theme => ({
   },
   actionNext: {
     backgroundColor: "#696565",
-    '&:hover': {
-      backgroundColor: "#242323",
+    "&:hover": {
+      backgroundColor: "#242323"
     },
     alignContent: "center",
     height: "50px",

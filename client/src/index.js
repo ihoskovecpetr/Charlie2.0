@@ -30,7 +30,6 @@ const httpLink = new BatchHttpLink({
 
 var WS_ENDPOINT = `ws://localhost:4005/subs`;
 if (process.env.NODE_ENV == "production") {
-  console.log("Production version");
   WS_ENDPOINT = `wss://${window.location.host}/subs`;
 }
 

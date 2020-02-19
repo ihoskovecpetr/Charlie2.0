@@ -18,7 +18,6 @@ import {
 // If you had Query fields not associated with a
 // specific type you could put them here
 
-console.log("Schema hitted");
 const Mutation = `
   type Mutation {
     new: String

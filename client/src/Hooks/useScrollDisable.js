@@ -8,7 +8,6 @@ export const useScrollDisable = id => {
   //   console.log("Hook event type: ", e.type);
   //   e = e || window.event;
   //   if (e.stopPropagation()) {
-  //     console.log("Hooks stopPropagation");
   //     e.stopPropagation();
   //   }
   //   e.returnValue = false;
@@ -52,13 +51,13 @@ export const useScrollDisable = id => {
     //     el.addEventListener(item, stopPropagation, false);
     //   });
     // }
-
+    console.log("Freezing");
     setUser(prev => {
       return { ...prev, freezScroll: true };
     });
     //document.addEventListener("wheel", preventDefault, { passive: false });
     return () => {
-      console.log("UnFreezing")
+      console.log("UnFreezing");
       setUser(prev => {
         return { ...prev, freezScroll: false };
       });
