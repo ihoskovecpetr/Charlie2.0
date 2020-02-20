@@ -9,25 +9,19 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { withRouter, useHistory } from "react-router-dom";
 
-import { useScrollDisable } from "../Hooks/useScrollDisable";
+import { useWindowSize } from "../Hooks/useWindowSize";
+
 
 function Layout(props) {
-  useScrollDisable("layout_id");
-  const classes = useStyles();
 
-  console.log("props.location: on BAXCK ", props.location);
-  console.log("window.previousLocation: on BAXCK ", window.previousLocation);
+  const classes = useStyles();
+  const windowSize = useWindowSize();
+
 
   return (
-    <div id="layout_id">
       <div
         className={classes.opaque}
-        onClick={
-          () => {} //history.goBack()
-        }
-        onScroll={() => {
-          console.log("'ONscroll event");
-        }}
+        style={{ height: windowSize.height }}
       >
         <div className={classes.modalWrap}>
           <CssBaseline />
@@ -57,7 +51,6 @@ function Layout(props) {
           <Container maxWidth="xs">{props.children}</Container>
         </div>
       </div>
-    </div>
   );
 }
 

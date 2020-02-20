@@ -261,8 +261,6 @@ function Play(props) {
     var { getPlayEvents } = dataDB;
   }
 
-  console.log("PLAY:", data ? getPlayEvents : "Not defined yet");
-
   if (loading) {
     return (
       <PaperEvent>
@@ -319,14 +317,15 @@ function Play(props) {
               <Grid
                 item
                 xs={4}
-                onClick={() => {
-                  history.push("/");
-                }}
+
               >
                 <Grid container justify="center">
                   <Grid item className={classes.actionClose}>
                     <CloseIcon
                       style={{ height: "40px", width: "40px", margin: "5px" }}
+                      onClick={() => {
+                        history.push("/");
+                      }}
                     />
                   </Grid>
                 </Grid>
@@ -343,14 +342,14 @@ function Play(props) {
               <Grid
                 item
                 xs={4}
-                onClick={() => {
-                  setPlayIndex(prev => prev + 1);
-                }}
               >
                 <Grid container justify="center">
                   <Grid item className={classes.actionNext}>
                     <RedoIcon
                       style={{ height: "30px", width: "30px", margin: "10px" }}
+                      onClick={() => {
+                        setPlayIndex(prev => prev + 1);
+                      }}
                     />
                   </Grid>
                 </Grid>

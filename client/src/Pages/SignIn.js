@@ -49,14 +49,15 @@ const LOGIN = gql`
 `;
 
 function SignIn(props) {
-  useScrollDisable();
   const classes = useStyles();
   let history = useHistory();
+
   const { user, setUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [login, { loading, error, data }] = useMutation(LOGIN);
-  console.log("useMutation(LOGIN: ", loading, error, data);
+  
+  useScrollDisable();
 
   const { dataOut } = data ? data.login : { dataOut: undefined };
   const { errorOut } = data ? data.login : { errorOut: undefined };
@@ -255,7 +256,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     alignItems: "center",
     color: "white",
-    backgroundColor: theme.palette.darkGrey
+    //backgroundColor: theme.palette.darkGrey
   },
   avatar: {
     margin: theme.spacing(1),

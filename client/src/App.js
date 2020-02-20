@@ -8,20 +8,8 @@ import {
 } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Avatar from "@material-ui/core/Avatar";
-
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import ExploreIcon from "@material-ui/icons/Explore";
-import SubjectIcon from "@material-ui/icons/Subject";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
@@ -33,6 +21,7 @@ import { useQuery } from "@apollo/react-hooks";
 
 import UpperStripe from "./Atoms/upper-stripe";
 import FloatingPlayBtn from "./Atoms/FloatingPlayBtn";
+import DrawerContent from "./Atoms/drawer-content";
 
 import { UserContext } from "./userContext";
 import { usePosition } from "./Hooks/useGeolocation";
@@ -181,75 +170,7 @@ function App(props) {
         <UserModal />,
         <SignUp />
       ];
-  const drawer = (
-    <div>
-      <div className={classes.toolbar} />
-      <Divider />
-      <List>
-        {ListOfNames.map((text, index) => (
-          <NavLink
-            to={`/${ListOfUrls[index]}`}
-            key={index}
-            onClick={() => {
-              handleDrawerToggle();
-            }}
-          >
-            <ListItem button key={text}>
-              {index === 0 && (
-                <ListItemIcon>
-                  <Avatar
-                    className={classes.avatarCharlie}
-                    alt="Remy Sharp"
-                    src="https://res.cloudinary.com/party-images-app/image/upload/v1557794256/ojkgl1hkiljwij69njbb.png"
-                  />
-                </ListItemIcon>
-              )}
-
-              {index === 1 && (
-                <ListItemIcon>
-                  <Avatar className={classes.avatar}>
-                    <AddCircleOutlineIcon />
-                  </Avatar>
-                </ListItemIcon>
-              )}
-              {index === 2 && (
-                <ListItemIcon>
-                  <Avatar className={classes.avatar}>
-                    <ExploreIcon />
-                  </Avatar>
-                </ListItemIcon>
-              )}
-              {index === 3 && (
-                <ListItemIcon>
-                  <Avatar className={classes.avatar}>
-                    <SubjectIcon />
-                  </Avatar>
-                </ListItemIcon>
-              )}
-              {index === 4 && (
-                <ListItemIcon>
-                  <Avatar className={classes.avatar}>
-                    <AccountCircleIcon />
-                  </Avatar>
-                </ListItemIcon>
-              )}
-              {index === 5 && (
-                <ListItemIcon>
-                  <Avatar className={classes.avatar}>
-                    <PlayArrowIcon />
-                  </Avatar>
-                </ListItemIcon>
-              )}
-
-              <ListItemText primary={text} />
-            </ListItem>
-          </NavLink>
-        ))}
-      </List>
-      <Divider />
-    </div>
-  );
-
+   
   const returnComponent = index => {
     return <div className="content_wrap">{ListOfComponents[index]}</div>;
   };
@@ -269,19 +190,10 @@ function App(props) {
     pathSet[1] == "user" ||
     pathSet[1] == "signin" ||
     pathSet[1] == "signout"
-    //|| pathSet[1] == "play"
   ) {
     Modal = true;
   }
-  // if (pathSet[1] == "user") {
-  //   Modal = true;
-  // }
-  // if (pathSet[1] == "signin") {
-  //   Modal = true;
-  // }
-  // if (pathSet[1] == "signout") {
-  //   Modal = true;
-  // }
+
 
   if (!Modal) {
     prevLocation = props.location;
@@ -301,7 +213,7 @@ function App(props) {
   }
 
   return (
-    <div className={classes.root} id="wrap_full">
+    <div id="wrap_full">
       <ThemeProvider theme={theme}>
         <UserContext.Provider value={providerValue}>
           <nav className={classes.drawer} aria-label="mailbox folders">
@@ -320,7 +232,12 @@ function App(props) {
                   keepMounted: true // Better open performance on mobile.
                 }}
               >
-                {drawer}
+                  <DrawerContent
+                  ListOfNames={ListOfNames} 
+                  ListOfUrls={ListOfUrls} 
+                  handleDrawerToggle={handleDrawerToggle}
+                  drawerWidth={drawerWidth}
+                   />
               </Drawer>
             </Hidden>
           </nav>
@@ -506,6 +423,20 @@ function App(props) {
           {!Modal && (
             <>
               <Switch location={prevLocation}>
+              <Route
+                    exact
+                    path={`/play`}
+                    key={"index"}
+                    render={() => (
+                      <>
+  
+                        <main className={classes.content}>
+                          <div className={classes.toolbar} />
+                          {returnComponent(5)}
+                        </main>
+                      </>
+                    )}
+                  />
                 {ListOfUrls.map((text, index) => (
                   <Route
                     exact
@@ -574,24 +505,12 @@ App.propTypes = {
 };
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    display: "flex"
-  },
+
   drawer: {
     [theme.breakpoints.up("sm")]: {
       width: 0,
       flexShrink: 0
     }
-  },
-  avatarCharlie: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-    width: 40,
-    height: 40
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
   },
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
