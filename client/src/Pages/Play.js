@@ -488,9 +488,9 @@ const useStyles = makeStyles(theme => ({
   },
   actionClose: {
     backgroundColor: "#600328",
-    "&:hover": {
-      backgroundColor: "#7C2849"
-    },
+    // "&:hover": {
+    //   backgroundColor: "#7C2849"
+    // },
     alignContent: "center",
     height: "50px",
     width: "50px",
@@ -509,9 +509,9 @@ const useStyles = makeStyles(theme => ({
   },
   actionNext: {
     backgroundColor: "#696565",
-    "&:hover": {
-      backgroundColor: "#242323"
-    },
+    // "&:hover": {
+    //   backgroundColor: "#242323"
+    // },
     alignContent: "center",
     height: "50px",
     width: "50px",

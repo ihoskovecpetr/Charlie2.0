@@ -88,6 +88,7 @@ function SignIn(props) {
 
   const onSignIn = (e) => {
     e.preventDefault();
+    let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
     console.log("pass + email: ", password, email);
     login({
@@ -111,13 +112,13 @@ function SignIn(props) {
         defaultValue="test@gmail.com"
         fullWidth
         data-cy={cy}
-        onChange={e => {
-          console.log("E? ", e.target.value);
-          setEmail(e.target.value);
-        }}
-        value={email}
+        // onChange={e => {
+        //   console.log("E? ", e.target.value);
+        //   setEmail(e.target.value);
+        // }}
         label="Email Address"
         name="email"
+        id="email"
         autoComplete="email"
         //autoFocus
         error={errorOut}
@@ -247,7 +248,7 @@ function SignIn(props) {
                 }}
               >
                 <Link href="/signup" className={classes.linkClass}>
-                  Sign In here!
+                  Sign Up here!
                 </Link>
               </Badge>
             </Grid>

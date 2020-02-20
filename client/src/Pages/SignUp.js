@@ -24,6 +24,7 @@ import { findEmpty } from "../Services/functions";
 
 import ModalLayout from "../Layouts/ModalLayout";
 import Copyright from "../Atoms/copyright";
+import Spinner from "../Atoms/Spinner";
 import Dropzone from "../Molecules/dropzone-signup";
 
 const NEW_USER = gql`
@@ -68,6 +69,7 @@ function SignUp() {
   const [feErrors, setFEerrors] = useState([]);
   const [newUser, { loading, error, data }] = useMutation(NEW_USER);
 
+  const { dataOut } = data ? data.newUser : { dataOut: undefined };
   const { errorOut } = data ? data.newUser : { errorOut: undefined };
   
   useScrollDisable();
@@ -107,12 +109,22 @@ function SignUp() {
     
 }
 
+if (dataOut && dataOut.success) {
+  return (
+    <ModalLayout>
+      <Paper className={classes.paper}>
+        <p>Sukces, redirecting</p>
+      </Paper>
+    </ModalLayout>
+  );
+}
+
   
   if (loading) {
     return (
       <ModalLayout>
         <Paper className={classes.paper}>
-          <p>Loading...</p>
+        <Spinner height={40} width={40} />
         </Paper>
       </ModalLayout>
     );
@@ -158,9 +170,14 @@ function SignUp() {
         {errorOut && (
           <h1>Error, this email is already taken!!</h1>
         )}
-        <Typography variant="h6" className={classes.mainHeading}>
-          Sign UP
-        </Typography>
+      <Grid container justify="center">
+        <Grid item>
+          <Typography variant="h6" className={classes.mainHeading}>
+            Sign UP
+          </Typography>
+        </Grid>
+      </Grid>
+
 
         
           <Grid
