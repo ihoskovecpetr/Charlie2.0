@@ -636,7 +636,7 @@ const useStyles = makeStyles(theme => ({
     height: "100vh",
     width: "100%",
     overflow: "scroll",
-    position: "absolute",
+    position: "fixed",
     // background:
     //   "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
   },
