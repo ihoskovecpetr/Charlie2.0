@@ -263,6 +263,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     alignItems: "center",
     color: "white",
+    overflowY: "scroll",
     //backgroundColor: theme.palette.darkGrey
   },
   avatar: {
