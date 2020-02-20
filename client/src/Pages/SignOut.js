@@ -48,18 +48,6 @@ function SignIn(props) {
   const Out = () => {
     window.localStorage.setItem("token", "_deleted_");
     user.getLoggedInUser()
-    // setUser({
-    //   success: false,
-    //   name: null,
-    //   email: null,
-    //   picture: null,
-    //   token: null
-    // });
-
-    setTimeout(() => {
-      history.push("/");
-    }, 100);
-    console.log("Deleting User: ", user);
 
   };
 
