@@ -242,10 +242,15 @@ function Play(props) {
       <div
         component="main"
         id="paperEvent"
-        className={classes.profileWrap}
+        className={classes.PaperEvent}
         style={{ height: windowSize.height }}
       >
-        <Container maxWidth="xs">{props.children}</Container>
+        <Container 
+          maxWidth="xs"
+          className={classes.PaperEventContainer}
+        >
+          {props.children}
+        </Container>
       </div>
     );
   };
@@ -269,7 +274,11 @@ function Play(props) {
             height: windowSize.height
           }}
         >
-          <Spinner height={100} width={100} />
+          <Grid container justify="center">
+            <Grid item>
+              <Spinner height={100} width={100} />
+            </Grid>
+          </Grid>
         </Paper>
       </PaperEvent>
     );
@@ -443,11 +452,14 @@ function Play(props) {
 }
 
 const useStyles = makeStyles(theme => ({
-  profileWrap: {
+  PaperEvent: {
     backgroundColor: "black",
     width: "100%",
     position: "fixed",
     top: 0
+  },
+  PaperEventContainer: {
+    padding: 0
   },
   paper: {
     background: "#454242", // "#FCCD30",
@@ -456,7 +468,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     alignItems: "center",
     overflow: "hidden",
-    borderRadius: 20
+    //borderRadius: 20
   },
   gridButtons: {
     color: "white",
@@ -465,8 +477,8 @@ const useStyles = makeStyles(theme => ({
     position: "relative",
     top: "-40px",
     height: "0px",
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20
+    // borderBottomRightRadius: 20,
+    // borderBottomLeftRadius: 20
     //boxShadow: "0px -2px 5px 0px rgba(200,200,200,0.3)"
   },
   eventButtons: {

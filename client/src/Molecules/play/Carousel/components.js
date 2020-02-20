@@ -7,7 +7,7 @@ export const Item = styled.div`
   text-align: center;
   padding: 0px;
   touch-action: inherit;
-  height: ${(props) => `${0.86*props.heightHook}px`};
+  height: ${(props) => `${1*props.heightHook}px`};
   background-image: ${props => `url(${props.img})`};
   background-size: cover;
   width: 100%;
@@ -23,7 +23,7 @@ export const Item = styled.div`
 
 export const CarouselContainer = styled.div`
   display: flex;
-  height: ${(props) => `${0.86*props.heightHook}px`};
+  height: ${(props) => `${1*props.heightHook}px`};
   transition: ${props => (props.sliding ? "none" : "transform 0.5s ease")};
   transform: ${props => {
     if (!props.sliding) return "translateX(calc(-100%))";

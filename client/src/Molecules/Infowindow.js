@@ -55,7 +55,7 @@ function Infowindow(props) {
         direction="column"
         justify="center"
         alignItems="center"
-        className={classes.body}
+        className={classes.infoWindBody}
       >
         <Grid item>{displayDate(props.location.dateStart)}</Grid>
       </Grid>
@@ -124,7 +124,7 @@ const useStyles = makeStyles(theme => ({
     width: 60,
     height: 60
   },
-  body: {
+  infoWindBody: {
     top: -30,
     position: "relative",
     width: "100%",

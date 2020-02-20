@@ -24,7 +24,7 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
         alignItems="flex-start"
         alignContent="flex-start"
         className={classes.mainContainer}
-        style={{height: `${0.86*windowSize.height}px`, touchAction: "inherit"}}
+        style={{height: `${1*windowSize.height}px`, touchAction: "inherit"}}
       >
       <Grid item xs={12}>
           <Typography variant="h4" className={classes.mainHeader}>
