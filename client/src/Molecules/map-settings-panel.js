@@ -2,25 +2,9 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
-
-import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
-import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-
-import { displayDate } from "../Services/transform-services";
-import { useSet__vh } from "../Hooks/useSetVH";
 
 import Spinner from "../Atoms/Spinner";
 
@@ -46,7 +30,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function MapSettingsPanel(props) {
   const classes = useStyles();
-  const { vhcko } = useSet__vh();
   console.log("props.dateState: ", props.dateState);
   let den = new Date(props.dateState);
 
@@ -139,7 +122,7 @@ export default function MapSettingsPanel(props) {
         </Grid>
       </Grid>
       <Grid container>
-        <div className="blue">XX {vhcko}</div>
+        <div className="blue">XX</div>
         <div
           className="green"
           onClick={() => {

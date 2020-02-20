@@ -37,9 +37,7 @@ import { useHistory } from "react-router-dom";
 
 import { findEmpty } from "../Services/functions";
 import { UserContext } from "../userContext";
-import { useViewPort } from "../Hooks/useViewPort";
 
-import ModalLayout from "../Layouts/ModalLayout";
 import Copyright from "../Atoms/copyright";
 import Dropzone from "../Molecules/dropzone";
 import Spinner from "../Atoms/Spinner";
@@ -108,7 +106,7 @@ const currencies = [
 function Create(props) {
   const classes = useStyles();
   let history = useHistory();
-  //useViewPort();
+
   const { user, setUser } = useContext(UserContext);
   const [customMapParam, setCustomMapParam] = useState();
   const [formValue, setFormValue] = useState({
@@ -126,11 +124,23 @@ function Create(props) {
   });
   
   const { dataOut } = data ? data.createEvent : { dataOut: undefined };
-  console.log("DATA LOGIN: ", dataOut);
   const { errorOut } = data ? data.createEvent : { errorOut: undefined };
-  console.log("ERROR LOGIN: ", errorOut);
 
   let den = new Date(formValue.startDate);
+
+
+  useEffect(() => {
+    console.log("ADDIGN scrolling MENU")
+    function printIt(){
+      console.log("scrolling MENU")
+    }
+    document.getElementById("mainCreate").addEventListener("scroll", () => printIt() )
+    return () =>{
+      console.log("Removing shitt")
+      document.getElementById("mainCreate").removeEventListener("scroll", () => printIt())
+    } 
+  }, []);
+
   //Day +- one day
   const plusDay = () => {
     den.setDate(den.getDate() + 1);
@@ -218,6 +228,7 @@ function Create(props) {
     };
 
     const empty = findEmpty(load);
+    
 
     if (empty.length == 0) {
       console.log("SUBMIT: ", load);
@@ -236,7 +247,6 @@ function Create(props) {
   };
 
   const handleChangeCurrency = event => {
-    //setCurrency(event.target.value);
     setFormValue(prev => {
       return { ...prev, currency: event.target.value };
     });
@@ -248,9 +258,12 @@ function Create(props) {
     }, 500);
   }
 
+  console.log("Upconning USRR Create: ", user)
+
   return (
     <div
       component="main"
+      id="mainCreate"
       className={classes.profileWrap}
       style={{ position: user.freezScroll ? "fixed" : "absolute" }} // fixed is freezed, absolute is scrollable
     >
@@ -339,7 +352,6 @@ function Create(props) {
                   margin="normal"
                   id="date-picker-dialog"
                   inputRef={inputDate}
-                  //label="Choose date"
                   format="dd/MM/yyyy"
                   value={formValue.startDate}
                   onChange={e => {
@@ -621,11 +633,10 @@ function Create(props) {
 const useStyles = makeStyles(theme => ({
   profileWrap: {
     top: 0,
-    minHeight: "100vh",
+    height: "100vh",
     width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    overflow: "scroll",
+    display: "block",
     background:
       "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
   },
@@ -634,11 +645,9 @@ const useStyles = makeStyles(theme => ({
     padding: 10,
     paddingTop: 50,
     paddingBottom: 0,
+    
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
     background: "#E8045D",
     [theme.breakpoints.down("xs")]: {
       marginTop: "56px !important"

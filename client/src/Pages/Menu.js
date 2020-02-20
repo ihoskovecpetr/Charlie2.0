@@ -12,7 +12,6 @@ import { NavLink } from "react-router-dom";
 
 import { UserContext } from "../userContext";
 import { useXsSize } from "../Hooks/useXsSize";
-import { useViewPort } from "../Hooks/useViewPort";
 
 import Carousel from "../Atoms/carousel";
 import Screen1 from "../Molecules/menu/screen_1";
@@ -59,9 +58,7 @@ export default function Menu(props) {
 
   const { user, setUser } = useContext(UserContext);
   const { xs_size_memo } = useXsSize();
-  const [value, setValue] = React.useState(0);
-
-  useViewPort();
+  //const [value, setValue] = React.useState(0);
 
   const [newBookingsArr, { loading, error, data }] = useMutation(
     USER_NEW_BOOKINGS,
@@ -72,7 +69,6 @@ export default function Menu(props) {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    //console.log("rerender Menu");
   });
 
   useEffect(() => {
@@ -81,6 +77,7 @@ export default function Menu(props) {
       "onclick" in document.createElement("div") ? "Joo" : "Noo"
     );
   }, []);
+
 
   if (user.success) {
     {
@@ -133,12 +130,11 @@ export default function Menu(props) {
       }}
       render={({ state, fullpageApi }) => {
         console.log("render prop change", state); // eslint-disable-line no-console
-        if (fullpageApi) {
-          //fullpageApi.setAllowScrolling(user.freezScroll);
-        }
+        // if (fullpageApi) {
+        //   // fullpageApi.setAllowScrolling(user.freezScroll);
+        // }
 
         return (
-          <div>
             <div id="fullpage-wrapper" >
               <Screen1 />
               <Screen2 />
@@ -187,7 +183,6 @@ export default function Menu(props) {
 
               <Screen6 />
             </div>
-          </div>
         );
       }}
     />

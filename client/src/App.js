@@ -24,7 +24,7 @@ import FloatingPlayBtn from "./Atoms/FloatingPlayBtn";
 import DrawerContent from "./Atoms/drawer-content";
 
 import { UserContext } from "./userContext";
-import { usePosition } from "./Hooks/useGeolocation";
+//import { usePosition } from "./Hooks/useGeolocation";
 
 import Menu from "./Pages/Menu";
 import SignIn from "./Pages/SignIn";
@@ -78,7 +78,7 @@ function App(props) {
       }
     }
   });
-  const { latitude, longitude, err } = usePosition();
+  // const { latitude, longitude, err } = usePosition();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [finishedAnimation, setFinishedAnimation] = useState(false);
 
@@ -108,11 +108,11 @@ function App(props) {
     }
   }
 
-  if (latitude && longitude && !user.geolocationObj) {
-    setUser(prev => {
-      return { ...prev, geolocationObj: { lat: latitude, lng: longitude } };
-    });
-  }
+  // if (latitude && longitude && !user.geolocationObj) {
+  //   setUser(prev => {
+  //     return { ...prev, geolocationObj: { lat: latitude, lng: longitude } };
+  //   });
+  // }
 
   const providerValue = useMemo(() => {
     return { user, setUser };
@@ -213,7 +213,6 @@ function App(props) {
   }
 
   return (
-    <div id="wrap_full">
       <ThemeProvider theme={theme}>
         <UserContext.Provider value={providerValue}>
           <nav className={classes.drawer} aria-label="mailbox folders">
@@ -423,7 +422,7 @@ function App(props) {
           {!Modal && (
             <>
               <Switch location={prevLocation}>
-              <Route
+              {/* <Route
                     exact
                     path={`/play`}
                     key={"index"}
@@ -435,7 +434,7 @@ function App(props) {
                         </main>
                       </>
                     )}
-                  />
+                  /> */}
                 {ListOfUrls.map((text, index) => (
                   <Route
                     exact
@@ -489,7 +488,6 @@ function App(props) {
           )}
         </UserContext.Provider>
       </ThemeProvider>
-    </div>
   );
 }
 

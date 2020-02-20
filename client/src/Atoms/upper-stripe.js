@@ -15,21 +15,11 @@ import Badge from "@material-ui/core/Badge";
 import { withRouter, useHistory } from "react-router-dom";
 import { Route, NavLink } from "react-router-dom";
 import { UserContext } from "../userContext";
-import { useWindowWidth } from "../Hooks/useWindowWidth";
 import Spinner from "./Spinner";
 
 function UpperStripe(props) {
   const { user, setUser } = useContext(UserContext);
   let history = useHistory();
-
-  // useEffect(() => {
-
-  // addEventListener('scroll')
-
-  //   return(
-
-  //   )
-  // }, [])
 
   const useStyles = makeStyles(theme => ({
     menuButton: {
@@ -42,9 +32,6 @@ function UpperStripe(props) {
       marginLeft: props.drawerWidth,
       color: "black",
       background: "rgba(255,255,255,0.6)"
-      // [theme.breakpoints.up("sm")]: {
-      //   width: `calc(100% - ${props.drawerWidth}px)`
-      // }
     },
     buttonToBeHidden: {
       [theme.breakpoints.down("xs")]: {
@@ -52,10 +39,6 @@ function UpperStripe(props) {
         display: "none",
         fontWeight: "400 !important"
       },
-      // padding: "0px",
-      // margin: "5px",
-      // marginLeft: "2px",
-      // marginRight: "2px",
       fontWeight: "550 !important",
     },
     ButtonAvatar: {
@@ -67,7 +50,6 @@ function UpperStripe(props) {
       float: "right"
     }
   }));
-
   const classes = useStyles();
   return (
     <>
@@ -92,11 +74,13 @@ function UpperStripe(props) {
               </IconButton>
               <Typography variant="h5">
                 {props.ListOfNames.map((text, index) => (
-                <NavLink to={`/${props.ListOfUrls[index]}`} key={index}>
+                // <NavLink 
+                //   //to={`/${props.ListOfUrls[index]}`} 
+                //   key={index}>
                   <Button
                     color="inherit"
                     className={classes.buttonToBeHidden}
-                   //onClick={() => {history.push(`/${props.ListOfUrls[index]}`)}}
+                   onClick={() => {history.push(`/${props.ListOfUrls[index]}`)}}
                   >
                     
                        {text == "Charlie" ? (
@@ -109,7 +93,7 @@ function UpperStripe(props) {
                         text
                       )}
                     </Button>
-                  </NavLink>
+                  // </NavLink>
                 ))}
               </Typography>
             </Grid>

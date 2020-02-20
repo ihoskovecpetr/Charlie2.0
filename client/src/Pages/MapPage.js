@@ -16,7 +16,6 @@ import { useQuery } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
-import { useSet__vh } from "../Hooks/useSetVH";
 
 import mapSetup from "../Services/map-settings";
 import { ALL_EVENTS } from "../Services/GQL";
@@ -35,7 +34,6 @@ function MapPage(props) {
   const classes = useStyles();
   let history = useHistory();
   const { user } = useContext(UserContext);
-  const { vhcko } = useSet__vh();
   const { loading, error, data } = useQuery(ALL_EVENTS, {
     variables: { date: props.workingPosition.date }
   });
