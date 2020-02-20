@@ -633,7 +633,7 @@ function Create(props) {
 const useStyles = makeStyles(theme => ({
   profileWrap: {
     top: 0,
-    height: "100vh",
+    height: "100%",
     width: "100%",
     overflow: "scroll",
     position: "fixed",
