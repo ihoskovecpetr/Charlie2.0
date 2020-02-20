@@ -16,16 +16,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/core/styles";
 
-//import { withApollo } from "react-apollo";
 import gql from "graphql-tag";
-import { useQuery } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/react-hooks";
 
 import UpperStripe from "./Atoms/upper-stripe";
 import FloatingPlayBtn from "./Atoms/FloatingPlayBtn";
 import DrawerContent from "./Atoms/drawer-content";
 
 import { UserContext } from "./userContext";
-//import { usePosition } from "./Hooks/useGeolocation";
+import { usePosition } from "./Hooks/useGeolocation";
 
 import Menu from "./Pages/Menu";
 import SignIn from "./Pages/SignIn";
@@ -43,7 +42,7 @@ const drawerWidth = 240;
 let prevLocation;
 
 const LOGIN = gql`
-  query {
+  mutation {
     getLoggedInUser {
       _id
       success
@@ -79,41 +78,62 @@ function App(props) {
       }
     }
   });
-  // const { latitude, longitude, err } = usePosition();
+
+
+  const { latitude, longitude, err } = usePosition();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [finishedAnimation, setFinishedAnimation] = useState(false);
 
-  const { loading, error, data } = useQuery(LOGIN);
+  //const { loading, error, data } = useQuery(LOGIN);
+  const [getLoggedInUser, { loading, error, data }] = useMutation(
+    LOGIN,
+    {
+      variables: { user_id: "FAKE" }
+    }
+  );
   const { container } = props;
   const [user, setUser] = useState({
     success: false,
     name: false,
     geolocationObj: null,
-    freezScroll: false
+    freezScroll: false,
+    getLoggedInUser: () => getLoggedInUser()
   });
   const [workingPosition, setWorkingPosition] = useState({
     date: new Date().toISOString().split("T")[0],
     geolocation: null
   });
 
-  if (data) {
-    if (data.getLoggedInUser.success && user.success == false) {
-      setUser({
-        _id: data.getLoggedInUser._id,
-        success: data.getLoggedInUser.success,
-        name: data.getLoggedInUser.name,
-        email: data.getLoggedInUser.email,
-        picture: data.getLoggedInUser.picture,
-        description: data.getLoggedInUser.description
-      });
-    }
-  }
+  useEffect(() => {
+    getLoggedInUser();
+  }, []);
 
-  // if (latitude && longitude && !user.geolocationObj) {
-  //   setUser(prev => {
-  //     return { ...prev, geolocationObj: { lat: latitude, lng: longitude } };
-  //   });
+
+  console.log("APP rerender 1: ", user);
+
+  // if (data) {
+    useEffect(() => {
+      if (data && data.getLoggedInUser) {
+        console.log("SETTING EMPTY USER name: ", data.getLoggedInUser.name)
+        setUser(prev => {return {
+          ...prev,
+          _id: data.getLoggedInUser._id,
+          success: data.getLoggedInUser.success,
+          name: data.getLoggedInUser.name,
+          email: data.getLoggedInUser.email,
+          picture: data.getLoggedInUser.picture,
+          description: data.getLoggedInUser.description
+        }});
+      }
+    }, [data]);
+
   // }
+
+  if (latitude && longitude && !user.geolocationObj) {
+    setUser(prev => {
+      return { ...prev, geolocationObj: { lat: latitude, lng: longitude } };
+    });
+  }
 
   const providerValue = useMemo(() => {
     return { user, setUser };
@@ -426,7 +446,7 @@ function App(props) {
           {!Modal && (
             <>
               <Switch location={prevLocation}>
-              {/* <Route
+              <Route
                     exact
                     path={`/play`}
                     key={"index"}
@@ -438,7 +458,7 @@ function App(props) {
                         </main>
                       </>
                     )}
-                  /> */}
+                  />
                 {ListOfUrls.map((text, index) => (
                   <Route
                     exact

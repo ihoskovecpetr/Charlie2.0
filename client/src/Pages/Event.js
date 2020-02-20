@@ -465,7 +465,13 @@ function Event(props) {
       </ModalLayout>
     );
   }
-  return <p>Reload please</p>;
+  return(
+    <ModalLayout>
+      <PaperEvent>
+        <Spinner height={100} width={100} />
+      </PaperEvent>
+    </ModalLayout>
+  );;
 }
 
 const useStyles = makeStyles(theme => ({

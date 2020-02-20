@@ -23,6 +23,7 @@ import { useScrollDisable } from "../Hooks/useScrollDisable";
 import ModalLayout from "../Layouts/ModalLayout";
 import Spinner from "../Atoms/Spinner";
 import Copyright from "../Atoms/copyright";
+import { f } from "@fullpage/react-fullpage";
 
 function SignIn(props) {
   const classes = useStyles();
@@ -35,18 +36,31 @@ function SignIn(props) {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    console.log('Do something after counter has changed', user);
+    if(user.success === false){
+      setTimeout(() => {
+      history.push("/");
+    }, 100);
+    }
+ }, [user]);
+
   const Out = () => {
     window.localStorage.setItem("token", "_deleted_");
-    setUser({
-      success: false,
-      name: null,
-      email: null,
-      picture: null,
-      token: null
-    });
+    user.getLoggedInUser()
+    // setUser({
+    //   success: false,
+    //   name: null,
+    //   email: null,
+    //   picture: null,
+    //   token: null
+    // });
+
     setTimeout(() => {
       history.push("/");
     }, 100);
+    console.log("Deleting User: ", user);
+
   };
 
   return (

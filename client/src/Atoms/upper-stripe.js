@@ -51,6 +51,8 @@ function UpperStripe(props) {
     }
   }));
   const classes = useStyles();
+
+  console.log("Upper String rerender: user: ", user);
   return (
     <>
       <CssBaseline />

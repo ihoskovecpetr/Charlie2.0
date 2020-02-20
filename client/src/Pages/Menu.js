@@ -76,6 +76,7 @@ export default function Menu(props) {
       "UseEffect MANU: ",
       "onclick" in document.createElement("div") ? "Joo" : "Noo"
     );
+    console.log("Rendering MENU: user: ", user);
   }, []);
 
 

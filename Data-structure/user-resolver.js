@@ -12,13 +12,13 @@ import {
 export const typeDef = `
   extend type Query {
     getOneUser(user_id: ID): User
-    getLoggedInUser: User
     deleteAllUsers: String
   }
 
   extend type Mutation {
     newUser(name: String! password: String! email: String! description: String!  picture: String): ResponseUser
     login(email: String! password: String!): ResponseUser
+    getLoggedInUser: User
   }
 
   type User {
@@ -101,12 +101,6 @@ export const resolvers = {
         console.log(err);
         return server_Error;
       }
-    }
-  },
-  Query: {
-    deleteAllUsers: async (_, _args, context, info) => {
-      let result = await User.deleteMany({});
-      return result.deletedCount;
     },
     getLoggedInUser: async (_, _args, context, info) => {
       try {
@@ -119,6 +113,12 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
+    },
+  },
+  Query: {
+    deleteAllUsers: async (_, _args, context, info) => {
+      let result = await User.deleteMany({});
+      return result.deletedCount;
     },
     getOneUser: async (_, _args, __) => {
       try {

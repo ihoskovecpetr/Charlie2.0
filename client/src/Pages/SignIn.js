@@ -73,7 +73,8 @@ function SignIn(props) {
   if (dataOut && dataOut.success && !user.name) {
     console.log("XXman user: ", user);
     window.localStorage.setItem("token", dataOut.token);
-    setUser({
+    setUser(prev => { return {
+      ...prev,
       _id: dataOut._id,
       success: dataOut.success,
       name: dataOut.name,
@@ -81,7 +82,7 @@ function SignIn(props) {
       picture: dataOut.picture,
       description: dataOut.description,
       token: dataOut.token
-    });
+    }});
   }
 
   const Email = ({ data, cy, disabled }) => {
@@ -131,7 +132,7 @@ function SignIn(props) {
         className={classes.paper}
         style={{
           marginTop: 0.12 * windowSize.height,
-          height: 0.86 * windowSize.height
+          maxHeight: 0.86 * windowSize.height
         }}>
         {dataOut && dataOut.success && (
           <Avatar className={classes.avatarSuccess}>
