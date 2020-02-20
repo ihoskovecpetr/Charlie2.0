@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
@@ -172,7 +173,10 @@ function App(props) {
       ];
    
   const returnComponent = index => {
-    return <div className="content_wrap">{ListOfComponents[index]}</div>;
+    return <>
+            <CssBaseline />
+            {ListOfComponents[index]}
+          </>;
   };
 
   var pathSet = props.location.pathname.split("/");
@@ -514,9 +518,10 @@ const useStyles = makeStyles(theme => ({
     width: drawerWidth
   },
   content: {
-    flexGrow: 1,
+    //flexGrow: 1,
     height: "100vh",
-    width: "100%"
+    width: "100%",
+    overflow: "scroll"
     //padding: theme.spacing(3)
   }
 }));

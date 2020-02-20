@@ -198,6 +198,11 @@ function Profile() {
   // });
 
   console.log("user.name: PROFILE ", user.name);
+  useEffect(() => {
+    document.documentElement.style.overflow = "auto"
+    return () =>{
+    } 
+  }, []);
 
   const { loading, error, data } = useQuery(HOST_RATINGS, {
     variables: { host_id: user._id }

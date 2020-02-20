@@ -130,14 +130,8 @@ function Create(props) {
 
 
   useEffect(() => {
-    console.log("ADDIGN scrolling MENU")
-    function printIt(){
-      console.log("scrolling MENU")
-    }
-    document.getElementById("mainCreate").addEventListener("scroll", () => printIt() )
+    document.documentElement.style.overflow = "auto"
     return () =>{
-      console.log("Removing shitt")
-      document.getElementById("mainCreate").removeEventListener("scroll", () => printIt())
     } 
   }, []);
 
@@ -303,7 +297,7 @@ function Create(props) {
                   label="My First Party"
                   name="name"
                   autoComplete="name"
-                  autoFocus
+                  //autoFocus
                   style={{
                     background: "rgba(255,255,255,0.9)",
                     borderRadius: 5,
@@ -635,7 +629,6 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     height: "100%",
     width: "100%",
-    overflow: "scroll",
     position: "absolute",
     // background:
     //   "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
