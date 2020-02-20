@@ -229,8 +229,6 @@ function Play(props) {
     //pollInterval: 500
   });
 
-  console.log("PLAY render");
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

@@ -99,7 +99,7 @@ function SignIn(props) {
         label="Email Address"
         name="email"
         autoComplete="email"
-        autoFocus
+        //autoFocus
         error={data ? data && !data.success : false}
       />
     );

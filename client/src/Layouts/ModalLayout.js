@@ -20,7 +20,7 @@ function Layout(props) {
 
   return (
       <div
-        className={classes.opaque}
+        className={classes.modalBackdrop}
         style={{ height: windowSize.height }}
       >
         <div className={classes.modalWrap}>
@@ -55,14 +55,13 @@ function Layout(props) {
 }
 
 const useStyles = makeStyles(theme => ({
-  opaque: {
+  modalBackdrop: {
     // flexGrow: 1,
     background: "rgba(96,3,40,0.4)",
     width: "100%",
-    position: "absolute",
+    position: "fixed",
     "z-index": 20,
     top: 0,
-    height: "100vh"
   },
   modalWrap: {
     padding: 0
