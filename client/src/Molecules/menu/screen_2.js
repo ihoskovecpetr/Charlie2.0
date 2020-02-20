@@ -1,27 +1,25 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import { NavLink } from "react-router-dom";
-import { Animated } from "react-animated-css";
-
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 
 import "../../Pages/Menu.css";
 
-import Spinner from "../../Atoms/Spinner";
-import FlippingLogo from "../../Atoms/Flipping-logo/logo";
-import EmpireOriginal from "../../Images/empire.jpg";
-import Skyline from "../../Images/skyline.png";
-import EventCard from "../../Molecules/event-card";
+import { Animated } from "react-animated-css";
+
+import { useWindowSize } from "../../Hooks/useWindowSize";
+
 
 export default function Screen2() {
   const classes = useStyles();
+  const windowSize = useWindowSize();
 
   return (
-    <div className="section s2">
+    <div 
+      className="section s2"
+      style={{ height: windowSize.height }}>
+        
       <Container maxWidth="sm" className={classes.container_2}>
         <Grid container id="s_2_id" style={{ display: "none" }}>
           <Grid item>

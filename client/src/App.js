@@ -429,7 +429,6 @@ function App(props) {
                     key={"index"}
                     render={() => (
                       <>
-  
                         <main className={classes.content}>
                           <div className={classes.toolbar} />
                           {returnComponent(5)}

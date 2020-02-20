@@ -265,8 +265,8 @@ function Play(props) {
         <Paper
           className={classes.paper}
           style={{
-            marginTop: 0.12 * windowSize.height,
-            height: 0.86 * windowSize.height
+            //marginTop: 0.12 * windowSize.height,
+            height: windowSize.height
           }}
         >
           <Spinner height={100} width={100} />
@@ -282,8 +282,8 @@ function Play(props) {
           <Paper
             className={classes.paper}
             style={{
-              marginTop: 0.12 * windowSize.height,
-              height: 0.86 * windowSize.height
+              //marginTop: 0.12 * windowSize.height,
+              height: windowSize.height
             }}
           >
             <CarouselWrap>
@@ -364,8 +364,8 @@ function Play(props) {
         <Paper
           className={classes.paper}
           style={{
-            marginTop: 0.12 * windowSize.height,
-            height: 0.86 * windowSize.height
+            //marginTop: 0.12 * windowSize.height,
+            height: windowSize.height
           }}
         >
           <Grid container justify="center" xs={12}>
@@ -447,26 +447,20 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: "black",
     width: "100%",
     position: "fixed",
-    //zIndex: 10,
     top: 0
   },
   paper: {
     background: "#454242", // "#FCCD30",
     color: "black",
-    // marginTop: "10vh",
-    // height: "80vh",
-    //paddingBottom: "80px",
     display: "fixed",
     flexDirection: "column",
     alignItems: "center",
-    // overflow: "scroll",
     overflow: "hidden",
     borderRadius: 20
   },
   gridButtons: {
     color: "white",
     marginTop: "0 !important",
-    //padding: theme.spacing(3, 2),
     display: "flex",
     position: "relative",
     top: "-40px",

@@ -10,17 +10,21 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import "../../Pages/Menu.css";
 
+import { useWindowSize } from "../../Hooks/useWindowSize";
+
 import FlippingLogo from "../../Atoms/Flipping-logo/logo";
 import EmpireOriginal from "../../Images/empire.jpg";
 import Skyline from "../../Images/skyline.png";
 
 export default function Screen1() {
   const classes = useStyles();
+  const windowSize = useWindowSize();
+
 
   return (
     <div
       className="section s1"
-      style={{ backgroundImage: `url(${EmpireOriginal})` }}
+      style={{ backgroundImage: `url(${EmpireOriginal})`, height: windowSize.height }}
     >
       <Container maxWidth="md" className={classes.container_1}>
         {
