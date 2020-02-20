@@ -54,7 +54,7 @@ function SignIn(props) {
   let history = useHistory();
 
   const { user, setUser } = useContext(UserContext);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("test@gmail.com");
   const windowSize = useWindowSize();
 
   const [login, { loading, error, data }] = useMutation(LOGIN);
@@ -64,6 +64,7 @@ function SignIn(props) {
   const { dataOut } = data ? data.login : { dataOut: undefined };
   const { errorOut } = data ? data.login : { errorOut: undefined };
   console.log("DataOut: ", dataOut);
+  console.log("ErrOut: ", errorOut);
   if (user.success) {
     setTimeout(() => {
       history.goBack();
@@ -85,7 +86,23 @@ function SignIn(props) {
     }});
   }
 
-  const Email = ({ data, cy, disabled }) => {
+  const onSignIn = (e) => {
+    e.preventDefault();
+    let password = document.getElementById("password").value;
+    console.log("pass + email: ", password, email);
+    login({
+      variables: {
+        email: email,
+        password: password
+      }
+    });
+  }
+
+  const Email = ({ cy, disabled }) => {
+    // let Err = false
+    // if(dataOut) Err = !dataOut.success
+    // console.log("Pass data: ", dataOut);
+    // console.log("Pass Err: ", Err);
     return (
       <TextField
         margin="normal"
@@ -103,12 +120,14 @@ function SignIn(props) {
         name="email"
         autoComplete="email"
         //autoFocus
-        error={data ? data && !data.success : false}
+        error={errorOut}
+        // error={data ? data && !data.success : false}
       />
     );
   };
 
-  const Pass = ({ data, disabled }) => {
+  const Pass = ({ disabled }) => {
+
     return (
       <TextField
         margin="normal"
@@ -121,7 +140,7 @@ function SignIn(props) {
         type="password"
         id="password"
         autoComplete="current-password"
-        error={data ? data && !data.success : false}
+        error={errorOut}
       />
     );
   };
@@ -161,9 +180,9 @@ function SignIn(props) {
               </Alert>
             ))}
 
-          {!data && <Email data={data} cy={"emailSignIn"} />}
-          {dataOut && dataOut.success && (
-            <Email data={data} cy={"emailSignIn"} disabled={true} />
+          {!data && <Email cy={"emailSignIn"} />}
+          {!dataOut || dataOut.success && (
+            <Email cy={"emailSignIn"} disabled={true} />
           )}
           {errorOut && (
             <Animated
@@ -173,12 +192,12 @@ function SignIn(props) {
               animationInDuration={800}
               isVisible={true}
             >
-              <Email data={data} />
+              <Email />
             </Animated>
           )}
 
-          {!data && <Pass data={data} />}
-          {dataOut && dataOut.success && <Pass data={data} disabled={true} />}
+          {!data && <Pass />}
+          {dataOut && dataOut.success && <Pass disabled={true} />}
           {errorOut && (
             <Animated
               animationIn="shake"
@@ -187,7 +206,7 @@ function SignIn(props) {
               animationInDuration={1000}
               isVisible={true}
             >
-              <Pass data={data} />
+              <Pass />
             </Animated>
           )}
 
@@ -203,16 +222,7 @@ function SignIn(props) {
             color="primary"
             className={classes.submit}
             onClick={e => {
-              e.preventDefault();
-              //let email = document.getElementById("email").value;
-              let password = document.getElementById("password").value;
-              console.log("pass + email: ", password, email);
-              login({
-                variables: {
-                  email: email,
-                  password: password
-                }
-              });
+              onSignIn(e)
             }}
           >
             Sign In
@@ -264,7 +274,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     alignItems: "center",
     color: "white",
-    overflowY: "scroll",
+    //overflowY: "scroll",
     //backgroundColor: theme.palette.darkGrey
   },
   avatar: {

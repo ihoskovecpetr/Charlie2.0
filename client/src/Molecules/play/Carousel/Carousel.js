@@ -15,6 +15,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import CloseIcon from "@material-ui/icons/Close";
 
 
 
@@ -50,6 +51,8 @@ const Carousel = ({children, setPosition, heightHook}) => {
       <Wrapper onClick={() => console.log("Wraper click")}>
         <div className={classes.eggContainerWrap}>
       <Grid container className={classes.eggContainerTop}>
+      <Grid item xs={10}>
+        <Grid container>
             <Grid item 
                   xs={4} 
                   className={classes.itm}
@@ -68,7 +71,39 @@ const Carousel = ({children, setPosition, heightHook}) => {
                   >
               <div className={clsx(classes.egg, state.pos === 2 && classes.white)}></div>
             </Grid>
+            <Grid item 
+                xs={2} 
+                className={classes.white}
+                >
+                  <CloseIcon fontSize="small" />
+            </Grid>
+            <Grid item 
+                xs={4} 
+                className={classes.red}
+                >
+                  <CloseIcon fontSize="small" />
+            </Grid>
+            <Grid item 
+                xs={4} 
+                className={classes.blue}
+                >
+                  <CloseIcon fontSize="small" />
+            </Grid>            
+            <Grid item 
+                xs={2} 
+                className={classes.white}
+                >
+                  <CloseIcon fontSize="small" />
+            </Grid>
           </Grid>
+        </Grid>
+      <Grid item 
+            xs={2} 
+            className={classes.closeCross}
+            >
+            <CloseIcon fontSize="large" />
+      </Grid>
+      </Grid>
           </div>
         <CarouselContainer dir={state.dir} sliding={state.sliding} heightHook={heightHook}>
           {React.Children.map(children, (child, index) => (
@@ -135,13 +170,14 @@ const useStyles = makeStyles(theme => ({
     zIndex: 100,
   },
   eggContainerTop: {
-    height: "16px", 
+    // height: "36px", //"16"
     width: '100%',
     zIndex: 100,
-    //marginTop: "8vh",
+    paddingTop: "2px",
+    paddingBottom: "2px",
     //top: '30px',
     position: "relative",
-    // backgroundColor: "rgba(0,0,0,0.3)",
+    backgroundColor: "rgba(0,0,0,0.3)",
   },
   itm:{
     padding: 0,
@@ -160,6 +196,16 @@ const useStyles = makeStyles(theme => ({
   white:{
     backgroundColor: "white",
   },
+  red:{
+    backgroundColor: "red",
+  },
+  blue:{
+    backgroundColor: "blue",
+
+  },
+  closeCross: {
+    color: "white",
+  }
 }));
 
 export default Carousel;
