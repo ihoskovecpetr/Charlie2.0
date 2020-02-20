@@ -368,11 +368,9 @@ function Profile() {
 const useStyles = makeStyles(theme => ({
   profileWrap: {
     top: 0,
-    minHeight: "100vh",
+    height: "100vh",
     width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    position: "fixed",
     background:
       "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
   },

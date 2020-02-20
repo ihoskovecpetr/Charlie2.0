@@ -636,9 +636,9 @@ const useStyles = makeStyles(theme => ({
     height: "100vh",
     width: "100%",
     overflow: "scroll",
-    display: "block",
-    background:
-      "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
+    position: "absolute",
+    // background:
+    //   "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
   },
   paper1: {
     marginTop: 66,
