@@ -9,17 +9,17 @@ import CloseIcon from "@material-ui/icons/Close";
 import RedoIcon from "@material-ui/icons/Redo";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import PropTypes from "prop-types";
+import gql from "graphql-tag";
 
 import { withRouter, useHistory, NavLink } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 import { UserContext } from "../userContext";
+import { useWindowSize } from "../Hooks/useWindowSize";
 
 import CarouselWrap from "../Molecules/play/Carousel/CarouselWrap";
 import PlayPageGallery from "../Molecules/play/play_page_gallery";
 import PlayPageList from "../Molecules/play/play_page_list";
 import PlayPageMap from "../Molecules/play/play_page_map";
-import { useWindowSize } from "../Hooks/useWindowSize";
 
 import Spinner from "../Atoms/Spinner";
 

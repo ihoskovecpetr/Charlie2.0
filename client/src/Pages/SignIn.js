@@ -23,6 +23,7 @@ import { useHistory, NavLink } from "react-router-dom";
 
 import { UserContext } from "../userContext";
 import { useScrollDisable } from "../Hooks/useScrollDisable";
+import { useWindowSize } from "../Hooks/useWindowSize";
 
 import ModalLayout from "../Layouts/ModalLayout";
 import Spinner from "../Atoms/Spinner";
@@ -54,7 +55,8 @@ function SignIn(props) {
 
   const { user, setUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
+  const windowSize = useWindowSize();
+
   const [login, { loading, error, data }] = useMutation(LOGIN);
   
   useScrollDisable();
@@ -125,7 +127,12 @@ function SignIn(props) {
 
   return (
     <ModalLayout>
-      <Paper className={classes.paper}>
+      <Paper 
+        className={classes.paper}
+        style={{
+          marginTop: 0.12 * windowSize.height,
+          height: 0.86 * windowSize.height
+        }}>
         {dataOut && dataOut.success && (
           <Avatar className={classes.avatarSuccess}>
             <CheckCircleOutlineIcon />
