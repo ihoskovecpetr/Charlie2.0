@@ -24,8 +24,8 @@ import PlayPageMap from "../Molecules/play/play_page_map";
 import Spinner from "../Atoms/Spinner";
 
 const PLAY_EVENTS = gql`
-  query getPlayEvents {
-    getPlayEvents {
+  mutation getPlayEvents($event_id: ID) {
+    getPlayEvents(event_id: $event_id) {
       _id
       success
       message
@@ -217,7 +217,7 @@ function Play(props) {
   const [createBooking, bookingStates] = useMutation(BOOKING);
   const [cancelBooking, cancelledState] = useMutation(CANCELLING);
   const [deleteOneEvent, deleteState] = useMutation(DELETE);
-  const { loading, error, data, refetch } = useQuery(PLAY_EVENTS, {
+  const [getPlayEventsMutation, { loading, error, data, refetch }] = useMutation(PLAY_EVENTS, {
     variables: { id: props.match.params.id }
     //skip: !id,
     //pollInterval: 500
@@ -231,6 +231,7 @@ function Play(props) {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    getPlayEventsMutation()
   }, []);
 
   if (deleteState.data && deleteState.data.deleteOneEvent.success == true) {
@@ -270,7 +271,6 @@ function Play(props) {
         <Paper
           className={classes.paper}
           style={{
-            //marginTop: 0.12 * windowSize.height,
             height: windowSize.height
           }}
         >
@@ -295,7 +295,9 @@ function Play(props) {
               height: windowSize.height
             }}
           >
-            <CarouselWrap>
+            <CarouselWrap getPlayEventsMutation={() => { 
+              console.log("XSATR")
+              getPlayEventsMutation()}} >
               <PlayPageMap
                 event={getPlayEvents[playIndex]}
                 showBookings={null} //showBookings

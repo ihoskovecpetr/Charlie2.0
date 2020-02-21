@@ -4,12 +4,12 @@ import Carousel from "./Carousel";
 import { useWindowSize } from "../../../Hooks/useWindowSize";
 
 
-function CarouselWrap({children}) {
+function CarouselWrap({children, getPlayEventsMutation}) {
   const windowSize = useWindowSize()
 
   return (
     <AppContainer>
-      <Carousel title="Carousel" heightHook={windowSize.height}> 
+      <Carousel title="Carousel" heightHook={windowSize.height} getPlayEventsMutation={getPlayEventsMutation}> 
       {children.map((item, index) => (
             <Item key={index} heightHook={windowSize.height}>
               {item}

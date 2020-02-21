@@ -1,5 +1,11 @@
-import React from "react";
+import React, { useState, useReducer } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+
 import { useSwipeable } from "react-swipeable";
+import { withRouter, useHistory } from "react-router-dom";
+
 import {
   Wrapper,
   CarouselContainer,
@@ -9,14 +15,7 @@ import {
   PREV,
   NEXT
 } from "./components";
-import clsx from "clsx";
-
-import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import CloseIcon from "@material-ui/icons/Close";
-
+import SettingsPanel from "./SettingsPanel"
 
 
 const getOrder = ({ index, pos, numItems }) => {
@@ -24,10 +23,11 @@ const getOrder = ({ index, pos, numItems }) => {
 };
 const initialState = { pos: 0, sliding: false, transforming: false, dir: NEXT };
 
-const Carousel = ({children, setPosition, heightHook}) => {
+const Carousel = ({children, setPosition, heightHook, getPlayEventsMutation}) => {
   const classes = useStyles();
-
-  const [state, dispatch] = React.useReducer(reducer, initialState);
+  let history = useHistory();
+  const [close, setClose] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const numItems = React.Children.count(children);
 
   const slide = dir => {
@@ -50,60 +50,7 @@ const Carousel = ({children, setPosition, heightHook}) => {
     <div {...handlers}>
       <Wrapper onClick={() => console.log("Wraper click")}>
         <div className={classes.eggContainerWrap}>
-      <Grid container className={classes.eggContainerTop}>
-      <Grid item xs={10}>
-        <Grid container>
-            <Grid item 
-                  xs={4} 
-                  className={classes.itm}
-                  >
-              <div className={clsx(classes.egg, state.pos === 0 && classes.white)}></div>
-            </Grid>
-            <Grid item 
-                  xs={4} 
-                  className={classes.itm}
-                  >
-              <div className={clsx(classes.egg, state.pos === 1 && classes.white)}></div>
-            </Grid>
-            <Grid item 
-                  xs={4} 
-                  className={classes.itm}
-                  >
-              <div className={clsx(classes.egg, state.pos === 2 && classes.white)}></div>
-            </Grid>
-            <Grid item 
-                xs={2} 
-                className={classes.white}
-                >
-                  <CloseIcon fontSize="small" />
-            </Grid>
-            <Grid item 
-                xs={4} 
-                className={classes.red}
-                >
-                  <CloseIcon fontSize="small" />
-            </Grid>
-            <Grid item 
-                xs={4} 
-                className={classes.blue}
-                >
-                  <CloseIcon fontSize="small" />
-            </Grid>            
-            <Grid item 
-                xs={2} 
-                className={classes.white}
-                >
-                  <CloseIcon fontSize="small" />
-            </Grid>
-          </Grid>
-        </Grid>
-      <Grid item 
-            xs={2} 
-            className={classes.closeCross}
-            >
-            <CloseIcon fontSize="large" />
-      </Grid>
-      </Grid>
+          <SettingsPanel state={state} getPlayEventsMutation={getPlayEventsMutation} />
           </div>
         <CarouselContainer dir={state.dir} sliding={state.sliding} heightHook={heightHook}>
           {React.Children.map(children, (child, index) => (
@@ -205,7 +152,11 @@ const useStyles = makeStyles(theme => ({
   },
   closeCross: {
     color: "white",
+  },
+  whiteBordered: {
+    border: "1px solid white",
+    borderRadius: 10
   }
 }));
 
-export default Carousel;
+export default withRouter(Carousel)

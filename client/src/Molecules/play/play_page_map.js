@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import PlayMap from "../../Molecules/play/Carousel/play-map";
+import PlayMap from "./Carousel/PlayMap";
 import UserCard from "../../Molecules/event/user-card";
 import RatingCard from "../../Molecules/rating-card";
 import { useWindowSize } from "../../Hooks/useWindowSize";

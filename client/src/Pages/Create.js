@@ -116,10 +116,10 @@ function Create(props) {
     currency: "CZK",
     BYO: false
   });
-  const [FEerrors, setFEerrors] = useState([]);
+  const [FeErrors, setFeErrors] = useState([]);
   const [createEvent, { loading, error, data }] = useMutation(NEW_EVENT, {
     onCompleted: () => {
-      setFEerrors([]);
+      setFeErrors([]);
     }
   });
   
@@ -230,7 +230,7 @@ function Create(props) {
         variables: load
       });
     } else {
-      setFEerrors(empty);
+      setFeErrors(empty);
     }
   };
 
@@ -592,8 +592,8 @@ function Create(props) {
               </Alert>
             ))}
 
-          {FEerrors &&
-            FEerrors.map(item => (
+          {FeErrors &&
+            FeErrors.map(item => (
               <Alert severity="error" key={item}>
                 {item} is empty
               </Alert>
