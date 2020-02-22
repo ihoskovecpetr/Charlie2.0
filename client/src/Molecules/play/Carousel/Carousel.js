@@ -30,6 +30,8 @@ const Carousel = ({children, setPosition, heightHook, getPlayEventsMutation}) =>
   const [state, dispatch] = useReducer(reducer, initialState);
   const numItems = React.Children.count(children);
 
+  console.log("Poset deti: ", numItems)
+
   const slide = dir => {
     dispatch({ type: dir, numItems });
     setTimeout(() => {
@@ -53,7 +55,9 @@ const Carousel = ({children, setPosition, heightHook, getPlayEventsMutation}) =>
           <SettingsPanel state={state} getPlayEventsMutation={getPlayEventsMutation} numItems={numItems} />
         </div>
         <CarouselContainer dir={state.dir} sliding={state.sliding} heightHook={heightHook}>
-          {React.Children.map(children, (child, index) => (
+          {React.Children.map(children, (child, index) => {
+            console.log("Carousel child: ", child);
+           return (
             <CarouselSlot
               key={index}
               order={getOrder({ index: index, pos: state.pos, numItems })}
@@ -61,7 +65,8 @@ const Carousel = ({children, setPosition, heightHook, getPlayEventsMutation}) =>
             >
               {child}
             </CarouselSlot>
-          ))}
+          )
+          })}
         </CarouselContainer>
       </Wrapper>
       <ButtonBlock>

@@ -379,7 +379,7 @@ function MapPage(props) {
         styling={{
           width: "100%",
           height: `${1*windowSize.height}px`,
-          position: "absolute",
+          position: "fixed",
           top: 0,
           background: "black"
         }}

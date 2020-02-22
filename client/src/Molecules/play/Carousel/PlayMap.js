@@ -4,7 +4,6 @@ import mapSetup from "../../../Services/map-settings";
 
 
 const PlayMap = ({event}) => {
-  console.log("Whole PlayMap Rerdr")
   //{ options, onMount, className, styling }
   const LngLatCenter = {
     lng: event.geometry.coordinates[1],
@@ -12,10 +11,8 @@ const PlayMap = ({event}) => {
   }
   let marker;
 
-  console.log("MapSetup: ", mapSetup);
 
     const MapOptions = useMemo(() => {
-        console.log("MAP OPTions RERENDER");
         return {
           center: LngLatCenter,
           zoom: 12,

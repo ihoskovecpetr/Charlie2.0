@@ -13,11 +13,11 @@ function CarouselWrap({children, getPlayEventsMutation}) {
     <AppContainer>
       <Carousel title="Carousel" heightHook={windowSize.height} getPlayEventsMutation={getPlayEventsMutation}> 
 
-            <Item heightHook={windowSize.height}>
+            {/* <Item heightHook={windowSize.height}>
               {children[0]}
-            </Item>
+            </Item> */}
 
-      {children[1].map((item, index) => (
+      {children.map((item, index) => (
             <Item key={index} heightHook={windowSize.height}>
               {item}
             </Item>

@@ -5,7 +5,6 @@ function Map({ options, onMount, className, styling }) {
   const ref = useRef();
 
   useEffect(() => {
-    console.log("ReRENDER MAPHUUK", options);
     const onLoad = () => {
       if (typeof onMount === `function` && window.google) {
         //const map = new window.google.maps.Map(ref.current, options);
