@@ -9,14 +9,13 @@ import clsx from 'clsx'
 import Spinner from "../../Atoms/Spinner";
 import PendingGuest from "../../Molecules/event/pending-guest";
 import ConfirmedGuest from "../../Molecules/event/confirmed-guest";
-import { useWindowSize } from "../../Hooks/useWindowSize";
 
 import { displayDate } from "../../Services/transform-services";
 
 
 const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledState, bookingStates}) => {
     const classes = useStyles();
-    const windowSize = useWindowSize()
+
     return(
         <Grid
         container
@@ -24,7 +23,7 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
         alignItems="flex-start"
         alignContent="flex-start"
         className={classes.mainContainer}
-        style={{touchAction: "inherit"}} // height: `${1*windowSize.height}px`
+        style={{touchAction: "inherit"}}
       >
       <Grid item xs={12}>
           <Typography variant="h4" className={classes.mainHeader}>

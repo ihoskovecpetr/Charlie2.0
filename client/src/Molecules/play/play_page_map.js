@@ -8,17 +8,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import PlayMap from "./Carousel/PlayMap";
 import UserCard from "../../Molecules/event/user-card";
 import RatingCard from "../../Molecules/rating-card";
-import { useWindowSize } from "../../Hooks/useWindowSize";
-
 
 const PlayPageMap = ({event, ratings}) => {
     const classes = useStyles();
-    const windowSize = useWindowSize()
 
     return(
         <Grid container 
-              className={classes.mapContainer}
-              style={{height: `${0.86*windowSize.height}px`, touchAction: "inherit"}}>
+              className={classes.mapContainer}>
         <PlayMap event={event} />
         <Grid
           container
