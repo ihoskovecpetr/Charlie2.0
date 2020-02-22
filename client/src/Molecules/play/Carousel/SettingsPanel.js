@@ -49,14 +49,12 @@ const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
         >
       <Grid container className={clsx(classes.eggContainerTop, checked && classes.solidColor)}>
         <Grid item xs={10}>
-            <Grid container>
-              <Grid item xs={1}>
-                    
-                </Grid>
+            <Grid container onClick={handleChange}>
+
                 <Grid item xs={5} >
                     <Chip label={`Radius: ${radius} km`} variant="outlined" color="secondary" />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={5}>
                      <Chip label={`+ ${days} days`} variant="outlined" color="primary" />
                 </Grid>            
                 <Grid item xs={2}>
@@ -121,7 +119,7 @@ const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
                     </Collapse>     
                 
                 </Grid>
-                <Grid item xs={2} className={classes.arrowGrid} >
+                <Grid item xs={2} className={classes.arrowGrid} style={{display: "none"}} >
                     <KeyboardArrowDownIcon 
                             color="secondary" 
                             fontSize="large" 

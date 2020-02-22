@@ -249,7 +249,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    background: "rgba(255,255,255,0.5)"
+    background: "black"
   },
   avatar: {
     height: 80,
