@@ -20,7 +20,7 @@ import gql from "graphql-tag";
 import { useHistory, NavLink } from "react-router-dom";
 
 import { UserContext } from "../userContext";
-import { useWindowSize } from "../Hooks/useWindowSize";
+// import { useWindowSize } from "../Hooks/useWindowSize";
 
 import Copyright from "../Atoms/copyright";
 import Spinner from "../Atoms/Spinner";
@@ -94,7 +94,7 @@ function Profile() {
   const classes = useStyles();
   const theme = useTheme();
   let history = useHistory();
-  const windowSize = useWindowSize();
+  // const windowSize = useWindowSize();
   const { user, setUser } = useContext(UserContext);
   const [discovered, setDiscovered] = React.useState(0);
   const [getPlayEventsMutation, { loading, error, data, refetch }] = useMutation(PLAY_EVENTS, {
@@ -219,7 +219,7 @@ if (data) {
                         </Grid>
                         <Grid container 
                               justify="center" 
-                              style={{display: index === discovered ? "flex" : "none"}}>
+                              style={{display: index === discovered ? "flex" : "none", margin: "30px"}}>
                             <Grid item>
                               <Spinner height={100} width={100} />
                             </Grid>
