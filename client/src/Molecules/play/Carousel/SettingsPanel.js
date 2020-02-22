@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { withRouter, useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Slider from '@material-ui/core/Slider';
@@ -41,6 +42,11 @@ const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
 
   return (
     <div className={classes.eggContainerWrap}>
+      <Container
+          maxWidth="xs"
+          className={classes.playContainer}
+          style={{padding: 0}}
+        >
       <Grid container className={clsx(classes.eggContainerTop, checked && classes.solidColor)}>
         <Grid item xs={10}>
             <Grid container>
@@ -140,6 +146,7 @@ const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
                     />
         </Grid>
       </Grid>
+      </Container>
     </div>
   );
 };
@@ -163,7 +170,7 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: "5px",
     //top: '30px',
     position: "relative",
-    backgroundColor: "rgba(0,0,0,0.7)",
+    backgroundColor: "rgba(0,0,0,1)",
   },
   solidColor:{
     backgroundColor: "rgba(0,0,0,1)",

@@ -28,6 +28,7 @@ import Spinner from "../Atoms/Spinner";
 import EventCard from "../Molecules/event-card";
 import RatingCard from "../Molecules/rating-card";
 import SettingsPanel from "../Molecules/play/Carousel/SettingsPanel";
+import JoinPanel from "../Molecules/play/Carousel/JoinPanel";
 
 
 import PlayPageGallery from "../Molecules/play/play_page_gallery";
@@ -94,8 +95,8 @@ function Profile() {
   const theme = useTheme();
   let history = useHistory();
   const windowSize = useWindowSize();
-
   const { user, setUser } = useContext(UserContext);
+  const [discovered, setDiscovered] = React.useState(0);
   const [getPlayEventsMutation, { loading, error, data, refetch }] = useMutation(PLAY_EVENTS, {
     variables: { id: "props.match.params.id" }
     //skip: !id,
@@ -137,6 +138,10 @@ if (data) {
     var { getPlayEvents } = dataDB;
   }
 
+  function discoverPlay(){
+    setDiscovered(discovered + 1)
+  }
+
 
 
   console.log(
@@ -146,46 +151,19 @@ if (data) {
     getPlayEvents,
     data
   );
-console.log("Height: ", `${windowSize.height-40}px`)
   return (
     <div
       className={classes.profileWrap}
       style={{ position: user.freezScroll ? "fixed" : "absolute" }}
     >
     <Container
-      maxWidth="sm"
+      maxWidth="xs"
       className={classes.playContainer}
     >
       <Paper className={classes.paper}>
 
           <SettingsPanel getPlayEventsMutation={getPlayEventsMutation} numItems={5} />
-          <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              alignContent="center"
-              className={classes.gridButtons}
-              style={{top: `${windowSize.height-40}px`}}
-            >
-              <Grid item xs={8}>
-                <Grid container justify="center">
-                  <Grid item xs={12} className={classes.actionJoin}>
-                  <Chip label={`JOIN ${0}`} variant="outlined" color="secondary" style={{width: "100%"}} />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                xs={4}
-              >
-                <Grid container justify="center">
-                  <Grid item className={classes.actionNext}>
-                    <Chip label={`PASS`} variant="outlined" color="primary" />
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
+          {/* <JoinPanel /> */}
 
             {loading && (
               <Grid container justify="center">
@@ -202,7 +180,8 @@ console.log("Height: ", `${windowSize.height-40}px`)
               alignContent="center"
               style={{ width: "100%" }}
             >
-            {getPlayEvents && getPlayEvents.map((event) => <>
+            {getPlayEvents && getPlayEvents.map((event, index) => 
+            <div style={{display: index <= discovered ? "block" : "none"}}>
                   <PlayPageGallery event={event} />
                   <PlayPageList
                     event={event}
@@ -217,10 +196,36 @@ console.log("Height: ", `${windowSize.height-40}px`)
                     showBookings={null} //showBookings
                     ratings={ratings}
                   /> 
-                  </>)}
-                  
-
-
+                   
+                      <Grid container
+                            className={classes.nextEventBox}
+                            alignItem="center">
+                        <Grid item xs={8}>
+                          
+                          <Chip label={`JOIN`} 
+                                variant="outlined" 
+                                color="secondary" 
+                                style={{width: "100%"}} 
+                                onClick={discoverPlay}
+                                />
+                        </Grid>
+                        <Grid item xs={4}>
+                          
+                          <Chip label={`NEXT`} 
+                                variant="outlined" 
+                                color="primary" 
+                                style={{width: "100%"}} 
+                                onClick={discoverPlay} />
+                        </Grid>
+                        <Grid container 
+                              justify="center" 
+                              style={{display: index === discovered ? "flex" : "none"}}>
+                            <Grid item>
+                              <Spinner height={100} width={100} />
+                            </Grid>
+                        </Grid>
+                      </Grid>
+                  </div>)}
             </Grid>
 
       </Paper>
@@ -235,15 +240,15 @@ const useStyles = makeStyles(theme => ({
   profileWrap: {
     width: '100%',
     top: 0,
-    backgroundColor: "black"
-
+    backgroundColor: "black",
+    minHeight: "100%",
   },
   paper: {
+    width: "100%",
     paddingTop: 10,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    width: "100%",
     background: "rgba(255,255,255,0.5)"
   },
   avatar: {
@@ -258,24 +263,11 @@ const useStyles = makeStyles(theme => ({
   buttonNavi: {
     marginBottom: 10
   },
-  gridButtons: {
-    color: "white",
-    marginTop: "0 !important",
-    display: "flex",
-    position: "fixed",
-    height: 40,
-    zIndex: 100,
-    backgroundColor: "rgba(0,0,0,0.7)"
-  },
-  actionJoin: {
-    alignContent: "center",
-  },
-  actionNext: {
-    backgroundColor: "lightGrey",
-    alignContent: "center",
-    borderRadius: "25px",
-    position: "relative",
-    boxShadow: "5px 5px 10px 0px rgba(0,0,0,0.7)"
+  nextEventBox: {
+    width: "100%",
+    backgroundColor: "white",
+    paddingBottom: 50,
+    paddingTop: 50,
   }
 }));
 
