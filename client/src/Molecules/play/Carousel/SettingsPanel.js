@@ -44,44 +44,17 @@ const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
       <Grid container className={clsx(classes.eggContainerTop, checked && classes.solidColor)}>
         <Grid item xs={10}>
             <Grid container>
-                <Grid item 
-                    xs={4} 
-                    className={classes.itm}
-                    >
-                <div className={clsx(classes.egg, state.pos === 0 && classes.white)}></div>
+              <Grid item xs={1}>
+                    
                 </Grid>
-                <Grid item 
-                    xs={4} 
-                    className={classes.itm}
-                    >
-                <div className={clsx(classes.egg, state.pos === 1 && classes.white)}></div>
-                </Grid>
-                <Grid item 
-                    xs={4} 
-                    className={classes.itm}
-                    >
-                <div className={clsx(classes.egg, state.pos === 2 && classes.white)}></div>
-                </Grid>
-                <Grid item 
-                    xs={2} 
-                    >
-                    {/* <FormControlLabel
-                        control={<Switch 
-                            checked={checked} onChange={handleChange} 
-                            />}
-                        label=""
-                    /> */}
-                </Grid>
-                <Grid item 
-                    xs={4} 
-                    >
+                <Grid item xs={5} >
                     <Chip label={`Radius: ${radius} km`} variant="outlined" color="secondary" />
                 </Grid>
-                <Grid item xs={4}  >
+                <Grid item xs={4}>
                      <Chip label={`+ ${days} days`} variant="outlined" color="primary" />
                 </Grid>            
                 <Grid item xs={2}>
-                    <Chip label={`${state.pos + 1}/${numItems}`} variant="outlined" color="secondary" />
+                    <Chip label={`${ 1}/${numItems}`} variant="outlined" color="secondary" />
                 </Grid>
                 <Grid item  xs={12}>
                 
@@ -174,8 +147,10 @@ const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
 
 const useStyles = makeStyles(theme => ({
   eggContainerWrap: {
+    position: "fixed",
     width: '100%',
     height: "0px", 
+    top: 0,
     zIndex: 100,
     touchAction: "none"
   },
@@ -183,8 +158,9 @@ const useStyles = makeStyles(theme => ({
     // height: "36px", //"16"
     width: '100%',
     zIndex: 100,
-    paddingTop: "2px",
+    paddingTop: "8px",
     paddingBottom: "2px",
+    paddingLeft: "5px",
     //top: '30px',
     position: "relative",
     backgroundColor: "rgba(0,0,0,0.7)",
@@ -243,10 +219,10 @@ const useStyles = makeStyles(theme => ({
     height: 0,
   },
   arrowOpener: {
-    backgroundColor: "rgba(255,255,255,0.7)",
+    backgroundColor: "rgba(255,255,255,1)",
     borderRadius: 20,
     position: "relative",
-    top: -10
+    top: -5
   },
   arrowUp: {
     transform: "rotate(0.5turn)",

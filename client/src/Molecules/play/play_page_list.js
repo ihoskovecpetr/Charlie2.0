@@ -104,7 +104,7 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
               ONE_EVENT={ONE_EVENT}
             /> */}
 
-            {bookingStates.loading && (
+            {bookingStates && bookingStates.loading && (
               <Spinner height={100} width={100} />
             )}
           </Box>

@@ -3,13 +3,13 @@ import PropTypes from "prop-types";
 
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 import Badge from "@material-ui/core/Badge";
-import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
+import Chip from '@material-ui/core/Chip';
 import Typography from "@material-ui/core/Typography";
+import CloseIcon from "@material-ui/icons/Close";
+import RedoIcon from "@material-ui/icons/Redo";
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import clsx from "clsx";
@@ -20,12 +20,15 @@ import gql from "graphql-tag";
 import { useHistory, NavLink } from "react-router-dom";
 
 import { UserContext } from "../userContext";
+import { useWindowSize } from "../Hooks/useWindowSize";
 
 import Copyright from "../Atoms/copyright";
 import Spinner from "../Atoms/Spinner";
 
 import EventCard from "../Molecules/event-card";
 import RatingCard from "../Molecules/rating-card";
+import SettingsPanel from "../Molecules/play/Carousel/SettingsPanel";
+
 
 import PlayPageGallery from "../Molecules/play/play_page_gallery";
 import PlayPageList from "../Molecules/play/play_page_list";
@@ -85,42 +88,14 @@ const EVENT_RATINGS = gql`
 `;
 
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box p={3}>{children}</Box>}
-    </Typography>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired
-};
-
-function a11yProps(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    "aria-controls": `full-width-tabpanel-${index}`
-  };
-}
 
 function Profile() {
   const classes = useStyles();
   const theme = useTheme();
   let history = useHistory();
+  const windowSize = useWindowSize();
+
   const { user, setUser } = useContext(UserContext);
-  const [value, setValue] = React.useState(0);
   const [getPlayEventsMutation, { loading, error, data, refetch }] = useMutation(PLAY_EVENTS, {
     variables: { id: "props.match.params.id" }
     //skip: !id,
@@ -131,6 +106,7 @@ function Profile() {
     //skip: !id,
     //pollInterval: 500
   });
+
 
   useEffect(() => {
     // document.documentElement.style.overflow = "auto"
@@ -150,13 +126,6 @@ if (data) {
   }
 
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const handleChangeIndex = index => {
-    setValue(index);
-  };
 
   console.log(
     "getPlayEvents PROFILE: ",
@@ -165,7 +134,7 @@ if (data) {
     getPlayEvents,
     data
   );
-
+console.log("Height: ", `${windowSize.height-40}px`)
   return (
     <div
       className={classes.profileWrap}
@@ -176,61 +145,36 @@ if (data) {
       className={classes.playContainer}
     >
       <Paper className={classes.paper}>
-        <AppBar position="static" color="default" className={classes.appBar}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="fullWidth"
-            aria-label="full width tabs example"
-          >
-            <Tab
-              label={
-                <Badge
-                  className={classes.padding}
-                  color="secondary"
-                  badgeContent={"data && data.showUserBookings.length"}
-                >
-                  ATTENDING
-                </Badge>
-              }
-              {...a11yProps(0)}
-            />
-            <Tab
-              label={
-                <Badge
-                  className={classes.padding}
-                  color="secondary"
-                  badgeContent={"data && data.userEvents.length"}
-                >
-                  HOSTING
-                </Badge>
-              }
-              {...a11yProps(1)}
-            />
 
-            <Tab
-              label={
-                <Badge
-                  className={classes.padding}
-                  color="secondary"
-                  badgeContent={"data && data.showRatings.length"}
-                >
-                  RATING
-                </Badge>
-              }
-              {...a11yProps(2)}
-            />
-          </Tabs>
-        </AppBar>
-        <SwipeableViews
-          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-          index={value}
-          onChangeIndex={handleChangeIndex}
-          style={{ width: "100%" }}
-        >
-          <TabPanel value={value} index={0} dir={theme.direction}>
+          <SettingsPanel getPlayEventsMutation={getPlayEventsMutation} numItems={5} />
+          <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              alignContent="center"
+              className={classes.gridButtons}
+              style={{top: `${windowSize.height-40}px`}}
+            >
+              <Grid item xs={8}>
+                <Grid container justify="center">
+                  <Grid item xs={12} className={classes.actionJoin}>
+                  <Chip label={`JOIN ${0}`} variant="outlined" color="secondary" style={{width: "100%"}} />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid
+                item
+                xs={4}
+              >
+                <Grid container justify="center">
+                  <Grid item className={classes.actionNext}>
+                    <Chip label={`PASS`} variant="outlined" color="primary" />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+
             {loading && (
               <Grid container justify="center">
                 <Grid item>
@@ -246,71 +190,28 @@ if (data) {
               alignContent="center"
               style={{ width: "100%" }}
             >
-{getPlayEvents && <>
-                  <PlayPageGallery event={getPlayEvents[0]} />
-                  {/* <PlayPageList
-                    event={getPlayEvents[0]}
+            {getPlayEvents && getPlayEvents.map((event) => <>
+                  <PlayPageGallery event={event} />
+                  <PlayPageList
+                    event={event}
                     showBookings={null} //showBookings
                     ONE_EVENT={PLAY_EVENTS}
                     // cancelBooking={cancelBooking}
                     // cancelledState={cancelledState}
                     // bookingStates={bookingStates}
-                  /> */}
+                  />
                                 <PlayPageMap
-                    event={getPlayEvents[0]}
+                    event={event}
                     showBookings={null} //showBookings
                     ratings={ratings}
                   /> 
-                  </>}
+                  </>)}
                   
-            </Grid>
-          </TabPanel>
-          <TabPanel value={value} index={1} dir={theme.direction}>
-            {loading && <Spinner />}
-            <Grid
-              container
-              justify="center"
-              direction="column"
-              alignItems="center"
-              alignContent="center"
-            >
-            {getPlayEvents && getPlayEvents.map(event => {
-              console.log("ITERACE??")
-              return (<div>
-                  
-                  {/* <PlayPageList
-                    event={event}
-                    showBookings={null} //showBookings
-                    ONE_EVENT={PLAY_EVENTS}
-                    // cancelBooking={cancelBooking}
-                    // cancelledState={cancelledState}
-                    // bookingStates={bookingStates}
-                  /> */}
-                                <PlayPageMap
-                    event={event}
-                    showBookings={null} //showBookings
-                    ratings={ratings}
-                  />
-                  <PlayPageGallery event={event} />
-                </div>)
-            } )}
-            </Grid>
-          </TabPanel>
-          <TabPanel
-            value={value}
-            index={2}
-            dir={theme.direction}
-            style={{ width: "100%" }}
-          >
-            Ratings...
-            {loading && <Spinner height={100} width={100} />}
 
-          </TabPanel>
-        </SwipeableViews>
+
+            </Grid>
+
       </Paper>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
     </div>
   );
@@ -320,12 +221,10 @@ const useStyles = makeStyles(theme => ({
     padding: 0,
   },
   profileWrap: {
+    width: '100%',
     top: 0,
-    height: "100%",
-    width: "100%",
-    position: "fixed",
-    background:
-      "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
+    backgroundColor: "black"
+
   },
   paper: {
     paddingTop: 10,
@@ -346,6 +245,25 @@ const useStyles = makeStyles(theme => ({
   },
   buttonNavi: {
     marginBottom: 10
+  },
+  gridButtons: {
+    color: "white",
+    marginTop: "0 !important",
+    display: "flex",
+    position: "fixed",
+    height: 40,
+    zIndex: 100,
+    backgroundColor: "rgba(0,0,0,0.7)"
+  },
+  actionJoin: {
+    alignContent: "center",
+  },
+  actionNext: {
+    backgroundColor: "lightGrey",
+    alignContent: "center",
+    borderRadius: "25px",
+    position: "relative",
+    boxShadow: "5px 5px 10px 0px rgba(0,0,0,0.7)"
   }
 }));
 
