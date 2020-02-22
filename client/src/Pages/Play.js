@@ -110,12 +110,24 @@ function Profile() {
 
   useEffect(() => {
     // document.documentElement.style.overflow = "auto"
-    window.scrollTo(0, 0);
     console.log("METATE PROIFILE")
     getPlayEventsMutation()
+    // window.addEventListener('load', () => {
+    //   window.scrollTo(0, 100);
+    // });
     return () => {
     } 
   }, []);
+
+  useEffect(() => {
+
+    window.scrollBy({
+      top: 50,
+      left: 0,
+      behavior: 'smooth'
+    });
+
+  }, [data]);
 
 
 let dataDB;
