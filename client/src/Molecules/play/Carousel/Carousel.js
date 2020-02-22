@@ -50,8 +50,8 @@ const Carousel = ({children, setPosition, heightHook, getPlayEventsMutation}) =>
     <div {...handlers}>
       <Wrapper onClick={() => console.log("Wraper click")}>
         <div className={classes.eggContainerWrap}>
-          <SettingsPanel state={state} getPlayEventsMutation={getPlayEventsMutation} />
-          </div>
+          <SettingsPanel state={state} getPlayEventsMutation={getPlayEventsMutation} numItems={numItems} />
+        </div>
         <CarouselContainer dir={state.dir} sliding={state.sliding} heightHook={heightHook}>
           {React.Children.map(children, (child, index) => (
             <CarouselSlot

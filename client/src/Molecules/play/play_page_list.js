@@ -24,7 +24,7 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
         alignItems="flex-start"
         alignContent="flex-start"
         className={classes.mainContainer}
-        style={{height: `${1*windowSize.height}px`, touchAction: "inherit"}}
+        style={{touchAction: "inherit"}} // height: `${1*windowSize.height}px`
       >
       <Grid item xs={12}>
           <Typography variant="h4" className={classes.mainHeader}>
@@ -37,22 +37,6 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
             </Typography>
   
         </Grid>
-        <Grid item xs={12}>
-            <Typography component="p" className={classes.standardDescription}>
-              {event.description}
-            </Typography>
-  
-        </Grid>
-        <Grid item xs={12}>
-            <Typography component="p" className={classes.standardDescription}>
-              {event.description}
-              {event.description}
-              {event.description}
-            </Typography>
-  
-        </Grid>
-
-
 
         <p className={classes.thisLine}></p>
 
@@ -71,7 +55,6 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
             </Grid>
           </Grid>
         </Grid>
-        <p className={classes.thisLine}></p>
         <p className={classes.thisLine}></p>
         <Grid item xs={12} className={classes.listRow}>
           <Grid container item xs={12}>
@@ -176,15 +159,13 @@ const useStyles = makeStyles(theme => ({
         paddingBottom: '0px',
         width: '100%',
         color: 'white',
-        backgroundColor: "green",
-        overflowY: 'scroll'
       },
       listRow:{
         width: '100%',
       },
       thisLine:{
-        height: '2px',
-        //width: '100%',
+        height: '1px',
+        width: '100%',
         marginTop: '2px',
         backgroundColor: "lightgrey"
       },

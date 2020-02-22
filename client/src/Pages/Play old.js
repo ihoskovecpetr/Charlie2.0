@@ -265,8 +265,6 @@ function Play(props) {
     var { getPlayEvents } = dataDB;
   }
 
-  console.log("getPlayEvents: ", getPlayEvents);
-
   if (loading) {
     return (
       <PaperEvent>
@@ -286,11 +284,7 @@ function Play(props) {
     );
   }
 
-
-
-  if (data && getPlayEvents) {
-
-
+  if (data && getPlayEvents[playIndex]) {
     return (
       <>
         <PaperEvent>
@@ -301,69 +295,23 @@ function Play(props) {
               height: windowSize.height
             }}
           >
-            <CarouselWrap getPlayEventsMutation={getPlayEventsMutation} >
-            <Grid container justify="center" xs={12}>
-            <Grid item xs={12}>
-              <Grid container justify="center">
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      props.history.push("/signin");
-                    }}
-                  >
-                    Login
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container justify="center">
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      window.location.reload();
-                    }}
-                  >
-                    Reload
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container justify="center">
-                <Grid item>
-                  <Typography component="div">
-                    No More upcomming events
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-
-           {getPlayEvents.map(event => {
-             console.log("ITERACE??")
-             return (<div>
-                <PlayPageGallery event={event} />
-                <PlayPageList
-                  event={event}
-                  showBookings={null} //showBookings
-                  ONE_EVENT={PLAY_EVENTS}
-                  cancelBooking={cancelBooking}
-                  cancelledState={cancelledState}
-                  bookingStates={bookingStates}
-                />
-                              <PlayPageMap
-                  event={event}
-                  showBookings={null} //showBookings
-                  ratings={ratings}
-                />
-              </div>)
-           } )}
-
+            <CarouselWrap getPlayEventsMutation={() => { 
+              console.log("XSATR")
+              getPlayEventsMutation()}} >
+              <PlayPageMap
+                event={getPlayEvents[playIndex]}
+                showBookings={null} //showBookings
+                ratings={ratings}
+              />
+              <PlayPageGallery event={getPlayEvents[playIndex]} />
+              <PlayPageList
+                event={getPlayEvents[playIndex]}
+                showBookings={null} //showBookings
+                ONE_EVENT={PLAY_EVENTS}
+                cancelBooking={cancelBooking}
+                cancelledState={cancelledState}
+                bookingStates={bookingStates}
+              />
             </CarouselWrap>
           </Paper>
           <Container maxWidth="xs">

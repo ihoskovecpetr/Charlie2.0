@@ -39,28 +39,8 @@ const PlayPageMap = ({event, ratings}) => {
             </Grid>
           </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Grid
-              container
-              justify="center"
-              className={classes.authorContainer}
-            >
-              <Grid item>
-                <UserCard author={event.author} />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Grid
-              container
-              justify="center"
-              className={classes.authorContainer}
-            >
-              <Grid item>
-                <UserCard author={event.author} />
-              </Grid>
-            </Grid>
-          </Grid>
+
+
 
           <Grid item xs={3}>
         <Typography component="div" className={classes.standardHeading}>

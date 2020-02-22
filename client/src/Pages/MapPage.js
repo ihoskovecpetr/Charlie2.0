@@ -16,6 +16,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
+import { useWindowSize } from "../Hooks/useWindowSize";
 
 import mapSetup from "../Services/map-settings";
 import { ALL_EVENTS } from "../Services/GQL";
@@ -33,6 +34,7 @@ let LngLatCenter = { lat: 50.068645, lng: 14.457364 }; //Default position
 function MapPage(props) {
   const classes = useStyles();
   let history = useHistory();
+  const windowSize = useWindowSize()
   const { user } = useContext(UserContext);
   const { loading, error, data } = useQuery(ALL_EVENTS, {
     variables: { date: props.workingPosition.date }
@@ -376,6 +378,7 @@ function MapPage(props) {
         className="main-map"
         styling={{
           width: "100%",
+          height: `${1*windowSize.height}px`,
           position: "absolute",
           top: 0,
           background: "black"

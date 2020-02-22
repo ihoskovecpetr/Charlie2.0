@@ -50,11 +50,9 @@ export default function UserCard(props) {
       return <Spinner height={100} width={100} />;
     }
     if (data) {
-      console.log("Spocitej prumer: ", data.showRatings);
       let celkem;
       let arrValues = data.showRatings.map(x => x.ratingValue);
       const arrAvg = arrValues.reduce((a, b) => a + b, 0) / arrValues.length;
-      console.log("Average: ", arrAvg);
       return (
         <>
           <Rating name="simple-controlled" readOnly value={arrAvg} />

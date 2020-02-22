@@ -18,7 +18,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 import SliderCustom from "../../../Atoms/SliderCustom";
 
-const SettingsPanel = ({state, getPlayEventsMutation}) => {
+const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
   const classes = useStyles();
   let history = useHistory();
   const [close, setClose] = useState(false);
@@ -81,7 +81,7 @@ const SettingsPanel = ({state, getPlayEventsMutation}) => {
                      <Chip label={`+ ${days} days`} variant="outlined" color="primary" />
                 </Grid>            
                 <Grid item xs={2}>
-                    <Chip label={`1/7 or O`} variant="outlined" color="secondary" />
+                    <Chip label={`${state.pos + 1}/${numItems}`} variant="outlined" color="secondary" />
                 </Grid>
                 <Grid item  xs={12}>
                 

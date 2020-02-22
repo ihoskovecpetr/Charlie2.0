@@ -7,10 +7,17 @@ import { useWindowSize } from "../../../Hooks/useWindowSize";
 function CarouselWrap({children, getPlayEventsMutation}) {
   const windowSize = useWindowSize()
 
+  console.log("Childern Carousel WRp: ", children);
+
   return (
     <AppContainer>
       <Carousel title="Carousel" heightHook={windowSize.height} getPlayEventsMutation={getPlayEventsMutation}> 
-      {children.map((item, index) => (
+
+            <Item heightHook={windowSize.height}>
+              {children[0]}
+            </Item>
+
+      {children[1].map((item, index) => (
             <Item key={index} heightHook={windowSize.height}>
               {item}
             </Item>
