@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 
 import clsx from "clsx";
 
@@ -12,12 +12,15 @@ import Slider from '@material-ui/core/Slider';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
+import Backdrop from '@material-ui/core/Backdrop';
 
 import CloseIcon from "@material-ui/icons/Close";
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import SliderCustom from "../../../Atoms/SliderCustom";
+import { useBackdrop } from "../../../Hooks/useBackdrop";
 
 const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
   const classes = useStyles();
@@ -28,7 +31,8 @@ const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
   const [days, setDays] = useState(2);
 
 
-  const handleChange = () => {
+  const handleChange = (e) => {
+    e.stopPropagation();
     setChecked(prev => !prev);
   };
 
@@ -40,8 +44,20 @@ const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
     setDays(newValue);
   };
 
+  const closeBackdrop = () => {
+    setChecked(false)
+  };
+
   return (
     <div className={classes.eggContainerWrap}>
+
+      <Backdrop className={classes.backdrop} 
+                open={checked} 
+                onClick={closeBackdrop} 
+                className={classes.backdropMain}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       <Container
           maxWidth="xs"
           className={classes.playContainer}
@@ -52,93 +68,104 @@ const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
             <Grid container onClick={handleChange}>
 
                 <Grid item xs={5} >
-                    <Chip label={`Radius: ${radius} km`} variant="outlined" color="secondary" />
+                  <Grid container justify="center">
+                    <Grid item xs={12}>
+                      <Chip label={`Radius: ${radius} km`} variant="outlined" color="secondary" className={classes.anyChip} />
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item xs={5}>
-                     <Chip label={`+ ${days} days`} variant="outlined" color="primary" />
+                  <Grid container justify="center">
+                    <Grid item xs={12}>
+                        <Chip label={`+ ${days} days`} variant="outlined" color="primary" className={classes.anyChip} />
+                    </Grid>
+                  </Grid>
                 </Grid>            
                 <Grid item xs={2}>
-                    <Chip label={`${ 1}/${numItems}`} variant="outlined" color="secondary" />
+                  <Grid container justify="center">
+                    <Grid item xs={12}>
+                        <Chip label={`${ 1}/${numItems}`} variant="outlined" color="secondary" className={classes.anyChip} />
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item  xs={12}>
                 
                 <Collapse in={checked}>
-                <Grid container alignItems="center">
-                    <Grid item xs={2}>
-                        <Typography id="range-slider" variant="subtitle2" color="secondary" gutterBottom>
-                            0 km
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={8}>
-                        
-                        <SliderCustom
-                            value={radius}
-                            onChange={handleChangeRadius}
-                            step={5}
-                            min={5}
-                            max={50}
-                            color={"secondary"}
-                            onChangeCommitted={getPlayEventsMutation}
-                            // valueLabelDisplay="auto"
-                            // aria-labelledby="range-slider"
-                            // getAriaValueText={valuetext}
-                        /> 
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Typography id="range-slider" variant="subtitle2" color="secondary" gutterBottom>
-                            {radius} km
-                        </Typography>
-                    </Grid>
+                  <Grid container alignItems="center" className={classes.collapseGrid}>
+                      <Grid item xs={2}>
+                          <Typography id="range-slider" variant="subtitle2" color="secondary" gutterBottom>
+                              0 km
+                          </Typography>
+                      </Grid>
+                      <Grid item xs={8}>
+                          
+                          <SliderCustom
+                              value={radius}
+                              onChange={handleChangeRadius}
+                              step={5}
+                              min={5}
+                              max={50}
+                              color={"secondary"}
+                              onChangeCommitted={getPlayEventsMutation}
+                              // valueLabelDisplay="auto"
+                              // aria-labelledby="range-slider"
+                              // getAriaValueText={valuetext}
+                          /> 
+                      </Grid>
+                      <Grid item xs={2}>
+                          <Typography id="range-slider" variant="subtitle2" color="secondary" gutterBottom>
+                              {radius} km
+                          </Typography>
+                      </Grid>
 
-                    <Grid item xs={2}>
-                        <Typography id="range-slider" variant="subtitle2" color="secondary" gutterBottom>
-                            Today
-                        </Typography>
-                    </Grid>
-                    <Grid item xs={8}>
-                        
-                        <SliderCustom
-                                value={days}
-                                onChange={handleChangeDays}
-                                step={1}
-                                min={0}
-                                max={7}
-                                color={"primary"}
-                                onChangeCommitted={() => {console.log("getPlayEventsMutation")}}
-                            // valueLabelDisplay="auto"
-                            // aria-labelledby="range-slider"
-                            // getAriaValueText={valuetext}
-                        />  
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Typography id="range-slider" variant="subtitle2" color="secondary" gutterBottom>
-                           + {days} days
-                        </Typography>
-                    </Grid>
-                    </Grid>
-                    </Collapse>     
+                      <Grid item xs={2}>
+                          <Typography id="range-slider" variant="subtitle2" color="secondary" gutterBottom>
+                              Today
+                          </Typography>
+                      </Grid>
+                      <Grid item xs={8}>
+                          
+                          <SliderCustom
+                                  value={days}
+                                  onChange={handleChangeDays}
+                                  step={1}
+                                  min={0}
+                                  max={7}
+                                  color={"primary"}
+                                  onChangeCommitted={() => {console.log("getPlayEventsMutation")}}
+                              // valueLabelDisplay="auto"
+                              // aria-labelledby="range-slider"
+                              // getAriaValueText={valuetext}
+                          />  
+                      </Grid>
+                      <Grid item xs={2}>
+                          <Typography id="range-slider" variant="subtitle2" color="secondary" gutterBottom>
+                            + {days} days
+                          </Typography>
+                      </Grid>
+                  </Grid>
+                </Collapse>     
                 
                 </Grid>
-                <Grid item xs={2} className={classes.arrowGrid} style={{display: "none"}} >
+                {/* <Grid item xs={2} className={classes.arrowGrid} style={{display: "none"}} >
                     <KeyboardArrowDownIcon 
                             color="secondary" 
                             fontSize="large" 
                             className={clsx(classes.arrowOpener, checked && classes.arrowUp)} 
                             onClick={handleChange} />
-                </Grid>
+                </Grid> */}
             </Grid>
 
             </Grid>
         <Grid item 
                 xs={2} 
                 id="play_close"
-                className={classes.closeCross}
+                className={classes.closeCrossGrid}
                 >
           <Grid container justify="center">
               <Grid item>
                 <CloseIcon 
-                    fontSize="large" 
-                    className={clsx(close && classes.whiteBordered)} 
+                    className={clsx(classes.closeCross, close && classes.whiteBordered)} 
                     onClick={() => {
                     setClose(true)
                     setTimeout(() => {
@@ -170,12 +197,15 @@ const useStyles = makeStyles(theme => ({
     // height: "36px", //"16"
     width: '100%',
     zIndex: 100,
-    paddingTop: "8px",
-    paddingBottom: "2px",
+    paddingTop: "12px",
+    paddingBottom: "4px",
     paddingLeft: "5px",
     //top: '30px',
     position: "relative",
     backgroundColor: "rgba(0,0,0,1)",
+  },
+  backdropMain: {
+    zIndex: 10
   },
   solidColor:{
     backgroundColor: "rgba(0,0,0,1)",
@@ -194,38 +224,25 @@ const useStyles = makeStyles(theme => ({
     marginBottom: '4px',
     borderRadius: "4px"
   },
-  white:{
-    backgroundColor: "white",
-  },
-  red:{
-    backgroundColor: "red",
-  },
-  blue:{
-    backgroundColor: "blue",
-
+  closeCrossGrid: {
+    color: "white",
   },
   closeCross: {
-    color: "white",
+    fontSize: 30,
   },
   whiteBordered: {
     border: "1px solid white",
     borderRadius: 10
   },
-
+  collapseGrid:{
+    marginTop: 10,
+    marginBottom: 10
+  },
   container: {
     display: 'flex',
   },
   paper: {
     margin: theme.spacing(1),
-  },
-  svg: {
-    width: 100,
-    height: 100,
-  },
-  polygon: {
-    fill: theme.palette.common.white,
-    stroke: theme.palette.divider,
-    strokeWidth: 1,
   },
   arrowGrid: {
     height: 0,
@@ -238,6 +255,11 @@ const useStyles = makeStyles(theme => ({
   },
   arrowUp: {
     transform: "rotate(0.5turn)",
+  },
+  anyChip: {
+    width: '90%',
+    marginLeft: '5%',
+    marginRight: '5%',
   }
 }));
 

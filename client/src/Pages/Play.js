@@ -210,7 +210,7 @@ if (data) {
     >
       <Paper className={classes.paper}>
 
-          <SettingsPanel getPlayEventsMutation={getPlayEventsMutation} numItems={5} />
+          <SettingsPanel getPlayEventsMutation={getPlayEventsMutation} numItems={getPlayEvents ? getPlayEvents.length : 0} />
           {/* <JoinPanel /> */}
 
             {loading && (
