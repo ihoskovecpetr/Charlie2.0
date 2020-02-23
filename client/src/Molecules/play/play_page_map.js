@@ -62,6 +62,8 @@ const PlayPageMap = ({event, ratings}) => {
 const useStyles = makeStyles(theme => ({
   mapContainer: {
     width: '100%',
+    paddingLeft: '40px',
+    paddingRight: '40px',
   },
   ratingAuthorContainer: {
       padding: '40px',

@@ -229,31 +229,29 @@ if (data) {
               style={{ width: "100%" }}
             >
             {getPlayEvents && getPlayEvents.map((event, index) => {
-              console.log("index, discovered,index % discovered : ", index , discovered, index % discovered)
              return (
-               <div style={{ backgroundColor: (index % 2 === 0) ? "#242323" : "lightgrey"}} >
-              {index > discovered && <Grid container
+               <div style={{ backgroundColor: (index % 2 === 0) ? "#242323" : "#908E8E", width: "100%" }} >
+              {index > discovered && 
+              <Grid container
                     className={classes.nextEventBox}
-                    alignItems="center"
+                    justify="center" 
+                    onClick={discoverPlay}
                     style={{display: (index === discovered + 1) ? "flex" : "none"}}>
-
-                <Grid container 
-                      justify="center" 
-                      onClick={discoverPlay}
-                      style={{ margin: "30px"}}>
-                    <Grid item xs={12}>
+                   <Grid item style={{ margin: "30px"}}>
                       {!loadingPlay && <ArrowDownwardIcon color="secondary" style={{ fontSize: 100 }} />}
                       {loadingPlay && <Spinner height={100} width={100} />}
                     </Grid>
-                </Grid>
               </Grid>}
               <Collapse in={index <= discovered }>
               <div style={{display: index <= discovered ? "block" : "none"}}>
-              <Grid item xs={12}>
-                  <Typography variant="h4" className={classes.mainHeader}>
-                  {event.name}
-                  </Typography>
-              </Grid>
+              
+                <Grid container justify='center'>
+                  <Grid item>
+                      <Typography variant="h4" className={classes.mainHeader}>
+                      {event.name}
+                      </Typography>
+                  </Grid>
+                </Grid>
                   <PlayPageGallery event={event} />
                   <PlayPageList
                     event={event}
@@ -275,9 +273,9 @@ if (data) {
                         <Grid item xs={12}>
                           
                           <Chip label={`JOIN`} 
-                                variant="outlined" 
+                                //variant="outlined" 
                                 color="secondary" 
-                                style={{width: "100%"}} 
+                                style={{width: "100%", fontWeight: 600, fontSize: 25, padding: 10}} 
                                 onClick={discoverPlay}
                                 />
                         </Grid>
@@ -315,8 +313,8 @@ const useStyles = makeStyles(theme => ({
     color: "white"
   },
   mainHeader:{
-    marginTop: '20px',
-    marginBottom: '5px'
+    marginTop: '100px',
+    marginBottom: '20px'
   },
   nextEventBox: {
     width: "100%",

@@ -134,14 +134,21 @@ const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
                 id="play_close"
                 className={classes.closeCross}
                 >
+          <Grid container justify="center">
+              <Grid item>
                 <CloseIcon 
                     fontSize="large" 
                     className={clsx(close && classes.whiteBordered)} 
                     onClick={() => {
                     setClose(true)
-                    history.goBack()
+                    setTimeout(() => {
+                      history.goBack()
+                    }, 100)
+                    
                     }}
                     />
+              </Grid>
+          </Grid>
         </Grid>
       </Grid>
       </Container>

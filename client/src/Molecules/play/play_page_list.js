@@ -108,6 +108,7 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
             )}
           </Box>
         </Grid>
+        <p className={classes.thisLine}></p>
         <Grid item xs={3}>
           <Typography component="div" className={classes.standardHeading}>
             Address
@@ -186,7 +187,7 @@ const useStyles = makeStyles(theme => ({
       },
       standardHeading: {
         fontWeight: 500,
-        color: "grey",
+        color: "lightGrey",
         textAlign: 'left'
       },
       standardDescription: {
