@@ -154,26 +154,20 @@ function Profile() {
 
 
   useEffect(() => {
-    // document.documentElement.style.overflow = "auto"
-    console.log("METATE PROIFILE")
     getPlayEventsMutation()
-    // window.addEventListener('load', () => {
-    //   window.scrollTo(0, 100);
-    // });
     return () => {
     } 
   }, []);
 
-  useEffect(() => {
-
-    setTimeout(() => {
-    window.scrollBy({
-      top: 50,
-      left: 0,
-      behavior: 'smooth'
-    });
-    })
-  }, [data]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //   window.scrollBy({
+  //     top: 50,
+  //     left: 0,
+  //     behavior: 'smooth'
+  //   });
+  //   })
+  // }, [data]);
 
 
 let dataDB;
@@ -317,7 +311,7 @@ const useStyles = makeStyles(theme => ({
     color: "white"
   },
   mainHeader:{
-    marginTop: '100px',
+    marginTop: '40px',
     marginBottom: '20px'
   },
   nextEventBox: {
