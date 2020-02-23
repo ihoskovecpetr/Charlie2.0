@@ -88,7 +88,7 @@ function ConfirmedGuest({bookings, event, cancelBooking, cancelledState, ONE_EVE
                               alt={booking.user.name}
                               src={booking.user.picture}
                             >
-                              M
+                              User
                             </Avatar>
                           }
                           label={booking.user.name}
@@ -107,7 +107,7 @@ function ConfirmedGuest({bookings, event, cancelBooking, cancelledState, ONE_EVE
               {bookings && bookings.map((booking, index) => {
                 if (booking.confirmed) {
                   countGuests++;
-                  if (index <= 2) {
+                  if (index <= 4) {
                     return (
                       <NavLink
                         to={`/user/${booking.user._id}`}
@@ -127,7 +127,7 @@ function ConfirmedGuest({bookings, event, cancelBooking, cancelledState, ONE_EVE
               })}
               {overFlowGst && (
                 <Tooltip title={leftoverGst.map(name => `${name} • `)}>
-                  <Avatar>+{countGuests - 3}</Avatar>
+                  <Avatar>+{countGuests - 5}</Avatar>
                 </Tooltip>
               )}
             </AvatarGroup>

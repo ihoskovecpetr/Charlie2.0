@@ -21,13 +21,10 @@ import { useHistory, NavLink } from "react-router-dom";
 import { UserContext } from "../userContext";
 // import { useWindowSize } from "../Hooks/useWindowSize";
 
-import Copyright from "../Atoms/copyright";
 import Spinner from "../Atoms/Spinner";
 
-import EventCard from "../Molecules/event-card";
-import RatingCard from "../Molecules/rating-card";
-import SettingsPanel from "../Molecules/play/Carousel/SettingsPanel";
-import JoinPanel from "../Molecules/play/Carousel/JoinPanel";
+import SettingsPanel from "../Molecules/play/SettingsPanel";
+
 
 
 import PlayPageGallery from "../Molecules/play/play_page_gallery";
@@ -45,6 +42,7 @@ const PLAY_EVENTS = gql`
         _id
         name
         picture
+        description
       }
       dateStart
       geometry {
@@ -223,14 +221,15 @@ if (data) {
               style={{ width: "100%" }}
             >
             {getPlayEvents && getPlayEvents.map((event, index) => {
+              console.log("index != 0 && index <= discovered + 1 : ", index != 0 && index <= discovered + 1 )
              return (
-               <div style={{ backgroundColor: (index % 2 === 0) ? "#242323" : "#908E8E", width: "100%" }} >
-              {index > discovered && 
+               <div style={{ backgroundColor: (index % 2 === 0) ? "#242323" : "#908E8E", width: "100%", color: (index % 2 === 0) ? "lightgrey" : "black", }} >
+              {index != 0 && index <= discovered + 1 && 
               <Grid container
                     className={classes.nextEventBox}
                     justify="center" 
                     onClick={discoverPlay}
-                    style={{display: (index === discovered + 1) ? "flex" : "none"}}>
+                    style={{display: (index === discovered + 1) ? "flex" : "flex"}}>
                    <Grid item style={{ margin: "30px"}}>
                       {!loadingPlay && <ArrowDownwardIcon color="secondary" style={{ fontSize: 100 }} />}
                       {loadingPlay && <Spinner height={100} width={100} />}
@@ -269,7 +268,7 @@ if (data) {
                           <Chip label={`JOIN`} 
                                 //variant="outlined" 
                                 color="secondary" 
-                                style={{width: "100%", fontWeight: 600, fontSize: 25, padding: 10}} 
+                                style={{width: "90%", fontWeight: 500, fontSize: 25, padding: 20, margin: "5%"}} 
                                 onClick={discoverPlay}
                                 />
                         </Grid>
@@ -311,7 +310,7 @@ const useStyles = makeStyles(theme => ({
     color: "white"
   },
   mainHeader:{
-    marginTop: '40px',
+    marginTop: '50px',
     marginBottom: '20px'
   },
   nextEventBox: {

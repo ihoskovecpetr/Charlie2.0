@@ -6,8 +6,8 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 import PlayMap from "./Carousel/PlayMap";
-import UserCard from "../../Molecules/event/user-card";
-import RatingCard from "../../Molecules/rating-card";
+import UserCard from "./UserCardPlay";
+import RatingCard from "./RatingCardPlay";
 
 const PlayPageMap = ({event, ratings}) => {
     const classes = useStyles();
@@ -25,33 +25,32 @@ const PlayPageMap = ({event, ratings}) => {
           className={classes.ratingAuthorContainer}
         >
           <Grid item xs={12}>
-                      <Grid
-            container
-            justify="center"
-            className={classes.authorContainer}
-          >
-            <Grid item>
-              <UserCard author={event.author} />
+            <Grid
+              container
+              justify="center"
+              className={classes.authorContainer}
+            >
+              <Grid item xs={12}>
+                <UserCard author={event.author} />
+              </Grid>
             </Grid>
           </Grid>
+          <p className={classes.thisLine}></p>
+
+          {/* <Grid item xs={3}>
+            <Typography component="div" className={classes.standardHeading}>
+              RATING
+            </Typography>
           </Grid>
 
-
-
           <Grid item xs={3}>
-        <Typography component="div" className={classes.standardHeading}>
-          RATING
-        </Typography>
-        </Grid>
-
-        <Grid item xs={3}>
-          {ratings.data &&
-            ratings.data.showRatings.map((rating, index) => (
-              <Grid item key={index}>
-                <RatingCard rating={rating} />
-              </Grid>
-            ))}
-        </Grid>
+            {ratings.data &&
+              ratings.data.showRatings.map((rating, index) => (
+                <Grid item key={index}>
+                  <RatingCard rating={rating} />
+                </Grid>
+              ))}
+          </Grid> */}
         </Grid>
 
       </Grid>  
@@ -62,11 +61,11 @@ const PlayPageMap = ({event, ratings}) => {
 const useStyles = makeStyles(theme => ({
   mapContainer: {
     width: '100%',
-    paddingLeft: '40px',
-    paddingRight: '40px',
+    paddingLeft: '20px',
+    paddingRight: '20px',
   },
   ratingAuthorContainer: {
-      padding: '40px',
+      padding: '0px',
       paddingTop: '5px',
       paddingBottom: '0px',
       width: '100%',
@@ -79,6 +78,12 @@ const useStyles = makeStyles(theme => ({
     },
     authorContainer: {
       width: "100%"
+    },
+    thisLine:{
+      height: '1px',
+      width: '100%',
+      marginTop: '2px',
+      backgroundColor: "#707070"
     },
   }));
 

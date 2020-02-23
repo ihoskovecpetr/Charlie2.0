@@ -26,9 +26,14 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
         style={{touchAction: "inherit"}}
       >
       <Grid item xs={12}>
-          <Typography variant="h4" className={classes.mainHeader}>
-          {event.name}
-          </Typography>
+          <Grid container 
+                justify="center">
+            <Grid item>
+              <Typography variant="h4" className={classes.mainHeader}>
+              {event.name}
+              </Typography>
+            </Grid>
+          </Grid>
       </Grid>
         <Grid item xs={12}>
             <Typography component="p" className={classes.standardDescription}>
@@ -88,13 +93,12 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
         <p className={classes.thisLine}></p>
         <Grid item xs={12} className={classes.listRow}>
         <Grid container item xs={12}>
-        <Grid item xs={3}>
+        <Grid item xs={5}>
           <Typography component="div" className={classes.standardHeading}>
             ATTENDEES
           </Typography>
         </Grid>
-        <Grid item xs={9}>
-          <Box textAlign="left" m={1}>
+        <Grid item xs={7}>
             <ConfirmedGuest
               bookings={event.bookings}
               cancelBooking={cancelBooking}
@@ -106,10 +110,7 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
             {bookingStates && bookingStates.loading && (
               <Spinner height={100} width={100} />
             )}
-          </Box>
         </Grid>
-        <p className={classes.thisLine}></p>
-
         </Grid>
         </Grid>
         <p className={classes.thisLine}></p>
@@ -153,7 +154,7 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
         <Grid container item xs={12}>
         <Grid item xs={3}>
           <Typography component="div" className={classes.standardHeading}>
-            Address
+            ADDRESS
           </Typography>
           </Grid>
           <Grid item xs={9}>
@@ -170,20 +171,21 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
 const useStyles = makeStyles(theme => ({
    
     mainContainer:{
-        padding: '40px',
+        padding: '20px',
         paddingTop: '5px',
         paddingBottom: '0px',
         width: '100%',
-        color: 'white',
       },
       listRow:{
         width: '100%',
+        marginTop: 5,
+        marginBottom: 5
       },
       thisLine:{
         height: '1px',
         width: '100%',
         marginTop: '2px',
-        backgroundColor: "lightgrey"
+        // backgroundColor: "#707070"
       },
       mainHeader:{
         marginTop: '20px',
@@ -191,12 +193,13 @@ const useStyles = makeStyles(theme => ({
       },
       standardHeading: {
         fontWeight: 500,
-        color: "lightGrey",
+        // color: "lightGrey",
         textAlign: 'left'
       },
       standardDescription: {
-        fontWeight: 300,
-        textAlign: 'left'
+        fontWeight: 400,
+        textAlign: 'left',
+
       },
       standardContent: {
         fontWeight: 400,
