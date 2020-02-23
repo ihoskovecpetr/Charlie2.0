@@ -1,10 +1,11 @@
 const Event = require("../Models-Mongo/Event");
 const User = require("../Models-Mongo/User");
 
-const transformEvent = async (event, success, areYourAuthor) => {
+const transformEvent = async (event, areYouAuthor) => {
   console.log(
-    "transformEvent FCE _dot.dateS",
-    new Date(event._doc.dateStart).toISOString()
+    "transformEvent FCE _dot.dateS RZAUTH",
+    new Date(event._doc.dateStart).toISOString(),
+    areYouAuthor
   );
   if (event) {
     return {
@@ -14,7 +15,7 @@ const transformEvent = async (event, success, areYourAuthor) => {
       author: await userLookup(event._doc.author),
       freeSnack: true,
       success: true,
-      areYourAuthor: areYourAuthor
+      areYouAuthor: areYouAuthor
     };
   } else {
     console.log("NULL ODMITNUTO");
@@ -59,7 +60,6 @@ const userLookup = async userId => {
   try {
     const userLookupResult = await User.findById(userId);
     if (userLookupResult) {
-      console.log("userLookup: XX", userLookupResult._doc);
       return {
         ...userLookupResult._doc,
         password: null

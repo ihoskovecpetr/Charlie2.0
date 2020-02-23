@@ -80,4 +80,4 @@ const useStyles = makeStyles(theme => ({
     },
   }));
 
-export default PlayPageMap
+export default React.memo(PlayPageMap)

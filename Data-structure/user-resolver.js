@@ -106,7 +106,6 @@ export const resolvers = {
       try {
         if (context.reqO.req.isAuth) {
           let user = await User.findById(context.reqO.req.userId);
-          console.log("fount all: ", user);
           return { ...user._doc, success: true };
         }
         return { success: false };

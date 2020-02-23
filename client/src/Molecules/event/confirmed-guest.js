@@ -10,18 +10,20 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { NavLink } from "react-router-dom";
 import { ALL_EVENTS } from "../../Services/GQL";
 
-function ConfirmedGuest(props) {
+function ConfirmedGuest({bookings, event, cancelBooking, cancelledState, ONE_EVENT}) {
   const classes = useStyles();
   let countGuests = 0;
   let overFlowGst = false;
   let leftoverGst = [];
+
+  console.log("ConfirmedBookings: ", event.name, bookings)
   return (
     <Grid container justify="flex-start" alignItems="center" direction="row">
-      {props.event.areYouAuthor ? (
+      {event && event.areYouAuthor ? ( //
         <>
-          {props.bookings.map((booking, index) => 
+          {bookings && bookings.map((booking, index) => 
             booking.confirmed && !booking.cancelled && <Grid item key={index}>
-                    {props.cancelledState.loading && (
+                    {cancelledState.loading && (
                       <Chip
                         className={classes.chip}
                         avatar={
@@ -38,7 +40,7 @@ function ConfirmedGuest(props) {
                         disabled
                       />
                     )}
-                    {!props.cancelledState.loading && props.event.areYouAuthor && (
+                    {!cancelledState.loading && event && event.areYouAuthor && (
                       <Chip
                         className={classes.chip}
                         avatar={
@@ -54,20 +56,20 @@ function ConfirmedGuest(props) {
                         variant="outlined"
                         onClick={() => console.log("XX")}
                         onDelete={() => {
-                          props.cancelBooking({
+                          cancelBooking({
                             variables: {
                               user_id: booking.user._id,
-                              event_id: props.event._id
+                              event_id: event._id
                             },
                             refetchQueries: () => [
                               {
-                                query: props.ONE_EVENT,
-                                variables: { id: props.event._id }
+                                query: ONE_EVENT,
+                                variables: { id: event._id }
                               },
                               {
                                 query: ALL_EVENTS,
                                 variables: {
-                                  date: new Date(props.event.dateStart)
+                                  date: new Date(event.dateStart)
                                     .toISOString()
                                     .split("T")[0]
                                 }
@@ -77,8 +79,8 @@ function ConfirmedGuest(props) {
                         }}
                       />
                     )}
-                    {!props.cancelledState.loading &&
-                      !props.event.areYouAuthor && (
+                    {cancelledState && !cancelledState.loading && event &&
+                      !event.areYouAuthor && (
                         <Chip
                           className={classes.chip}
                           avatar={
@@ -102,7 +104,7 @@ function ConfirmedGuest(props) {
         <Grid container>
           <Grid item>
             <AvatarGroup>
-              {props.bookings.map((booking, index) => {
+              {bookings && bookings.map((booking, index) => {
                 if (booking.confirmed) {
                   countGuests++;
                   if (index <= 2) {

@@ -14,12 +14,12 @@ export const resolvers = {
         if (context.reqO.req.isAuth) {
           let oneEvent = await Event.findOne({ _id: _args.id });
           if (oneEvent) {
-            let areYourAuthor = oneEvent.author == context.reqO.req.userId;
+            let areYouAuthor = oneEvent.author == context.reqO.req.userId;
             return {
               ...oneEvent._doc,
               dateStart: new Date(oneEvent._doc.dateStart).toISOString(),
               success: true,
-              areYouAuthor: areYourAuthor
+              areYouAuthor: areYouAuthor
             };
           } else {
             return {
@@ -154,18 +154,20 @@ export const resolvers = {
           let playEvents = await Event.find({}).sort(
             "dateStart"
           )
-          console.log("playEvents", playEvents)
           if (playEvents) {
-            //let areYourAuthor = oneEvent.author == context.reqO.req.userId;
             let filtered = playEvents.filter((item) => item.dateStart > new Date()) 
-            return filtered.map(event => {
-              return transformEvent(event);
-            });
+            let FILTD = await Promise.all(filtered.map(async event => {
+              let TRANSFD = await transformEvent(event, event.author == context.reqO.req.userId);
+              return TRANSFD
+            }));
+            return FILTD
+
+
             // return {
             //   ...oneEvent._doc,
             //   dateStart: new Date(oneEvent._doc.dateStart).toISOString(),
             //   success: true,
-            //   areYouAuthor: areYourAuthor
+            //   areYouAuthor: areYouAuthor
             // };
           // } else {
             return {
@@ -179,7 +181,49 @@ export const resolvers = {
             message: "You are not authorised, login first to continue"
           };
         }
-      } catch (err) {
+      } 
+      
+    //   try {
+    //     if (context.reqO.req.isAuth) {
+    //       console.log("Pass first")
+    //      let playEvents = await Event.find({}).sort(
+    //        "dateStart"
+    //      )
+    //      console.log("playEvents", playEvents)
+    //      if (playEvents) {
+    //        // let areYouAuthor = oneEvent.author == context.reqO.req.userId;
+    //        let filtered = playEvents.filter((item) => item.dateStart > new Date()) 
+    //        //only future events
+    //        return filtered.map(event =>{ return transformEvent({
+    //          ...event, 
+    //          areYouAuthor: true,
+    //        }) 
+    //      })
+    //      console.log("FILTER AUTHOR EVENTS:", filtered);
+    //      return filtered
+    //        // return transformEvent(event);
+    //        return {
+    //          ...oneEvent._doc,
+    //          dateStart: new Date(oneEvent._doc.dateStart).toISOString(),
+    //          success: true,
+    //          areYouAuthor: areYouAuthor
+    //        };
+    //      } else {
+    //        return {
+    //          success: false,
+    //          message: "This event is worhere to be seen, check url and repeat"
+    //        };
+    //       }
+    //    } else {
+    //      console.log("Did not pass")
+    //      return {
+    //        success: false,
+    //        message: "You are not authorised, login first to continue"
+    //      };
+    //    }
+    //  }
+      
+      catch (err) {
         throw err;
       }
     },
@@ -195,7 +239,6 @@ export const resolvers = {
     },
     bookings: async a => {
       try {
-        console.log("Event.bookings.a: ", a);
         const bookingsArr = await Booking.find({ event: a });
         return bookingsArr;
       } catch (err) {

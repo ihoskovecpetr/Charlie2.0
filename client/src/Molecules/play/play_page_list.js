@@ -29,7 +29,7 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
           <Typography variant="h4" className={classes.mainHeader}>
           {event.name}
           </Typography>
-        </Grid>
+      </Grid>
         <Grid item xs={12}>
             <Typography component="p" className={classes.standardDescription}>
               {event.description}
@@ -92,24 +92,35 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
           <Typography component="div" className={classes.standardHeading}>
             ATTENDEES
           </Typography>
-          </Grid>
-          <Grid item xs={9}>
+        </Grid>
+        <Grid item xs={9}>
           <Box textAlign="left" m={1}>
-            {/* <ConfirmedGuest
-              bookings={showBookings}
+            <ConfirmedGuest
+              bookings={event.bookings}
               cancelBooking={cancelBooking}
               cancelledState={cancelledState}
               event={event}
               ONE_EVENT={ONE_EVENT}
-            /> */}
+            />
 
             {bookingStates && bookingStates.loading && (
               <Spinner height={100} width={100} />
             )}
           </Box>
         </Grid>
+        <Grid item xs={3}>
+          <Typography component="div" className={classes.standardHeading}>
+            Address
+          </Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <Typography component="p" className={classes.standardContent}>
+              {event.address ? event.address : "NO Address"}
+            </Typography>
         </Grid>
         </Grid>
+        </Grid>
+        <p className={classes.thisLine}></p>
         <Grid item xs={12}>
           {event.areYouAuthor && (
             <>
@@ -142,10 +153,11 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
                   )}
                 </Box>
               </Grid>
+              <p className={classes.thisLine}></p>
             </>
           )}
         </Grid>
-
+       
       </Grid>
     )
 }

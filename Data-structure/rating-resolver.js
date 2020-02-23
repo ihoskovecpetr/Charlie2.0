@@ -20,7 +20,6 @@ export const resolvers = {
         } else if (_args.host_id) {
           ratings = await Rating.find({ host: _args.host_id });
         }
-        console.log("showRatings found: ", ratings);
         return ratings.map(rating => {
           return {
             ...rating._doc,
@@ -81,9 +80,7 @@ export const resolvers = {
     },
     guest: async (a, b, c) => {
       try {
-        console.log("RATING guest:: input ", a.guest);
         const user = await User.findById(a.guest);
-        console.log("RATING guest:: ", user);
         return user;
       } catch (err) {
         throw err;

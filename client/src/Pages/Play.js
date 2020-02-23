@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import Container from "@material-ui/core/Container";
@@ -7,9 +7,8 @@ import Badge from "@material-ui/core/Badge";
 import Paper from "@material-ui/core/Paper";
 import Chip from '@material-ui/core/Chip';
 import Typography from "@material-ui/core/Typography";
-import CloseIcon from "@material-ui/icons/Close";
-import RedoIcon from "@material-ui/icons/Redo";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import Collapse from '@material-ui/core/Collapse';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import clsx from "clsx";
@@ -70,9 +69,31 @@ const PLAY_EVENTS = gql`
       }
       confirmed
       areYouAuthor
+      bookings{
+        _id
+        confirmed
+        user{
+          _id
+          name
+          picture
+        }
+      }
     }
+
   }
 `;
+
+// showBookings(id: $id) {
+//   confirmed
+//   cancelled
+//   message
+//   user {
+//     _id
+//     name
+//     email
+//     picture
+//   }
+// }
 
 const EVENT_RATINGS = gql`
   query showRatings($event_id: ID!) {
@@ -89,6 +110,24 @@ const EVENT_RATINGS = gql`
 `;
 
 
+const BOOKING = gql`
+  mutation bookEvent($user_id: String!, $event_id: String!) {
+    bookEvent(user_id: $user_id, event_id: $event_id) {
+      success
+    }
+  }
+`;
+
+const CANCELLING = gql`
+  mutation cancelBooking($user_id: String!, $event_id: String!) {
+    cancelBooking(user_id: $user_id, event_id: $event_id) {
+      _id
+      success
+    }
+  }
+`;
+
+
 
 function Profile() {
   const classes = useStyles();
@@ -96,7 +135,8 @@ function Profile() {
   let history = useHistory();
   // const windowSize = useWindowSize();
   const { user, setUser } = useContext(UserContext);
-  const [discovered, setDiscovered] = React.useState(0);
+  const [discovered, setDiscovered] = useState(0);
+  const [loadingPlay, setLoadingPlay] = useState(false);
   const [getPlayEventsMutation, { loading, error, data, refetch }] = useMutation(PLAY_EVENTS, {
     variables: { id: "props.match.params.id" }
     //skip: !id,
@@ -107,6 +147,10 @@ function Profile() {
     //skip: !id,
     //pollInterval: 500
   });
+    const [cancelBooking, cancelledState] = useMutation(CANCELLING);
+    // const [deleteOneEvent, deleteState] = useMutation(DELETE);
+    const [createBooking, bookingStates] = useMutation(BOOKING);
+
 
 
   useEffect(() => {
@@ -122,12 +166,13 @@ function Profile() {
 
   useEffect(() => {
 
+    setTimeout(() => {
     window.scrollBy({
       top: 50,
       left: 0,
       behavior: 'smooth'
     });
-
+    })
   }, [data]);
 
 
@@ -139,21 +184,24 @@ if (data) {
   }
 
   function discoverPlay(){
-    setDiscovered(discovered + 1)
+    setLoadingPlay(true)
+    setTimeout(() => {
+      setDiscovered(discovered + 1)
+      setLoadingPlay(false)
+    }, 500)
+    setTimeout(() => {
+      window.scrollBy({
+        top: 200,
+        left: 0,
+        behavior: 'smooth'
+      });
+      }, 800)
+
   }
 
-
-
-  console.log(
-    "getPlayEvents PROFILE: ",
-    // hostingStates.data,
-    // bookingStates.data,
-    getPlayEvents,
-    data
-  );
   return (
     <div
-      className={classes.profileWrap}
+      className={classes.playWrap}
       style={{ position: user.freezScroll ? "fixed" : "absolute" }}
     >
     <Container
@@ -180,27 +228,51 @@ if (data) {
               alignContent="center"
               style={{ width: "100%" }}
             >
-            {getPlayEvents && getPlayEvents.map((event, index) => 
-            <div style={{display: index <= discovered ? "block" : "none"}}>
+            {getPlayEvents && getPlayEvents.map((event, index) => {
+              console.log("index, discovered,index % discovered : ", index , discovered, index % discovered)
+             return (
+               <div style={{ backgroundColor: (index % 2 === 0) ? "#242323" : "lightgrey"}} >
+              {index > discovered && <Grid container
+                    className={classes.nextEventBox}
+                    alignItems="center"
+                    style={{display: (index === discovered + 1) ? "flex" : "none"}}>
+
+                <Grid container 
+                      justify="center" 
+                      onClick={discoverPlay}
+                      style={{ margin: "30px"}}>
+                    <Grid item xs={12}>
+                      {!loadingPlay && <ArrowDownwardIcon color="secondary" style={{ fontSize: 100 }} />}
+                      {loadingPlay && <Spinner height={100} width={100} />}
+                    </Grid>
+                </Grid>
+              </Grid>}
+              <Collapse in={index <= discovered }>
+              <div style={{display: index <= discovered ? "block" : "none"}}>
+              <Grid item xs={12}>
+                  <Typography variant="h4" className={classes.mainHeader}>
+                  {event.name}
+                  </Typography>
+              </Grid>
                   <PlayPageGallery event={event} />
                   <PlayPageList
                     event={event}
-                    showBookings={null} //showBookings
+                    showBookings={getPlayEvents.bookings} //showBookings
                     ONE_EVENT={PLAY_EVENTS}
-                    // cancelBooking={cancelBooking}
-                    // cancelledState={cancelledState}
-                    // bookingStates={bookingStates}
+                    cancelBooking={cancelBooking}
+                    cancelledState={cancelledState}
+                    bookingStates={bookingStates}
                   />
-                                <PlayPageMap
+                  <PlayPageMap
                     event={event}
-                    showBookings={null} //showBookings
+                    showBookings={getPlayEvents.bookings} //showBookings
                     ratings={ratings}
                   /> 
                    
                       <Grid container
                             className={classes.nextEventBox}
-                            alignItem="center">
-                        <Grid item xs={8}>
+                            alignItems="center">
+                        <Grid item xs={12}>
                           
                           <Chip label={`JOIN`} 
                                 variant="outlined" 
@@ -209,23 +281,14 @@ if (data) {
                                 onClick={discoverPlay}
                                 />
                         </Grid>
-                        <Grid item xs={4}>
-                          
-                          <Chip label={`NEXT`} 
-                                variant="outlined" 
-                                color="primary" 
-                                style={{width: "100%"}} 
-                                onClick={discoverPlay} />
-                        </Grid>
-                        <Grid container 
-                              justify="center" 
-                              style={{display: index === discovered ? "flex" : "none", margin: "30px"}}>
-                            <Grid item>
-                              <Spinner height={100} width={100} />
-                            </Grid>
-                        </Grid>
                       </Grid>
-                  </div>)}
+                  </div>
+               
+              </Collapse> 
+              </div>
+             ) 
+            }
+             )}
             </Grid>
 
       </Paper>
@@ -237,10 +300,9 @@ const useStyles = makeStyles(theme => ({
   playContainer: {
     padding: 0,
   },
-  profileWrap: {
+  playWrap: {
     width: '100%',
     top: 0,
-    backgroundColor: "black",
     minHeight: "100%",
   },
   paper: {
@@ -249,25 +311,21 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    background: "black"
+    backgroundColor: "#242323",
+    color: "white"
   },
-  avatar: {
-    height: 80,
-    width: 80,
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
-  },
-  appBar: {
-    zIndex: 1
-  },
-  buttonNavi: {
-    marginBottom: 10
+  mainHeader:{
+    marginTop: '20px',
+    marginBottom: '5px'
   },
   nextEventBox: {
     width: "100%",
-    backgroundColor: "white",
-    paddingBottom: 50,
+    backgroundColor: "transparent",
+    paddingBottom: 20,
     paddingTop: 50,
+  },
+  light: {
+    backgroundColor: "lightgrey"
   }
 }));
 
