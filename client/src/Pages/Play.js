@@ -214,7 +214,7 @@ if (data) {
           {/* <JoinPanel /> */}
 
             {loading && (
-              <Grid container justify="center">
+              <Grid container justify="center" alignItems='center' className={classes.loadingGridCont}>
                 <Grid item>
                   <Spinner height={100} width={100} />
                 </Grid>
@@ -298,6 +298,9 @@ const useStyles = makeStyles(theme => ({
   playContainer: {
     padding: 0,
   },
+  loadingGridCont: {
+    minHeight: "100vh",
+  },
   playWrap: {
     width: '100%',
     top: 0,
@@ -305,6 +308,7 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     width: "100%",
+    minHeight: "100%",
     paddingTop: 10,
     display: "flex",
     flexDirection: "column",

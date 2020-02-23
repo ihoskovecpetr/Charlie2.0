@@ -109,16 +109,7 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
           </Box>
         </Grid>
         <p className={classes.thisLine}></p>
-        <Grid item xs={3}>
-          <Typography component="div" className={classes.standardHeading}>
-            Address
-          </Typography>
-          </Grid>
-          <Grid item xs={9}>
-            <Typography component="p" className={classes.standardContent}>
-              {event.address ? event.address : "NO Address"}
-            </Typography>
-        </Grid>
+
         </Grid>
         </Grid>
         <p className={classes.thisLine}></p>
@@ -158,7 +149,20 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
             </>
           )}
         </Grid>
-       
+        <Grid item xs={12} className={classes.listRow}>
+        <Grid container item xs={12}>
+        <Grid item xs={3}>
+          <Typography component="div" className={classes.standardHeading}>
+            Address
+          </Typography>
+          </Grid>
+          <Grid item xs={9}>
+            <Typography component="p" className={classes.standardContent}>
+              {event.address ? event.address : "NO Address"}
+            </Typography>
+        </Grid>
+        </Grid>
+        </Grid>
       </Grid>
     )
 }
