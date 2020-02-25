@@ -28,7 +28,7 @@ import { f } from "@fullpage/react-fullpage";
 function SignIn(props) {
   const classes = useStyles();
   useScrollDisable();
-  const { user, setUser } = useContext(UserContext);
+  const { context } = useContext(UserContext);
   let history = useHistory();
 
   useEffect(() => {
@@ -37,17 +37,16 @@ function SignIn(props) {
   }, []);
 
   useEffect(() => {
-    console.log('Do something after counter has changed', user);
-    if(user.success === false){
+    if(context.success === false){
       setTimeout(() => {
       history.push("/");
     }, 100);
     }
- }, [user]);
+ }, [context]);
 
   const Out = () => {
     window.localStorage.setItem("token", "_deleted_");
-    user.getLoggedInUser()
+    context.getLoggedInUser()
 
   };
 

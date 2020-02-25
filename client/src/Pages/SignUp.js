@@ -63,7 +63,6 @@ const NEW_USER = gql`
 function SignUp() {
   const classes = useStyles();
   let history = useHistory();
-  const { user, setUser } = useContext(UserContext);
 
   const [formValue, setFormValue] = useState({ picture: null });
   const [feErrors, setFEerrors] = useState([]);

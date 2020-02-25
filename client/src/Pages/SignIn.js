@@ -53,7 +53,7 @@ function SignIn(props) {
   const classes = useStyles();
   let history = useHistory();
 
-  const { user, setUser } = useContext(UserContext);
+  const { context, setContext } = useContext(UserContext);
   const [email, setEmail] = useState("test@gmail.com");
   const windowSize = useWindowSize();
 
@@ -65,16 +65,15 @@ function SignIn(props) {
   const { errorOut } = data ? data.login : { errorOut: undefined };
   console.log("DataOut: ", dataOut);
   console.log("ErrOut: ", errorOut);
-  if (user.success) {
+  if (context.success) {
     setTimeout(() => {
       history.goBack();
     }, 100);
   }
 
-  if (dataOut && dataOut.success && !user.name) {
-    console.log("XXman user: ", user);
+  if (dataOut && dataOut.success && !context.name) {
     window.localStorage.setItem("token", dataOut.token);
-    setUser(prev => { return {
+    setContext(prev => { return {
       ...prev,
       _id: dataOut._id,
       success: dataOut.success,

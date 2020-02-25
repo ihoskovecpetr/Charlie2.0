@@ -2,11 +2,11 @@ const Event = require("../Models-Mongo/Event");
 const User = require("../Models-Mongo/User");
 
 const transformEvent = async (event, areYouAuthor) => {
-  console.log(
-    "transformEvent FCE _dot.dateS RZAUTH",
-    new Date(event._doc.dateStart).toISOString(),
-    areYouAuthor
-  );
+  // console.log(
+  //   "transformEvent FCE _dot.dateS RZAUTH",
+  //   new Date(event._doc.dateStart).toISOString(),
+  //   areYouAuthor
+  // );
   if (event) {
     return {
       ...event._doc,

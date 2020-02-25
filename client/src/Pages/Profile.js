@@ -188,7 +188,7 @@ function Profile() {
   const classes = useStyles();
   const theme = useTheme();
   let history = useHistory();
-  const { user, setUser } = useContext(UserContext);
+  const { context } = useContext(UserContext);
   const [value, setValue] = React.useState(0);
   // const hostingStates = useQuery(USER_EVENTS, {
   //   variables: { user_id: user._id }
@@ -196,8 +196,6 @@ function Profile() {
   // const bookingStates = useQuery(USER_BOOKING, {
   //   variables: { user_id: user._id }
   // });
-
-  console.log("user.name: PROFILE ", user.name);
   useEffect(() => {
     document.documentElement.style.overflow = "auto"
     return () =>{
@@ -205,7 +203,7 @@ function Profile() {
   }, []);
 
   const { loading, error, data } = useQuery(HOST_RATINGS, {
-    variables: { host_id: user._id }
+    variables: { host_id: context._id }
   });
 
 
@@ -229,26 +227,26 @@ function Profile() {
   return (
     <div
       className={classes.profileWrap}
-      style={{ position: user.freezScroll ? "fixed" : "absolute" }}
+      style={{ position: context.freezScroll ? "fixed" : "absolute" }}
     >
     <Container
       maxWidth="sm"
     >
       <Paper className={classes.paper}>
-        <Avatar className={classes.avatar} src={user.picture}>
+        <Avatar className={classes.avatar} src={context.picture}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          {user.name}
+          {context.name}
         </Typography>
-        <Typography variant="body1">{user.email}</Typography>
+        <Typography variant="body1">{context.email}</Typography>
         <Button color="inherit" className={classes.buttonNavi}>
           <NavLink to={`/signout`}>
             <Typography variant="subtitle2">Sign out</Typography>
             <ExitToAppIcon />
           </NavLink>
         </Button>
-        <Typography variant="body1">{user.description}</Typography>
+        <Typography variant="body1">{context.description}</Typography>
         {error && <h1>ERROR</h1>}
         <AppBar position="static" color="default" className={classes.appBar}>
           <Tabs

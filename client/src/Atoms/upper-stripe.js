@@ -18,7 +18,7 @@ import { UserContext } from "../userContext";
 import Spinner from "./Spinner";
 
 function UpperStripe(props) {
-  const { user, setUser } = useContext(UserContext);
+  const { context } = useContext(UserContext);
   let history = useHistory();
 
   const useStyles = makeStyles(theme => ({
@@ -52,7 +52,6 @@ function UpperStripe(props) {
   }));
   const classes = useStyles();
 
-  console.log("Upper String rerender: user: ", user);
   return (
     <>
       <CssBaseline />
@@ -100,13 +99,13 @@ function UpperStripe(props) {
               </Typography>
             </Grid>
             <Grid item>
-              {!props.userApp && user && user.name && (
+              {!props.userApp && context && context.name && (
                     <Button color="inherit" className={classes.buttonNavi} onClick={history.push(`/profile`)}>
-                      {user.name}
+                      {context.name}
 
                       <Avatar
                         alt="Remy Sharp"
-                        src={user.picture}
+                        src={context.picture}
                         className={classes.ButtonAvatar}
                       >
                         x
@@ -114,7 +113,7 @@ function UpperStripe(props) {
                     </Button>
               )}
 
-              {!props.userApp.success && !user.name && (
+              {!props.userApp.success && !context.name && (
                 <Badge
                   color="primary"
                   badgeContent={

@@ -109,8 +109,6 @@ function App(props) {
   }, []);
 
 
-  console.log("APP rerender 1: ", user);
-
   // if (data) {
     useEffect(() => {
       if (data && data.getLoggedInUser) {
@@ -136,7 +134,9 @@ function App(props) {
   }
 
   const providerValue = useMemo(() => {
-    return { user, setUser };
+    let context = user
+    let setContext = setUser
+    return { context, setContext };
   }, [user, setUser]);
 
   const handleDrawerToggle = () => {

@@ -25,15 +25,25 @@ import Spinner from "../Atoms/Spinner";
 
 import SettingsPanel from "../Molecules/play/SettingsPanel";
 
-
-
 import PlayPageGallery from "../Molecules/play/play_page_gallery";
 import PlayPageList from "../Molecules/play/play_page_list";
 import PlayPageMap from "../Molecules/play/play_page_map";
 
 const PLAY_EVENTS = gql`
-  mutation getPlayEvents($event_id: ID) {
-    getPlayEvents(event_id: $event_id) {
+  mutation getPlayEvents(
+    $plusDays: Int!
+    $lng: Float
+    $lat: Float
+    $radius: Int
+  ) {
+    getPlayEvents(
+      playInput: {
+        plusDays: $plusDays
+        lng: $lng
+        lat: $lat
+        radius: $radius
+      }
+    ) {
       _id
       success
       message
@@ -127,19 +137,20 @@ const CANCELLING = gql`
 
 
 
-function Profile() {
+function Play() {
   const classes = useStyles();
   const theme = useTheme();
   let history = useHistory();
   // const windowSize = useWindowSize();
-  const { user, setUser } = useContext(UserContext);
+  const { context, setContext } = useContext(UserContext);
   const [discovered, setDiscovered] = useState(0);
   const [loadingPlay, setLoadingPlay] = useState(false);
-  const [getPlayEventsMutation, { loading, error, data, refetch }] = useMutation(PLAY_EVENTS, {
-    variables: { id: "props.match.params.id" }
-    //skip: !id,
-    //pollInterval: 500
+  const [playFilter, setPlayFilter] = useState({
+    days: 2,
+    radius: 20,
   });
+
+  const [getPlayEventsMutation, { loading, error, data, refetch }] = useMutation(PLAY_EVENTS);
   const ratings = useQuery(EVENT_RATINGS, {
     variables: { event_id: "props.match.params.id" }
     //skip: !id,
@@ -149,23 +160,35 @@ function Profile() {
     // const [deleteOneEvent, deleteState] = useMutation(DELETE);
     const [createBooking, bookingStates] = useMutation(BOOKING);
 
+  useEffect(() => {
+    console.log("GRAPHQL: ", playFilter.days, context.geolocationObj, playFilter.radius);
+    if(context.geolocationObj && playFilter.days && playFilter.radius){
+      getPlayEventsMutation({variables:{
+          plusDays: playFilter.days,
+          lng: context.geolocationObj ? context.geolocationObj.lng : null,
+          lat: context.geolocationObj ? context.geolocationObj.lat : null,
+          radius: playFilter.radius
+    }})
+    }
+
+    return () => {
+    } 
+  }, [playFilter, context]);
+
+  
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [playFilter]);
 
 
   useEffect(() => {
-    getPlayEventsMutation()
-    return () => {
-    } 
+    if(!context.geolocationObj){
+      navigator.geolocation.getCurrentPosition(function(position) {
+        setContext(prev => {return {...prev, geolocationObj: {lat: position.coords.latitude, lng: position.coords.longitude}}});
+    });
+    }
   }, []);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //   window.scrollBy({
-  //     top: 50,
-  //     left: 0,
-  //     behavior: 'smooth'
-  //   });
-  //   })
-  // }, [data]);
 
 
 let dataDB;
@@ -194,7 +217,7 @@ if (data) {
   return (
     <div
       className={classes.playWrap}
-      style={{ position: user.freezScroll ? "fixed" : "absolute" }}
+      style={{ position: context.freezScroll ? "fixed" : "absolute" }}
     >
     <Container
       maxWidth="xs"
@@ -202,7 +225,11 @@ if (data) {
     >
       <Paper className={classes.paper}>
 
-          <SettingsPanel getPlayEventsMutation={getPlayEventsMutation} numItems={getPlayEvents ? getPlayEvents.length : 0} />
+          <SettingsPanel  getPlayEventsMutation={getPlayEventsMutation} 
+                          setPlayFilter={setPlayFilter}
+                          playFilter={playFilter}
+                          loading={loading}
+                          numItems={getPlayEvents ? getPlayEvents.length : 0} />
           {/* <JoinPanel /> */}
 
             {loading && (
@@ -221,8 +248,8 @@ if (data) {
               style={{ width: "100%" }}
             >
             {getPlayEvents && getPlayEvents.map((event, index) => {
-              console.log("index != 0 && index <= discovered + 1 : ", index != 0 && index <= discovered + 1 )
-             return (
+
+              return (
                <div style={{ backgroundColor: (index % 2 === 0) ? "#242323" : "#908E8E", width: "100%", color: (index % 2 === 0) ? "lightgrey" : "black", }} >
               {index != 0 && index <= discovered + 1 && 
               <Grid container
@@ -324,4 +351,4 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default Profile;
+export default Play;

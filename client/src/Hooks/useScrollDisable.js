@@ -2,7 +2,7 @@ import { useEffect, useContext } from "react";
 import { UserContext } from "../userContext";
 
 export const useScrollDisable = id => {
-  const { user, setUser } = useContext(UserContext);
+  const { setContext } = useContext(UserContext);
 
   // const stopPropagation = e => {
   //   console.log("Hook event type: ", e.type);
@@ -52,13 +52,13 @@ export const useScrollDisable = id => {
     //   });
     // }
     console.log("Freezing");
-    setUser(prev => {
+    setContext(prev => {
       return { ...prev, freezScroll: true };
     });
     //document.addEventListener("wheel", preventDefault, { passive: false });
     return () => {
       console.log("UnFreezing");
-      setUser(prev => {
+      setContext(prev => {
         return { ...prev, freezScroll: false };
       });
       //window.removeEventListener("DOMMouseScroll", preventDefault, false);

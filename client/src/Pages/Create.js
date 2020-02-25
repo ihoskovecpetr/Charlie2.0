@@ -107,7 +107,7 @@ function Create(props) {
   const classes = useStyles();
   let history = useHistory();
 
-  const { user, setUser } = useContext(UserContext);
+  const { context } = useContext(UserContext);
   const [customMapParam, setCustomMapParam] = useState();
   const [formValue, setFormValue] = useState({
     startDate: new Date(),
@@ -208,7 +208,7 @@ function Create(props) {
       lng: customMapParam.lng,
       lat: customMapParam.lat,
       address: customMapParam.address,
-      author: user._id,
+      author: context._id,
       eventType: 1,
       dateStart: formValue.startDate, //inputDate.current.value,
       price: formValue.price,
@@ -252,14 +252,12 @@ function Create(props) {
     }, 500);
   }
 
-  console.log("Upconning USRR Create: ", user)
-
   return (
     <div
       component="main"
       id="mainCreate"
       className={classes.profileWrap}
-      style={{ position: user.freezScroll ? "fixed" : "absolute" }} // fixed is freezed, absolute is scrollable
+      style={{ position: context.freezScroll ? "fixed" : "absolute" }} // fixed is freezed, absolute is scrollable
     >
       <CssBaseline />
       <Container maxWidth="sm" className={classes.paper1}>
@@ -286,7 +284,7 @@ function Create(props) {
 
           <Grid container className={clsx(classes.formRow)}>
             <Grid item style={{ width: "100%" }}>
-              {user.success ? (
+              {context.success ? (
                 <TextField
                   variant="outlined"
                   margin="normal"

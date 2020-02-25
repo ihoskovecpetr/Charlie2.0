@@ -172,7 +172,7 @@ function Event(props) {
   const classes = useStyles();
   const theme = useTheme();
   let history = useHistory();
-  const { user, setUser } = useContext(UserContext);
+  const { context } = useContext(UserContext);
   const [createBooking, bookingStates] = useMutation(BOOKING);
   //const [createReqBooking, bookingReqStates] = useMutation(BOOKING_REQ);
   const [cancelBooking, cancelledState] = useMutation(CANCELLING);
@@ -430,7 +430,7 @@ function Event(props) {
         >
           <EventButtons
             data={dataDB}
-            user={user}
+            user={context}
             createBooking={createBooking}
             cancelBooking={cancelBooking}
             deleteOneEvent={deleteOneEvent}

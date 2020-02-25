@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useReducer, useEffect, useContext } from "react";
 
 import clsx from "clsx";
 
@@ -14,34 +14,40 @@ import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import Backdrop from '@material-ui/core/Backdrop';
 
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import AllOutIcon from '@material-ui/icons/AllOut';
+import DateRangeIcon from '@material-ui/icons/DateRange';
+
 import CloseIcon from "@material-ui/icons/Close";
 import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { UserContext } from "../../userContext";
+
 import SliderCustom from "../../Atoms/SliderCustom";
 import { useBackdrop } from "../../Hooks/useBackdrop";
 
-const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
+const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilter, loading}) => {
   const classes = useStyles();
   let history = useHistory();
+  const { context, setContext } = useContext(UserContext);
   const [close, setClose] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [radius, setRadius] = useState(20);
-  const [days, setDays] = useState(2);
-
 
   const handleChange = (e) => {
     e.stopPropagation();
     setChecked(prev => !prev);
   };
 
-  const handleChangeRadius = (event, newValue) => {
-    setRadius(newValue);
+  const handleChangeRadius = (e, newValue) => {
+    e.preventDefault()
+    setPlayFilter(prev => {return {...prev,radius: newValue}});
   };
 
-  const handleChangeDays = (event, newValue) => {
-    setDays(newValue);
+  const handleChangeDays = (e, newValue) => {
+    e.preventDefault()
+    setPlayFilter(prev => {return {...prev,days: newValue}});
   };
 
   const closeBackdrop = () => {
@@ -55,13 +61,14 @@ const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
                 open={checked} 
                 onClick={closeBackdrop} 
                 className={classes.backdropMain}>
-        <CircularProgress color="inherit" />
+        <ArrowUpwardIcon color="inherit" style={{height: 60, width: 60}} />
       </Backdrop>
 
       <Container
           maxWidth="xs"
           className={classes.playContainer}
           style={{padding: 0}}
+          onClick={(e) => {e.preventDefault()}}
         >
       <Grid container className={clsx(classes.eggContainerTop, checked && classes.solidColor)}>
         <Grid item xs={10}>
@@ -70,21 +77,35 @@ const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
                 <Grid item xs={5} >
                   <Grid container justify="center">
                     <Grid item xs={12}>
-                      <Chip label={`Radius: ${radius} km`} variant="outlined" color="secondary" className={classes.anyChip} />
+                      <Chip icon={<AllOutIcon style={{height: 20, width: 20,}} />} 
+                            label={`+ ${playFilter.radius} km`} 
+                            variant="outlined" 
+                            color="secondary" 
+                            onClick={() => console.log("Yess")}
+                            className={classes.anyChip} />
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid item xs={5}>
                   <Grid container justify="center">
                     <Grid item xs={12}>
-                        <Chip label={`+ ${days} days`} variant="outlined" color="primary" className={classes.anyChip} />
+                        <Chip icon={<DateRangeIcon style={{height: 20, width: 20, color: '#D1D0D0'}} />}
+                              label={`+ ${playFilter.days} days`} 
+                              variant="outlined" 
+                              color="#D1D0D0" 
+                              style={{borderColor: '#D1D0D0', color: '#D1D0D0'}}
+                              className={classes.anyChip} />
                     </Grid>
                   </Grid>
                 </Grid>            
                 <Grid item xs={2}>
                   <Grid container justify="center">
                     <Grid item xs={12}>
-                        <Chip label={`${ 1}/${numItems}`} variant="outlined" color="secondary" className={classes.anyChip} />
+                        <Chip label={!loading ? `${1}/${numItems}` : null} 
+                              icon={loading && <CircularProgress style={{height: 20, width: 20, color: 'white', left: 6, position: "relative"}} />}
+                              variant="default" 
+                              color="secondary" 
+                              className={classes.anyChip} />
                     </Grid>
                   </Grid>
                 </Grid>
@@ -93,54 +114,58 @@ const SettingsPanel = ({state, getPlayEventsMutation, numItems}) => {
                 <Collapse in={checked}>
                   <Grid container alignItems="center" className={classes.collapseGrid}>
                       <Grid item xs={2}>
-                          <Typography id="range-slider" variant="subtitle2" color="secondary" gutterBottom>
+                          <Typography id="range-slider" color="secondary" gutterBottom className={classes.textSize}>
                               0 km
                           </Typography>
                       </Grid>
                       <Grid item xs={8}>
                           
                           <SliderCustom
-                              value={radius}
+                              value={playFilter.radius}
                               onChange={handleChangeRadius}
                               step={5}
                               min={5}
                               max={50}
                               color={"secondary"}
-                              onChangeCommitted={getPlayEventsMutation}
+                              onChangeCommitted={() => getPlayEventsMutation({variables:{
+                                plusDays: playFilter.days,
+                                lng: context.geolocationObj ? context.geolocationObj.lng : null,
+                                lat: context.geolocationObj ? context.geolocationObj.lat : null,
+                                radius: playFilter.radius
+                              }})}
                               // valueLabelDisplay="auto"
                               // aria-labelledby="range-slider"
                               // getAriaValueText={valuetext}
                           /> 
                       </Grid>
                       <Grid item xs={2}>
-                          <Typography id="range-slider" variant="subtitle2" color="secondary" gutterBottom>
-                              {radius} km
+                          <Typography id="range-slider" color="secondary" gutterBottom className={classes.textSize}>
+                              {playFilter.radius} km
                           </Typography>
                       </Grid>
 
                       <Grid item xs={2}>
-                          <Typography id="range-slider" variant="subtitle2" color="secondary" gutterBottom>
+                          <Typography id="range-slider"color="secondary" gutterBottom className={classes.textSize, classes.lightGrey}>
                               Today
                           </Typography>
                       </Grid>
                       <Grid item xs={8}>
                           
-                          <SliderCustom
-                                  value={days}
+                            <Slider valueLabelDisplay="auto" 
+                                  aria-label="none" 
+                                  value={playFilter.days} 
                                   onChange={handleChangeDays}
                                   step={1}
                                   min={0}
                                   max={7}
-                                  color={"primary"}
+                                  color={"#D1D0D0"}
+                                  style={{color: "#D1D0D0"}}
                                   onChangeCommitted={() => {console.log("getPlayEventsMutation")}}
-                              // valueLabelDisplay="auto"
-                              // aria-labelledby="range-slider"
-                              // getAriaValueText={valuetext}
-                          />  
+                            /> 
                       </Grid>
                       <Grid item xs={2}>
-                          <Typography id="range-slider" variant="subtitle2" color="secondary" gutterBottom>
-                            + {days} days
+                          <Typography id="range-slider" gutterBottom className={classes.textSize, classes.lightGrey}>
+                            + {playFilter.days} days
                           </Typography>
                       </Grid>
                   </Grid>
@@ -260,6 +285,15 @@ const useStyles = makeStyles(theme => ({
     width: '90%',
     marginLeft: '5%',
     marginRight: '5%',
+    fontWeight: 400,
+    fontSize: 16
+  },
+  textSize: {
+    fontWeight: 400,
+    fontSize: 16
+  },
+  lightGrey: {
+    color: '#D1D0D0'
   }
 }));
 

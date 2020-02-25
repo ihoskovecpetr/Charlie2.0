@@ -56,14 +56,14 @@ const USER_NEW_BOOKINGS = gql`
 export default function Menu(props) {
   const classes = useStyles();
 
-  const { user, setUser } = useContext(UserContext);
+  const { context } = useContext(UserContext);
   const { xs_size_memo } = useXsSize();
   //const [value, setValue] = React.useState(0);
 
   const [newBookingsArr, { loading, error, data }] = useMutation(
     USER_NEW_BOOKINGS,
     {
-      variables: { user_id: user._id }
+      variables: { user_id: context._id }
     }
   );
 
@@ -76,11 +76,10 @@ export default function Menu(props) {
       "UseEffect MANU: ",
       "onclick" in document.createElement("div") ? "Joo" : "Noo"
     );
-    console.log("Rendering MENU: user: ", user);
   }, []);
 
 
-  if (user.success) {
+  if (context.success) {
     {
       !loading && !data && newBookingsArr();
     }

@@ -211,7 +211,6 @@ function Play(props) {
   const classes = useStyles();
   // const theme = useTheme();
   let history = useHistory();
-  const { user, setUser } = useContext(UserContext);
   const windowSize = useWindowSize();
 
   const [createBooking, bookingStates] = useMutation(BOOKING);

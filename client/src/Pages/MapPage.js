@@ -35,7 +35,7 @@ function MapPage(props) {
   const classes = useStyles();
   let history = useHistory();
   const windowSize = useWindowSize()
-  const { user } = useContext(UserContext);
+  const { context, setContext } = useContext(UserContext);
   const { loading, error, data } = useQuery(ALL_EVENTS, {
     variables: { date: props.workingPosition.date }
   });
@@ -279,7 +279,7 @@ function MapPage(props) {
           location.bookings &&
             location.bookings.map((guest, index) => {
               //console.log("User indexOf: ", guest.user._id, user._id);
-              if (guest.user._id == user._id) {
+              if (guest.user._id == context._id) {
                 //console.log("Yes, GUEST");
                 {
                   !guest.cancelled && guest.confirmed && (url = urlAttend);
@@ -301,8 +301,8 @@ function MapPage(props) {
 
           var marker = new window.google.maps.Marker({
             position: {
-              lat: location.geometry.coordinates[0],
-              lng: location.geometry.coordinates[1]
+              lat: location.geometry.coordinates[1],
+              lng: location.geometry.coordinates[0]
             },
             map: map,
             icon: image,
@@ -322,11 +322,11 @@ function MapPage(props) {
                 ReactDOM.render(
                   //<p>Infowindow</p>
                   <InfoWindow
-                    lat={location.geometry.coordinates[1]}
-                    lng={location.geometry.coordinates[0]}
+                    lat={location.geometry.coordinates[0]}
+                    lng={location.geometry.coordinates[1]}
                     id={location._id}
                     location={location}
-                    user={user}
+                    user={context}
                     redirectLogin={redirectLogin}
                   />,
                   document.getElementById("infoWindow")
@@ -346,8 +346,8 @@ function MapPage(props) {
 
   if (props.workingPosition.geometry) {
     LngLatCenter = props.workingPosition.geometry;
-  } else if (user.geolocationObj) {
-    LngLatCenter = user.geolocationObj;
+  } else if (context.geolocationObj) {
+    LngLatCenter = context.geolocationObj;
   }
   // let LngLatCenter = { lat: latitude, lng: longitude };
   // if (!latitude) {

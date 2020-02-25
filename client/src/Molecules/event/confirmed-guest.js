@@ -16,7 +16,6 @@ function ConfirmedGuest({bookings, event, cancelBooking, cancelledState, ONE_EVE
   let overFlowGst = false;
   let leftoverGst = [];
 
-  console.log("ConfirmedBookings: ", event.name, bookings)
   return (
     <Grid container justify="flex-start" alignItems="center" direction="row">
       {event && event.areYouAuthor ? ( //

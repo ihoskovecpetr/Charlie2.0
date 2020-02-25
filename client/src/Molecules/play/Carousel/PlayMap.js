@@ -6,8 +6,8 @@ import mapSetup from "../../../Services/map-settings";
 const PlayMap = ({event}) => {
   //{ options, onMount, className, styling }
   const LngLatCenter = {
-    lng: event.geometry.coordinates[1],
-    lat: event.geometry.coordinates[0]
+    lng: event.geometry.coordinates[0],
+    lat: event.geometry.coordinates[1]
   }
   let marker;
 
@@ -46,12 +46,12 @@ const PlayMap = ({event}) => {
   
         if (event.geometry) {
           marker.setPosition({
-            lng: event.geometry.coordinates[1],
-            lat: event.geometry.coordinates[0]
+            lng: event.geometry.coordinates[0],
+            lat: event.geometry.coordinates[1]
           });
           map.panTo({
-            lng: event.geometry.coordinates[1],
-            lat: event.geometry.coordinates[0]
+            lng: event.geometry.coordinates[0],
+            lat: event.geometry.coordinates[1]
           });
           //map.setZoom(event.customMapParam.zoom);
         }

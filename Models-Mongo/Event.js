@@ -36,4 +36,6 @@ const EventSchema = new Schema({
   hide: { type: Boolean }
 });
 
+EventSchema.index({ "geometry": "2dsphere" });
+
 module.exports = mongoose.models.Event || mongoose.model("Event", EventSchema);

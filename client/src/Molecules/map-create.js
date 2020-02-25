@@ -4,7 +4,6 @@ import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 
 import { UserContext } from "../userContext";
-import { usePosition } from "../Hooks/useGeolocation";
 
 import Map from "../Atoms/Hook-map";
 
@@ -12,7 +11,7 @@ let LngLatCenter = { lat: 50.068645, lng: 14.457364 };
 
 function MapCreate(props) {
   //const { latitude, longitude, error } = usePosition();
-  const { user, setUser } = useContext(UserContext);
+  const { context } = useContext(UserContext);
   const [addressTxt, setAddressTxt] = useState("Write address");
   let marker;
   //let markerGeoLoc = { lat: latitude, lng: longitude };
@@ -20,8 +19,8 @@ function MapCreate(props) {
 
   //console.log("RENDER CREATE MAP: position: ", markerGeoLoc);
 
-  if (user.geolocationObj) {
-    LngLatCenter = user.geolocationObj;
+  if (context.geolocationObj) {
+    LngLatCenter = context.geolocationObj;
   }
 
   const MapOptions = useMemo(() => {

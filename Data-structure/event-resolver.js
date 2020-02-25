@@ -107,7 +107,7 @@ export const resolvers = {
             name: _args.eventInput.name,
             author: _args.eventInput.author,
             geometry: {
-              coordinates: [_args.eventInput.lat, _args.eventInput.lng]
+              coordinates: [_args.eventInput.lng, _args.eventInput.lat]
             },
             address: _args.eventInput.address,
             eventType: _args.eventInput.eventType,
@@ -151,14 +151,32 @@ export const resolvers = {
     getPlayEvents: async (_, _args, context) => {
       try {
         //  if (context.reqO.req.isAuth) {
-          let playEvents = await Event.find({}).sort(
-            "dateStart"
-          )
+          console.log("args: ", _args)
+          let nowD = new Date();
+          let nextD = new Date().toISOString().split("T")[0];
+          nextD = new Date(nextD)
+          nextD.setDate(nextD.getDate() + _args.playInput.plusDays + 1);
+
+          let playEvents = await Event.find({
+            dateStart: { $gte: nowD, $lte: nextD }, 
+            geometry:{
+              $near: {
+                    $geometry: {
+                                type: "Point",
+                                coordinates: [ _args.playInput.lng, _args.playInput.lat]
+                            },
+                            $maxDistance: _args.playInput.radius * 1000
+                        } }
+            
+          })
+          //.sort(
+          //   "dateStart"
+          // )
+          console.log("PlayEvents: ", playEvents)
           if (playEvents) {
             let filtered = playEvents.filter((item) => item.dateStart > new Date()) 
             let FILTD = await Promise.all(filtered.map(async event => {
-              let TRANSFD = await transformEvent(event, event.author == context.reqO.req.userId);
-              return TRANSFD
+              return await transformEvent(event, event.author == context.reqO.req.userId);
             }));
             return FILTD
 
@@ -260,7 +278,7 @@ function newFunction() {
   extend type Mutation {
     createEvent(eventInput: EventInput!): ResponseEvent
     deleteOneEvent(delete_id: ID!): Hlaska
-    getPlayEvents(event_id: ID): [Event]
+    getPlayEvents(playInput: PlayInput): [Event]
   }
 
   type ResponseEvent {
@@ -311,6 +329,14 @@ function newFunction() {
     vwidth: Int
     isSelected: Boolean
   }
+
+  input PlayInput {
+    plusDays: Int!
+    lng: Float
+    lat: Float
+    radius: Int
+  }
+
 
   type Event {
     _id: ID
