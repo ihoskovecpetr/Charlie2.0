@@ -185,9 +185,9 @@ function Play() {
 
   useEffect(() => {
     if(!context.geolocationObj){
-      navigator.geolocation.getCurrentPosition(function(position) {
-        setContext(prev => {return {...prev, geolocationObj: {lat: position.coords.latitude, lng: position.coords.longitude}}});
-    });
+    //   navigator.geolocation.getCurrentPosition(function(position) {
+    //     setContext(prev => {return {...prev, geolocationObj: {lat: position.coords.latitude, lng: position.coords.longitude}}});
+    // });
     }
   }, []);
 

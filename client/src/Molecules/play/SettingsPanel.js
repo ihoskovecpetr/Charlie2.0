@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import Backdrop from '@material-ui/core/Backdrop';
 
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import AllOutIcon from '@material-ui/icons/AllOut';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 
@@ -61,7 +61,7 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
                 open={checked} 
                 onClick={closeBackdrop} 
                 className={classes.backdropMain}>
-        <ArrowUpwardIcon color="inherit" style={{height: 60, width: 60}} />
+        <FiberManualRecordIcon color="inherit" style={{height: 60, width: 60}} />
       </Backdrop>
 
       <Container
