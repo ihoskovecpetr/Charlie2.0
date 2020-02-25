@@ -9,17 +9,8 @@ import Chip from '@material-ui/core/Chip';
 import Typography from "@material-ui/core/Typography";
 import Collapse from '@material-ui/core/Collapse';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import VpnLockIcon from '@material-ui/icons/VpnLock';
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Backdrop from '@material-ui/core/Backdrop';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 
-import clsx from "clsx";
-
-import SwipeableViews from "react-swipeable-views";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { useHistory, NavLink } from "react-router-dom";
@@ -34,6 +25,7 @@ import SettingsPanel from "../Molecules/play/SettingsPanel";
 import PlayPageGallery from "../Molecules/play/play_page_gallery";
 import PlayPageList from "../Molecules/play/play_page_list";
 import PlayPageMap from "../Molecules/play/play_page_map";
+import NoLocationBck from "../Molecules/play/NoLocationBck";
 
 const PLAY_EVENTS = gql`
   mutation getPlayEvents(
@@ -232,46 +224,7 @@ if (data) {
     >
       <Paper className={classes.paper}>
         {!context.geolocationObj &&
-        <Backdrop
-                open={true} 
-                onClick={() => {}} 
-                className={classes.backdropMain}>
-          <Grid container justify='center' spacing={5} className={classes.noLocCont}>
-            <Grid item xs={12} >
-              <Grid container justify='center' spacing={5} className={classes.noLocGrid}>
-                <Grid item >
-                  <VpnLockIcon color="inherit" fontSize="large" />
-                </Grid>
-              </Grid>
-            </Grid>
-           
-            <Grid item  xs={12}> 
-              <Grid container justify='center' spacing={5} className={classes.noLocGrid}>
-                <Grid item>
-                <FormControl className={classes.formControl}>
-                <InputLabel id="demo-controlled-open-select-label">Choose location</InputLabel>
-                  <Select
-                      labelId="demo-controlled-open-select-label"
-                      id="demo-controlled-open-select"
-                      // open={open}
-                      // onClose={handleClose}
-                      // onOpen={handleOpen}
-                      // value={age}
-                      // onChange={handleChange}
-                    >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value={10}>Prague</MenuItem>
-                      <MenuItem value={20}>Sydney</MenuItem>
-                      <MenuItem value={30}>Gold Coast</MenuItem>
-                    </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-            </Grid>
-        </Grid>
-      </Backdrop>
+        <NoLocationBck />
       }
 
           <SettingsPanel  getPlayEventsMutation={getPlayEventsMutation} 
@@ -397,18 +350,6 @@ const useStyles = makeStyles(theme => ({
   },
   light: {
     backgroundColor: "lightgrey"
-  },
-  backdropMain: {
-    zIndex: 100
-  },
-  noLocGrid: {
-    backgroundColor: "lightgrey",
-  },
-  noLocCont: {
-    width: '80%'
-  },
-  formControl: {
-    minWidth: 200,
   },
 }));
 
