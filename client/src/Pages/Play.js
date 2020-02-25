@@ -162,6 +162,7 @@ function Play() {
 
   useEffect(() => {
     console.log("GRAPHQL: ", playFilter.days, context.geolocationObj, playFilter.radius);
+    alert(`${playFilter.days} , ${context.geolocationObj ? context.geolocationObj.lng : "No Location"}`)
     if(context.geolocationObj && playFilter.days && playFilter.radius){
       getPlayEventsMutation({variables:{
           plusDays: playFilter.days,
