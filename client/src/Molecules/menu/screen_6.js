@@ -42,7 +42,7 @@ export default function Screen1() {
               label="Your Email"
               name="email"
               autoComplete="email"
-              autoFocus
+              // autoFocus
             />
             <TextField
               variant="outlined"
@@ -57,7 +57,7 @@ export default function Screen1() {
               label="Your Question"
               name="question"
               autoComplete="text"
-              autoFocus
+              // autoFocus
             />
             <Button
               type="submit"

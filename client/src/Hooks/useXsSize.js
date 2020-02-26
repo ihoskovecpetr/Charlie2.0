@@ -4,14 +4,14 @@ export function useXsSize() {
   const [xs_size, setXs_size] = useState(false);
 
   useEffect(() => {
-    if (window.innerWidth <= 600) {
+    if (window.innerWidth <= 585) {
       setXs_size(true);
     }
   }, []);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 600) {
+      if (window.innerWidth <= 585) {
         if (!xs_size) {
           setXs_size(true);
         }

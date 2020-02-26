@@ -29,5 +29,11 @@
     background-size: contain;
     background-position: center center;
   }
+  .s1 {
+    background-size: 143px 287px; /*  238px 479px  */
+    background-position: center right;
+    background-repeat: no-repeat;
+    background-color: #fff;
+  }
 
 }

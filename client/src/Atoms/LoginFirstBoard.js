@@ -39,19 +39,19 @@ function LoginFirstBoard(props) {
       <Grid item xs={12} className={classes.fingerItem}>
         <Grid container direction="column" justify="center" alignItems="center">
           <Grid item>
-            <Animated
+            {/* <Animated
               animationIn="bounceInDown"
               animationOut="fadeOut"
               animationInDelay={500}
               //animationInDuration={5000}
               isVisible={true}
               infinite={true}
-            >
+            > */}
               <Avatar
                 className={classes.fingerPng}
                 src="https://res.cloudinary.com/party-images-app/image/upload/v1580483234/ol7l7zkkbvcojwzwz4dd.png"
               />
-            </Animated>
+            {/* </Animated> */}
           </Grid>
         </Grid>
       </Grid>

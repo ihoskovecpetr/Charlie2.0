@@ -1,0 +1,220 @@
+import React, { useState, useEffect, useContext, useMemo } from "react";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import { useHistory } from "react-router-dom";
+import { Animated } from "react-animated-css";
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab';
+
+import { makeStyles } from "@material-ui/core/styles";
+
+import "../../Pages/Menu.css";
+
+import { useXsSize } from "../../Hooks/useXsSize";
+
+import FlippingLogo from "../../Atoms/Flipping-logo/logo";
+import EmpireOriginal from "../../Images/empire.jpg";
+import CharlieHalf from "../../Images/charlie_half.png";
+import Skyline from "../../Images/skyline.png";
+
+export default function Screen1() {
+  const classes = useStyles();
+  const { xs_size_memo } = useXsSize();
+  let history = useHistory();
+
+  const redirectPlay = () => {
+    history.push("/play")
+  }
+
+  return (
+    <div
+      className="section s1"
+      style={{ backgroundImage: xs_size_memo ? `url(${CharlieHalf})` : `url(${EmpireOriginal})`}}
+    >
+      <Container maxWidth="md" className={classes.container_1}>
+        {
+          //MainScreenMemo
+        }
+        <Grid container>
+          <Grid item xs={12} className={classes.top_half}>
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+              className={classes.menuGrid_1XX}
+            >
+              <Grid item xs={12}>
+                <p className={classes.cha}>CHA</p>
+              </Grid>
+              <Grid item xs={12}>
+              <p className={classes.rlie}>RLIE</p>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12} sm={6} className={classes.quarter_grid}>
+            <Grid
+              container
+              justify="center"
+              direction="column"
+              alignItems="center"
+              
+            >
+              <Grid item className={classes.landingTextItem}>
+                <Animated
+                  animationIn="fadeIn"
+                  animationOut="fadeOut"
+                  animationInDelay={200}
+                  animationInDuration={1000}
+                  isVisible={true}
+                >
+                  <Typography
+                    variant="subtitle1"
+                    component="h6"
+                    className={classes.text}
+                  >
+                    “Have you ever seen house on the beach or flat in a
+                    skyscraper and wonder how would it be to enjoy a drink in
+                    there?”
+                  </Typography>
+                </Animated>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12} sm={6} className={classes.quarter_grid_dark }>
+            
+              <Grid
+                container
+                justify="left"
+                direction="row"
+                className={classes.menuGrid_3}
+              >
+                <Grid item xs={8}>
+                  <Grid container className={classes.main_buttons_container}>
+                    <Grid item xs={12} className={classes.link_main_play}>
+                      <Fab variant="extended" className={classes.fab_pink} onClick={redirectPlay}>
+                        PLAY
+                        <PlayArrowIcon className={classes.extendedIcon} />
+                      </Fab>
+                    </Grid>
+                    <Grid item xs={12} className={classes.link_main_play}>
+                      
+                    <Fab variant="extended" className={classes.fab_grey}>
+                        CREATE
+                        <AddIcon className={classes.extendedIcon} />
+                      </Fab>
+                    </Grid>
+                    
+                  </Grid>
+                </Grid>
+
+                <Grid item xs={4} className={classes.arrowWrapItem}>
+                  <Grid container justify="flex-end" alignItems='flex-end' className={classes.arrowContainer}>
+                    <Grid item>
+                      <ArrowDownwardIcon color='secondary' className={classes.arrowIcon}/>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+          </Grid>
+
+        </Grid>
+      </Container>
+    </div>
+  );
+}
+
+const useStyles = makeStyles(theme => ({
+  container_1: {
+    // height: "100vh",
+    //background: "rgba(25,25,25,0.3)"
+    // backgroundImage: `url(${Skyline})`,
+    backgroundColor: '#D9D8D8',
+    padding: 0,
+    overflow: 'hidden',
+    width: '100vw'
+  },
+  top_half: {
+    height: '50vh',
+    color: '#696868',
+    paddingTop: 90,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  cha: {
+    fontSize: 160,
+    fontWeight: 800,
+    margin: 0,
+    letterSpacing: "-2px",
+    lineHeight: '60%',
+  },
+  rlie: {
+    fontSize: 155,
+    fontWeight: 800,
+    margin: 0,
+    letterSpacing: -2,
+    lineHeight: '100%',
+  },
+  quarter_grid: {
+    height: '25vh',
+    color: 'black',
+    paddingTop: '5vh',
+    paddingLeft: 20,
+    paddingRight: 20,
+    fontSize: 16
+  },
+  landingTextItem: {
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: 'white'
+  },
+  quarter_grid_dark: {
+    height: '25vh',
+    color: 'black',
+    fontSize: 16,
+    backgroundColor: '#242323'
+  },
+  main_buttons_container: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10
+  },
+  link_main_play: {
+    marginBottom: 10,
+  },
+  fab_pink: {
+    backgroundColor: '#E8045D',
+    color: 'white',
+    fontWeight: 700,
+    fontSize: 20,
+    letterSpacing: 8,
+    width: '100%'
+  },
+  fab_grey: {
+    backgroundColor: '#C4C3C3',
+    fontSize: 20,
+    width: '100%'
+  },
+  extendedIcon: {
+    marginLeft: theme.spacing(1),
+    color: "white"
+  },
+  arrowWrapItem: {
+    paddingRight: 20,
+  },
+  arrowContainer: {
+    height: '100%'
+  },
+  arrowIcon: {
+    height: 50,
+    width: 50,
+    color: 'white'
+  }
+}));
+

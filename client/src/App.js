@@ -26,6 +26,7 @@ import DrawerContent from "./Atoms/drawer-content";
 import { UserContext } from "./userContext";
 import { usePosition } from "./Hooks/useGeolocation";
 import { useWindowSize } from "./Hooks/useWindowSize";
+import { useScrollY } from "./Hooks/useScrollY";
 
 import Menu from "./Pages/Menu";
 import SignIn from "./Pages/SignIn";
@@ -41,6 +42,7 @@ import Play from "./Pages/Play";
 
 const drawerWidth = 240;
 let prevLocation;
+let ticking
 
 const LOGIN = gql`
   mutation {
@@ -57,6 +59,8 @@ const LOGIN = gql`
 
 function App(props) {
   const windowSize = useWindowSize()
+  const {displayPlay_memo} = useScrollY()
+  console.log("displayPlay: ", displayPlay_memo);
 
   const theme = createMuiTheme({
     palette: {
@@ -106,6 +110,7 @@ function App(props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [finishedAnimation, setFinishedAnimation] = useState(false);
 
+
   //const { loading, error, data } = useQuery(LOGIN);
   const [getLoggedInUser, { loading, error, data }] = useMutation(
     LOGIN,
@@ -125,7 +130,6 @@ function App(props) {
     date: new Date().toISOString().split("T")[0],
     geolocation: null
   });
-
   useEffect(() => {
     getLoggedInUser();
   }, []);
@@ -166,19 +170,10 @@ function App(props) {
   };
 
 
-useEffect(() => {
-  window.addEventListener("load",function() {
-    setTimeout(function(){
-        // This hides the address bar:
-        window.scrollTo(0, 1);
-    }, 0);
-});
-}, []);
-
   useEffect(() => {
-    // Update the document title using the browser API
     prevLocation = props.location;
   }, []);
+
 
   const ListOfUrls = user.success
     ? ["", "create", "map", "about", "signout", "play", "user", "profile"]
@@ -267,6 +262,7 @@ useEffect(() => {
   ) {
     justGoBack = true;
   }
+
 
   return (
       <ThemeProvider theme={theme}>
@@ -539,7 +535,8 @@ useEffect(() => {
                   )}
                 />
               </Switch>
-              {pathSet[1] !== "play" && <FloatingPlayBtn />}
+              {pathSet[1] !== "play" && pathSet[1] !== "" && <FloatingPlayBtn />}
+              {pathSet[1] == "" && <div style={{display: displayPlay_memo ? "block" : "none"}}><FloatingPlayBtn  /></div> }
             </>
           )}
         </UserContext.Provider>

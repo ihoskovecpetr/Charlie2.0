@@ -15,6 +15,7 @@ import { useXsSize } from "../Hooks/useXsSize";
 
 import Carousel from "../Atoms/carousel";
 import Screen1 from "../Molecules/menu/screen_1";
+import Screen1Mobile from "../Molecules/menu/screen_1_mobile";
 import Screen2 from "../Molecules/menu/screen_2";
 import Screen3 from "../Molecules/menu/screen_3";
 import Screen4 from "../Molecules/menu/screen_4";
@@ -191,7 +192,7 @@ if(!xs_size_memo){
 
   return (
       <div style={{position: "absolute", top: 0}}>
-        <Screen1 />
+        <Screen1Mobile />
         <Screen2 />
         <Screen3 loading={loading} data={data} />
         <Screen4 props={props} />

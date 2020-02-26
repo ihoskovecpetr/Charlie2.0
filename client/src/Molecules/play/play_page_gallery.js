@@ -20,7 +20,6 @@ const PlayPageGallery = ({event}) => {
     )
 }
 
-
 const useStyles = makeStyles(theme => ({
    
     galleryGrid: {
