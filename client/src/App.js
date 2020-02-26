@@ -95,7 +95,7 @@ function App(props) {
     content: {
       //height: "100vh",
       height: `${1*windowSize.height}px`,
-      position: "fixed",
+      position: props.location.pathname.split("/")[1] === "map" ? "fixed" : null,
       width: "100%",
       overflow: "scroll"
     }
