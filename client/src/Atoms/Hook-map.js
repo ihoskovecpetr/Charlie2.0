@@ -1,10 +1,8 @@
 import React, { useEffect, useRef } from "react";
-import { useWindowSize } from "../Hooks/useWindowSize";
 
 let scriptAdded = false;
 function Map({ options, onMount, className, styling }) {
   const ref = useRef();
-  const windowSize = useWindowSize()
 
   useEffect(() => {
     const onLoad = () => {

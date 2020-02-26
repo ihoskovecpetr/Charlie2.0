@@ -25,6 +25,7 @@ import DrawerContent from "./Atoms/drawer-content";
 
 import { UserContext } from "./userContext";
 import { usePosition } from "./Hooks/useGeolocation";
+import { useWindowSize } from "./Hooks/useWindowSize";
 
 import Menu from "./Pages/Menu";
 import SignIn from "./Pages/SignIn";
@@ -55,7 +56,7 @@ const LOGIN = gql`
 `;
 
 function App(props) {
-  const classes = useStyles();
+  const windowSize = useWindowSize()
 
   const theme = createMuiTheme({
     palette: {
@@ -79,7 +80,27 @@ function App(props) {
     }
   });
 
+  const useStyles = makeStyles(theme => ({
 
+    drawer: {
+      [theme.breakpoints.up("sm")]: {
+        width: 0,
+        flexShrink: 0
+      }
+    },
+    toolbar: theme.mixins.toolbar,
+    drawerPaper: {
+      width: drawerWidth
+    },
+    content: {
+      //height: "100vh",
+      height: `${1*windowSize.height}px`,
+      width: "100%",
+      overflow: "scroll"
+    }
+  }));
+
+  const classes = useStyles();
   const { latitude, longitude, err } = usePosition();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [finishedAnimation, setFinishedAnimation] = useState(false);
@@ -535,26 +556,6 @@ App.propTypes = {
   )
 };
 
-const useStyles = makeStyles(theme => ({
-
-  drawer: {
-    [theme.breakpoints.up("sm")]: {
-      width: 0,
-      flexShrink: 0
-    }
-  },
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth
-  },
-  content: {
-    //flexGrow: 1,
-    height: "100vh",
-    width: "100%",
-    overflow: "scroll"
-    //padding: theme.spacing(3)
-  }
-}));
 
 function AppWrap() {
   return (
