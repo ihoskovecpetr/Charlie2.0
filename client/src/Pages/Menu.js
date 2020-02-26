@@ -68,9 +68,9 @@ export default function Menu(props) {
     }
   );
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  });
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // });
 
   useEffect(() => {
     console.log(
