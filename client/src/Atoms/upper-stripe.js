@@ -13,7 +13,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Badge from "@material-ui/core/Badge";
 
 import { withRouter, useHistory } from "react-router-dom";
-import { Route, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { UserContext } from "../userContext";
 import Spinner from "./Spinner";
 
@@ -48,7 +48,14 @@ function UpperStripe(props) {
     buttonNavi: {
       fontWeight: "600 !important",
       float: "right"
-    }
+    },
+    middle: {
+      position: 'absolute',
+      zIndex: 1,
+      left: 0,
+      right: 0,
+      margin: '0 auto',
+    },
   }));
   const classes = useStyles();
 

@@ -16,24 +16,28 @@ import "../../Pages/Menu.css";
 
 import { useXsSize } from "../../Hooks/useXsSize";
 
-import FlippingLogo from "../../Atoms/Flipping-logo/logo";
-import EmpireOriginal from "../../Images/empire.jpg";
-import CharlieHalf from "../../Images/charlie_half.png";
-import Skyline from "../../Images/skyline.png";
+// import FlippingLogo from "../../Atoms/Flipping-logo/logo";
+// import EmpireOriginal from "../../Images/empire.jpg";
+// import CharlieHalf from "../../Images/charlie_half.png";
+// import Skyline from "../../Images/skyline.png";
 
 export default function Screen1() {
   const classes = useStyles();
-  const { xs_size_memo } = useXsSize();
+  // const { xs_size_memo } = useXsSize();
   let history = useHistory();
 
   const redirectPlay = () => {
     history.push("/play")
   }
 
+  const redirectCreate = () => {
+    history.push("/create")
+  }
+
   return (
     <div
       className="section s1"
-      style={{ backgroundImage: xs_size_memo ? `url(${CharlieHalf})` : `url(${EmpireOriginal})`}}
+      // style={{ backgroundImage: xs_size_memo ? `url(${CharlieHalf})` : `url(${EmpireOriginal})`}}
     >
       <Container maxWidth="md" className={classes.container_1}>
         {
@@ -63,7 +67,7 @@ export default function Screen1() {
               justify="center"
               direction="column"
               alignItems="center"
-              
+              className={classes.landingTextContainer}
             >
               <Grid item className={classes.landingTextItem}>
                 <Animated
@@ -93,7 +97,6 @@ export default function Screen1() {
                 container
                 justify="left"
                 direction="row"
-                className={classes.menuGrid_3}
               >
                 <Grid item xs={8}>
                   <Grid container className={classes.main_buttons_container}>
@@ -105,7 +108,7 @@ export default function Screen1() {
                     </Grid>
                     <Grid item xs={12} className={classes.link_main_play}>
                       
-                    <Fab variant="extended" className={classes.fab_grey}>
+                    <Fab variant="extended" className={classes.fab_grey} onClick={redirectCreate}>
                         CREATE
                         <AddIcon className={classes.extendedIcon} />
                       </Fab>
@@ -132,17 +135,14 @@ export default function Screen1() {
 
 const useStyles = makeStyles(theme => ({
   container_1: {
-    // height: "100vh",
-    //background: "rgba(25,25,25,0.3)"
-    // backgroundImage: `url(${Skyline})`,
     backgroundColor: '#D9D8D8',
     padding: 0,
     overflow: 'hidden',
     width: '100vw'
   },
   top_half: {
-    height: '50vh',
-    color: '#696868',
+    height: `${0.5*window.innerHeight}px`,
+    color: 'white', //'#696868'
     paddingTop: 90,
     paddingLeft: 20,
     paddingRight: 20,
@@ -159,15 +159,18 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 800,
     margin: 0,
     letterSpacing: -2,
-    lineHeight: '100%',
+    lineHeight: '122%',
   },
   quarter_grid: {
-    height: '25vh',
+    height: `${0.25*window.innerHeight}px`,
     color: 'black',
-    paddingTop: '5vh',
+    // paddingTop: '5vh',
     paddingLeft: 20,
     paddingRight: 20,
     fontSize: 16
+  },
+  landingTextContainer: {
+    height: '100%'
   },
   landingTextItem: {
     padding: 10,
@@ -175,7 +178,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: 'white'
   },
   quarter_grid_dark: {
-    height: '25vh',
+    height: `${0.25*window.innerHeight}px`,
     color: 'black',
     fontSize: 16,
     backgroundColor: '#242323'

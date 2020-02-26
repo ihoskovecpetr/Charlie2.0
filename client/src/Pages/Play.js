@@ -259,16 +259,33 @@ if (data) {
                     justify="center" 
                     onClick={discoverPlay}
                     style={{display: (index === discovered + 1) ? "flex" : "flex"}}>
-                   <Grid item style={{ margin: "30px"}}>
-                      {!loadingPlay && <ArrowDownwardIcon color="secondary" style={{ fontSize: 100 }} />}
-                      {loadingPlay && <Spinner height={100} width={100} />}
+                   <Grid item xs={12} style={{ margin: "30px"}}>
+                      <Grid container justify="center">
+                         
+                          {!loadingPlay && index === discovered + 1 && <Grid item><ArrowDownwardIcon color="secondary" style={{ fontSize: 100 }} /></Grid>}
+                          {!loadingPlay && index <= discovered && <Grid item><Typography variant="h4">{index + 1}/{getPlayEvents ? getPlayEvents.length : 0}</Typography></Grid>}
+                          {loadingPlay && <Grid item><Spinner height={100} width={100} /></Grid>}
+                          
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={12} style={{display: index === discovered + 1 ? "block" : "none"}}>
+                      <Grid container justify="center" alignItems='center' className={classes.mainHeaderFake}>
+                      <Grid item>
+                        {loadingPlay && <Spinner height={30} width={30} />}
+                      </Grid>
+                      </Grid>
+                      <Grid container justify="center" alignItems='center' className={classes.mainGalleryFake}>
+                      <Grid item>
+                        {loadingPlay && <Spinner height={40} width={40} />}
+                      </Grid>
+                      </Grid>
                     </Grid>
               </Grid>}
               <Collapse in={index <= discovered }>
               <div style={{display: index <= discovered ? "block" : "none"}}>
               
                 <Grid container justify='center'>
-                  <Grid item>
+                  <Grid item style={{ marginTop: index === 0 && "30px"}}>
                       <Typography variant="h4" className={classes.mainHeader}>
                       {event.name}
                       </Typography>
@@ -339,14 +356,26 @@ const useStyles = makeStyles(theme => ({
     color: "white"
   },
   mainHeader:{
-    marginTop: '50px',
+    marginTop: '30px',
     marginBottom: '20px'
+  },
+  mainHeaderFake: {
+    backgroundColor: "#6F6F6F",
+    height: "40px",
+    width: "80%",
+    marginLeft: "10%",
+    marginRight: "10%",
+    marginBottom: 30
+  },
+  mainGalleryFake: {
+    backgroundColor: "#2F2F2F",
+    height: "60px",
+    width: "100%",
   },
   nextEventBox: {
     width: "100%",
     backgroundColor: "transparent",
-    paddingBottom: 20,
-    paddingTop: 50,
+    paddingTop: 20,
   },
   light: {
     backgroundColor: "lightgrey"

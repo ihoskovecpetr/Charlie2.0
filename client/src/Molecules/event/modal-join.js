@@ -129,6 +129,16 @@ function ModalJoin(props) {
                   />
                 </Grid>
                 <Grid item>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={e => {
+                      e.preventDefault();
+                      handleClose();
+                    }}
+                  >
+                    CLOSE
+                  </Button>
                   <Button
                     variant="contained"
                     color="secondary"
@@ -151,16 +161,6 @@ function ModalJoin(props) {
                     }}
                   >
                     SEND
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={e => {
-                      e.preventDefault();
-                      handleClose();
-                    }}
-                  >
-                    CLOSE
                   </Button>
                 </Grid>
               </Grid>

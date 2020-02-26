@@ -20,13 +20,11 @@ import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 
 import UpperStripe from "./Atoms/upper-stripe";
-import FloatingPlayBtn from "./Atoms/FloatingPlayBtn";
 import DrawerContent from "./Atoms/drawer-content";
 
 import { UserContext } from "./userContext";
 import { usePosition } from "./Hooks/useGeolocation";
 import { useWindowSize } from "./Hooks/useWindowSize";
-import { useScrollY } from "./Hooks/useScrollY";
 
 import Menu from "./Pages/Menu";
 import SignIn from "./Pages/SignIn";
@@ -39,6 +37,8 @@ import Profile from "./Pages/Profile";
 import About from "./Pages/About";
 import UserModal from "./Pages/UserModal";
 import Play from "./Pages/Play";
+
+import FloatingBtnWrap from "./Molecules/FloatingBtnWrap";
 
 const drawerWidth = 240;
 let prevLocation;
@@ -59,8 +59,6 @@ const LOGIN = gql`
 
 function App(props) {
   const windowSize = useWindowSize()
-  const {displayPlay_memo} = useScrollY()
-  console.log("displayPlay: ", displayPlay_memo);
 
   const theme = createMuiTheme({
     palette: {
@@ -535,8 +533,7 @@ function App(props) {
                   )}
                 />
               </Switch>
-              {pathSet[1] !== "play" && pathSet[1] !== "" && <FloatingPlayBtn />}
-              {pathSet[1] == "" && <div style={{display: displayPlay_memo ? "block" : "none"}}><FloatingPlayBtn  /></div> }
+              <FloatingBtnWrap />
             </>
           )}
         </UserContext.Provider>
