@@ -374,8 +374,8 @@ const useStyles = makeStyles(theme => ({
     height: "100%",
     width: "100%",
     position: "fixed",
-    background:
-      "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
+    // background:
+    //   "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
   },
   paper: {
     marginTop: theme.spacing(8),

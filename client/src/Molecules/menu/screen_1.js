@@ -24,7 +24,7 @@ export default function Screen1() {
   return (
     <div
       className="section s1"
-      style={{ backgroundImage: `url(${EmpireOriginal})`, height: windowSize.height }}
+      style={{ backgroundImage: `url(${EmpireOriginal})`, height: `${1*windowSize.height}px` }}
     >
       <Container maxWidth="md" className={classes.container_1}>
         {

@@ -169,6 +169,7 @@ const useStyles = makeStyles(theme => ({
   grid_foot_container: {
     background: "rgba(0,0,0,0.4)",
     color: "white",
-    height: "100%"
+    height: "100%",
+    textAlign: "center"
   }
 }));

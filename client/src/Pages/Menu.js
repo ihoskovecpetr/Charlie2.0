@@ -73,7 +73,7 @@ export default function Menu(props) {
 
   useEffect(() => {
     console.log(
-      "UseEffect MANU: ",
+      "UseEffect Find out if document has property onclick ",
       "onclick" in document.createElement("div") ? "Joo" : "Noo"
     );
   }, []);
@@ -91,8 +91,8 @@ export default function Menu(props) {
     callbacks: ["onLeave"],
     scrollOverflow: true
   };
-
-  return (
+if(!xs_size_memo){
+    return (
     <ReactFullpage
       {...props}
       slidesNavigation={false}
@@ -129,19 +129,19 @@ export default function Menu(props) {
         }
       }}
       render={({ state, fullpageApi }) => {
-        console.log("render prop change", state); // eslint-disable-line no-console
         // if (fullpageApi) {
         //   // fullpageApi.setAllowScrolling(user.freezScroll);
         // }
 
-        return (
+          return (
             <div id="fullpage-wrapper" >
               <Screen1 />
               <Screen2 />
               <Screen3 loading={loading} data={data} />
               <Screen4 props={props} />
 
-              {xs_size_memo && (
+              {/* {xs_size_memo && (
+                <>
                 <div
                   className="section s5"
                   id="s_post_1_id"
@@ -151,9 +151,6 @@ export default function Menu(props) {
                     <BlogPost1 />
                   </Container>
                 </div>
-              )}
-
-              {xs_size_memo && (
                 <div
                   className="section s6"
                   id="s_post_2_id"
@@ -163,23 +160,23 @@ export default function Menu(props) {
                     <BlogPost2 />
                   </Container>
                 </div>
-              )}
-
-              {xs_size_memo && (
                 <div
                   className="section s7"
                   id="s_post_3_id"
                   //style={{ display: "none" }}
-                >
-                  <BlogPost3 />
+                  >
+                  <Container maxWidth="md">
+                    <BlogPost3 />
+                  </Container>
                 </div>
-              )}
+                </>
+              )} */}
 
-              {!xs_size_memo && (
+              {/* {!xs_size_memo && ( */}
                 <div className="section s5">
                   <Posts />
                 </div>
-              )}
+              {/* )} */}
 
               <Screen6 />
             </div>
@@ -187,6 +184,25 @@ export default function Menu(props) {
       }}
     />
   );
+} else {
+  document.getElementById("s_2_id").style.display = "block";
+  document.getElementById("s_3_id").style.display = "block";
+  document.getElementById("s_4_id").style.display = "block";
+
+  return (
+      <div style={{position: "absolute", top: 0}}>
+        <Screen1 />
+        <Screen2 />
+        <Screen3 loading={loading} data={data} />
+        <Screen4 props={props} />
+        <BlogPost1 />
+        <BlogPost2 />
+        <BlogPost3 />
+        <Screen6 />
+      </div>
+  )
+}
+
 }
 
 const useStyles = makeStyles(theme => ({
