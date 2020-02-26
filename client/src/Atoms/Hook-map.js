@@ -38,12 +38,13 @@ function Map({ options, onMount, className, styling }) {
 
   return (
     <div
-      // style={styling}
-      style={{  width: "100%", 
-                position: 'absolute', 
-                height: `${1*windowSize.height}px`,
-                top: 0
-    }}
+     style={styling}
+    //   style={{  width: "100%", 
+    //             position: 'absolute', 
+    //             height: `${1*windowSize.height}px`,
+    //             top: 0,
+    //             bottom: 0
+    // }}
       //id="map-create"
       //css="height: 60vh; width: 60vh; margin: 1em 0; border-radius: 0.5em;"
       {...{ ref, className }}

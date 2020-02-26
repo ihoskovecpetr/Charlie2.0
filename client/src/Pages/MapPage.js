@@ -372,17 +372,25 @@ function MapPage(props) {
 
   const MapAtom = useMemo(
     () => (
+      <div style={{ 
+            width: "100%",
+            height: `${1*windowSize.height}px`,
+            top: 0,
+            position: "absolute",
+            background: "black"
+            }}>
       <Map
         onMount={onMapMount}
         options={MapOptions()}
         className="main-map"
         styling={{
-          width: "100%",
+          width: "100%", 
+          position: 'absolute', 
           height: `${1*windowSize.height}px`,
-          top: 20,
-          background: "black"
-        }}
+          top: 0,
+          bottom: 0}}
       />
+      </div>
     ),
     [onMapMount, MapOptions]
   );
