@@ -19,4 +19,4 @@ function FloatingBtnWrap(){
     )
 }
 
-export default withRouter(FloatingBtnWrap)
+export default React.memo(withRouter(FloatingBtnWrap))

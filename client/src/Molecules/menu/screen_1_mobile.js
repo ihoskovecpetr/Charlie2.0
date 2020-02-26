@@ -141,8 +141,8 @@ const useStyles = makeStyles(theme => ({
     width: '100vw'
   },
   top_half: {
-    height: `${0.5*window.innerHeight}px`,
-    color: 'white', //'#696868'
+    height: `45vh`, //`${0.5*window.innerHeight}px`
+    color: '#B5B4B4', //'#696868'
     paddingTop: 90,
     paddingLeft: 20,
     paddingRight: 20,
@@ -159,10 +159,10 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 800,
     margin: 0,
     letterSpacing: -2,
-    lineHeight: '122%',
+    lineHeight: '94%',
   },
   quarter_grid: {
-    height: `${0.25*window.innerHeight}px`,
+    height: '20vh', //`${0.25*window.innerHeight}px`
     color: 'black',
     // paddingTop: '5vh',
     paddingLeft: 20,
@@ -175,10 +175,10 @@ const useStyles = makeStyles(theme => ({
   landingTextItem: {
     padding: 10,
     borderRadius: 10,
-    backgroundColor: 'white'
+    backgroundColor: 'rgba(255,255,255,0.7)'
   },
   quarter_grid_dark: {
-    height: `${0.25*window.innerHeight}px`,
+    height: "35vh", //`${0.25*window.innerHeight}px`
     color: 'black',
     fontSize: 16,
     backgroundColor: '#242323'

@@ -203,13 +203,13 @@ if (data) {
       setDiscovered(discovered + 1)
       setLoadingPlay(false)
     }, 500)
-    setTimeout(() => {
-      window.scrollBy({
-        top: 200,
-        left: 0,
-        behavior: 'smooth'
-      });
-      }, 800)
+    // setTimeout(() => {
+    //   window.scrollBy({
+    //     top: 200,
+    //     left: 0,
+    //     behavior: 'smooth'
+    //   });
+    //   }, 800)
 
   }
 
