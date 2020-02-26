@@ -95,6 +95,7 @@ function App(props) {
     content: {
       //height: "100vh",
       height: `${1*windowSize.height}px`,
+      position: "fixed",
       width: "100%",
       overflow: "scroll"
     }
