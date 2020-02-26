@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from "react";
+import { useWindowSize } from "../Hooks/useWindowSize";
 
 let scriptAdded = false;
 function Map({ options, onMount, className, styling }) {
   const ref = useRef();
+  const windowSize = useWindowSize()
 
   useEffect(() => {
     const onLoad = () => {
@@ -36,7 +38,12 @@ function Map({ options, onMount, className, styling }) {
 
   return (
     <div
-      style={styling}
+      // style={styling}
+      style={{  width: "100%", 
+                position: 'absolute', 
+                height: `${1*windowSize.height}px`,
+                top: 0
+    }}
       //id="map-create"
       //css="height: 60vh; width: 60vh; margin: 1em 0; border-radius: 0.5em;"
       {...{ ref, className }}
