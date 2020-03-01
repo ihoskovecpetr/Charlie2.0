@@ -19,12 +19,16 @@ import Spinner from "../Atoms/Spinner";
 import Copyright from "../Atoms/copyright";
 
 const GET_USER = gql`
-  query getOneUser($user_id: ID!) {
+  query getOneUser($user_id: ID!, $limit: Int) {
     getOneUser(user_id: $user_id) {
       success
       _id
       name
       picture
+      createdEvents(limit: $limit){
+        _id
+      	name
+      }
     }
   }
 `;
@@ -58,7 +62,9 @@ function UserModal(props) {
   const theme = useTheme();
   let history = useHistory();
   const { loading, error, data, refetch } = useQuery(GET_USER, {
-    variables: { user_id: props.match.params.id }
+    variables: {  user_id: props.match.params.id,
+                  limit: 2 
+                }
     //skip: !id,
     //pollInterval: 500
   });

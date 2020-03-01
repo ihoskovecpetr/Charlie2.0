@@ -11,10 +11,10 @@ import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 
 import { makeStyles } from "@material-ui/core/styles";
+import CharlieHalf from "../../Images/charlie_half.png";
 
 import "../../Pages/Menu.css";
 
-import { useXsSize } from "../../Hooks/useXsSize";
 
 // import FlippingLogo from "../../Atoms/Flipping-logo/logo";
 // import EmpireOriginal from "../../Images/empire.jpg";
@@ -23,7 +23,6 @@ import { useXsSize } from "../../Hooks/useXsSize";
 
 export default function Screen1() {
   const classes = useStyles();
-  // const { xs_size_memo } = useXsSize();
   let history = useHistory();
 
   const redirectPlay = () => {
@@ -53,15 +52,20 @@ export default function Screen1() {
               className={classes.menuGrid_1XX}
             >
               <Grid item xs={12}>
-                <p className={classes.cha}>CHA</p>
+                <p className={classes.ch}>CH</p>
               </Grid>
               <Grid item xs={12}>
-              <p className={classes.rlie}>RLIE</p>
+              <p className={classes.ar}>AR</p>
+              </Grid>
+              <Grid item xs={12}>
+              <p className={classes.lie}>LIE</p>
               </Grid>
             </Grid>
           </Grid>
-
-          <Grid item xs={12} sm={6} className={classes.quarter_grid}>
+            <Grid item className={classes.side_logo}>
+              <img src={CharlieHalf} className={classes.side_logo_img} />
+            </Grid>
+          {/* <Grid item xs={12} sm={6} className={classes.quarter_grid}>
             <Grid
               container
               justify="center"
@@ -89,7 +93,7 @@ export default function Screen1() {
                 </Animated>
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} sm={6} className={classes.quarter_grid_dark }>
             
@@ -135,34 +139,60 @@ export default function Screen1() {
 
 const useStyles = makeStyles(theme => ({
   container_1: {
-    backgroundColor: '#D9D8D8',
+    backgroundColor: "#F7F7F7", // '#D9D8D8',
     padding: 0,
     overflow: 'hidden',
     width: '100vw'
   },
   top_half: {
-    height: `45vh`, //`${0.5*window.innerHeight}px`
-    color: '#B5B4B4', //'#696868'
-    paddingTop: 90,
-    paddingLeft: 20,
+    height: 456, // `45vh` `${0.5*window.innerHeight}px`
+    color: '#C6C5C5', //'#696868'
+    position: "relative",
+    left: -21,
+    paddingTop: 39,
+    paddingLeft: 0,
     paddingRight: 20,
-  },
-  cha: {
-    fontSize: 160,
+    fontSize: 185,
     fontWeight: 800,
-    margin: 0,
-    letterSpacing: "-2px",
-    lineHeight: '60%',
+    letterSpacing: 9,
+    lineHeight: '75%',
   },
-  rlie: {
-    fontSize: 155,
-    fontWeight: 800,
+  ch: {
+    // fontSize: 222,
+    // fontWeight: 800,
     margin: 0,
-    letterSpacing: -2,
-    lineHeight: '94%',
+    // letterSpacing: "-2px",
+    //lineHeight: '70%',
+  },
+  ar: {
+    // fontSize: 222,
+    // fontWeight: 800,
+    position: "relative",
+    margin: 0,
+    letterSpacing: -5,
+    left: -20,
+    // lineHeight: '80%',
+  },
+  lie: {
+    // fontSize: 222,
+    // fontWeight: 800,
+    margin: 0,
+    // letterSpacing: -2,
+    // lineHeight: '80%',
+  },
+  side_logo: {
+    height: 0,
+    position: "relative",
+    top: -390,
+    left: "100vw"
+  },
+  side_logo_img: {
+    height: 300,
+    position: "relative",
+    left: -149
   },
   quarter_grid: {
-    height: '20vh', //`${0.25*window.innerHeight}px`
+    height: 140, //  20vh'`${0.25*window.innerHeight}px`
     color: 'black',
     // paddingTop: '5vh',
     paddingLeft: 20,
@@ -178,7 +208,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: 'rgba(255,255,255,0.7)'
   },
   quarter_grid_dark: {
-    height: "35vh", //`${0.25*window.innerHeight}px`
+    height: 150, // "35vh" `${0.25*window.innerHeight}px`
     color: 'black',
     fontSize: 16,
     backgroundColor: '#242323'
@@ -217,7 +247,7 @@ const useStyles = makeStyles(theme => ({
   arrowIcon: {
     height: 50,
     width: 50,
-    color: 'white'
+    color: 'grey'
   }
 }));
 

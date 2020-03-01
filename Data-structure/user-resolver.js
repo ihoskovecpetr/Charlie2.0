@@ -1,6 +1,7 @@
 import User from "../Models-Mongo/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { authorsEvents } from "./merge.js";
 import { userYupSchema } from "./Utils/userYupSchema.js";
 import { formatYupError } from "./Utils/formatError.js";
 import {
@@ -11,12 +12,12 @@ import {
 
 export const typeDef = `
   extend type Query {
-    getOneUser(user_id: ID): User
+    getOneUser(user_id: ID, limit: Int): User
     deleteAllUsers: String
   }
 
   extend type Mutation {
-    newUser(name: String! password: String! email: String! description: String!  picture: String): ResponseUser
+    newUser(name: String!, password: String!, email: String!, description: String!, picture: String): ResponseUser
     login(email: String! password: String!): ResponseUser
     getLoggedInUser: User
   }
@@ -122,7 +123,11 @@ export const resolvers = {
     getOneUser: async (_, _args, __) => {
       try {
         let user = await User.findById(_args.user_id);
-        return { ...user._doc, success: true };
+        // return authorsEvents()
+        return { 
+          ...user._doc,
+          createdEvents: authorsEvents(user.id), 
+          success: true };
       } catch (err) {
         throw err;
       }

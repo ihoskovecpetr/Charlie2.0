@@ -122,7 +122,8 @@ function App(props) {
     name: false,
     geolocationObj: null,
     freezScroll: false,
-    getLoggedInUser: () => getLoggedInUser()
+    getLoggedInUser: () => getLoggedInUser(),
+    shownEvents: ["5e55766d88021f7b2fc51c31"]
   });
   const [workingPosition, setWorkingPosition] = useState({
     date: new Date().toISOString().split("T")[0],
@@ -472,6 +473,19 @@ function App(props) {
           {!Modal && (
             <>
               <Switch location={prevLocation}>
+              <Route
+                    exact
+                    path={`/play/:id`}
+                    key={"index"}
+                    render={() => (
+                      <>
+                        <main className={classes.content}>
+                          <div className={classes.toolbar} />
+                          {returnComponent(5)}
+                        </main>
+                      </>
+                    )}
+                  />
               <Route
                     exact
                     path={`/play`}

@@ -33,6 +33,7 @@ const PLAY_EVENTS = gql`
     $lng: Float
     $lat: Float
     $radius: Int
+    $shownEvents: [ID]
   ) {
     getPlayEvents(
       playInput: {
@@ -40,6 +41,7 @@ const PLAY_EVENTS = gql`
         lng: $lng
         lat: $lat
         radius: $radius
+        shownEvents: $shownEvents
       }
     ) {
       _id
@@ -166,7 +168,8 @@ function Play() {
           plusDays: playFilter.days,
           lng: context.geolocationObj ? context.geolocationObj.lng : null,
           lat: context.geolocationObj ? context.geolocationObj.lat : null,
-          radius: playFilter.radius
+          radius: playFilter.radius, // playFilter.radius,
+          shownEvents: context.shownEvents
     }})
     }
 
@@ -179,7 +182,6 @@ function Play() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [playFilter]);
-
 
   useEffect(() => {
     if(!context.geolocationObj){
@@ -197,10 +199,26 @@ if (data) {
     var { getPlayEvents } = dataDB;
   }
 
+  useEffect(() => {
+    console.log("ScrollTop")
+    window.scrollTo(0, 0);
+  }, [getPlayEvents && getPlayEvents[0]]);
+
+
+  useEffect(() => {
+    getPlayEvents && history.replace(`/play/${getPlayEvents[0]._id}`)
+  }, [getPlayEvents && getPlayEvents[0]]);
+
+
+
   function discoverPlay(){
     setLoadingPlay(true)
     setTimeout(() => {
-      setDiscovered(discovered + 1)
+      // setDiscovered(discovered + 1)
+      setContext(prev => {
+        console.log("prev.shownEvents, getPlayEvents[0] ", getPlayEvents[0]._id);
+        return {...prev, shownEvents: [...prev.shownEvents, getPlayEvents[0]._id]}});
+      window.scrollBy(0,0);
       setLoadingPlay(false)
     }, 500)
     // setTimeout(() => {
@@ -212,6 +230,8 @@ if (data) {
     //   }, 800)
 
   }
+
+  console.log("History: ", history)
 
   return (
     <div

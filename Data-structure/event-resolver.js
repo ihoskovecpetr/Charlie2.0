@@ -10,16 +10,18 @@ export const typeDef = newFunction();
 export const resolvers = {
   Query: {
     getOneEvent: async (_, _args, context) => {
+      console.log("Her")
       try {
-        if (context.reqO.req.isAuth) {
+        if (true) { //context.reqO.req.isAuth
           let oneEvent = await Event.findOne({ _id: _args.id });
           if (oneEvent) {
             let areYouAuthor = oneEvent.author == context.reqO.req.userId;
-            return {
-              ...oneEvent._doc,
-              dateStart: new Date(oneEvent._doc.dateStart).toISOString(),
-              success: true,
-              areYouAuthor: areYouAuthor
+            return transformEvent(oneEvent, oneEvent.author == context.reqO.req.userId) 
+            {
+              // ...oneEvent._doc,
+              // dateStart: new Date(oneEvent._doc.dateStart).toISOString(),
+              // success: true,
+              // areYouAuthor: areYouAuthor
             };
           } else {
             return {
@@ -151,7 +153,7 @@ export const resolvers = {
     getPlayEvents: async (_, _args, context) => {
       try {
         //  if (context.reqO.req.isAuth) {
-          console.log("args: ", _args)
+          console.log("args: ", _args.playInput)
           let nowD = new Date();
           let nextD = new Date().toISOString().split("T")[0];
           nextD = new Date(nextD)
@@ -165,16 +167,24 @@ export const resolvers = {
                                 type: "Point",
                                 coordinates: [ _args.playInput.lng, _args.playInput.lat]
                             },
-                            $maxDistance: _args.playInput.radius * 1000
+                            $maxDistance: _args.playInput.radius * 1000 * 10
                         } }
             
           })
           //.sort(
           //   "dateStart"
           // )
-          console.log("PlayEvents: ", playEvents)
           if (playEvents) {
             let filtered = playEvents.filter((item) => item.dateStart > new Date()) 
+
+            filtered = filtered.filter((item) => {
+              console.log("!_args.playInput.shownEvents.includes(item._id): ", item._id , _args.playInput.shownEvents && _args.playInput.shownEvents.includes(item._id.toString()))
+              if(_args.playInput.shownEvents){
+                return !_args.playInput.shownEvents.includes(item._id.toString())
+              }else{
+                return true
+              }
+            }) 
             let FILTD = await Promise.all(filtered.map(async event => {
               return await transformEvent(event, event.author == context.reqO.req.userId);
             }));
@@ -334,7 +344,8 @@ function newFunction() {
     plusDays: Int!
     lng: Float
     lat: Float
-    radius: Int
+    radius: Int,
+    shownEvents: [ID]
   }
 
 

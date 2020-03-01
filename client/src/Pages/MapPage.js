@@ -36,8 +36,12 @@ function MapPage(props) {
   let history = useHistory();
   const windowSize = useWindowSize()
   const { context, setContext } = useContext(UserContext);
-  const { loading, error, data } = useQuery(ALL_EVENTS, {
-    variables: { date: props.workingPosition.date }
+  const { loading, error, data, fetchMore } = useQuery(ALL_EVENTS, {
+    variables: { date: props.workingPosition.date, 
+                  offset: 1,
+                  limit: 1 
+              },
+      fetchPolicy: "cache-and-network"
   });
 
   useEffect(() => {

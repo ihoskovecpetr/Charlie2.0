@@ -32,6 +32,7 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
   const classes = useStyles();
   let history = useHistory();
   const { context, setContext } = useContext(UserContext);
+  const [workingValue, setWorkingValue] = useState({radius: playFilter.radius, days: playFilter.days});
   const [close, setClose] = useState(false);
   const [checked, setChecked] = useState(false);
 
@@ -41,13 +42,20 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
   };
 
   const handleChangeRadius = (e, newValue) => {
+    console.log("Handle Change rad")
     e.preventDefault()
     setPlayFilter(prev => {return {...prev,radius: newValue}});
   };
 
   const handleChangeDays = (e, newValue) => {
+    console.log("Handle Change Days")
     e.preventDefault()
     setPlayFilter(prev => {return {...prev,days: newValue}});
+  };
+
+  const handleChangeWorkingValue = (e, target, newValue) => {
+    e.preventDefault()
+    setWorkingValue(prev => {return {...prev, [target]: newValue}});
   };
 
   const closeBackdrop = () => {
@@ -92,7 +100,6 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
                         <Chip icon={<DateRangeIcon style={{height: 20, width: 20, color: '#D1D0D0'}} />}
                               label={`+ ${playFilter.days} days`} 
                               variant="outlined" 
-                              color="#D1D0D0" 
                               style={{borderColor: '#D1D0D0', color: '#D1D0D0'}}
                               className={classes.anyChip} />
                     </Grid>
@@ -121,18 +128,24 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
                       <Grid item xs={8}>
                           
                           <SliderCustom
-                              value={playFilter.radius}
-                              onChange={handleChangeRadius}
+                              // defaultValue={playFilter.radius}
+                              value={workingValue.radius}
+                              onChange={(e, value) => handleChangeWorkingValue(e, "radius", value)}
                               step={5}
                               min={5}
                               max={50}
                               color={"secondary"}
-                              onChangeCommitted={() => getPlayEventsMutation({variables:{
-                                plusDays: playFilter.days,
-                                lng: context.geolocationObj ? context.geolocationObj.lng : null,
-                                lat: context.geolocationObj ? context.geolocationObj.lat : null,
-                                radius: playFilter.radius
-                              }})}
+                              onChangeCommitted={(e_, value) => {
+                                handleChangeRadius(e_ , value)
+                                 console.log("Radius ChangeCommit: ", value)
+                              //   getPlayEventsMutation({variables:{
+                              //   plusDays: playFilter.days,
+                              //   lng: context.geolocationObj ? context.geolocationObj.lng : null,
+                              //   lat: context.geolocationObj ? context.geolocationObj.lat : null,
+                              //   radius: playFilter.radius
+                              // }})
+                              } 
+                            }
                               // valueLabelDisplay="auto"
                               // aria-labelledby="range-slider"
                               // getAriaValueText={valuetext}
@@ -140,7 +153,7 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
                       </Grid>
                       <Grid item xs={2}>
                           <Typography id="range-slider" color="secondary" gutterBottom className={classes.textSize}>
-                              {playFilter.radius} km
+                              {50} km
                           </Typography>
                       </Grid>
 
@@ -153,14 +166,17 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
                           
                             <Slider valueLabelDisplay="auto" 
                                   aria-label="none" 
-                                  value={playFilter.days} 
-                                  onChange={handleChangeDays}
+                                  value={workingValue.days} 
+                                  onChange={(e, value) => handleChangeWorkingValue(e, "days", value)}
                                   step={1}
                                   min={0}
                                   max={7}
-                                  color={"#D1D0D0"}
+                                  onChangeCommitted={(e_, value) => {
+                                    console.log("Commited Days")
+                                    handleChangeDays(e_ , value)
+                                  } 
+                                }
                                   style={{color: "#D1D0D0"}}
-                                  onChangeCommitted={() => {console.log("getPlayEventsMutation")}}
                             /> 
                       </Grid>
                       <Grid item xs={2}>
@@ -193,6 +209,7 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
                     className={clsx(classes.closeCross, close && classes.whiteBordered)} 
                     onClick={() => {
                     setClose(true)
+                    setContext(prev => {return {...prev, shownEvents: []}});
                     setTimeout(() => {
                       history.goBack()
                     }, 100)

@@ -12,6 +12,9 @@ import Avatar from "@material-ui/core/Avatar";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Badge from "@material-ui/core/Badge";
 
+import { useScrollY } from "../Hooks/useScrollY";
+import { useXsSize } from "../Hooks/useXsSize";
+
 import { withRouter, useHistory } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { UserContext } from "../userContext";
@@ -19,7 +22,9 @@ import Spinner from "./Spinner";
 
 function UpperStripe(props) {
   const { context } = useContext(UserContext);
-  let history = useHistory();
+  let history = useHistory(); 
+  const {displayPlay_memo} = useScrollY({y: 100})
+
 
   const useStyles = makeStyles(theme => ({
     menuButton: {
@@ -31,7 +36,6 @@ function UpperStripe(props) {
     appBar: {
       marginLeft: props.drawerWidth,
       color: "black",
-      background: "rgba(255,255,255,0.6)"
     },
     buttonToBeHidden: {
       [theme.breakpoints.down("xs")]: {
@@ -59,10 +63,16 @@ function UpperStripe(props) {
   }));
   const classes = useStyles();
 
+
   return (
     <>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" 
+              className={classes.appBar} 
+              style={{
+                backgroundColor: !displayPlay_memo ? "transparent" : "rgba(255,255,255,0.6)",
+                boxShadow: !displayPlay_memo && "none"
+                }}>
         <Toolbar>
           <Grid
             justify="space-between" // Add it here :)

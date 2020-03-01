@@ -2,11 +2,9 @@ const Event = require("../Models-Mongo/Event");
 const User = require("../Models-Mongo/User");
 
 const transformEvent = async (event, areYouAuthor) => {
-  // console.log(
-  //   "transformEvent FCE _dot.dateS RZAUTH",
-  //   new Date(event._doc.dateStart).toISOString(),
-  //   areYouAuthor
-  // );
+  console.log(
+    "transformEvent FCE _dot.dateS RZAUTH",
+  );
   if (event) {
     return {
       ...event._doc,
@@ -16,6 +14,22 @@ const transformEvent = async (event, areYouAuthor) => {
       freeSnack: true,
       success: true,
       areYouAuthor: areYouAuthor
+    };
+  } else {
+    console.log("NULL ODMITNUTO");
+    return null;
+  }
+};
+
+const transformUser = async (user) => {
+  console.log(
+    "tRZAUTH"
+  );
+  if (user) {
+    return {
+      ...event._doc,
+      _id: event.id,
+      createdEvents: await authorsEvents(user._doc.author),
     };
   } else {
     console.log("NULL ODMITNUTO");
@@ -33,6 +47,17 @@ const transformEvent = async (event, areYouAuthor) => {
 //     updatedAt: new Date(booking._doc.updatedAt).toISOString()
 //   };
 // };
+
+const authorsEvents = async author_id => {
+  try {
+    const events = await Event.find({ author: author_id });
+    return events.map(event => {
+      return transformEvent(event);
+    });
+  } catch (err) {
+    throw err;
+  }
+};
 
 const eventsLookup = async eventIds => {
   try {
@@ -81,3 +106,4 @@ exports.userLookup = userLookup;
 exports.singleEvent = singleEvent;
 exports.transformEvent = transformEvent;
 //exports.transformBooking = transformBooking;
+exports.authorsEvents= authorsEvents;

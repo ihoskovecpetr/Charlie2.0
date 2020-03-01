@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useMemo } from "react";
 
-export function useScrollY() {
+ export function useScrollY({y}) {
   const [displayPlay, setDisplayPlay] = useState(false);
 
+  const limit = y ? y : 450
 
   useEffect(() => {
     const handleResize = () => {
-      if(window.scrollY >= 450 && !displayPlay){
+      if(window.scrollY >= limit && !displayPlay){
         setDisplayPlay(true)
-      }else if(window.scrollY <= 450 && displayPlay){
+      }else if(window.scrollY <= limit && displayPlay){
         setDisplayPlay(false)
       }
     }

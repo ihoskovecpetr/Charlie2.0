@@ -7,7 +7,7 @@ import FloatingPlayBtn from "../Atoms/FloatingPlayBtn";
 
 function FloatingBtnWrap(){
     let history = useHistory();
-    const {displayPlay_memo} = useScrollY()
+    const {displayPlay_memo} = useScrollY({y: 450})
 
     const pathSet = history.location.pathname.split("/");
 
