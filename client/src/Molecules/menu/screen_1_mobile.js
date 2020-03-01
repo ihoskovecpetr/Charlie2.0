@@ -145,14 +145,14 @@ const useStyles = makeStyles(theme => ({
     width: '100vw'
   },
   top_half: {
-    height: 456, // `45vh` `${0.5*window.innerHeight}px`
+    height: 443, // `45vh` `${0.5*window.innerHeight}px`
     color: '#C6C5C5', //'#696868'
     position: "relative",
     left: -21,
-    paddingTop: 39,
+    paddingTop: 37,
     paddingLeft: 0,
     paddingRight: 20,
-    fontSize: 185,
+    fontSize: 180,
     fontWeight: 800,
     letterSpacing: 9,
     lineHeight: '75%',
@@ -216,7 +216,7 @@ const useStyles = makeStyles(theme => ({
   main_buttons_container: {
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: 10
+    paddingTop: 7
   },
   link_main_play: {
     marginBottom: 10,
