@@ -145,10 +145,10 @@ function Play() {
   const { context, setContext } = useContext(UserContext);
   const [discovered, setDiscovered] = useState(0);
   const [loadingPlay, setLoadingPlay] = useState(false);
-  const [playFilter, setPlayFilter] = useState({
-    days: 2,
-    radius: 20,
-  });
+  // const [playFilter, setPlayFilter] = useState({
+  //   days: 2,
+  //   radius: 20,
+  // });
 
   const [getPlayEventsMutation, { loading, error, data, refetch }] = useMutation(PLAY_EVENTS);
   const ratings = useQuery(EVENT_RATINGS, {
@@ -161,27 +161,32 @@ function Play() {
     const [createBooking, bookingStates] = useMutation(BOOKING);
 
   useEffect(() => {
-    console.log("GRAPHQL: ", playFilter.days, context.geolocationObj, playFilter.radius);
+    console.log("GRAPHQL: ", context.days, context.geolocationObj, context.radius);
     // alert(`${playFilter.days} , ${context.geolocationObj ? context.geolocationObj.lng : "No Location"}`)
-    if(context.geolocationObj && playFilter.days && playFilter.radius){
+    if(context.geolocationObj && context.days && context.radius){
       getPlayEventsMutation({variables:{
-          plusDays: playFilter.days,
+          plusDays: context.days,
           lng: context.geolocationObj ? context.geolocationObj.lng : null,
           lat: context.geolocationObj ? context.geolocationObj.lat : null,
-          radius: playFilter.radius, // playFilter.radius,
+          radius: context.radius, // playFilter.radius,
           shownEvents: context.shownEvents
     }})
     }
 
     return () => {
     } 
-  }, [playFilter, context]);
+  }, [
+      context.geolocationObj && context.geolocationObj.lng, 
+      context.geolocationObj && context.geolocationObj.lat, 
+      context.radius, 
+      context.days
+  ]);
 
   
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [playFilter]);
+  }, [context]);
 
   useEffect(() => {
     if(!context.geolocationObj){
@@ -200,15 +205,31 @@ if (data) {
   }
 
   useEffect(() => {
-    console.log("ScrollTop")
-    window.scrollTo(0, 0);
-  }, [getPlayEvents && getPlayEvents[0]]);
+    console.log("getPlayEvents: ", getPlayEvents, context.playEventsCount);
+    if(getPlayEvents){
+      if(context.playEventsCount === null){
+        console.log("Pass if null")
+        setContext(prev => {return {...prev, playEventsCount: getPlayEvents.length}});
+      }
+    }
+  }, [getPlayEvents]);
+
+  // useEffect(() => {
+  //   console.log("NEW FILTER", getPlayEvents)
+  //   if(getPlayEvents){
+  
+  //       setContext(prev => {return {...prev, playEventsCount: getPlayEvents.length}});
+
+  //   }
+
+  // }, [context.radius, context.days, getPlayEvents]);
 
 
   useEffect(() => {
+    console.log("REPLACE URL")
     getPlayEvents && history.replace(`/play/${getPlayEvents[0]._id}`)
+    window.scrollTo(0, 0);
   }, [getPlayEvents && getPlayEvents[0]]);
-
 
 
   function discoverPlay(){
@@ -218,7 +239,7 @@ if (data) {
       setContext(prev => {
         console.log("prev.shownEvents, getPlayEvents[0] ", getPlayEvents[0]._id);
         return {...prev, shownEvents: [...prev.shownEvents, getPlayEvents[0]._id]}});
-      window.scrollBy(0,0);
+      window.scrollTo(0,0);
       setLoadingPlay(false)
     }, 500)
     // setTimeout(() => {
@@ -248,8 +269,8 @@ if (data) {
       }
 
           <SettingsPanel  getPlayEventsMutation={getPlayEventsMutation} 
-                          setPlayFilter={setPlayFilter}
-                          playFilter={playFilter}
+                          // setPlayFilter={setPlayFilter}
+                          // playFilter={playFilter}
                           loading={loading}
                           numItems={getPlayEvents ? getPlayEvents.length : 0} />
           {/* <JoinPanel /> */}

@@ -33,13 +33,16 @@ function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth
       }));
 
       const classes = useStyles();
+
+      console.log("ListOfNames: ", ListOfNames)
+      console.log("ListOfUrls: ", ListOfUrls)     
     return(
         <div>
         <div className={classes.toolbar} />
         <Divider />
         <List>
         {ListOfNames.map((text, index) => (
-            <NavLink
+        <NavLink
             to={`/${ListOfUrls[index]}`}
             key={index}
             onClick={() => {
@@ -56,46 +59,46 @@ function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth
                     />
                 </ListItemIcon>
                 )}
-
                 {index === 1 && (
-                <ListItemIcon>
-                    <Avatar className={classes.avatar}>
-                    <AddCircleOutlineIcon />
-                    </Avatar>
-                </ListItemIcon>
-                )}
-                {index === 2 && (
-                <ListItemIcon>
-                    <Avatar className={classes.avatar}>
-                    <ExploreIcon />
-                    </Avatar>
-                </ListItemIcon>
-                )}
-                {index === 3 && (
-                <ListItemIcon>
-                    <Avatar className={classes.avatar}>
-                    <SubjectIcon />
-                    </Avatar>
-                </ListItemIcon>
-                )}
-                {index === 4 && (
-                <ListItemIcon>
-                    <Avatar className={classes.avatar}>
-                    <AccountCircleIcon />
-                    </Avatar>
-                </ListItemIcon>
-                )}
-                {index === 5 && (
                 <ListItemIcon>
                     <Avatar className={classes.avatar}>
                     <PlayArrowIcon />
                     </Avatar>
                 </ListItemIcon>
                 )}
+                {index === 2 && (
+                <ListItemIcon>
+                    <Avatar className={classes.avatar}>
+                    <AddCircleOutlineIcon />
+                    </Avatar>
+                </ListItemIcon>
+                )}
+                {index === 3 && (
+                <ListItemIcon>
+                    <Avatar className={classes.avatar}>
+                    <ExploreIcon />
+                    </Avatar>
+                </ListItemIcon>
+                )}
+                {index === 4 && (
+                <ListItemIcon>
+                    <Avatar className={classes.avatar}>
+                    <SubjectIcon />
+                    </Avatar>
+                </ListItemIcon>
+                )}
+                <Divider />
+                {index === 5 && (
+                <ListItemIcon>
+                    <Avatar className={classes.avatar}>
+                    <AccountCircleIcon />
+                    </Avatar>
+                </ListItemIcon>
+                )}
 
                 <ListItemText primary={text} />
             </ListItem>
-            </NavLink>
+        </NavLink>
         ))}
         </List>
         <Divider />

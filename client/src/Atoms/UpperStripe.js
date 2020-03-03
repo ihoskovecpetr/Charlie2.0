@@ -63,6 +63,9 @@ function UpperStripe(props) {
   }));
   const classes = useStyles();
 
+  const pathSet = props.location.pathname.split("/");
+
+  console.log("UPPER STR: ", pathSet)
 
   return (
     <>
@@ -70,7 +73,7 @@ function UpperStripe(props) {
       <AppBar position="fixed" 
               className={classes.appBar} 
               style={{
-                backgroundColor: !displayPlay_memo ? "transparent" : "rgba(255,255,255,0.6)",
+                backgroundColor: pathSet[1] === 'map' || displayPlay_memo ? "rgba(255,255,255,0.6)" : "transparent" ,
                 boxShadow: !displayPlay_memo && "none"
                 }}>
         <Toolbar>

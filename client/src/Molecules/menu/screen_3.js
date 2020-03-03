@@ -51,9 +51,9 @@ export default function Screen3(props) {
           </Animated>
         </Grid>
 
-        <Grid item>
-          <Grid justify="center" container style={{ width: "100%" }}>
-            <Grid item style={{ width: "90%" }}>
+        <Grid item xs={12}>
+          <Grid justify="center" container>
+            <Grid item >
               {!props.loading && !props.data && <LoginFirstBoard />}
               {props.loading && <Spinner height={100} width={100} />}
               {Sorted.map((event, index) => {

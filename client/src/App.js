@@ -19,8 +19,8 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 
-import UpperStripe from "./Atoms/upper-stripe";
-import DrawerContent from "./Atoms/drawer-content";
+import UpperStripe from "./Atoms/UpperStripe";
+import DrawerContent from "./Atoms/DrawerContent";
 
 import { UserContext } from "./userContext";
 import { usePosition } from "./Hooks/useGeolocation";
@@ -123,7 +123,10 @@ function App(props) {
     geolocationObj: null,
     freezScroll: false,
     getLoggedInUser: () => getLoggedInUser(),
-    shownEvents: ["5e55766d88021f7b2fc51c31"]
+    shownEvents: [],
+    playEventsCount: null,
+    radius: 20,
+    days: 2
   });
   const [workingPosition, setWorkingPosition] = useState({
     date: new Date().toISOString().split("T")[0],
@@ -175,11 +178,11 @@ function App(props) {
 
 
   const ListOfUrls = user.success
-    ? ["", "create", "map", "about", "signout", "play", "user", "profile"]
-    : ["", "create", "map", "about", "signin", "play", "user", "signup"];
+    ? ["", "play", "create", "map", "about", "signout", "user", "profile"]
+    : ["", "play", "create", "map", "about", "signin", "user", "signup"];
   const ListOfNames = user.success
-    ? ["Charlie", "Create", "Map", "About", "Sign Out", "Play"]
-    : ["Charlie", "Create", "Map", "About", "Sign In", "Play"];
+    ? ["Charlie", "Play", "Create", "Map", "About", "Sign Out"]
+    : ["Charlie", "Play", "Create", "Map", "About", "Sign In"];
   const ListOfComponents = user.success
     ? [
         <Menu
@@ -188,6 +191,7 @@ function App(props) {
           finishedAnimation={finishedAnimation}
           setFinishedAnimation={setFinishedAnimation}
         />,
+        <Play />,
         <Create />, //create
         <MapPage
           workingPosition={workingPosition}
@@ -195,7 +199,6 @@ function App(props) {
         />, //Map
         <About />,
         <SignOut LOGIN={LOGIN} />,
-        <Play />,
         <UserModal />,
         <Profile />
       ]
@@ -206,6 +209,7 @@ function App(props) {
           finishedAnimation={finishedAnimation}
           setFinishedAnimation={setFinishedAnimation}
         />,
+        <Play />,
         <Create />,
         <MapPage
           workingPosition={workingPosition}
@@ -213,12 +217,13 @@ function App(props) {
         />,
         <About />,
         <SignIn />,
-        <Play />,
         <UserModal />,
         <SignUp />
       ];
    
   const returnComponent = index => {
+
+    console.log("Returning Component: ", ListOfComponents, index)
     return <>
             <CssBaseline />
             {ListOfComponents[index]}
@@ -481,7 +486,7 @@ function App(props) {
                       <>
                         <main className={classes.content}>
                           <div className={classes.toolbar} />
-                          {returnComponent(5)}
+                          {returnComponent(1)}
                         </main>
                       </>
                     )}
@@ -494,7 +499,7 @@ function App(props) {
                       <>
                         <main className={classes.content}>
                           <div className={classes.toolbar} />
-                          {returnComponent(5)}
+                          {returnComponent(1)}
                         </main>
                       </>
                     )}

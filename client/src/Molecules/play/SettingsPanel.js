@@ -32,9 +32,13 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
   const classes = useStyles();
   let history = useHistory();
   const { context, setContext } = useContext(UserContext);
-  const [workingValue, setWorkingValue] = useState({radius: playFilter.radius, days: playFilter.days});
+  const [workingValue, setWorkingValue] = useState({radius: context.radius, days: context.days});
   const [close, setClose] = useState(false);
   const [checked, setChecked] = useState(false);
+  // const [playFilter, setPlayFilter] = useState({
+  //   days: 2,
+  //   radius: 20,
+  // });
 
   const handleChange = (e) => {
     e.stopPropagation();
@@ -42,15 +46,17 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
   };
 
   const handleChangeRadius = (e, newValue) => {
-    console.log("Handle Change rad")
+    console.log("Handle Change rad", newValue )
     e.preventDefault()
-    setPlayFilter(prev => {return {...prev,radius: newValue}});
+    setContext(prev => {return {...prev,shownEvents: [], playEventsCount: null, radius: newValue}});
+    // setPlayFilter(prev => {return {...prev,radius: newValue}});
   };
 
   const handleChangeDays = (e, newValue) => {
-    console.log("Handle Change Days")
+    console.log("Handle Change Days", newValue)
     e.preventDefault()
-    setPlayFilter(prev => {return {...prev,days: newValue}});
+    setContext(prev => {return {...prev,shownEvents: [], playEventsCount: null, days: newValue}});
+    // setPlayFilter(prev => {return {...prev,days: newValue}});
   };
 
   const handleChangeWorkingValue = (e, target, newValue) => {
@@ -86,7 +92,7 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
                   <Grid container justify="center">
                     <Grid item xs={12}>
                       <Chip icon={<AllOutIcon style={{height: 20, width: 20,}} />} 
-                            label={`+ ${playFilter.radius} km`} 
+                            label={`+ ${context.radius} km`} 
                             variant="outlined" 
                             color="secondary" 
                             onClick={() => console.log("Yess")}
@@ -98,7 +104,7 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
                   <Grid container justify="center">
                     <Grid item xs={12}>
                         <Chip icon={<DateRangeIcon style={{height: 20, width: 20, color: '#D1D0D0'}} />}
-                              label={`+ ${playFilter.days} days`} 
+                              label={`+ ${context.days} days`} 
                               variant="outlined" 
                               style={{borderColor: '#D1D0D0', color: '#D1D0D0'}}
                               className={classes.anyChip} />
@@ -108,7 +114,7 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
                 <Grid item xs={2}>
                   <Grid container justify="center">
                     <Grid item xs={12}>
-                        <Chip label={!loading ? `${1}/${numItems}` : null} 
+                        <Chip label={!loading ? `${context.shownEvents.length + 1}/${context.playEventsCount}` : null} 
                               icon={loading && <CircularProgress style={{height: 20, width: 20, color: 'white', left: 6, position: "relative"}} />}
                               variant="default" 
                               color="secondary" 
@@ -181,7 +187,7 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
                       </Grid>
                       <Grid item xs={2}>
                           <Typography id="range-slider" gutterBottom className={classes.textSize, classes.lightGrey}>
-                            + {playFilter.days} days
+                            + {context.days} days
                           </Typography>
                       </Grid>
                   </Grid>

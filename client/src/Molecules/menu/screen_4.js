@@ -35,7 +35,7 @@ export default function Screen4(props) {
           </Grid>
         </Grid>
         <Animated
-              animationIn="bounceInUp"
+              animationIn="fadeIn"
               animationOut="fadeOut"
               animationInDelay={500}
               animationInDuration={1000}
@@ -89,7 +89,7 @@ export default function Screen4(props) {
         </Grid>
         </Animated>
         <Animated
-              animationIn="bounceInUp"
+              animationIn="fadeIn"
               animationOut="fadeOut"
               animationInDelay={700}
               animationInDuration={1000}

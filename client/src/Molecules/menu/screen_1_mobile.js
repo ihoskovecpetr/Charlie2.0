@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import { Animated } from "react-animated-css";
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import FilterListIcon from '@material-ui/icons/FilterList';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
@@ -124,7 +125,8 @@ export default function Screen1() {
                 <Grid item xs={4} className={classes.arrowWrapItem}>
                   <Grid container justify="flex-end" alignItems='flex-end' className={classes.arrowContainer}>
                     <Grid item>
-                      <ArrowDownwardIcon color='secondary' className={classes.arrowIcon}/>
+                      {/* <ArrowDownwardIcon color='secondary' className={classes.arrowIcon}/> */}
+                      <FilterListIcon color='secondary' className={classes.arrowIcon} />
                     </Grid>
                   </Grid>
                 </Grid>
@@ -183,7 +185,7 @@ const useStyles = makeStyles(theme => ({
   side_logo: {
     height: 0,
     position: "relative",
-    top: -390,
+    top: -370,
     left: "100vw"
   },
   side_logo_img: {

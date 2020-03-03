@@ -167,7 +167,7 @@ export const resolvers = {
                                 type: "Point",
                                 coordinates: [ _args.playInput.lng, _args.playInput.lat]
                             },
-                            $maxDistance: _args.playInput.radius * 1000 * 10
+                            $maxDistance: _args.playInput.radius * 1000
                         } }
             
           })
