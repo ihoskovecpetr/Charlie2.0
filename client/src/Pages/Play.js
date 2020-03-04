@@ -26,6 +26,7 @@ import PlayPageGallery from "../Molecules/play/play_page_gallery";
 import PlayPageList from "../Molecules/play/play_page_list";
 import PlayPageMap from "../Molecules/play/play_page_map";
 import NoLocationBck from "../Molecules/play/NoLocationBck";
+import JoinBackdrop from "../Molecules/play/JoinBackdrop";
 
 const PLAY_EVENTS = gql`
   mutation getPlayEvents(
@@ -145,6 +146,7 @@ function Play() {
   const { context, setContext } = useContext(UserContext);
   const [discovered, setDiscovered] = useState(0);
   const [loadingPlay, setLoadingPlay] = useState(false);
+  const [firstArrCount, setFirstArrCount] = useState(0);
   // const [playFilter, setPlayFilter] = useState({
   //   days: 2,
   //   radius: 20,
@@ -172,17 +174,15 @@ function Play() {
           shownEvents: context.shownEvents
     }})
     }
-
     return () => {
     } 
   }, [
       context.geolocationObj && context.geolocationObj.lng, 
       context.geolocationObj && context.geolocationObj.lat, 
       context.radius, 
-      context.days
+      context.days,
+      context.shownEvents
   ]);
-
-  
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -265,15 +265,14 @@ if (data) {
     >
       <Paper className={classes.paper}>
         {!context.geolocationObj &&
-        <NoLocationBck />
-      }
+        <NoLocationBck />}
 
           <SettingsPanel  getPlayEventsMutation={getPlayEventsMutation} 
                           // setPlayFilter={setPlayFilter}
                           // playFilter={playFilter}
                           loading={loading}
                           numItems={getPlayEvents ? getPlayEvents.length : 0} />
-          {/* <JoinPanel /> */}
+          <JoinBackdrop />
 
             {loading && (
               <Grid container justify="center" alignItems='center' className={classes.loadingGridCont}>
@@ -302,11 +301,9 @@ if (data) {
                     style={{display: (index === discovered + 1) ? "flex" : "flex"}}>
                    <Grid item xs={12} style={{ margin: "30px"}}>
                       <Grid container justify="center">
-                         
                           {!loadingPlay && index === discovered + 1 && <Grid item><ArrowDownwardIcon color="secondary" style={{ fontSize: 100 }} /></Grid>}
                           {!loadingPlay && index <= discovered && <Grid item><Typography variant="h4">{index + 1}/{getPlayEvents ? getPlayEvents.length : 0}</Typography></Grid>}
                           {loadingPlay && <Grid item><Spinner height={100} width={100} /></Grid>}
-                          
                       </Grid>
                     </Grid>
                     <Grid item xs={12} style={{display: index === discovered + 1 ? "block" : "none"}}>
@@ -356,7 +353,7 @@ if (data) {
                                 //variant="outlined" 
                                 color="secondary" 
                                 style={{width: "90%", fontWeight: 500, fontSize: 25, padding: 20, margin: "5%"}} 
-                                onClick={discoverPlay}
+                                // onClick={discoverPlay}
                                 />
                         </Grid>
                       </Grid>

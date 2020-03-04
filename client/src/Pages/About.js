@@ -10,6 +10,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 //import "fullpage.js/vendors/scrolloverflow"; // Optional. When using scrollOverflow:true
 import ReactFullpage from "@fullpage/react-fullpage";
+import Screen6 from "../Molecules/menu/screen_6";
+
 import "./index.css";
 
 const fullpageOptions = {
@@ -100,21 +102,11 @@ const FullpageWrapper = fullpageProps => {
                         </Typography>
                       </Paper>
                     </Grid>
-                    <Grid item xs={12}>
-              <Typography variant="body2">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></Typography>
-              <Typography variant="body2">Icons made by <a href="https://www.flaticon.com/authors/icongeek26" title="Icongeek26">Icongeek26</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></Typography>
-            
-              
-            </Grid>
                   </Grid>
                 </Container>
               </div>
-              <div className="section" style={{ background: "#0EE" }}>
-                <div className="slide">
-                  <h3>With scroll</h3>
-                </div>
-              </div>
               <div className="section">
+              <Container maxWidth="md" className={classes.aboutContainer}>
                 <Grid container>
                   <Grid item>
                     <Typography
@@ -158,9 +150,15 @@ const FullpageWrapper = fullpageProps => {
                         will decide :){" "}
                       </Typography>
                     </Paper>
+                    <Paper className={classes.basicPaper}>
+                      <Typography component="p">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></Typography>
+                      <Typography component="p">Icons made by <a href="https://www.flaticon.com/authors/icongeek26" title="Icongeek26">Icongeek26</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></Typography>
+                    </Paper>
                   </Grid>
                 </Grid>
+              </Container>
               </div>
+              <Screen6 />
             </div>
           </div>
         );
