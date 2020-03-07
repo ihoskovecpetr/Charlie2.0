@@ -7,11 +7,12 @@ import Badge from "@material-ui/core/Badge";
 import Paper from "@material-ui/core/Paper";
 import Chip from '@material-ui/core/Chip';
 import Typography from "@material-ui/core/Typography";
+
 import Collapse from '@material-ui/core/Collapse';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-
 import { useMutation, useQuery } from "@apollo/react-hooks";
+
 import gql from "graphql-tag";
 import { useHistory, NavLink } from "react-router-dom";
 
@@ -21,9 +22,10 @@ import { UserContext } from "../userContext";
 import Spinner from "../Atoms/Spinner";
 
 import SettingsPanel from "../Molecules/play/SettingsPanel";
+import JoinSend from "../Molecules/play/JoinSend";
 
 import PlayPageGallery from "../Molecules/play/play_page_gallery";
-import PlayPageList from "../Molecules/play/play_page_list";
+import PlayPageList from "../Molecules/play/PlayPageList";
 import PlayPageMap from "../Molecules/play/play_page_map";
 import NoLocationBck from "../Molecules/play/NoLocationBck";
 import JoinBackdrop from "../Molecules/play/JoinBackdrop";
@@ -146,7 +148,6 @@ function Play() {
   const { context, setContext } = useContext(UserContext);
   const [discovered, setDiscovered] = useState(0);
   const [loadingPlay, setLoadingPlay] = useState(false);
-  const [firstArrCount, setFirstArrCount] = useState(0);
   // const [playFilter, setPlayFilter] = useState({
   //   days: 2,
   //   radius: 20,
@@ -162,10 +163,11 @@ function Play() {
     // const [deleteOneEvent, deleteState] = useMutation(DELETE);
     const [createBooking, bookingStates] = useMutation(BOOKING);
 
+    console.log("RER PLAY: loading, error, data ", loading, error, data);
   useEffect(() => {
     console.log("GRAPHQL: ", context.days, context.geolocationObj, context.radius);
     // alert(`${playFilter.days} , ${context.geolocationObj ? context.geolocationObj.lng : "No Location"}`)
-    if(context.geolocationObj && context.days && context.radius){
+    if(context.geolocationObj && context.days !== null && context.radius){
       getPlayEventsMutation({variables:{
           plusDays: context.days,
           lng: context.geolocationObj ? context.geolocationObj.lng : null,
@@ -249,8 +251,8 @@ if (data) {
     //     behavior: 'smooth'
     //   });
     //   }, 800)
-
   }
+
 
   console.log("History: ", history)
 
@@ -271,8 +273,8 @@ if (data) {
                           // setPlayFilter={setPlayFilter}
                           // playFilter={playFilter}
                           loading={loading}
-                          numItems={getPlayEvents ? getPlayEvents.length : 0} />
-          <JoinBackdrop />
+                          numItems={getPlayEvents ? getPlayEvents.length : 0} 
+                          />
 
             {loading && (
               <Grid container justify="center" alignItems='center' className={classes.loadingGridCont}>
@@ -306,7 +308,7 @@ if (data) {
                           {loadingPlay && <Grid item><Spinner height={100} width={100} /></Grid>}
                       </Grid>
                     </Grid>
-                    <Grid item xs={12} style={{display: index === discovered + 1 ? "block" : "none"}}>
+                    <Grid item xs={12} style={{display: index === discovered + 1 ? "block" : "none", padding: "4px"}}>
                       <Grid container justify="center" alignItems='center' className={classes.mainHeaderFake}>
                       <Grid item>
                         {loadingPlay && <Spinner height={30} width={30} />}
@@ -332,7 +334,7 @@ if (data) {
                   <PlayPageGallery event={event} />
                   <PlayPageList
                     event={event}
-                    showBookings={getPlayEvents.bookings} //showBookings
+                    showBookings={event.bookings} //showBookings
                     ONE_EVENT={PLAY_EVENTS}
                     cancelBooking={cancelBooking}
                     cancelledState={cancelledState}
@@ -349,12 +351,9 @@ if (data) {
                             alignItems="center">
                         <Grid item xs={12}>
                           
-                          <Chip label={`JOIN`} 
-                                //variant="outlined" 
-                                color="secondary" 
-                                style={{width: "90%", fontWeight: 500, fontSize: 25, padding: 20, margin: "5%"}} 
-                                // onClick={discoverPlay}
-                                />
+
+                            <JoinSend event={event} />
+
                         </Grid>
                       </Grid>
                   </div>
@@ -418,6 +417,18 @@ const useStyles = makeStyles(theme => ({
   light: {
     backgroundColor: "lightgrey"
   },
+  sendJoinContainer: {
+    backgroundColor: "white",
+    height: 0,
+    overflow: 'hidden',
+    transition: 'height 0.6s',
+    transitionTimingFunction: 'ease-out'
+  },
+  openSend: {
+    height: 220,
+    padding: 5,
+  }
+
 }));
 
 export default Play;

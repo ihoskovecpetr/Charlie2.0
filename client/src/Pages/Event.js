@@ -19,10 +19,10 @@ import { displayDate } from "../Services/transform-services";
 import { UserContext } from "../userContext";
 
 import ModalLayout from "../Layouts/ModalLayout";
-import EventButtons from "../Molecules/event/event-buttons";
+import EventButtons from "../Molecules/event/EventButtons";
 import RatingCard from "../Molecules/rating-card";
 import Spinner from "../Atoms/Spinner";
-import PendingGuest from "../Molecules/event/pending-guest";
+import PendingGuest from "../Molecules/event/PendingGuest";
 import ConfirmedGuest from "../Molecules/event/confirmed-guest";
 import UserCard from "../Molecules/event/user-card";
 

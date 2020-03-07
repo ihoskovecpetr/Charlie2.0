@@ -13,7 +13,7 @@ const transformEvent = async (event, areYouAuthor) => {
       author: await userLookup(event._doc.author),
       freeSnack: true,
       success: true,
-      areYouAuthor: areYouAuthor
+      areYouAuthor: areYouAuthor,
     };
   } else {
     console.log("NULL ODMITNUTO");

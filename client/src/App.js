@@ -120,6 +120,7 @@ function App(props) {
   const [user, setUser] = useState({
     success: false,
     name: false,
+    _id: null,
     geolocationObj: null,
     freezScroll: false,
     getLoggedInUser: () => getLoggedInUser(),

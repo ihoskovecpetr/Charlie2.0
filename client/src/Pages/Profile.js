@@ -32,7 +32,7 @@ import { useHistory, NavLink } from "react-router-dom";
 import Copyright from "../Atoms/copyright";
 import { UserContext } from "../userContext";
 import Spinner from "../Atoms/Spinner";
-import EventCard from "../Molecules/event-card";
+import EventCard from "../Molecules/EventCard";
 import RatingCard from "../Molecules/rating-card";
 
 // const USER_EVENTS = gql`

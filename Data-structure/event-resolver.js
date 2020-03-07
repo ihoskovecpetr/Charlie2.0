@@ -152,8 +152,9 @@ export const resolvers = {
     },
     getPlayEvents: async (_, _args, context) => {
       try {
-        //  if (context.reqO.req.isAuth) {
+        if (context.reqO.req.isAuth) {
           console.log("args: ", _args.playInput)
+          console.log("context: ", context)
           let nowD = new Date();
           let nextD = new Date().toISOString().split("T")[0];
           nextD = new Date(nextD)
@@ -171,9 +172,9 @@ export const resolvers = {
                         } }
             
           })
-          //.sort(
-          //   "dateStart"
-          // )
+          .sort(
+            "dateStart"
+          )
           if (playEvents) {
             let filtered = playEvents.filter((item) => item.dateStart > new Date()) 
 
@@ -197,12 +198,12 @@ export const resolvers = {
             //   success: true,
             //   areYouAuthor: areYouAuthor
             // };
-          // } else {
+          } else {
             return {
               success: false,
               message: "This event is worhere to be seen, check url and repeat"
             };
-          // }
+          }
         } else {
           return {
             success: false,

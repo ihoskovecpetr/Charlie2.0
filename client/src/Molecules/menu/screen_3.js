@@ -12,7 +12,7 @@ import "../../Pages/Menu.css";
 
 import Spinner from "../../Atoms/Spinner";
 import LoginFirstBoard from "../../Atoms/LoginFirstBoard";
-import EventCard from "../../Molecules/event-card";
+import EventCard from "../../Molecules/EventCard";
 
 export default function Screen3(props) {
   const classes = useStyles();
