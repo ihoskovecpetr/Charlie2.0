@@ -13,7 +13,7 @@ export const resolvers = {
   Query: {
     showRatings: async (_, _args, __) => {
       try {
-        console.log("ShowBookings args: ", _args.host_id);
+        console.log("ShowBookings args retung: ", _args.host_id);
         let ratings;
         if (_args.event_id) {
           ratings = await Rating.find({ event: _args.event_id });

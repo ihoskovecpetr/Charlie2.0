@@ -24,6 +24,9 @@ import Map from "../Atoms/Hook-map";
 import InfoWindow from "../Molecules/Infowindow";
 import MapSettingsPanel from "../Molecules/map-settings-panel";
 
+import BasicMarker from "../Images/basic-marker.png";
+import CharlieMarker from "../Images/charlie-marker.png";
+
 let infoBubble;
 let InfoBevent = false;
 let previousMarker;
@@ -273,11 +276,8 @@ function MapPage(props) {
       if (!loading) {
         //console.log("Rendering MARKERS ", UniqArr);
         AllMarkersArr = UniqArr.map((location, i) => {
-          var urlNA =
-            "https://res.cloudinary.com/party-images-app/image/upload/v1557626853/j4fot5g2fvldzh88h9u4.png";
-          //var urlAttend = "https://res.cloudinary.com/party-images-app/image/upload/v1557648350/caacy89b65efjmwjiho8.png"
-          var urlAttend =
-            "https://res.cloudinary.com/party-images-app/image/upload/v1558048597/lo7digag5hz5alymniwz.png";
+          var urlNA = "https://res.cloudinary.com/party-images-app/image/upload/v1583692669/ijy8dorejsarudzkauma.png" // {BasicMarker}
+          var urlAttend = "https://res.cloudinary.com/party-images-app/image/upload/v1583692624/nwvqlicffptzqpwha5no.png" // {CharlieMarker} 
           var url = urlNA;
 
           location.bookings &&

@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from "react"
 import Map from "../../../Atoms/Hook-map";
 import mapSetup from "../../../Services/map-settings";
-
+import CharlieMarker from "../../../Images/charlie-marker.png";
 
 const PlayMap = ({event}) => {
   //{ options, onMount, className, styling }
@@ -34,7 +34,7 @@ const PlayMap = ({event}) => {
           map: map,
           anchorPoint: new window.google.maps.Point(0, -29),
           icon: {
-            url: "https://res.cloudinary.com/party-images-app/image/upload/v1558048597/lo7digag5hz5alymniwz.png",
+            url: "https://res.cloudinary.com/party-images-app/image/upload/v1583692624/nwvqlicffptzqpwha5no.png", // {CharlieMarker},
             size: new window.google.maps.Size(48, 48),
             origin: new window.google.maps.Point(0, 0),
             anchor: new window.google.maps.Point(24, 48),

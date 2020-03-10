@@ -17,8 +17,11 @@ import { useXsSize } from "../Hooks/useXsSize";
 
 import { withRouter, useHistory } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+
 import { UserContext } from "../userContext";
 import Spinner from "./Spinner";
+import CharlieLogo from "../Images/charlie-logo.png"
+
 
 function UpperStripe(props) {
   const { context } = useContext(UserContext);
@@ -108,7 +111,7 @@ function UpperStripe(props) {
                         <Avatar
                           className={classes.avatarCharlie}
                           alt="Remy Sharp"
-                          src="https://res.cloudinary.com/party-images-app/image/upload/v1557794256/ojkgl1hkiljwij69njbb.png"
+                          src={CharlieLogo}
                         />
                       ) : (
                         text

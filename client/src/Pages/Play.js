@@ -3,9 +3,7 @@ import PropTypes from "prop-types";
 
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Badge from "@material-ui/core/Badge";
 import Paper from "@material-ui/core/Paper";
-import Chip from '@material-ui/core/Chip';
 import Typography from "@material-ui/core/Typography";
 
 import Collapse from '@material-ui/core/Collapse';
@@ -29,6 +27,8 @@ import PlayPageList from "../Molecules/play/PlayPageList";
 import PlayPageMap from "../Molecules/play/play_page_map";
 import NoLocationBck from "../Molecules/play/NoLocationBck";
 import JoinBackdrop from "../Molecules/play/JoinBackdrop";
+import TimeDistanceChips from "../Molecules/play/TimeDistanceChips";
+
 
 const PLAY_EVENTS = gql`
   mutation getPlayEvents(
@@ -106,19 +106,6 @@ const PLAY_EVENTS = gql`
 //   }
 // }
 
-const EVENT_RATINGS = gql`
-  query showRatings($event_id: ID!) {
-    showRatings(event_id: $event_id) {
-      guest {
-        picture
-        name
-      }
-      message
-      ratingValue
-      createdAt
-    }
-  }
-`;
 
 
 const BOOKING = gql`
@@ -138,8 +125,6 @@ const CANCELLING = gql`
   }
 `;
 
-
-
 function Play() {
   const classes = useStyles();
   const theme = useTheme();
@@ -148,31 +133,29 @@ function Play() {
   const { context, setContext } = useContext(UserContext);
   const [discovered, setDiscovered] = useState(0);
   const [loadingPlay, setLoadingPlay] = useState(false);
+  const [filterOn, setFilterOn] = useState(true);
+
   // const [playFilter, setPlayFilter] = useState({
   //   days: 2,
   //   radius: 20,
   // });
 
   const [getPlayEventsMutation, { loading, error, data, refetch }] = useMutation(PLAY_EVENTS);
-  const ratings = useQuery(EVENT_RATINGS, {
-    variables: { event_id: "props.match.params.id" }
-    //skip: !id,
-    //pollInterval: 500
-  });
-    const [cancelBooking, cancelledState] = useMutation(CANCELLING);
-    // const [deleteOneEvent, deleteState] = useMutation(DELETE);
-    const [createBooking, bookingStates] = useMutation(BOOKING);
+
+  const [cancelBooking, cancelledState] = useMutation(CANCELLING);
+  const [createBooking, bookingStates] = useMutation(BOOKING);
 
     console.log("RER PLAY: loading, error, data ", loading, error, data);
+
   useEffect(() => {
     console.log("GRAPHQL: ", context.days, context.geolocationObj, context.radius);
     // alert(`${playFilter.days} , ${context.geolocationObj ? context.geolocationObj.lng : "No Location"}`)
-    if(context.geolocationObj && context.days !== null && context.radius){
+    if(context.geolocationObj && context.days !== null && context.radius && context.name){
       getPlayEventsMutation({variables:{
-          plusDays: context.days,
+          plusDays: filterOn ? context.days : 10000,
           lng: context.geolocationObj ? context.geolocationObj.lng : null,
           lat: context.geolocationObj ? context.geolocationObj.lat : null,
-          radius: context.radius, // playFilter.radius,
+          radius: filterOn ? context.radius : 9999999, // playFilter.radius,
           shownEvents: context.shownEvents
     }})
     }
@@ -183,7 +166,8 @@ function Play() {
       context.geolocationObj && context.geolocationObj.lat, 
       context.radius, 
       context.days,
-      context.shownEvents
+      context.shownEvents,
+      filterOn
   ]);
 
   useEffect(() => {
@@ -209,7 +193,7 @@ if (data) {
   useEffect(() => {
     console.log("getPlayEvents: ", getPlayEvents, context.playEventsCount);
     if(getPlayEvents){
-      if(context.playEventsCount === null){
+      if(context.shownEvents.length === 0){ // context.playEventsCount === null
         console.log("Pass if null")
         setContext(prev => {return {...prev, playEventsCount: getPlayEvents.length}});
       }
@@ -244,18 +228,10 @@ if (data) {
       window.scrollTo(0,0);
       setLoadingPlay(false)
     }, 500)
-    // setTimeout(() => {
-    //   window.scrollBy({
-    //     top: 200,
-    //     left: 0,
-    //     behavior: 'smooth'
-    //   });
-    //   }, 800)
   }
 
-
   console.log("History: ", history)
-
+  
   return (
     <div
       className={classes.playWrap}
@@ -273,7 +249,8 @@ if (data) {
                           // setPlayFilter={setPlayFilter}
                           // playFilter={playFilter}
                           loading={loading}
-                          numItems={getPlayEvents ? getPlayEvents.length : 0} 
+                          filterOn={filterOn} 
+                          setFilterOn={setFilterOn}
                           />
 
             {loading && (
@@ -325,11 +302,14 @@ if (data) {
               <div style={{display: index <= discovered ? "block" : "none"}}>
               
                 <Grid container justify='center'>
-                  <Grid item style={{ marginTop: index === 0 && "30px"}}>
+                  <Grid item style={{ marginTop: index === 0 && 40}}>
                       <Typography variant="h4" className={classes.mainHeader}>
-                      {event.name}
+                    {event.name}
+                    <p className={classes.thisLine}></p>
+
                       </Typography>
                   </Grid>
+                  <TimeDistanceChips event={event} />
                 </Grid>
                   <PlayPageGallery event={event} />
                   <PlayPageList
@@ -343,7 +323,6 @@ if (data) {
                   <PlayPageMap
                     event={event}
                     showBookings={getPlayEvents.bookings} //showBookings
-                    ratings={ratings}
                   /> 
                    
                       <Grid container
@@ -352,7 +331,7 @@ if (data) {
                         <Grid item xs={12}>
                           
 
-                            <JoinSend event={event} />
+                            <JoinSend event={event} getPlayEventsMutation={getPlayEventsMutation} />
 
                         </Grid>
                       </Grid>
@@ -394,7 +373,7 @@ const useStyles = makeStyles(theme => ({
   },
   mainHeader:{
     marginTop: '30px',
-    marginBottom: '20px'
+    marginBottom: '10px'
   },
   mainHeaderFake: {
     backgroundColor: "#6F6F6F",
@@ -427,7 +406,13 @@ const useStyles = makeStyles(theme => ({
   openSend: {
     height: 220,
     padding: 5,
-  }
+  },
+  thisLine:{
+    height: '1px',
+    width: '100%',
+    marginTop: '2px',
+    backgroundColor: "#707070"
+  },
 
 }));
 

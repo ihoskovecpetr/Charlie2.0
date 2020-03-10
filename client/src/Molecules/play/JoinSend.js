@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Chip from '@material-ui/core/Chip';
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -8,6 +8,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
 import SendIcon from '@material-ui/icons/Send';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 import clsx from "clsx";
 import { useMutation } from "@apollo/react-hooks";
@@ -15,6 +16,7 @@ import gql from "graphql-tag";
 import { Animated } from "react-animated-css";
 
 import { UserContext } from "../../userContext";
+import Spinner from "../../Atoms/Spinner";
 
 
 const BOOKING_REQ = gql`
@@ -37,11 +39,12 @@ const BOOKING_REQ = gql`
   }
 `;
 
-export default function JoinSend({event}) {
+export default function JoinSend({event, getPlayEventsMutation}) {
     const classes = useStyles();
     const [checked, setChecked] = useState(false);
+    const [refetched, setRefetched] = useState(false);
     const { context, setContext } = useContext(UserContext);
-    const [createReqBooking, bookingReqStates] = useMutation(BOOKING_REQ);
+    const [createReqBooking,  { loading, error, data }] = useMutation(BOOKING_REQ);
 
     const inputDescription = useRef(null);
 
@@ -65,23 +68,24 @@ export default function JoinSend({event}) {
         }
     })
 
-    console.log("bookingReqStates: ", bookingReqStates);
-
+    console.log("loading, error, data: ", loading, error, data );
 
     function openJoin(){
       if(!attending && !pending){
         setChecked(true)
       }
-       
     }
 
     function sendBooking(params) {
+      console.log("Creating booking: ", context._id, context.name, event._id, inputDescription.current.value )
         createReqBooking({
             variables: {
               guest_id: context._id,
               guest_name: context.name,
               event_id: event._id,
-              message: "XXX sdfdsdf"
+              message: inputDescription.current.value
+                        ? inputDescription.current.value
+                        : null,
             },
             // refetchQueries: () => [
             //   {
@@ -91,6 +95,22 @@ export default function JoinSend({event}) {
             // ]
           })
     }
+
+    if(data && data.requestBookEvent.success && !refetched){
+      setRefetched(true)
+      setChecked(false)
+      console.log("Refetching EVT")
+      setTimeout(() => {getPlayEventsMutation({variables:{
+            plusDays: context.days,
+            lng: context.geolocationObj ? context.geolocationObj.lng : null,
+            lat: context.geolocationObj ? context.geolocationObj.lat : null,
+            radius: context.radius, // playFilter.radius,
+            shownEvents: context.shownEvents
+      }})      }
+
+      , 1000)
+    }
+
 
     return (
         <>
@@ -107,6 +127,7 @@ export default function JoinSend({event}) {
         <Grid container
             className={clsx(classes.sendJoinContainer, checked && classes.openSend, )}
             alignItems="center">
+            {!loading && !data && (
             <Grid item xs={12} className={clsx(classes.itemSend, checked && classes.displayBlock)}>
             <Animated
               animationIn="fadeIn"
@@ -144,6 +165,23 @@ export default function JoinSend({event}) {
                         />
                 </Animated>
             </Grid>
+            )}
+            {loading && (
+              <Grid container justify="center" alignItems='center' className={classes.loadingGridCont}>
+                <Grid item>
+                  <Spinner height={100} width={100} />
+                </Grid>
+              </Grid>
+            )}
+            
+            {!loading && data && data.requestBookEvent && (
+            <Grid item xs={12} className={clsx(classes.itemSend, checked && classes.displayBlock)}>
+                <InputLabel htmlFor="standard-adornment-amount">
+                    Finished
+                </InputLabel>
+                
+            </Grid>
+            )}
         </Grid>
     </>
     )

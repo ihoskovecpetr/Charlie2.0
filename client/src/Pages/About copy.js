@@ -17,6 +17,7 @@ import { NavLink } from "react-router-dom";
 
 import Copyright from "../Atoms/copyright";
 import SocialLine from "../Atoms/social-line";
+import LastBackImage from "../Images/last-back-image";
 
 const useStyles = makeStyles(theme => ({
   aboutContainer: {
@@ -199,7 +200,7 @@ export default function Menu(props) {
             <SocialLine color="secondary" />
             <CardMedia
               className={classes.cardMediaBottom}
-              image="https://res.cloudinary.com/party-images-app/image/upload/v1559960064/uvic6vretl0zabrk570z.png"
+              image={LastBackImage}
               title="Paella dish"
             />
             <SocialLine color="secondary" />

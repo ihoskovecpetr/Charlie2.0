@@ -31,6 +31,9 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
             <Grid item>
               <Typography variant="h4" className={classes.mainHeader}>
               {event.name}
+              
+              <p className={classes.thisLineHeader}></p>
+
               </Typography>
             </Grid>
           </Grid>
@@ -187,6 +190,12 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         marginTop: '2px',
         // backgroundColor: "#707070"
+      },
+      thisLineHeader:{
+        height: '1px',
+        width: '100%',
+        marginTop: '2px',
+        backgroundColor: "#707070"
       },
       mainHeader:{
         marginTop: '20px',

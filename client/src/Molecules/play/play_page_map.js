@@ -4,13 +4,35 @@ import Gallery from "react-grid-gallery";
 import Typography from "@material-ui/core/Typography";
 
 import { makeStyles } from "@material-ui/core/styles";
+import { useMutation, useQuery } from "@apollo/react-hooks";
+
+import gql from "graphql-tag";
 
 import PlayMap from "./Carousel/PlayMap";
 import UserCard from "./UserCardPlay";
 import RatingCard from "./RatingCardPlay";
 
-const PlayPageMap = ({event, ratings}) => {
+const EVENT_RATINGS = gql`
+  query showRatings($event_id: ID!) {
+    showRatings(event_id: $event_id) {
+      guest {
+        picture
+        name
+      }
+      message
+      ratingValue
+      createdAt
+    }
+  }
+`;
+
+const PlayPageMap = ({event}) => {
     const classes = useStyles();
+    const ratings = useQuery(EVENT_RATINGS, {
+      variables: { event_id: event._id }
+      //skip: !id,
+      //pollInterval: 500
+    });
 
     return(
         <Grid container 

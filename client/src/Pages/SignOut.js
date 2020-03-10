@@ -45,9 +45,8 @@ function SignIn(props) {
  }, [context]);
 
   const Out = () => {
-    window.localStorage.setItem("token", "_deleted_");
+    context.deleteToken()
     context.getLoggedInUser()
-
   };
 
   return (

@@ -13,6 +13,11 @@ import "../../../Pages/Menu.css";
 
 import Carousel from "../../../Atoms/carousel";
 
+import randomgirl1 from "../../../Images/randomgirl1.png";
+import post2A from "../../../Images/post2A.png";
+import post2B from "../../../Images/post2B.png";
+import post2C from "../../../Images/post2C.png";
+
 export default function BlogPosts() {
   const classes = useStyles();
 
@@ -36,7 +41,7 @@ export default function BlogPosts() {
             <Avatar
               alt="Author"
               sizes="large"
-              src="https://res.cloudinary.com/party-images-app/image/upload/v1553557168/cgnjfgxcbegttvftwbox.png"
+              src={randomgirl1}
             />
           </Grid>
           <Grid item>
@@ -52,11 +57,9 @@ export default function BlogPosts() {
         </Grid>
         <Carousel
           images={[
-            "https://res.cloudinary.com/party-images-app/image/upload/v1553558709/hdyqsmvfmye0abxbmo6v.png",
-
-            "https://res.cloudinary.com/party-images-app/image/upload/v1553558710/kuh7whsezyjnbbtlphg2.png",
-
-            "https://res.cloudinary.com/party-images-app/image/upload/v1553558710/fh4mqii1zzgtd2sircza.png"
+            post2A,
+            post2B,
+            post2C
           ]}
         />
       </Animated>

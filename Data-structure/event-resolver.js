@@ -176,6 +176,7 @@ export const resolvers = {
             "dateStart"
           )
           if (playEvents) {
+            console.log("PlayEventd is there distance?: ", playEvents);
             let filtered = playEvents.filter((item) => item.dateStart > new Date()) 
 
             filtered = filtered.filter((item) => {
@@ -205,6 +206,7 @@ export const resolvers = {
             };
           }
         } else {
+          console.log("You are no authorised XX")
           return {
             success: false,
             message: "You are not authorised, login first to continue"

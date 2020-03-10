@@ -13,6 +13,11 @@ import "../../../Pages/Menu.css";
 
 import Carousel from "../../../Atoms/carousel";
 
+import randomguy2 from "../../../Images/randomguy2.jpg";
+import post3A from "../../../Images/post3A.png";
+import post3B from "../../../Images/post3B.png";
+import post3C from "../../../Images/post3C.png";
+
 export default function BlogPosts() {
   const classes = useStyles();
 
@@ -35,7 +40,7 @@ export default function BlogPosts() {
             <Avatar
               alt="Author"
               sizes="large"
-              src="https://res.cloudinary.com/party-images-app/image/upload/v1555136792/qcb1xwjgfb1ozhhgmajg.jpg"
+              src={randomguy2}
             />
           </Grid>
           <Grid item>
@@ -53,10 +58,10 @@ export default function BlogPosts() {
         </Grid>
         <Carousel
           images={[
-            "https://res.cloudinary.com/party-images-app/image/upload/v1555137923/hp9x1b6w6hxx7ipk9nyw.png",
-            "https://res.cloudinary.com/party-images-app/image/upload/v1555137919/k74xwqzb3ssmh0mezqg5.png",
-            "https://res.cloudinary.com/party-images-app/image/upload/v1555137918/ozocoqfkuouyaomybh4u.png"
-          ]}
+                post3A,
+                post3B,
+                post3C  
+              ]}
         />
       </Animated>
     </div>

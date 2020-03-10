@@ -58,7 +58,7 @@ const LOGIN = gql`
 `;
 
 function App(props) {
-  const windowSize = useWindowSize()
+   const windowSize = useWindowSize()
 
   const theme = createMuiTheme({
     palette: {
@@ -121,9 +121,13 @@ function App(props) {
     success: false,
     name: false,
     _id: null,
+    email: null,
+    picture: null,
+    description: null,
     geolocationObj: null,
     freezScroll: false,
     getLoggedInUser: () => getLoggedInUser(),
+    deleteToken: () => window.localStorage.setItem("token", "_deleted_"),
     shownEvents: [],
     playEventsCount: null,
     radius: 20,

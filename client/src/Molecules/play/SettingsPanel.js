@@ -28,36 +28,38 @@ import { UserContext } from "../../userContext";
 import SliderCustom from "../../Atoms/SliderCustom";
 import { useBackdrop } from "../../Hooks/useBackdrop";
 
-const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilter, loading}) => {
+const SettingsPanel = ({getPlayEventsMutation, loading, filterOn, setFilterOn}) => {
   const classes = useStyles();
   let history = useHistory();
   const { context, setContext } = useContext(UserContext);
   const [workingValue, setWorkingValue] = useState({radius: context.radius, days: context.days});
   const [close, setClose] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [filterOn, setFilterOn] = useState(true);
+
   // const [playFilter, setPlayFilter] = useState({
   //   days: 2,
   //   radius: 20,
   // });
 
-  useEffect(() => {
-    !filterOn && getPlayEventsMutation({variables:{
-        plusDays: 1000,
-        lng: context.geolocationObj ? context.geolocationObj.lng : null,
-        lat: context.geolocationObj ? context.geolocationObj.lat : null,
-        radius: 99999, // playFilter.radius,
-        shownEvents: []
-    }})
+  // useEffect(() => {
+  //   console.log("Fertching useEff");
 
-    filterOn && getPlayEventsMutation({variables:{
-        plusDays: context.days,
-        lng: context.geolocationObj ? context.geolocationObj.lng : null,
-        lat: context.geolocationObj ? context.geolocationObj.lat : null,
-        radius: context.radius, // playFilter.radius,
-        shownEvents: context.shownEvents
-    }})
-  }, [filterOn]);
+  //   !filterOn && getPlayEventsMutation({variables:{
+  //       plusDays: 1000,
+  //       lng: context.geolocationObj ? context.geolocationObj.lng : null,
+  //       lat: context.geolocationObj ? context.geolocationObj.lat : null,
+  //       radius: 999999999, // playFilter.radius,
+  //       shownEvents: []
+  //   }})
+
+  //   filterOn && getPlayEventsMutation({variables:{
+  //     plusDays: context.days,
+  //     lng: context.geolocationObj ? context.geolocationObj.lng : null,
+  //     lat: context.geolocationObj ? context.geolocationObj.lat : null,
+  //     radius: context.radius, // playFilter.radius,
+  //     shownEvents: context.shownEvents
+  //   }})
+  // }, [filterOn]);
 
   const handleChange = (e) => {
     e.stopPropagation();
@@ -66,6 +68,7 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
 
   const handleFilterOn = (e) => {
     e.stopPropagation();
+    setContext(prev => {return {...prev,shownEvents: []}});
     setFilterOn(prev => !prev);
   };
 
@@ -138,7 +141,7 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
                 <Grid item xs={2}>
                   <Grid container justify="center">
                     <Grid item xs={12}>
-                        <Chip label={!loading ? `${context.shownEvents.length + 1}/${numItems}` : null} 
+                        <Chip label={!loading ? `${context.shownEvents.length + 1}/${context.playEventsCount}` : null} 
                               icon={loading && <CircularProgress style={{height: 20, width: 20, color: 'white', left: 6, position: "relative"}} />}
                               variant="default" 
                               color="secondary"
@@ -164,6 +167,7 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
                               step={5}
                               min={5}
                               max={50}
+                              disabled={!filterOn}
                               onChangeCommitted={(e_, value) => {
                                 handleChangeRadius(e_ , value)
                               } 
@@ -194,6 +198,7 @@ const SettingsPanel = ({getPlayEventsMutation, numItems, playFilter, setPlayFilt
                                   step={1}
                                   min={0}
                                   max={7}
+                                  disabled={!filterOn}
                                   onChangeCommitted={(e_, value) => {
                                     console.log("Commited Days")
                                     handleChangeDays(e_ , value)

@@ -16,6 +16,10 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import { makeStyles } from "@material-ui/core/styles";
 import { NavLink } from "react-router-dom";
 
+import CharlieLogo from "../Images/charlie-logo.png"
+import DrawerProfileBox from "./DrawerProfileBox"
+
+
 function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth}) {
 
     const useStyles = makeStyles(theme => ({
@@ -28,7 +32,7 @@ function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth
         avatar: {
           margin: theme.spacing(1),
           backgroundColor: theme.palette.secondary.main
-        },
+        }
 
       }));
 
@@ -40,6 +44,9 @@ function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth
         <div>
         <div className={classes.toolbar} />
         <Divider />
+
+        <DrawerProfileBox handleDrawerToggle={handleDrawerToggle} />
+        
         <List>
         {ListOfNames.map((text, index) => (
         <NavLink
@@ -55,7 +62,7 @@ function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth
                     <Avatar
                     className={classes.avatarCharlie}
                     alt="Remy Sharp"
-                    src="https://res.cloudinary.com/party-images-app/image/upload/v1557794256/ojkgl1hkiljwij69njbb.png"
+                    src={CharlieLogo}
                     />
                 </ListItemIcon>
                 )}
