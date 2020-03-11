@@ -50,6 +50,10 @@ const NEW_USER = gql`
       password
       email
       }
+      errorOut{
+        name
+        message
+      }
 
     }
   }
@@ -166,9 +170,6 @@ if (dataOut && dataOut.success) {
     <ModalLayout>
       <Paper className={classes.paper}>
         <CssBaseline />
-        {errorOut && (
-          <h1>Error, this email is already taken!!</h1>
-        )}
       <Grid container justify="center">
         <Grid item>
           <Typography variant="h6" className={classes.mainHeading}>

@@ -30,10 +30,12 @@ const Query = `
   type Query {
     _empty: Prazdno
   }
+
   type Error {
     name: String
     message: String
   }
+  
 `;
 const resolversLoc = {
   Query: {

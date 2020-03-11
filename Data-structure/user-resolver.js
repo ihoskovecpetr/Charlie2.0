@@ -46,11 +46,13 @@ export const resolvers = {
       try {
         await userYupSchema.validate(_args, { abortEarly: false });
       } catch (err) {
+        console.log("Yup Err")
         return formatYupError(err);
       }
       try {
         let existing = await User.find({ email: _args.email });
         if (existing.length) {
+          console.log("Duplicate Email> ")
           return duplicate_email_Error;
         } else {
           if (!_args.picture) {

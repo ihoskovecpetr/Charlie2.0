@@ -54,7 +54,7 @@ function SignIn(props) {
   let history = useHistory();
 
   const { context, setContext } = useContext(UserContext);
-  const [email, setEmail] = useState("test@gmail.com");
+  const [input, setInput] = useState({email: "Holdr", password: "ss"});
   const windowSize = useWindowSize();
 
   const [login, { loading, error, data }] = useMutation(LOGIN);
@@ -98,33 +98,36 @@ function SignIn(props) {
     });
   }
 
-  const Email = ({ cy, disabled }) => {
-    // let Err = false
-    // if(dataOut) Err = !dataOut.success
-    // console.log("Pass data: ", dataOut);
-    // console.log("Pass Err: ", Err);
-    return (
-      <TextField
-        margin="normal"
-        required
-        disabled={disabled}
-        defaultValue="test@gmail.com"
-        fullWidth
-        data-cy={cy}
-        // onChange={e => {
-        //   console.log("E? ", e.target.value);
-        //   setEmail(e.target.value);
-        // }}
-        label="Email Address"
-        name="email"
-        id="email"
-        autoComplete="email"
-        //autoFocus
-        error={errorOut}
-        // error={data ? data && !data.success : false}
-      />
-    );
-  };
+  const handleInputChange = (e) => setInput({
+    ...input,
+    [e.currentTarget.name]: e.currentTarget.value
+  })
+
+  // const Email = ({ cy, disabled }) => {
+  //   // let Err = false
+  //   // if(dataOut) Err = !dataOut.success
+  //   // console.log("Pass data: ", dataOut);
+  //   // console.log("Pass Err: ", Err);
+  //   return (
+  //     <TextField
+  //       margin="normal"
+  //       required
+  //       // disabled={disabled}
+  //       // defaultValue="test@gmail.com"
+  //       value={email}
+  //       fullWidth
+  //       // data-cy={cy}
+  //       onChange={handleUsernameChange}
+  //       label="Email Address"
+  //       name="email"
+  //       id="email"
+  //       // autoComplete="email"
+  //       //autoFocus
+  //       error={errorOut}
+  //       // error={data ? data && !data.success : false}
+  //     />
+  //   );
+  // };
 
   const Pass = ({ disabled }) => {
 
@@ -134,12 +137,12 @@ function SignIn(props) {
         required
         fullWidth
         disabled={disabled}
-        defaultValue="heslo"
+        // defaultValue="heslo"
         name="password"
         label="Password"
         type="password"
         id="password"
-        autoComplete="current-password"
+        // autoComplete="current-password"
         error={errorOut}
       />
     );
@@ -180,9 +183,32 @@ function SignIn(props) {
               </Alert>
             ))}
 
-          {!data && <Email cy={"emailSignIn"} />}
+
+          {!data && 
+                <TextField
+                margin="normal"
+                required
+                value={input.email}
+                fullWidth
+                onChange={handleInputChange}
+                label="Email Address"
+                name="email"
+                id="email"
+                error={errorOut}
+              />
+           }
           {!dataOut || dataOut.success && (
-            <Email cy={"emailSignIn"} disabled={true} />
+                  <TextField
+                  margin="normal"
+                  required
+                  disabled={true}
+                  value={input.email}
+                  fullWidth
+                  label="Email Address"
+                  name="email"
+                  id="email"
+                  error={errorOut}
+                />
           )}
           {errorOut && (
             <Animated
@@ -192,12 +218,44 @@ function SignIn(props) {
               animationInDuration={800}
               isVisible={true}
             >
-              <Email />
+              <TextField
+                margin="normal"
+                required
+                value={input.email}
+                fullWidth
+                onChange={handleInputChange}
+                label="Email Address"
+                name="email"
+                id="email"
+                error={errorOut}
+              />
             </Animated>
           )}
 
-          {!data && <Pass />}
-          {dataOut && dataOut.success && <Pass disabled={true} />}
+          {!data && <TextField
+                margin="normal"
+                required
+                fullWidth
+                value={input.password}
+                onChange={handleInputChange}
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                error={errorOut}
+              />}
+          {dataOut && dataOut.success && <TextField
+                margin="normal"
+                required
+                fullWidth
+                value={input.password}
+                onChange={handleInputChange}
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                error={errorOut}
+              />}
           {errorOut && (
             <Animated
               animationIn="shake"
@@ -206,7 +264,18 @@ function SignIn(props) {
               animationInDuration={1000}
               isVisible={true}
             >
-              <Pass />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                value={input.password}
+                onChange={handleInputChange}
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                error={errorOut}
+              />
             </Animated>
           )}
 
