@@ -13,6 +13,7 @@ import Fab from '@material-ui/core/Fab';
 
 import { makeStyles } from "@material-ui/core/styles";
 import CharlieHalf from "../../Images/charlie_half.png";
+import CharBckg from "../../Images/charbckg.png";
 
 import "../../Pages/Menu.css";
 
@@ -25,6 +26,13 @@ import "../../Pages/Menu.css";
 export default function Screen1() {
   const classes = useStyles();
   let history = useHistory();
+  const [windowHeight, setWindowHeight] = useState(0);
+
+
+  useEffect(() => {
+      setWindowHeight(window.innerHeight)
+  }, []);
+
 
   const redirectPlay = () => {
     history.push("/play")
@@ -37,15 +45,20 @@ export default function Screen1() {
   return (
     <div
       className="section s1"
-      // style={{ backgroundImage: xs_size_memo ? `url(${CharlieHalf})` : `url(${EmpireOriginal})`}}
+      // style={{ backgroundImage: xs_size_memo ? `url(${CharlieHalf})` : `url(${EmpireOriginal})`}} 
     >
-      <Container maxWidth="md" className={classes.container_1}>
+      <Container maxWidth="md" className={classes.container_1} style={{ height: windowHeight}}>
         {
           //MainScreenMemo
         }
         <Grid container>
-          <Grid item xs={12} className={classes.top_half}>
-            <Grid
+          <Grid item xs={12} 
+                className={classes.top_half} 
+                style={{ height: 0.7 * windowHeight, 
+                          backgroundSize: "contain",
+                          backgroundRepeat: "no-repeat",
+                          backgroundImage: `url(${CharBckg})`}}>
+            {/* <Grid
               container
               direction="column"
               justify="center"
@@ -61,7 +74,7 @@ export default function Screen1() {
               <Grid item xs={12}>
               <p className={classes.lie}>LIE</p>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Grid>
             <Grid item className={classes.side_logo}>
               <img src={CharlieHalf} className={classes.side_logo_img} />
@@ -96,12 +109,13 @@ export default function Screen1() {
             </Grid>
           </Grid> */}
 
-          <Grid item xs={12} sm={6} className={classes.quarter_grid_dark }>
+          <Grid item xs={12} sm={6} className={classes.quarter_grid_dark } style={{ height: 0.3 * windowHeight}}>
             
               <Grid
                 container
                 justify="left"
                 direction="row"
+                style={{ height: "100%"}}
               >
                 <Grid item xs={8}>
                   <Grid container className={classes.main_buttons_container}>
@@ -147,7 +161,7 @@ const useStyles = makeStyles(theme => ({
     width: '100vw'
   },
   top_half: {
-    height: 443, // `45vh` `${0.5*window.innerHeight}px`
+    // height: 443, // `45vh` `${0.5*window.innerHeight}px`
     color: '#C6C5C5', //'#696868'
     position: "relative",
     left: -21,
@@ -193,14 +207,14 @@ const useStyles = makeStyles(theme => ({
     position: "relative",
     left: -149
   },
-  quarter_grid: {
-    height: 140, //  20vh'`${0.25*window.innerHeight}px`
-    color: 'black',
-    // paddingTop: '5vh',
-    paddingLeft: 20,
-    paddingRight: 20,
-    fontSize: 16
-  },
+  // quarter_grid: {
+  //   // height: 140, //  20vh'`${0.25*window.innerHeight}px`
+  //   color: 'black',
+  //   // paddingTop: '5vh',
+  //   paddingLeft: 20,
+  //   paddingRight: 20,
+  //   fontSize: 16
+  // },
   landingTextContainer: {
     height: '100%'
   },
@@ -210,7 +224,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: 'rgba(255,255,255,0.7)'
   },
   quarter_grid_dark: {
-    height: 150, // "35vh" `${0.25*window.innerHeight}px`
+    // height: 150, // "35vh" `${0.25*window.innerHeight}px`
     color: 'black',
     fontSize: 16,
     backgroundColor: '#242323'
@@ -218,7 +232,8 @@ const useStyles = makeStyles(theme => ({
   main_buttons_container: {
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: 7
+    paddingTop: 7,
+    height: "100%"
   },
   link_main_play: {
     marginBottom: 10,

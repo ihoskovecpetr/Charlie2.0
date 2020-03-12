@@ -127,10 +127,26 @@ function Create(props) {
   const { errorOut } = data ? data.createEvent : { errorOut: undefined };
 
   let den = new Date(formValue.startDate);
-
+  let timer1
 
   useEffect(() => {
     document.documentElement.style.overflow = "auto"
+    document.getElementById("plus_btn").addEventListener('mousedown', function(event) { 
+      // simulating hold event
+      timer1 = setInterval(function() {
+        // You are now in a hold state, you can do whatever you like!
+        console.log("HOLDDDIIING")
+        setFormValue(prev => {
+          return { ...prev, price: prev.price + 1 };
+        });
+      }, 100);
+    });
+
+    document.getElementById("plus_btn").addEventListener('mouseup', function(event) { 
+      // simulating hold event
+      clearTimeout(timer1)
+    });
+
     return () =>{
     } 
   }, []);
@@ -168,6 +184,10 @@ function Create(props) {
   };
 
   const plusPrice = () => {
+    const timer = setInterval(function(){ 
+      console.log("Hello: ") 
+      clearTimeout(timer)
+    }, 1000);
     setFormValue(prev => {
       return { ...prev, price: prev.price + 1 };
     });
@@ -483,6 +503,7 @@ function Create(props) {
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
+                id="plus_btn"
                 onClick={() => {
                   plusPrice();
                 }}

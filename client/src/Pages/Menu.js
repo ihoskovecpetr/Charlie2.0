@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useMemo } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -59,7 +59,7 @@ export default function Menu(props) {
 
   const { context } = useContext(UserContext);
   const { xs_size_memo } = useXsSize();
-  //const [value, setValue] = React.useState(0);
+  const [windowHeight, setWindowHeight] = useState(0);
 
   const [newBookingsArr, { loading, error, data }] = useMutation(
     USER_NEW_BOOKINGS,
@@ -77,6 +77,9 @@ export default function Menu(props) {
       "UseEffect Find out if document has property onclick ",
       "onclick" in document.createElement("div") ? "Joo" : "Noo"
     );
+
+      setWindowHeight(window.innerWidth)
+
   }, []);
 
 

@@ -31,7 +31,12 @@ function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth
         },
         avatar: {
           margin: theme.spacing(1),
-          backgroundColor: theme.palette.secondary.main
+          backgroundColor: "transparent",
+          color: "black"
+        //   theme.palette.secondary.main
+        },
+        itemText: {
+            marginLeft: 20
         }
 
       }));
@@ -39,11 +44,14 @@ function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth
       const classes = useStyles();
 
       console.log("ListOfNames: ", ListOfNames)
-      console.log("ListOfUrls: ", ListOfUrls)     
+      console.log("ListOfUrls: ", ListOfUrls)  
+      
+      ListOfNames.pop()
+
+      console.log("ListOfNames POP: ", ListOfNames)
     return(
         <div>
         <div className={classes.toolbar} />
-        <Divider />
 
         <DrawerProfileBox handleDrawerToggle={handleDrawerToggle} />
         
@@ -69,28 +77,28 @@ function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth
                 {index === 1 && (
                 <ListItemIcon>
                     <Avatar className={classes.avatar}>
-                    <PlayArrowIcon />
+                    <PlayArrowIcon fontSize="large" />
                     </Avatar>
                 </ListItemIcon>
                 )}
                 {index === 2 && (
                 <ListItemIcon>
                     <Avatar className={classes.avatar}>
-                    <AddCircleOutlineIcon />
+                    <AddCircleOutlineIcon fontSize="large" />
                     </Avatar>
                 </ListItemIcon>
                 )}
                 {index === 3 && (
                 <ListItemIcon>
                     <Avatar className={classes.avatar}>
-                    <ExploreIcon />
+                    <ExploreIcon fontSize="large" />
                     </Avatar>
                 </ListItemIcon>
                 )}
                 {index === 4 && (
                 <ListItemIcon>
                     <Avatar className={classes.avatar}>
-                    <SubjectIcon />
+                    <SubjectIcon fontSize="large" />
                     </Avatar>
                 </ListItemIcon>
                 )}
@@ -98,12 +106,12 @@ function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth
                 {index === 5 && (
                 <ListItemIcon>
                     <Avatar className={classes.avatar}>
-                    <AccountCircleIcon />
+                    <AccountCircleIcon fontSize="large" />
                     </Avatar>
                 </ListItemIcon>
                 )}
 
-                <ListItemText primary={text} />
+                <ListItemText primary={text} className={classes.itemText} />
             </ListItem>
         </NavLink>
         ))}

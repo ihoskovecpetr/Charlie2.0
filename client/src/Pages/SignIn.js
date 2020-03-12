@@ -54,7 +54,7 @@ function SignIn(props) {
   let history = useHistory();
 
   const { context, setContext } = useContext(UserContext);
-  const [input, setInput] = useState({email: "Holdr", password: "ss"});
+  const [input, setInput] = useState({email: "test@gmail.com", password: "heslo"});
   const windowSize = useWindowSize();
 
   const [login, { loading, error, data }] = useMutation(LOGIN);

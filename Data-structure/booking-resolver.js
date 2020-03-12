@@ -330,7 +330,5 @@ function newFunction() {
     cancelled: Boolean
     success: Boolean
   }
-
-
 `;
 }

@@ -73,6 +73,7 @@ export default function JoinSend({event, getPlayEventsMutation}) {
     function openJoin(){
       if(!attending && !pending){
         setChecked(true)
+        window.scrollTo(0,document.body.scrollHeight);
       }
     }
 

@@ -18,13 +18,13 @@ const useStyles = makeStyles(theme => ({
     blackBox: {
         width: "100%",
         height: 160,
-        backgroundColor: "black",
+        backgroundColor: "#E8045D",
         color: "white",
-        backgroundImage: `url(${ptyBck})`,
-        backgroundSize: "cover"
+        // backgroundImage: `url(${ptyBck})`,
+        // backgroundSize: "cover"
     },
     topPart: {
-        height: 30,
+        height: 40,
         backgroundColor: "rgba(0,0,0,0.3)"
     },
     middlePart: {
@@ -38,8 +38,8 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: "rgba(0,0,0,0.3)"
     },
     avatar: {
-        height: 100,
-        width: 100,
+        height: 80,
+        width: 80,
     },
     actBtns: {
         marginRight: 4
@@ -77,8 +77,10 @@ export default function DrawerProfileBox({handleDrawerToggle}) {
                     </Grid>
                 </Grid>
             </Grid>
+
             <Grid item xs={12} >
             <Grid container justify='center' alignItems="center" className={classes.bottomPart}>
+            {!context.name && <>
             <Grid item className={classes.actBtns}>
             <Badge badgeContent={4} color="secondary">
                 <NavLink
@@ -100,38 +102,30 @@ export default function DrawerProfileBox({handleDrawerToggle}) {
                 </NavLink>
             </Badge>
             </Grid>
-            <Grid item className={classes.actBtns}>
-            <NavLink
-            to={`/profile`}
-            >
-            <Chip
-                className={classes.chip}
-                // avatar={
-                //   <Avatar
-                //     alt={booking.user.name}
-                //     src={booking.user.picture}
-                //   >
-                //     M
-                //   </Avatar>
-                // }
-                label="Ratings"
-                style={{backgroundColor: "#696565", color: "white"}}
-                
-                />
-            </NavLink>
-            </Grid>
             <Grid item onClick={Out} >
+                <Chip
+                    className={classes.chipOutline}
+                    // avatar={<Avatar style={{backgroundColor: "#696565"}}><ExitToAppIcon fontSize="small" style={{color: "white"}} /></Avatar>}
+                    label="SIGN OUT"
+                    // color="secondary"
+                    style={{color: "white", borderColor: "white"}}
+                    variant="outlined"
+                    />
+            </Grid>
+            </>}
+            {context.name &&             
+            <Grid item onClick={SignIn} >
                     <Chip
                         className={classes.chipOutline}
                         
-                        avatar={<Avatar style={{backgroundColor: "#696565"}}><ExitToAppIcon fontSize="small" style={{color: "white"}} /></Avatar>}
-                        label="OUT"
+                        label="SIGN IN"
                         // color="secondary"
                         style={{color: "white", borderColor: "white"}}
                         variant="outlined"
                         
                       />
-                    </Grid>
+            </Grid>
+            }
             </Grid>
             </Grid>
 
