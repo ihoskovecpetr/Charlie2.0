@@ -20,7 +20,7 @@ export default function Screen2() {
       className="section s2"
       style={{ height: windowSize.height }}>
         
-      <Container maxWidth="sm" className={classes.container_2}>
+      <Container maxWidth="md" className={classes.container_2}>
         <Grid container id="s_2_id" style={{ display: "none" }}>
           <Grid item>
             <Animated
@@ -61,7 +61,8 @@ export default function Screen2() {
           </Grid>
         </Grid>
         <Grid container className={classes.containerIframe}>
-          <Grid item className={classes.iFrame}>
+          <Grid item xs={12}>
+            <div className={classes.iframe_wrapper}>
             <iframe
               src="https://www.youtube.com/embed/PogfNxsugF0"
               frameBorder="0"
@@ -69,6 +70,7 @@ export default function Screen2() {
               allowFullScreen
               className={classes.iFrame}
             ></iframe>
+            </div>
           </Grid>
         </Grid>
       </Container>
@@ -79,7 +81,7 @@ export default function Screen2() {
 const useStyles = makeStyles(theme => ({
   container_2: {
     height: "100vh",
-    color: "white",
+    color: "black",
     paddingTop: "12vh"
   },
   defaultHeader: {
@@ -95,10 +97,20 @@ const useStyles = makeStyles(theme => ({
   },
   containerIframe: {
     width: "100%",
-    height: "40vh"
+    height: "auto"
+  },
+  iframe_wrapper: {
+    position: "relative",
+    paddingBottom: '56.25%', /* 16:9 */
+    height: 0,
   },
   iFrame: {
-    width: "100%",
-    height: "100%"
+    // width: "100%",
+    // height: "100%"
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
   }
 }));

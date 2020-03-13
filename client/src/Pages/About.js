@@ -10,6 +10,11 @@ import { makeStyles } from "@material-ui/core/styles";
 
 //import "fullpage.js/vendors/scrolloverflow"; // Optional. When using scrollOverflow:true
 import ReactFullpage from "@fullpage/react-fullpage";
+
+import { useXsSize } from "../Hooks/useXsSize";
+
+import AboutScreen1 from "../Molecules/about/about_screen_1";
+import AboutScreen2 from "../Molecules/about/about_screen_2";
 import Screen6 from "../Molecules/menu/screen_6";
 
 import "./index.css";
@@ -67,104 +72,45 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+
+
+
 const FullpageWrapper = fullpageProps => {
   const classes = useStyles();
+  const { xs_size_memo } = useXsSize();
 
-  return (
+
+  if(!xs_size_memo){ 
+    return (
     <ReactFullpage
       {...fullpageProps}
       render={({ state, fullpageApi }) => {
         console.log("render prop change", state); // eslint-disable-line no-console
-
-        return (
-          <div>
-            <div id="fullpage-wrapper">
-              <div className="section">
-                <Container maxWidth="md" className={classes.aboutContainer}>
-                  <Grid container>
-                    <Grid item>
-                      <Typography
-                        variant="h5"
-                        component="h5"
-                        className={classes.defaultHeader}
-                      >
-                        MAIN <b>MISSION</b>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Paper className={classes.basicPaper}>
-                        <Typography component="p">
-                          Have you ever seen house on the beach or flat in a
-                          skyscraper and wonder how would it be to enjoy a drink
-                          in there? Then this is your chance, dont go to that
-                          same old bar you know already good enought, just have
-                          a look and join some event in your neighbourhood.
-                        </Typography>
-                      </Paper>
-                    </Grid>
-                  </Grid>
-                </Container>
+        
+          return (
+            <div>
+              <div id="fullpage-wrapper">
+                <div className="section">
+                  <AboutScreen1 />
+                </div>
+                <div className="section">
+                  <AboutScreen2 />
+                </div>
+                <Screen6 />
               </div>
-              <div className="section">
-              <Container maxWidth="md" className={classes.aboutContainer}>
-                <Grid container>
-                  <Grid item>
-                    <Typography
-                      variant="h6"
-                      component="h6"
-                      className={classes.defaultHeader}
-                    >
-                      <b>F.A.Q.</b>
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Paper className={classes.basicPaper}>
-                      <Typography variant="h6" component="h6">
-                        How to start?
-                      </Typography>
-                      <Typography component="p">
-                        Go to create section of Charlie, fill up short form with
-                        all the important questinos and press PREVIEW > Confirm,
-                        you will get notification on your email anytime you
-                        gained some guest. Easy!
-                      </Typography>
-                    </Paper>
-                    <Paper className={classes.basicPaper}>
-                      <Typography variant="h6" component="h6">
-                        How to colect the admission fee?
-                      </Typography>
-                      <Typography component="p">
-                        At this stage of Charlie development you will collect
-                        fee from your guests by yourself.
-                      </Typography>
-                    </Paper>
-
-                    <Paper className={classes.basicPaper}>
-                      <Typography variant="h6" component="h6">
-                        Is my place good enought to host Charlie event?
-                      </Typography>
-                      <Typography component="p">
-                        It is only up to you how much time/efford/money will you
-                        invest into creating event or improving your place and
-                        how much you want to earn per each guest.. only guests
-                        will decide :){" "}
-                      </Typography>
-                    </Paper>
-                    <Paper className={classes.basicPaper}>
-                      <Typography component="p">Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></Typography>
-                      <Typography component="p">Icons made by <a href="https://www.flaticon.com/authors/icongeek26" title="Icongeek26">Icongeek26</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></Typography>
-                    </Paper>
-                  </Grid>
-                </Grid>
-              </Container>
-              </div>
-              <Screen6 />
             </div>
-          </div>
-        );
+          );
       }}
     />
-  );
+  )}else {
+    return (
+      <>
+     <AboutScreen1 />
+     <AboutScreen2 />
+     <Screen6 />
+      </>
+    )
+  }
 };
 
 export default FullpageWrapper;

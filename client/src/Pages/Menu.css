@@ -10,12 +10,21 @@
 }
 
 .s2 {
-  background: #242323;
+  /* background:    #242323; */
+  background: #D1D0D0;
   background-image: url("https://res.cloudinary.com/party-images-app/image/upload/v1580409964/i30srekz4ofed7f8dxcc.png");
   background-size: 950px 621px;
   background-repeat: no-repeat;
   /* background-attachment: fixed; */
   background-position: center center;
+}
+
+.s4 {
+  background: #D1D0D0;
+}
+
+.s8 {
+  background: #D1D0D0;
 }
 
 @media (max-width: 900px) {

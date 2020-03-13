@@ -120,17 +120,24 @@ export default function Screen1() {
                 <Grid item xs={8}>
                   <Grid container className={classes.main_buttons_container}>
                     <Grid item xs={12} className={classes.link_main_play}>
+                      <Grid container style={{ height: "100%"}} alignItems="center">
+                        <Grid item xs={12}>
                       <Fab variant="extended" className={classes.fab_pink} onClick={redirectPlay}>
                         PLAY
                         <PlayArrowIcon className={classes.extendedIcon} />
                       </Fab>
+                      </Grid>
+                      </Grid>
                     </Grid>
                     <Grid item xs={12} className={classes.link_main_play}>
-                      
-                    <Fab variant="extended" className={classes.fab_grey} onClick={redirectCreate}>
-                        CREATE
-                        <AddIcon className={classes.extendedIcon} />
-                      </Fab>
+                      <Grid container style={{ height: "100%"}} alignItems="center">
+                        <Grid item xs={12}>
+                            <Fab variant="extended" className={classes.fab_grey} onClick={redirectCreate}>
+                              CREATE
+                            <AddIcon className={classes.extendedIcon} />
+                          </Fab>
+                        </Grid>
+                      </Grid>
                     </Grid>
                     
                   </Grid>

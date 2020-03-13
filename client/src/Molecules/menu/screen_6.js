@@ -21,6 +21,26 @@ import SocialLine from "../../Atoms/social-line";
 
 export default function Screen1() {
   const classes = useStyles();
+  const [formValue, setFormValue] = useState({
+    message: "Your message",
+    email: "your@email.com",
+  });
+
+
+  const handleValueChange = (e) => {
+    console.log("e: ", e.currentTarget.name, e.currentTarget.value);
+    const name = e.currentTarget.name
+    const value = e.currentTarget.value
+    setFormValue(prev => {
+    return { ...prev, [name]: value };
+  });
+  }
+
+  const onSubmit = (e) => {
+    alert(`This is not implementer yet: ${formValue.email} , ${formValue.message} `)
+  }
+
+
 
   return (
     <div className="section s8">
@@ -36,13 +56,14 @@ export default function Screen1() {
               margin="normal"
               required
               fullWidth
-              //color="secondary"
-
-              //inputRef={inputName}
+              style={{backgroundColor: "white", borderRadius: 5}}
               label="Your Email"
+              value={formValue.email}
+              onChange={e => {
+                    handleValueChange(e);
+                  }}
               name="email"
               autoComplete="email"
-              // autoFocus
             />
             <TextField
               variant="outlined"
@@ -51,13 +72,15 @@ export default function Screen1() {
               fullWidth
               multiline
               rows="4"
-              //color="secondary"
+              style={{backgroundColor: "white", borderRadius: 5}}
               id="question"
-              //inputRef={inputName}
               label="Your Question"
-              name="question"
+              value={formValue.message}
+              onChange={e => {
+                    handleValueChange(e);
+                  }}
+              name="message"
               autoComplete="text"
-              // autoFocus
             />
             <Button
               type="submit"
@@ -65,7 +88,11 @@ export default function Screen1() {
               variant="contained"
               color="primary"
               className={classes.submit}
-              //onClick={e => onSubmit(e)}
+              onClick={e =>{
+                  e.preventDefault()
+                  onSubmit(e)
+                }
+              }
             >
               Send
             </Button>

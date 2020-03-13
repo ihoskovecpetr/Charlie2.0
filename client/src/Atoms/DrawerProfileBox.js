@@ -80,7 +80,7 @@ export default function DrawerProfileBox({handleDrawerToggle}) {
 
             <Grid item xs={12} >
             <Grid container justify='center' alignItems="center" className={classes.bottomPart}>
-            {!context.name && <>
+            {context.name && <>
             <Grid item className={classes.actBtns}>
             <Badge badgeContent={4} color="secondary">
                 <NavLink
@@ -113,7 +113,7 @@ export default function DrawerProfileBox({handleDrawerToggle}) {
                     />
             </Grid>
             </>}
-            {context.name &&             
+            {!context.name &&             
             <Grid item onClick={SignIn} >
                     <Chip
                         className={classes.chipOutline}

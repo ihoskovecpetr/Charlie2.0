@@ -26,7 +26,6 @@ import PlayPageGallery from "../Molecules/play/play_page_gallery";
 import PlayPageList from "../Molecules/play/PlayPageList";
 import PlayPageMap from "../Molecules/play/play_page_map";
 import NoLocationBck from "../Molecules/play/NoLocationBck";
-import JoinBackdrop from "../Molecules/play/JoinBackdrop";
 import TimeDistanceChips from "../Molecules/play/TimeDistanceChips";
 
 
