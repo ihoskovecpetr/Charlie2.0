@@ -45,16 +45,15 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
   
         </Grid>
 
-        <p className={classes.thisLine}></p>
 
         <Grid item xs={12} className={classes.listRow}>
           <Grid container item xs={12}>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <Typography component="div" className={classes.standardHeading}>
                 DATE
               </Typography>
             </Grid>
-            <Grid item xs={9}>
+            <Grid item xs={8}>
                 <Typography component="div" className={clsx(classes.standardContent)}>
                   {event.dateStart &&
                     displayDate(event.dateStart)}
@@ -62,15 +61,14 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
             </Grid>
           </Grid>
         </Grid>
-        <p className={classes.thisLine}></p>
         <Grid item xs={12} className={classes.listRow}>
           <Grid container item xs={12}>
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <Typography component="div" className={classes.standardHeading}>
                 PRICE
               </Typography>
             </Grid>
-            <Grid item xs={9}>
+            <Grid item xs={8}>
               <Typography component="p" className={classes.standardContent}>
                 {event.price} {event.currency}
               </Typography>
@@ -78,30 +76,29 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
           </Grid>
         </Grid>
         
-        <p className={classes.thisLine}></p>
         <Grid item xs={12} className={classes.listRow}>
         <Grid container item xs={12}>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <Typography component="div" className={classes.standardHeading}>
             BYO
           </Typography>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={8}>
             <Typography component="p" className={classes.standardContent}>
               {event.BYO ? "YES" : "NO"}
             </Typography>
         </Grid>
         </Grid>
         </Grid>
-        <p className={classes.thisLine}></p>
+
         <Grid item xs={12} className={classes.listRow}>
         <Grid container item xs={12}>
-        <Grid item xs={5}>
+        <Grid item xs={4}>
           <Typography component="div" className={classes.standardHeading}>
             ATTENDEES
           </Typography>
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={8}>
             <ConfirmedGuest
               bookings={event.bookings}
               cancelBooking={cancelBooking}
@@ -116,7 +113,7 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
         </Grid>
         </Grid>
         </Grid>
-        <p className={classes.thisLine}></p>
+
         {/* <Grid item xs={12}>
           {event.areYouAuthor && (
             <>
@@ -156,12 +153,12 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
         </Grid> */}
         <Grid item xs={12} className={classes.listRow}>
         <Grid container item xs={12}>
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <Typography component="div" className={classes.standardHeading}>
             ADDRESS
           </Typography>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={8}>
             <Typography component="p" className={classes.standardContent}>
               {event.address ? event.address : "NO Address"}
             </Typography>
@@ -182,8 +179,9 @@ const useStyles = makeStyles(theme => ({
       },
       listRow:{
         width: '100%',
-        marginTop: 5,
-        marginBottom: 5
+        marginTop: 2,
+        marginBottom: 2,
+        backgroundColor: "rgba(255,255,255,0.05)",
       },
       thisLine:{
         height: '1px',
@@ -204,17 +202,20 @@ const useStyles = makeStyles(theme => ({
       standardHeading: {
         fontWeight: 500,
         // color: "lightGrey",
-        textAlign: 'left'
+        textAlign: 'left',
+        backgroundColor: "rgba(255,255,255,0.05)",
+        padding: 10
       },
       standardDescription: {
         fontWeight: 400,
         textAlign: 'left',
-
+        padding: 10
       },
       standardContent: {
         fontWeight: 400,
         textAlign: 'right',
-        color: '#29FFF7'
+        color: '#29FFF7',
+        padding: 10
       }
   }));
 

@@ -67,7 +67,12 @@ function SignIn(props) {
   console.log("ErrOut: ", errorOut);
   if (context.success) {
     setTimeout(() => {
-      history.goBack();
+      console.log("SignIn: EVENT", window.eventId)
+      if(window.eventId){
+        history.push(`/event/${window.eventId}`);
+      }else{
+        history.goBack();
+      }
     }, 100);
   }
 

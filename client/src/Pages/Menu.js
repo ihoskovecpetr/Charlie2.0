@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
 import Container from "@material-ui/core/Container";
+import Alert from '@material-ui/lab/Alert';
+
 import { makeStyles } from "@material-ui/core/styles";
 
 import ReactFullpage from "@fullpage/react-fullpage";
@@ -15,16 +17,16 @@ import { useXsSize } from "../Hooks/useXsSize";
 
 import Carousel from "../Atoms/carousel";
 import Screen1 from "../Molecules/menu/screen_1";
-import Screen1Mobile from "../Molecules/menu/screen_1_mobile";
+import Screen1Mobile from "../Molecules/menu/Screen1Mobile";
+import ScreenHowItWorks from "../Molecules/menu/ScreenHowItWorks";
 import Screen2 from "../Molecules/menu/screen_2";
 import Screen3 from "../Molecules/menu/screen_3";
 import Screen4 from "../Molecules/menu/screen_4";
 import Posts from "../Molecules/menu/posts";
 import Screen6 from "../Molecules/menu/screen_6";
-
-import BlogPost1 from "../Molecules/menu/blog/post_1";
-import BlogPost2 from "../Molecules/menu/blog/post_2";
-import BlogPost3 from "../Molecules/menu/blog/post_3";
+import BlogPost1 from "../Molecules/menu/blog/BlogPost1";
+import BlogPost2 from "../Molecules/menu/blog/BlogPost2";
+import BlogPost3 from "../Molecules/menu/blog/BlogPost3";
 
 const USER_NEW_BOOKINGS = gql`
   mutation newestUserBookings($user_id: ID!) {
@@ -95,7 +97,7 @@ export default function Menu(props) {
     callbacks: ["onLeave"],
     scrollOverflow: true
   };
-if(!xs_size_memo){
+if(!xs_size_memo && false){
     return (
     <ReactFullpage
       {...props}
@@ -189,13 +191,13 @@ if(!xs_size_memo){
     />
   );
 } else {
-  document.getElementById("s_2_id").style.display = "block";
-  document.getElementById("s_3_id").style.display = "block";
-  document.getElementById("s_4_id").style.display = "block";
-
+    // document.getElementById("s_2_id").style.display = "block";
+    // document.getElementById("s_3_id").style.display = "block";
+    // document.getElementById("s_4_id").style.display = "block";
   return (
       <div style={{position: "absolute", top: 0}}>
-        <Screen1Mobile />
+        {xs_size_memo ? <Screen1Mobile /> : <Screen1 />}
+        <ScreenHowItWorks />
         <Screen2 />
         <Screen3 loading={loading} data={data} />
         <Screen4 props={props} />
@@ -205,6 +207,8 @@ if(!xs_size_memo){
         <Screen6 />
       </div>
   )
+
+
 }
 
 }

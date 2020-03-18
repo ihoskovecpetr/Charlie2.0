@@ -42,13 +42,9 @@ function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth
       }));
 
       const classes = useStyles();
-
-      console.log("ListOfNames: ", ListOfNames)
-      console.log("ListOfUrls: ", ListOfUrls)  
       
       ListOfNames.pop()
 
-      console.log("ListOfNames POP: ", ListOfNames)
     return(
         <div>
         <div className={classes.toolbar} />

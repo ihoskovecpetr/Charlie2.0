@@ -73,10 +73,11 @@ export const resolvers = {
     },
     userEvents: async (_, _args, __) => {
       try {
-        const userEvents = await Event.find({ author: _args.user_id }).sort(
-          "dateStart"
-        );
+        const userEvents = await Event.find({ author: _args.user_id }).sort({
+          "dateStart": -1
+        });
         if (userEvents) {
+          console.log("Tohle chci:", userEvents)
           return userEvents.map(event => {
             //let result = await transformEvent(event);
             //console.log("RESOLVR LEVL: ", result);

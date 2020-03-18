@@ -54,7 +54,7 @@ export default function JoinSend({event, getPlayEventsMutation}) {
     let message = "JOIN"
     let icon = [<WhatshotIcon fontSize="large" />]
 
-    event.bookings.map(item => {
+    event && event.bookings && event.bookings.map(item => {
         if( item.user._id === context._id) {
             if(item.confirmed){
                 attending = true
@@ -72,8 +72,12 @@ export default function JoinSend({event, getPlayEventsMutation}) {
 
     function openJoin(){
       if(!attending && !pending){
-        window.scrollTo(0,document.body.scrollHeight);
         setChecked(true)
+        window.scrollBy({
+          top: 200,
+          left: 0,
+          behavior: 'smooth'
+        });
       }
     }
 

@@ -79,7 +79,7 @@ export default function RecipeReviewCard(props) {
         }
         subheader={displayDate(props.event.dateStart)}
       />
-      <NavLink to={`/user/${props.event.author._id}`}>
+      <NavLink to={`/event/${props.event._id}`}>
         <CardMedia
           className={classes.media}
           //image="/static/images/cards/paella.jpg"

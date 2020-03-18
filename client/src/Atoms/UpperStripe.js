@@ -67,6 +67,7 @@ function UpperStripe(props) {
   const classes = useStyles();
 
   const pathSet = props.location.pathname.split("/");
+  const disabledFromOut = window.eventId ? true : false
 
   console.log("UPPER STR: ", pathSet)
 
@@ -104,9 +105,9 @@ function UpperStripe(props) {
                   <Button
                     color="inherit"
                     className={classes.buttonToBeHidden}
-                   onClick={() => {history.push(`/${props.ListOfUrls[index]}`)}}
+                    disabled={disabledFromOut}
+                    onClick={() => {history.push(`/${props.ListOfUrls[index]}`)}}
                   >
-                    
                        {text == "Charlie" ? (
                         <Avatar
                           className={classes.avatarCharlie}
@@ -123,9 +124,11 @@ function UpperStripe(props) {
             </Grid>
             <Grid item>
               {!props.userApp && context && context.name && (
-                    <Button color="inherit" className={classes.buttonNavi} onClick={history.push(`/profile`)}>
+                    <Button color="inherit" 
+                            className={classes.buttonNavi} 
+                            disabled={disabledFromOut}
+                            onClick={() => history.push(`/profile`)}>
                       {context.name}
-
                       <Avatar
                         alt="Remy Sharp"
                         src={context.picture}
@@ -152,23 +155,27 @@ function UpperStripe(props) {
                   <Button 
                       color="inherit" 
                       className={classes.buttonNavi}
-                    onClick={() => {history.push("/signin")}}>
-                    SIGN IN
-                    {props.loading ? (
-                      <div className={classes.ButtonAvatar}>
-                        <Spinner height={30} width={30} />
-                      </div>
-                    ) : (
-                      <div className={classes.ButtonAvatar}>
-                        <AccountCircleIcon color="disabled" fontSize="large" />
-                      </div>
-                    )}
+                      disabled={disabledFromOut}
+                      onClick={() => {history.push("/signin")}}>
+                      SIGN IN
+                      {props.loading ? (
+                          <div className={classes.ButtonAvatar}>
+                            <Spinner height={30} width={30} />
+                          </div>
+                        ) : (
+                          <div className={classes.ButtonAvatar}>
+                            <AccountCircleIcon color="disabled" fontSize="large" />
+                          </div>
+                        )}
                   </Button>
                 </Badge>
               )}
               {props.userApp.success && (
-                <NavLink to={`/profile`}>
-                  <Button color="inherit" className={classes.buttonNavi}>
+                // <NavLink to={`/profile`} >
+                  <Button color="inherit" 
+                          className={classes.buttonNavi}
+                          disabled={disabledFromOut}
+                          onClick={() => {history.push("/profile")}}>
                     {props.userApp.name}
                     <Avatar
                       alt="Remy Sharp"
@@ -178,7 +185,7 @@ function UpperStripe(props) {
                       x
                     </Avatar>
                   </Button>
-                </NavLink>
+                // </NavLink>
               )}
             </Grid>
           </Grid>

@@ -3,8 +3,11 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import { NavLink } from "react-router-dom";
+import Avatar from "@material-ui/core/Avatar";
+
+import { NavLink, useHistory } from "react-router-dom";
 import { Animated } from "react-animated-css";
+import clsx from "clsx";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -14,61 +17,28 @@ import { useXsSize } from "../../Hooks/useXsSize";
 
 import FlippingLogo from "../../Atoms/Flipping-logo/logo";
 import EmpireOriginal from "../../Images/empire.jpg";
-import CharlieHalf from "../../Images/charlie_half.png";
+import CharlieBlack from "../../Images/charlie_black.png";
 import Skyline from "../../Images/skyline.png";
+import Scroll from "../../Images/scroll.png";
+
 
 export default function Screen1() {
   const classes = useStyles();
   const { xs_size_memo } = useXsSize();
+  let history = useHistory();
+
 
   return (
     <div
       className="section s1"
-      style={{ backgroundImage: xs_size_memo ? `url(${CharlieHalf})` : `url(${EmpireOriginal})`}}
+      // style={{ backgroundImage: xs_size_memo ? `url(${CharlieHalf})` : `url(${EmpireOriginal})`}}
     >
-      <Container maxWidth="md" className={classes.container_1}>
+      <Container maxWidth="lg" className={classes.container_1}>
         {
           //MainScreenMemo
         }
         <Grid container>
-          <Grid item xs={6} sm={6} className={classes.quarter_grid}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-              className={classes.menuGrid_1}
-            >
-              <Grid item className={classes.main_nadpis_row}>
-                <Animated
-                  animationIn="bounceInLeft"
-                  animationOut="fadeOut"
-                  animationInDelay={200}
-                  animationInDuration={1000}
-                  isVisible={true}
-                >
-                  <Typography variant="h5" className={classes.charlie}>
-                    CHARLIE
-                  </Typography>
-                </Animated>
-              </Grid>
-              <Grid item className={classes.main_nadpis_row}>
-                <Animated
-                  animationIn="bounceInLeft"
-                  animationOut="fadeOut"
-                  animationInDelay={200}
-                  animationInDuration={1000}
-                  isVisible={true}
-                >
-                  <Typography variant="h5" className={classes.party}>
-                    PARTY
-                  </Typography>
-                </Animated>
-              </Grid>
-            </Grid>
-          </Grid>
-
-          <Grid item xs={6} sm={6} className={classes.quarter_grid}>
+        <Grid item xs={4} sm={4} className={classes.quarter_grid}>
             <Grid
               container
               direction="column"
@@ -78,23 +48,47 @@ export default function Screen1() {
             >
               <Grid item className={classes.menuGrid_2_item}>
                 <Animated
-                  animationIn="bounceInRight"
+                  animationIn="fadeIn"
                   animationOut="fadeOut"
                   animationInDelay={600}
                   animationInDuration={1000}
                   isVisible={true}
                 >
-                  <FlippingLogo height={100} width={100} />
+                  <Avatar src={CharlieBlack} className={classes.charlieFace} id="drop_shadow"/>
                 </Animated>
               </Grid>
             </Grid>
           </Grid>
+          
+          <Grid item xs={6} sm={8} className={classes.quarter_grid}>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              className={classes.menuGrid_1}
+            >
+                <Grid item>
+                  <Typography
+                        variant="subtitle1"
+                        component="h6"
+                        className={classes.letsParty}
+                      >
+                        Let's have a Party
+                      </Typography>
+                  </ Grid>
+                  <Grid item xs={12}>
+                  <Typography
+                        variant="subtitle1"
+                        component="h6"
+                        className={classes.letsPartyDescription}
+                      >
+                        “Have you ever seen house on the beach or flat in a skyscraper and wonder how would it be to enjoy a drink in there?”                 
+                        </Typography>
+                  </ Grid>
 
-          <Grid item xs={12} className={classes.quarter_grid_empty}></Grid>
-
-          <Grid item xs={12} sm={6} className={classes.quarter_grid}>
-            <Animated
-              animationIn="bounceInLeft"
+                  <Grid item xs={12}>
+                  <Animated
+              animationIn="fadeIn"
               animationOut="fadeOut"
               animationInDelay={1000}
               animationInDuration={1000}
@@ -104,63 +98,44 @@ export default function Screen1() {
                 container
                 justify="center"
                 direction="row"
+                spacing={3}
                 className={classes.menuGrid_3}
               >
-                <NavLink to={`/map`} className={classes.link_main_pink}>
-                  <Grid item>
+                  <Grid item xs={6}>
                     <Button
                       variant="contained"
                       color="secondary"
-                      className={classes.button}
+                      className={clsx(classes.button, classes.link_main_pink)}
+                      onClick={() => {history.push("/play")}}
                     >
-                      MAP
+                      JOIN
                     </Button>
                   </Grid>
-                </NavLink>
-                <NavLink to={`/create`} className={classes.link_main_pink}>
-                  <Grid item>
+                  <Grid item xs={6}>
                     <Button
                       variant="contained"
-                      color="secondary"
-                      className={classes.button}
+                      className={clsx(classes.button,classes.link_main_grey)}
+                      onClick={() => {history.push("/create")}}
                     >
                       CREATE
                     </Button>
                   </Grid>
-                </NavLink>
               </Grid>
             </Animated>
+    
+                  </ Grid>
+              </Grid>
           </Grid>
 
-          <Grid item xs={12} sm={6} className={classes.quarter_grid}>
-            <Grid
-              container
-              justify="center"
-              direction="row"
-              className={classes.menuGrid_4}
-            >
-              <Grid item>
-                <Animated
-                  animationIn="bounceInRight"
-                  animationOut="fadeOut"
-                  animationInDelay={1200}
-                  animationInDuration={1000}
-                  isVisible={true}
-                >
-                  <Typography
-                    variant="subtitle1"
-                    component="h6"
-                    className={classes.text}
-                  >
-                    “Have you ever seen house on the beach or flat in a
-                    skyscraper and wonder how would it be to enjoy a drink in
-                    there?”
-                  </Typography>
-                </Animated>
-              </Grid>
+          <Grid item xs={12} className={classes.scrollWrap}>
+                <Grid container justify="center">
+                   <Grid item>
+                      <img src={Scroll} className={classes.scrollAvatar}/>
+                    </Grid>
+                </Grid>
             </Grid>
-          </Grid>
-        </Grid>
+
+       </Grid>
       </Container>
     </div>
   );
@@ -174,6 +149,7 @@ const useStyles = makeStyles(theme => ({
     backgroundImage: `url(${Skyline})`,
     backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
+    marginBottom: 20,
     backgroundPosition: "center bottom",
     [theme.breakpoints.up("sm")]: {
       background: "none"
@@ -197,15 +173,20 @@ const useStyles = makeStyles(theme => ({
     }
   },
   menuGrid_1: {
-    height: "100%"
+    height: "100%",
+    width: "100%",
   },
   menuGrid_2: {
     height: "100%"
   },
   menuGrid_3: {
+    width: "100%",
     [theme.breakpoints.down("xs")]: {
       paddingTop: "0vh"
     }
+  },
+  animateButtons: {
+    width: "100%"
   },
   menuGrid_4: {
     [theme.breakpoints.down("xs")]: {
@@ -213,50 +194,37 @@ const useStyles = makeStyles(theme => ({
       top: -30
     }
   },
-  main_nadpis_row: {
-    marginRight: "30%",
-    [theme.breakpoints.down("xs")]: {
-      //marginRight: "50%",
-    }
+  letsParty: {
+    fontSize: 75,
+    fontWeight: 900,
+    color: "#837F7F",
+    textAlign: "center"
   },
-  party: {
-    textAlign: "center",
-    fontWeight: 300,
-    letterSpacing: 8,
-    color: "black",
-    padding: "10px",
-    paddingLeft: 20,
-    textShadow: "2px 2px 3px grey",
-    [theme.breakpoints.up("sm")]: {
-      fontSize: 40
-    },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: 30
-    }
+  letsPartyDescription: {
+    fontSize: '0.9rem',
+    fontWeight: 500,
+    textAlign: "center"
   },
-  charlie: {
-    textAlign: "center",
-    fontWeight: 800,
-    padding: "10px",
-    color: "black",
-    textShadow: "2px 2px 3px grey",
-    [theme.breakpoints.up("sm")]: {
-      fontSize: 40
-    },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: 30
-    }
+  charlieFace: {
+    height: 200,
+    width: 200,
+    // filter: 'dropShadow(5px 5px 5px #222)'
   },
   link_main_pink: {
     width: "100%",
-    marginRight: "30%",
-    [theme.breakpoints.down("xs")]: {
-      width: "30%",
-      margin: 10
-    }
+  },
+  link_main_grey: {
+    width: "100%",
+    backgroundColor: "lightGrey",
+    color: "black"
+  },
+  scrollWrap: {
+    marginTop: 60, 
+  },
+  scrollAvatar: {
+    height: 80,
   },
   menuGrid_2_item: {
-    marginLeft: "30%",
     [theme.breakpoints.down("xs")]: {
       marginLeft: 0
     }
@@ -264,8 +232,11 @@ const useStyles = makeStyles(theme => ({
   button: {
     width: "100%",
     marginTop: 10,
-    fontWeight: "700 !important",
-    boxShadow: "2px 4px 6px grey !important"
+    fontWeight: "600 !important",
+    fontSize: 25,
+    boxShadow: "2px 4px 6px grey !important",
+    borderRadius: 30,
+    padding: 5
   },
   text: {
     color: "black",

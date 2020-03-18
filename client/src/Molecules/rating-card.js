@@ -1,6 +1,5 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
@@ -14,6 +13,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Rating from "@material-ui/lab/Rating";
 
 import { NavLink } from "react-router-dom";
+import clsx from "clsx";
 
 import { displayDate } from "../Services/transform-services";
 

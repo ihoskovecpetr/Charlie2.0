@@ -15,9 +15,9 @@ import "../../Pages/Menu.css";
 
 import Carousel from "../../Atoms/carousel";
 import Skyline from "../../Images/skyline.png";
-import BlogPost1 from "./blog/post_1";
-import BlogPost2 from "./blog/post_2";
-import BlogPost3 from "./blog/post_3";
+import BlogPost1 from "./blog/BlogPost1";
+import BlogPost2 from "./blog/BlogPost2";
+import BlogPost3 from "./blog/BlogPost3";
 
 export default function BlogPosts() {
   const classes = useStyles();

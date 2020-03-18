@@ -18,6 +18,10 @@ import { displayDate } from "../Services/transform-services";
 
 import { UserContext } from "../userContext";
 
+import PlayPageList from "../Molecules/play/PlayPageList";
+import PlayPageGallery from "../Molecules/play/PlayPageGallery";
+import PlayPageMap from "../Molecules/play/PlayPageMap";
+
 import ModalLayout from "../Layouts/ModalLayout";
 import EventButtons from "../Molecules/event/EventButtons";
 import RatingCard from "../Molecules/rating-card";
@@ -37,6 +41,7 @@ const ONE_EVENT = gql`
         _id
         name
         picture
+        description
       }
       dateStart
       geometry {
@@ -113,60 +118,6 @@ const DELETE = gql`
   }
 `;
 let dataMock;
-// dataMock = {
-//   getOneEvent: {
-//     _id: "12321",
-//     success: true,
-//     author: {
-//       _id: "12321",
-//       name: "Petr H. McOcker",
-//       picture:
-//         "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
-//     },
-//     name: "Mock data Party",
-//     geometry: { coordinates: [50.040112099, 14.428] },
-//     lng: 14.45,
-//     lat: 50,
-//     addressGoogle: "addressGoogle",
-//     addressCustom: "addressCustom",
-//     address: "address",
-//     eventType: 1,
-//     dateStart: "2019-10-10",
-//     price: 12,
-//     capacityMax: 20,
-//     BYO: true,
-//     imagesArr: [
-//       {
-//         caption: "No more pictures for this Event",
-//         src:
-//           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-//         thumbnail:
-//           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-//         thumbnailHeight: 10,
-//         thumbnailWidth: 10,
-//         scaletwidth: 100,
-//         marginLeft: 0,
-//         vwidth: 100,
-//         isSelected: false
-//       }
-//     ],
-//     description: "Desc Mocks data",
-//     confirmed: true,
-//     hide: false
-//   },
-//   showBookings: [
-//     {
-//       confrimed: true,
-//       user: {
-//         name: "Mock Guy",
-//         email: "mock@email.com",
-//         picture:
-//           "https://www.ixxiyourworld.com/media/2389064/ixxi-paul-fuentes-pink-rocket.jpg?mode=crop&width=562&height=832",
-//         _id: "232hj23h24h234"
-//       }
-//     }
-//   ]
-// };
 
 function Event(props) {
   const classes = useStyles();
@@ -273,74 +224,26 @@ function Event(props) {
               direction="column"
               spacing={2}
             >
-              <Grid item className={classes.galleryGrid}>
+              {/* <Grid item className={classes.galleryGrid}>
                 <Gallery
                   images={dataDB.getOneEvent.imagesArr}
                   rowHeight={100}
                   display={true}
                   backdropClosesModal={true}
                 />
-              </Grid>
-              <Grid item>
-                <Typography component="div" className={classes.standardHeading}>
-                  DESCRIPTION
-                </Typography>
-                <Box textAlign="justify" m={1}>
-                  <Typography component="p" className={classes.standardContent}>
-                    {dataDB.getOneEvent.description}
-                  </Typography>
-                </Box>
-              </Grid>
+              </Grid> */}
+              <PlayPageGallery event={dataDB.getOneEvent} />
 
-              <Grid item>
-                <Typography component="div" className={classes.standardHeading}>
-                  DATE
-                </Typography>
-                <Box textAlign="left" m={1}>
-                  <Typography component="p" className={classes.standardContent}>
-                    {dataDB.getOneEvent.dateStart &&
-                      displayDate(dataDB.getOneEvent.dateStart)}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Typography component="div" className={classes.standardHeading}>
-                PRICE
-              </Typography>
-              <Grid item>
-                <Box textAlign="left" m={1}>
-                  <Typography component="p" className={classes.standardContent}>
-                    {dataDB.getOneEvent.price}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item>
-                <Typography component="div" className={classes.standardHeading}>
-                  BYO
-                </Typography>
-                <Box textAlign="left" m={1}>
-                  <Typography component="p" className={classes.standardContent}>
-                    {dataDB.getOneEvent.BYO ? "YES" : "NO"}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item>
-                <Typography component="div" className={classes.standardHeading}>
-                  ATTENDEES
-                </Typography>
-                <Box textAlign="left" m={1}>
-                  <ConfirmedGuest
-                    bookings={dataDB.showBookings}
-                    cancelBooking={cancelBooking}
-                    cancelledState={cancelledState}
+              
+              <PlayPageList
                     event={dataDB.getOneEvent}
-                    ONE_EVENT={ONE_EVENT}
+                    showBookings={dataDB.getOneEvent.bookings} //showBookings
+                    // ONE_EVENT={PLAY_EVENTS}
+                    // cancelBooking={cancelBooking}
+                    // cancelledState={cancelledState}
+                    // bookingStates={bookingStates}
                   />
 
-                  {bookingStates.loading && (
-                    <Spinner height={100} width={100} />
-                  )}
-                </Box>
-              </Grid>
               <Grid item>
                 {dataDB.getOneEvent.areYouAuthor && (
                   <>
@@ -376,9 +279,12 @@ function Event(props) {
                   </>
                 )}
               </Grid>
-              <Typography component="div" className={classes.standardHeading}>
-                AUTHOR
-              </Typography>
+
+              <PlayPageMap
+                    event={dataDB.getOneEvent}
+                    showBookings={dataDB.getOneEvent.bookings} //showBookings
+                  /> 
+
               <Grid
                 container
                 justify="center"
@@ -388,16 +294,7 @@ function Event(props) {
                   <UserCard author={dataDB.getOneEvent.author} />
                 </Grid>
               </Grid>
-              <Typography component="div" className={classes.standardHeading}>
-                ADDRESS
-              </Typography>
-              <Grid item>
-                <Box textAlign="left" m={1}>
-                  <Typography component="p" className={classes.standardContent}>
-                    {dataDB.getOneEvent.address}
-                  </Typography>
-                </Box>
-              </Grid>
+
               <Typography component="div" className={classes.standardHeading}>
                 RATING
               </Typography>
@@ -479,7 +376,7 @@ const useStyles = makeStyles(theme => ({
     background: "black",
     color: "white",
     marginTop: "10vh",
-    padding: theme.spacing(3, 2),
+    // padding: theme.spacing(3, 2),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",

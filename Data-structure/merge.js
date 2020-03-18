@@ -2,9 +2,7 @@ const Event = require("../Models-Mongo/Event");
 const User = require("../Models-Mongo/User");
 
 const transformEvent = async (event, areYouAuthor) => {
-  console.log(
-    "transformEvent FCE _dot.dateS RZAUTH",
-  );
+
   if (event) {
     return {
       ...event._doc,
@@ -16,15 +14,13 @@ const transformEvent = async (event, areYouAuthor) => {
       areYouAuthor: areYouAuthor,
     };
   } else {
-    console.log("NULL ODMITNUTO");
+    console.log("NULL ODMITNUTO TRNS: ", event);
     return null;
   }
 };
 
 const transformUser = async (user) => {
-  console.log(
-    "tRZAUTH"
-  );
+
   if (user) {
     return {
       ...event._doc,

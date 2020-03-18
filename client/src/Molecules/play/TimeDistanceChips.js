@@ -20,10 +20,7 @@ export default function TimeDistanceChips({event}) {
     const classes = useStyles();
     const [checked, setChecked] = useState(false);
     const { context, setContext } = useContext(UserContext);
-    const distance = useCountDistance(event.geometry.coordinates[1], event.geometry.coordinates[0], context.geolocationObj && context.geolocationObj.lat, context.geolocationObj && context.geolocationObj.lng )
-
-    console.log("TimeDistanceMarks: ", event, context)
-    console.log("countdownDDD ", countdown(new Date(event.dateStart), new Date(), "X", 2).toString())
+    const distance = useCountDistance(event.geometry.coordinates[1], event.geometry.coordinates[0], context.geolocationObj && context.geolocationObj.lat, context.geolocationObj && context.geolocationObj.lng, "K")
 
     return (
         <Grid item style={{ marginBottom: 5}}>  

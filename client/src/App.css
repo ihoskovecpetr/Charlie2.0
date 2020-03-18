@@ -37,3 +37,8 @@ a {
   /* border: 5px solid blue; */
   height: calc(var(--vh2, 1vh) * 100);
 }
+
+#drop_shadow {
+  -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(5px 5px 5px #222);
+}

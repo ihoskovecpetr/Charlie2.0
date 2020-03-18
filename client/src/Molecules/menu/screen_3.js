@@ -37,7 +37,8 @@ export default function Screen3(props) {
   return (
     <div className="section s3">
       <Container maxWidth="sm" className={classes.container_2}>
-        <Grid item id="s_3_id" style={{ display: "none" }}>
+        <Grid item id="s_3_id" // style={{ display: "none" }}
+        >
           <Animated
             animationIn="bounceInLeft"
             animationOut="fadeOut"

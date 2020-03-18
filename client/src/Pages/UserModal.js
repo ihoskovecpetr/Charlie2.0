@@ -19,13 +19,13 @@ import Spinner from "../Atoms/Spinner";
 import Copyright from "../Atoms/copyright";
 
 const GET_USER = gql`
-  query getOneUser($user_id: ID!, $limit: Int) {
+  query getOneUser($user_id: ID!) {
     getOneUser(user_id: $user_id) {
       success
       _id
       name
       picture
-      createdEvents(limit: $limit){
+      createdEvents{
         _id
       	name
       }
@@ -63,7 +63,7 @@ function UserModal(props) {
   let history = useHistory();
   const { loading, error, data, refetch } = useQuery(GET_USER, {
     variables: {  user_id: props.match.params.id,
-                  limit: 2 
+                  // limit: 2 
                 }
     //skip: !id,
     //pollInterval: 500

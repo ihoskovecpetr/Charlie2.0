@@ -18,7 +18,9 @@ export default function Screen4(props) {
 
   return (
     <div className="section s4">
-      <Container maxWidth="sm" className={classes.container_4} id="s_4_id" style={{ display: "none" }}>
+      <Container maxWidth="sm" className={classes.container_4} id="s_4_id" 
+      // style={{ display: "none" }}
+      >
         <Grid container className={classes.header_be_gone}>
           <Grid item >
             <Animated

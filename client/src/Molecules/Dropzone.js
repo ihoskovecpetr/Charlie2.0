@@ -7,9 +7,12 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Spinner from "../Atoms/Spinner";
 
-const CLOUDINARY_UPLOAD_PRESET = "simple-preset-1";
+// const CLOUDINARY_UPLOAD_PRESET = "simple-preset-1";
+const CLOUDINARY_UPLOAD_PRESET = "simpl_pst"; 
+// const CLOUDINARY_UPLOAD_URL =
+//   "https://api.cloudinary.com/v1_1/party-images-app/upload"; 
 const CLOUDINARY_UPLOAD_URL =
-  "https://api.cloudinary.com/v1_1/party-images-app/upload";
+  "https://api.cloudinary.com/v1_1/dkyt8girl/upload"; 
 let smallfile;
 
 function MyDropzone(props) {

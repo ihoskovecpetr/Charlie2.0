@@ -21,8 +21,9 @@ export default function Screen2() {
       style={{ height: windowSize.height }}>
         
       <Container maxWidth="md" className={classes.container_2}>
-        <Grid container id="s_2_id" style={{ display: "none" }}>
-          <Grid item>
+        <Grid container id="s_2_id" //style={{ display: "none" }}
+        >
+          <Grid item xs={12}>
             <Animated
               animationIn="bounceInLeft"
               animationOut="fadeOut"
@@ -35,7 +36,7 @@ export default function Screen2() {
               </Typography>
             </Animated>
           </Grid>
-          <Grid item>
+          <Grid item xs={12}>
             <Animated
               animationIn="bounceInRight"
               animationOut="fadeOut"
@@ -81,7 +82,7 @@ export default function Screen2() {
 const useStyles = makeStyles(theme => ({
   container_2: {
     height: "100vh",
-    color: "black",
+    color: "white",
     paddingTop: "12vh"
   },
   defaultHeader: {

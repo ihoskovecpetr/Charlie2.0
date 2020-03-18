@@ -6,6 +6,9 @@ import Paper from "@material-ui/core/Paper";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import Alert from "@material-ui/lab/Alert";
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
+
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
@@ -43,6 +46,9 @@ import Dropzone from "../Molecules/dropzone";
 import Spinner from "../Atoms/Spinner";
 import MapCreate from "../Molecules/map-create";
 import LoginFirstButton from "../Atoms/LoginFirstButton";
+
+import {useLogicPlusMinusValue} from "./Logic/Create/useLogicPlusMinusValue";
+
 
 const NEW_EVENT = gql`
   mutation createEvent(
@@ -109,13 +115,24 @@ function Create(props) {
 
   const { context } = useContext(UserContext);
   const [customMapParam, setCustomMapParam] = useState();
+  const Price = useLogicPlusMinusValue("plus_btn", "minus_btn", 101)
+  const Capacity = useLogicPlusMinusValue("plus_btn_capacity", "minus_btn_capacity", 15)
   const [formValue, setFormValue] = useState({
     startDate: new Date(),
-    price: 100,
-    capacity: 15,
     currency: "CZK",
-    BYO: false
+    BYO: true
   });
+
+  const price = Price.value
+  const plusClickPrice = Price.plusClickValue
+  const minusClickPrice = Price.minusClickValue
+
+  const capacity = Capacity.value
+  const plusClickCapacity = Capacity.plusClickValue
+  const minusClickCapacity = Capacity.minusClickValue
+
+  console.log("Capacity: ", capacity);
+
   const [FeErrors, setFeErrors] = useState([]);
   const [createEvent, { loading, error, data }] = useMutation(NEW_EVENT, {
     onCompleted: () => {
@@ -127,38 +144,9 @@ function Create(props) {
   const { errorOut } = data ? data.createEvent : { errorOut: undefined };
 
   let den = new Date(formValue.startDate);
-  let timer1
 
-  const holding = () => {
-    timer1 = setInterval(function() {
-      console.log("HOLDDDIIING")
-      setFormValue(prev => {
-        return { ...prev, price: prev.price + 1 };
-      });
-    }, 100);
-  }
 
-  useEffect(() => {
-    document.documentElement.style.overflow = "auto"
-    document.getElementById("plus_btn").addEventListener('mousedown', function() { 
-      holding()
-    });
-    document.getElementById("plus_btn").addEventListener('touchstart', function() { 
-      holding()
-    });
 
-    document.getElementById("plus_btn").addEventListener('mouseup', function(event) { 
-      // simulating hold event
-      clearTimeout(timer1)
-    });
-    document.getElementById("plus_btn").addEventListener('touchend', function(event) { 
-      // simulating hold event
-      clearTimeout(timer1)
-    });
-
-    return () =>{
-    } 
-  }, []);
 
   //Day +- one day
   const plusDay = () => {
@@ -192,38 +180,11 @@ function Create(props) {
     });
   };
 
-  const plusPrice = () => {
-    const timer = setInterval(function(){ 
-      console.log("Hello: ") 
-      clearTimeout(timer)
-    }, 1000);
-    setFormValue(prev => {
-      return { ...prev, price: prev.price + 1 };
-    });
-  };
-  const minusPrice = () => {
-    setFormValue(prev => {
-      return { ...prev, price: prev.price - 1 };
-    });
-  };
-
-  const plusCapacity = () => {
-    setFormValue(prev => {
-      return { ...prev, capacity: prev.capacity + 1 };
-    });
-  };
-  const minusCapacity = () => {
-    setFormValue(prev => {
-      return { ...prev, capacity: prev.capacity - 1 };
-    });
-  };
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const inputName = useRef(null);
-  const inputDate = useRef(null);
   const inputTime = useRef(null);
   const inputBYO = useRef(null);
   const inputDescription = useRef(null);
@@ -239,10 +200,10 @@ function Create(props) {
       address: customMapParam.address,
       author: context._id,
       eventType: 1,
-      dateStart: formValue.startDate, //inputDate.current.value,
-      price: formValue.price,
+      dateStart: formValue.startDate,
+      price: price,
       currency: formValue.currency,
-      capacityMax: formValue.capacity,
+      capacityMax: capacity,
       BYO: inputBYO.current.checked,
       description: inputDescription.current.value
         ? inputDescription.current.value
@@ -297,6 +258,7 @@ function Create(props) {
           direction="column"
           className={classes.pinkBack}
         >
+          
           {/* <Avatar className={classes.avatar}>
             <AddCircleOutlineIcon />
           </Avatar> */}
@@ -372,7 +334,6 @@ function Create(props) {
                 <KeyboardDatePicker
                   margin="normal"
                   id="date-picker-dialog"
-                  inputRef={inputDate}
                   format="dd/MM/yyyy"
                   value={formValue.startDate}
                   onChange={e => {
@@ -470,9 +431,8 @@ function Create(props) {
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
-                onClick={() => {
-                  minusPrice();
-                }}
+                id="minus_btn"
+                onClick={() => minusClickPrice}
               >
                 <ArrowBackIosIcon color="primary" />
               </IconButton>
@@ -480,7 +440,7 @@ function Create(props) {
             <Grid item>
               <Input
                 type="number"
-                value={formValue.price}
+                value={price}
                 //onChange={handleChange("amount")}
                 startAdornment={
                   <InputAdornment position="start">
@@ -513,9 +473,7 @@ function Create(props) {
                 aria-label="open drawer"
                 edge="start"
                 id="plus_btn"
-                onClick={() => {
-                  plusPrice();
-                }}
+                onClick={() => plusClickPrice}
               >
                 <ArrowForwardIosIcon color="primary" />
               </IconButton>
@@ -528,16 +486,15 @@ function Create(props) {
               <IconButton
                 color="inherit"
                 edge="start"
-                onClick={() => {
-                  minusCapacity();
-                }}
+                id="minus_btn_capacity"
+                onClick={() => minusClickCapacity}
               >
                 <ArrowBackIosIcon color="primary" />
               </IconButton>
             </Grid>
             <Grid>
               <TextField
-                value={formValue.capacity}
+                value={capacity}
                 type="number"
                 InputProps={{
                   startAdornment: (
@@ -553,9 +510,8 @@ function Create(props) {
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
-                onClick={() => {
-                  plusCapacity();
-                }}
+                id="plus_btn_capacity"
+                onClick={() => plusClickCapacity}
               >
                 <ArrowForwardIosIcon color="primary" />
               </IconButton>

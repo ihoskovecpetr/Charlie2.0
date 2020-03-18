@@ -41,7 +41,15 @@ function Layout(props) {
                 size="small"
                 className={classes.closeButton}
                 onClick={() => {
-                  props.history.goBack();
+                  console.log("CLOSEEEEE MODALLL")
+                  if(window.eventId){
+                    console.log("ELSAAAAAAA")
+                    window.eventId = null
+                    props.history.push("/");
+                  }else{
+                    props.history.goBack();
+                  }
+                  
                 }}
               >
                 <CloseIcon fontSize="large" />

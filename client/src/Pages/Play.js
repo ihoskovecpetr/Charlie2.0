@@ -22,11 +22,12 @@ import Spinner from "../Atoms/Spinner";
 import SettingsPanel from "../Molecules/play/SettingsPanel";
 import JoinSend from "../Molecules/play/JoinSend";
 
-import PlayPageGallery from "../Molecules/play/play_page_gallery";
+import PlayPageGallery from "../Molecules/play/PlayPageGallery";
 import PlayPageList from "../Molecules/play/PlayPageList";
-import PlayPageMap from "../Molecules/play/play_page_map";
+import PlayPageMap from "../Molecules/play/PlayPageMap";
 import NoLocationBck from "../Molecules/play/NoLocationBck";
 import TimeDistanceChips from "../Molecules/play/TimeDistanceChips";
+import LoginFirstBoard from "../Atoms/LoginFirstBoard";
 
 
 const PLAY_EVENTS = gql`
@@ -93,6 +94,8 @@ const PLAY_EVENTS = gql`
   }
 `;
 
+
+
 // showBookings(id: $id) {
 //   confirmed
 //   cancelled
@@ -138,25 +141,29 @@ function Play() {
   //   days: 2,
   //   radius: 20,
   // });
+  console.log("Hist na PLAY: ", history);
 
   const [getPlayEventsMutation, { loading, error, data, refetch }] = useMutation(PLAY_EVENTS);
-
+  // const oneEventData = useQuery(ONE_EVENT, {
+  //   variables: { id: history.location.pathname.split("/")[2] },
+  //   skip: !context.firstPrint,
+  //   //pollInterval: 500
+  // });
   const [cancelBooking, cancelledState] = useMutation(CANCELLING);
   const [createBooking, bookingStates] = useMutation(BOOKING);
 
-    console.log("RER PLAY: loading, error, data ", loading, error, data);
-
   useEffect(() => {
-    console.log("GRAPHQL: ", context.days, context.geolocationObj, context.radius);
-    // alert(`${playFilter.days} , ${context.geolocationObj ? context.geolocationObj.lng : "No Location"}`)
-    if(context.geolocationObj && context.days !== null && context.radius && context.name){
-      getPlayEventsMutation({variables:{
+    console.log("GRAPHQL:  wndw.firstPrint: ", window.firstPrintPlay);
+    if(context.geolocationObj && context.days !== null && context.radius && context.name && !context.firstPrint){
+      getPlayEventsMutation({
+        variables:{
           plusDays: filterOn ? context.days : 10000,
           lng: context.geolocationObj ? context.geolocationObj.lng : null,
           lat: context.geolocationObj ? context.geolocationObj.lat : null,
           radius: filterOn ? context.radius : 9999999, // playFilter.radius,
           shownEvents: context.shownEvents
     }})
+
     }
     return () => {
     } 
@@ -182,12 +189,17 @@ function Play() {
   }, []);
 
 
-let dataDB;
 
 if (data) {
-    dataDB = data;
-    var { getPlayEvents } = dataDB;
+  console.log("Data normatXX")
+    var { getPlayEvents } = data;
   }
+  // else if(oneEventData.data){
+  //   console.log("Data from ONEEvent: ", oneEventData.data.getOneEvent)
+  //   var getPlayEvents = [oneEventData.data.getOneEvent];
+  // }
+
+  console.log("getPlayEvents: RESULT ", getPlayEvents);
 
   useEffect(() => {
     console.log("getPlayEvents: ", getPlayEvents, context.playEventsCount);
@@ -211,8 +223,8 @@ if (data) {
 
 
   useEffect(() => {
-    console.log("REPLACE URL")
-    getPlayEvents && history.replace(`/play/${getPlayEvents[0]._id}`)
+    console.log("REPLACE URL history: ", history.location.pathname);
+    if(getPlayEvents){history.replace(`/play/${getPlayEvents[0]._id}`)} 
     window.scrollTo(0, 0);
   }, [getPlayEvents && getPlayEvents[0]]);
 
@@ -241,7 +253,7 @@ if (data) {
       className={classes.playContainer}
     >
       <Paper className={classes.paper}>
-        {!context.geolocationObj &&
+        {context.name && !context.geolocationObj &&
         <NoLocationBck />}
 
           <SettingsPanel  getPlayEventsMutation={getPlayEventsMutation} 
@@ -259,6 +271,13 @@ if (data) {
                 </Grid>
               </Grid>
             )}
+            {!context.name && getPlayEvents && (
+              <Grid container justify="center" alignItems='center' className={classes.loadingGridCont}>
+                <Grid item>
+                <LoginFirstBoard />
+                </Grid>
+              </Grid>
+            )}
             <Grid
               container
               justify="center"
@@ -268,6 +287,8 @@ if (data) {
               style={{ width: "100%" }}
             >
             {getPlayEvents && getPlayEvents.map((event, index) => {
+
+              console.log("Iterating EVENTS")
 
               return (
                <div style={{ backgroundColor: (index % 2 === 0) ? "#242323" : "#908E8E", width: "100%", color: (index % 2 === 0) ? "lightgrey" : "black", }} >

@@ -15,7 +15,7 @@ const hbs = require("nodemailer-express-handlebars");
 //   console.log("transformBooking: ", booking._doc);
 //   return {
 //     ...booking._doc,
-//     user: await userLookup(booking._doc.user),
+//     user: await userLookup(x._doc.user),
 //     event: await singleEvent(booking._doc.event),
 //     createdAt: new Date(booking._doc.createdAt).toISOString(),
 //     updatedAt: new Date(booking._doc.updatedAt).toISOString()
@@ -53,9 +53,7 @@ export const resolvers = {
   Query: {
     showBookings: async (_, _args, __) => {
       try {
-        console.log("ShowBookings args: ", _args.id);
         let bookings = await Booking.find({ event: _args.id });
-        console.log("ShowBookings: ", bookings);
         return bookings;
       } catch (err) {
         throw err;
@@ -66,7 +64,6 @@ export const resolvers = {
         let bookings = await Booking.find({ user: _args.user_id }).sort({
           "event.dateStart": -1
         });
-        console.log("ShowBookings: ", bookings);
         //return bookings;
         return bookings.map(async (booking, index) => {
           return {
@@ -321,7 +318,7 @@ function newFunction() {
 
   type Booking {
     _id: ID! 
-    event: Event!
+    event: Event
     user: User!
     message: String
     createdAt: String!

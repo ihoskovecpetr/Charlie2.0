@@ -150,6 +150,8 @@ const HOST_RATINGS = gql`
   }
 `;
 
+
+
 // function tryLogin() {
 //   console.log("Mutation data: ", data);
 // }
@@ -232,22 +234,48 @@ function Profile() {
     <Container
       maxWidth="sm"
     >
-      <Paper className={classes.paper}>
-        <Avatar className={classes.avatar} src={context.picture}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          {context.name}
-        </Typography>
-        <Typography variant="body1">{context.email}</Typography>
-        <Button color="inherit" className={classes.buttonNavi}>
-          <NavLink to={`/signout`}>
-            <Typography variant="subtitle2">Sign out</Typography>
-            <ExitToAppIcon />
-          </NavLink>
-        </Button>
-        <Typography variant="body1">{context.description}</Typography>
-        {error && <h1>ERROR</h1>}
+      
+      <Paper  className={classes.paper}>
+        <Grid container justify="center" direction="column" alignItems="center" style={{
+          backgroundImage: `url(${context.picture})`,
+          backgroundSize: "cover",
+          // filter: "blur(4px)",
+          // -webkit-filter: "blur(8px)
+        }}>
+          <Grid item style={{ backgroundColor: "rgba(0,0,0,0.6)", width: "100%", height: "100%"}}>
+            <Grid container justify="center" direction="column" alignItems="center">
+              <Grid item>
+                <Avatar className={classes.avatar} src={context.picture}>
+                  <LockOutlinedIcon />
+                </Avatar>
+              </Grid>
+              <Grid item>
+                <Typography component="h1" variant="h5">
+                  {context.name}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="body1">
+                  {context.email}
+                </Typography>
+              </Grid>
+              <Grid item>
+              <Button color="inherit" className={classes.buttonNavi}>
+                <NavLink to={`/signout`}>
+                  <Typography variant="subtitle2">Sign out</Typography>
+                  <ExitToAppIcon />
+                </NavLink>
+              </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1">
+                  {context.description}
+                </Typography>
+                {error && <h1>ERROR</h1>}
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
         <AppBar position="static" color="default" className={classes.appBar}>
           <Tabs
             value={value}
@@ -262,7 +290,7 @@ function Profile() {
                 <Badge
                   className={classes.padding}
                   color="secondary"
-                  badgeContent={data && data.showUserBookings.length}
+                  badgeContent={data && data.showUserBookings && data.showUserBookings.length}
                 >
                   ATTENDING
                 </Badge>
@@ -384,7 +412,8 @@ const useStyles = makeStyles(theme => ({
     flexDirection: "column",
     alignItems: "center",
     width: "100%",
-    background: "rgba(255,255,255,0.5)"
+    background: "rgba(255,255,255,0.5)",
+    color: "white"
   },
   avatar: {
     height: 80,
@@ -396,7 +425,8 @@ const useStyles = makeStyles(theme => ({
     zIndex: 1
   },
   buttonNavi: {
-    marginBottom: 10
+    marginBottom: 10,
+    backgroundColor: "rgba(255,255,255,0.2)"
   }
 }));
 

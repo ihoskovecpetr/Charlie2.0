@@ -4,6 +4,8 @@ import {
   Switch,
   Route,
   NavLink,
+  Redirect,
+  useHistory,
   BrowserRouter as Router
 } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -11,6 +13,10 @@ import PropTypes from "prop-types";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
@@ -21,10 +27,11 @@ import { useMutation } from "@apollo/react-hooks";
 
 import UpperStripe from "./Atoms/UpperStripe";
 import DrawerContent from "./Atoms/DrawerContent";
+import WindowEventSnackbar from "./Atoms/WindowEventSnackbar";
 
 import { UserContext } from "./userContext";
 import { usePosition } from "./Hooks/useGeolocation";
-import { useWindowSize } from "./Hooks/useWindowSize";
+// import { useWindowSize } from "./Hooks/useWindowSize";
 
 import Menu from "./Pages/Menu";
 import SignIn from "./Pages/SignIn";
@@ -37,12 +44,14 @@ import Profile from "./Pages/Profile";
 import About from "./Pages/About";
 import UserModal from "./Pages/UserModal";
 import Play from "./Pages/Play";
+import PlayOutside from "./Pages/PlayOutside";
 
 import FloatingBtnWrap from "./Molecules/FloatingBtnWrap";
 
+
 const drawerWidth = 240;
 let prevLocation;
-let ticking
+let firstLocation
 
 const LOGIN = gql`
   mutation {
@@ -58,7 +67,8 @@ const LOGIN = gql`
 `;
 
 function App(props) {
-   const windowSize = useWindowSize()
+  //  const windowSize = useWindowSize()
+  let history = useHistory();
 
   const theme = createMuiTheme({
     palette: {
@@ -95,11 +105,12 @@ function App(props) {
       width: drawerWidth
     },
     content: {
-      //height: "100vh",
-      height: `${1*windowSize.height}px`,
+      height: "100vh",
+      // height: `${1*windowSize.height}px`,
       position: props.location.pathname.split("/")[1] === "map" ? "fixed" : null,
       width: "100%",
-      overflow: "scroll"
+      backgroundColor: "#F8F8F8",
+      // overflow: "scroll"
     }
   }));
 
@@ -131,21 +142,41 @@ function App(props) {
     shownEvents: [],
     playEventsCount: null,
     radius: 20,
-    days: 2
+    days: 2,
+    // firstPrint: props.location.pathname.split("/")[1] === "play" ? true : false
   });
   const [workingPosition, setWorkingPosition] = useState({
     date: new Date().toISOString().split("T")[0],
     geolocation: null
   });
-  useEffect(() => {
-    getLoggedInUser();
-  }, []);
 
+
+  useEffect(() => {
+    console.log("App UseEffect []")
+    getLoggedInUser();
+    if(props.location.pathname.split("/")[1] === "play" && !window.firstPrintPlay){
+      window.firstPrintPlay = "play"
+    }else{
+      window.firstPrintPlay = "else"
+    }
+  }, [props.location.pathname]);
+
+  useEffect(() => {
+
+    prevLocation = props.location;
+    firstLocation = props.location.pathname.split("/")[1];
+    // if(props.location.pathname.split("/")[1] === "play"){
+    //   console.log("Setting FPnt: true")
+    //   setUser(prev => {
+    //   return { ...prev, firstPrint: true };
+    // });
+    // }
+
+  }, []);
 
   // if (data) {
     useEffect(() => {
       if (data && data.getLoggedInUser) {
-        console.log("SETTING EMPTY USER name: ", data.getLoggedInUser.name)
         setUser(prev => {return {
           ...prev,
           _id: data.getLoggedInUser._id,
@@ -162,7 +193,7 @@ function App(props) {
 
   if (latitude && longitude && !user.geolocationObj) {
     setUser(prev => {
-      return { ...prev, geolocationObj: { lat: latitude, lng: longitude } };
+      return { ...prev, geolocationObj: { lat: latitude, lng: longitude }};
     });
   }
 
@@ -175,12 +206,6 @@ function App(props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
-
-  useEffect(() => {
-    prevLocation = props.location;
-  }, []);
-
 
   const ListOfUrls = user.success
     ? ["", "play", "create", "map", "about", "signout", "user", "profile"]
@@ -228,7 +253,7 @@ function App(props) {
    
   const returnComponent = index => {
 
-    console.log("Returning Component: ", ListOfComponents, index)
+
     return <>
             <CssBaseline />
             {ListOfComponents[index]}
@@ -242,6 +267,7 @@ function App(props) {
   // } else {
   //   prevLocation = props.location;
   // }
+
   let firstPrint = false;
   let Modal = false;
 
@@ -260,6 +286,7 @@ function App(props) {
   }
 
   if (prevLocation == props.location) {
+    console.log("Prev Loc a Loc: ", prevLocation, props.location, firstLocation);
     firstPrint = true;
   }
 
@@ -272,6 +299,7 @@ function App(props) {
     justGoBack = true;
   }
 
+  console.log("APP window.firstPrintPlay?, firstPrint MODAL ", window.firstPrintPlay, firstPrint, Modal)
 
   return (
       <ThemeProvider theme={theme}>
@@ -300,6 +328,9 @@ function App(props) {
                    />
               </Drawer>
             </Hidden>
+
+          <WindowEventSnackbar />
+
           </nav>
           {firstPrint && Modal && (
             <>
@@ -429,6 +460,7 @@ function App(props) {
                   </>
                 )}
               />
+
               <Switch location={prevLocation}>
                 {ListOfUrls.map((text, index) => (
                   <Route
@@ -453,12 +485,13 @@ function App(props) {
                     )}
                   />
                 ))}
+
                 <Route
                   path={`/`}
                   key={"xc"}
                   render={() => (
                     <>
-                      <UpperStripe
+                    <UpperStripe
                         loading={loading}
                         userApp={user}
                         ListOfNames={ListOfNames}
@@ -480,7 +513,7 @@ function App(props) {
               </Switch>
             </>
           )}
-          {!Modal && (
+          {!Modal && window.firstPrintPlay != "play" && (
             <>
               <Switch location={prevLocation}>
               <Route
@@ -489,10 +522,13 @@ function App(props) {
                     key={"index"}
                     render={() => (
                       <>
+                      {window.firstPrintPlay != "play" && (
                         <main className={classes.content}>
                           <div className={classes.toolbar} />
                           {returnComponent(1)}
                         </main>
+                      )}
+                      )
                       </>
                     )}
                   />
@@ -509,6 +545,18 @@ function App(props) {
                       </>
                     )}
                   />
+              <Route
+                exact
+                path={`/event/:id`}
+                render={() => (
+                  <>
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <Event />
+                    </main>
+                  </>
+                )}
+              />
                 {ListOfUrls.map((text, index) => (
                   <Route
                     exact
@@ -558,6 +606,31 @@ function App(props) {
                 />
               </Switch>
               <FloatingBtnWrap />
+            </>
+          )}
+          {!Modal && window.firstPrintPlay === "play" && (
+            <>
+            <Route
+                exact
+                path={`/play/:id`}
+                render={() => (
+                  <>
+                    {/* <UpperStripe
+                      //bringOwnUser?? true??
+                      loading={loading}
+                      userApp={false}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    /> */}
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <PlayOutside />
+                    </main>
+                  </>
+                )}
+            />
             </>
           )}
         </UserContext.Provider>
