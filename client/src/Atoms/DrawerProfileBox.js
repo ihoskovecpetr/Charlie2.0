@@ -70,10 +70,14 @@ export default function DrawerProfileBox({handleDrawerToggle}) {
         <Grid container className={classes.blackBox}>
             <Grid item xs={12}>
                 <Grid container justify='center' alignItems="center" className={classes.middlePart}>
-                    <Grid item >
-                    <Avatar className={classes.avatar} src={context.picture}>
-                        <AccountCircleIcon  fontSize="large" onClick={SignIn} />
-                    </Avatar>
+                    <Grid item onClick={handleDrawerToggle}>
+                        <NavLink
+                            to={`/profile`}
+                            >
+                            <Avatar className={classes.avatar} src={context.picture}>
+                                <AccountCircleIcon  fontSize="large" onClick={SignIn} />
+                            </Avatar>
+                        </NavLink>
                     </Grid>
                 </Grid>
             </Grid>
@@ -81,7 +85,7 @@ export default function DrawerProfileBox({handleDrawerToggle}) {
             <Grid item xs={12} >
             <Grid container justify='center' alignItems="center" className={classes.bottomPart}>
             {context.name && <>
-            <Grid item className={classes.actBtns}>
+            <Grid item className={classes.actBtns} onClick={handleDrawerToggle}>
             <Badge badgeContent={4} color="secondary">
                 <NavLink
                 to={`/profile`}

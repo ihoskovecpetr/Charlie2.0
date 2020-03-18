@@ -8,7 +8,7 @@ import clsx from 'clsx'
 
 import Spinner from "../../Atoms/Spinner";
 import PendingGuest from "../event/PendingGuest";
-import ConfirmedGuest from "../event/confirmed-guest";
+import ConfirmedGuest from "../event/ConfirmedGuest";
 
 import { displayDate } from "../../Services/transform-services";
 

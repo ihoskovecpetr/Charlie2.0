@@ -18,6 +18,9 @@ function Layout(props) {
 
   useEffect(() => {
     setWindowHeight(window.innerHeight)
+   if(document.getElementById("menu_wrap")){
+     document.getElementById("menu_wrap").style.height = "100vh"
+   } 
 }, []);
 
   return (

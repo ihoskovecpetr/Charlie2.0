@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -8,7 +8,6 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Avatar from "@material-ui/core/Avatar";
-import Divider from "@material-ui/core/Divider";
 
 import { withRouter, useHistory, NavLink } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/react-hooks";
@@ -27,8 +26,6 @@ import EventButtons from "../Molecules/event/EventButtons";
 import RatingCard from "../Molecules/rating-card";
 import Spinner from "../Atoms/Spinner";
 import PendingGuest from "../Molecules/event/PendingGuest";
-import ConfirmedGuest from "../Molecules/event/confirmed-guest";
-import UserCard from "../Molecules/event/user-card";
 
 const ONE_EVENT = gql`
   query getOneEvent($id: ID!) {
@@ -65,6 +62,15 @@ const ONE_EVENT = gql`
       }
       confirmed
       areYouAuthor
+      bookings{
+        _id
+        confirmed
+        user{
+          _id
+          name
+          picture
+        }
+      }
     }
     showBookings(id: $id) {
       confirmed
@@ -123,7 +129,10 @@ function Event(props) {
   const classes = useStyles();
   const theme = useTheme();
   let history = useHistory();
+
+  const [windowHeight, setWindowHeight] = useState(0);
   const { context } = useContext(UserContext);
+
   const [createBooking, bookingStates] = useMutation(BOOKING);
   //const [createReqBooking, bookingReqStates] = useMutation(BOOKING_REQ);
   const [cancelBooking, cancelledState] = useMutation(CANCELLING);
@@ -141,6 +150,7 @@ function Event(props) {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setWindowHeight(window.innerHeight)
   }, []);
 
   useEffect(() => {
@@ -167,7 +177,7 @@ function Event(props) {
   const PaperEvent = props => {
     return <Paper 
                   className={classes.paper}
-                  style={{marginTop: window.eventId ? "6vh" : "10vh",}}
+                  style={{marginTop: window.eventId ? "8vh" : "10vh", height: 0.7 * windowHeight}}
                   >
               {props.children}
           </Paper>;
@@ -216,19 +226,18 @@ function Event(props) {
       <ModalLayout>
         <div id="paper_scrollable">
           <PaperEvent>
-            <Grid item className={classes.nameGrid} md={12}>
-              <Box textAlign="center" m={1}>
-                <Typography component="h5" variant="h5">
-                  {dataDB.getOneEvent.name}
-                </Typography>
-              </Box>
-              <Divider />
-            </Grid>
+
 
             <Grid
               container
               justify="center"
             >
+              <Grid item className={classes.nameGrid}>
+                <Typography component="h4" variant="h4" className={classes.name}>
+                  {dataDB.getOneEvent.name}
+                  <p className={classes.thisLineHeader}></p>
+                </Typography>
+              </Grid>
               {/* <Grid item className={classes.galleryGrid}>
                 <Gallery
                   images={dataDB.getOneEvent.imagesArr}
@@ -242,11 +251,11 @@ function Event(props) {
               
               <PlayPageList
                     event={dataDB.getOneEvent}
-                    showBookings={dataDB.getOneEvent.bookings} //showBookings
+                    showBookings={dataDB.showBookings} //showBookings
                     // ONE_EVENT={PLAY_EVENTS}
                     // cancelBooking={cancelBooking}
-                    // cancelledState={cancelledState}
-                    // bookingStates={bookingStates}
+                    cancelledState={cancelledState}
+                    bookingStates={dataDB.showBookings}
                   />
 
               <Grid item>
@@ -294,19 +303,6 @@ function Event(props) {
                     showBookings={dataDB.getOneEvent.bookings} //showBookings
                   /> 
 
-              <Grid
-                container
-                justify="center"
-                className={classes.authorContainer}
-              >
-                <Grid item>
-                  <UserCard author={dataDB.getOneEvent.author} />
-                </Grid>
-              </Grid>
-
-              <Typography component="div" className={classes.standardHeading}>
-                RATING
-              </Typography>
 
               <Grid
                 container
@@ -386,10 +382,8 @@ function Event(props) {
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    background: "black",
+    background: "#242323",
     color: "white",
-    maxHeight: "70vh",
-    minHeight: "50vh",
     overflow: "scroll",
     borderBottomRightRadius: 0,
     borderBottomLeftRadius: 0
@@ -411,8 +405,16 @@ const useStyles = makeStyles(theme => ({
     color: "white"
   },
   nameGrid: {
-    borderBottom: "solid 1px white",
-    marginBottom: 15
+    margin: 15
+  },
+  name: {
+    textAlign: "center"
+  },
+  thisLineHeader:{
+    height: '1px',
+    width: '100%',
+    marginTop: '2px',
+    backgroundColor: "#707070"
   },
   galleryGrid: {
     width: "100%",

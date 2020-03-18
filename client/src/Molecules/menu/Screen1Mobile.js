@@ -78,7 +78,7 @@ export default function Screen1() {
             </Grid> */}
           </Grid>
             <Grid item className={classes.side_logo}>
-              <img src={CharlieHalf} className={classes.side_logo_img} />
+              <img src={CharlieHalf} id="drop_shadow_half" className={classes.side_logo_img} />
             </Grid>
           {/* <Grid item xs={12} sm={6} className={classes.quarter_grid}>
             <Grid

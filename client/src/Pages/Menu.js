@@ -195,7 +195,7 @@ if(!xs_size_memo && false){
     // document.getElementById("s_3_id").style.display = "block";
     // document.getElementById("s_4_id").style.display = "block";
   return (
-      <div style={{position: "absolute", top: 0}}>
+      <div id="menu_wrap" style={{position: "absolute", top: 0, overflow: "hidden"}}>
         {xs_size_memo ? <Screen1Mobile /> : <Screen1 />}
         <ScreenHowItWorks />
         <Screen2 />
