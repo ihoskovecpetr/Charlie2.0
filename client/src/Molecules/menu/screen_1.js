@@ -149,6 +149,7 @@ const useStyles = makeStyles(theme => ({
     backgroundImage: `url(${Skyline})`,
     backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
+    marginTop: 60,
     marginBottom: 20,
     backgroundPosition: "center bottom",
     [theme.breakpoints.up("sm")]: {

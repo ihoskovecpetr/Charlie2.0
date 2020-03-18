@@ -73,11 +73,12 @@ export default function JoinSend({event, getPlayEventsMutation}) {
     function openJoin(){
       if(!attending && !pending){
         setChecked(true)
-        window.scrollBy({
+        setTimeout(() => { window.scrollBy({
           top: 200,
           left: 0,
           behavior: 'smooth'
-        });
+        }); }, 400);
+
       }
     }
 

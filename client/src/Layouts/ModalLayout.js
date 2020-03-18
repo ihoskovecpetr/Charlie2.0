@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -9,19 +9,21 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { withRouter, useHistory } from "react-router-dom";
 
-import { useWindowSize } from "../Hooks/useWindowSize";
-
 
 function Layout(props) {
 
   const classes = useStyles();
-  const windowSize = useWindowSize();
+  const [windowHeight, setWindowHeight] = useState(0);
 
+
+  useEffect(() => {
+    setWindowHeight(window.innerHeight)
+}, []);
 
   return (
       <div
         className={classes.modalBackdrop}
-        style={{ height: windowSize.height }}
+        style={{ height: windowHeight }}
       >
         <div className={classes.modalWrap}>
           <CssBaseline />
@@ -41,9 +43,7 @@ function Layout(props) {
                 size="small"
                 className={classes.closeButton}
                 onClick={() => {
-                  console.log("CLOSEEEEE MODALLL")
                   if(window.eventId){
-                    console.log("ELSAAAAAAA")
                     window.eventId = null
                     props.history.push("/");
                   }else{

@@ -165,7 +165,12 @@ function Event(props) {
   let dataDB;
 
   const PaperEvent = props => {
-    return <Paper className={classes.paper}>{props.children}</Paper>;
+    return <Paper 
+                  className={classes.paper}
+                  style={{marginTop: window.eventId ? "6vh" : "10vh",}}
+                  >
+              {props.children}
+          </Paper>;
   };
 
   // if (bookingStates.loading) {
@@ -182,11 +187,15 @@ function Event(props) {
     dataDB = data;
   }
 
-  if (loading) {
+  if (bookingStates.loading) {
     return (
       <ModalLayout>
         <PaperEvent>
-          <Spinner height={100} width={100} />
+        <Grid container justify="center" alignItems="center" style={{width: "100%", height: 300}}>
+            <Grid item>
+              <Spinner height={100} width={100} />
+            </Grid>
+          </Grid>
         </PaperEvent>
       </ModalLayout>
     );
@@ -218,11 +227,7 @@ function Event(props) {
 
             <Grid
               container
-              justify="flex-start"
-              alignItems="flex-start"
-              alignContent="flex-start"
-              direction="column"
-              spacing={2}
+              justify="center"
             >
               {/* <Grid item className={classes.galleryGrid}>
                 <Gallery
@@ -272,7 +277,11 @@ function Event(props) {
                           })}
                         </Grid>
                         {bookingStates.loading && (
-                          <Spinner height={100} width={100} />
+                        <Grid container justify="center" alignItems="center" style={{width: "100%", height: 300}}>
+                          <Grid item>
+                            <Spinner height={100} width={100} />
+                          </Grid>
+                        </Grid>
                         )}
                       </Box>
                     </Grid>
@@ -365,7 +374,11 @@ function Event(props) {
   return(
     <ModalLayout>
       <PaperEvent>
-        <Spinner height={100} width={100} />
+          <Grid container justify="center" alignItems="center" style={{width: "100%", height: 300}}>
+            <Grid item>
+              <Spinner height={100} width={100} />
+            </Grid>
+          </Grid>
       </PaperEvent>
     </ModalLayout>
   );;
@@ -375,26 +388,11 @@ const useStyles = makeStyles(theme => ({
   paper: {
     background: "black",
     color: "white",
-    marginTop: "10vh",
-    // padding: theme.spacing(3, 2),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    //width: 300,
     maxHeight: "70vh",
     minHeight: "50vh",
     overflow: "scroll",
     borderBottomRightRadius: 0,
     borderBottomLeftRadius: 0
-  },
-  gridClose: {
-    position: "absolute",
-    top: "10vh",
-    height: 0,
-    color: "white",
-    margin: "0 !important",
-    padding: 0,
-    width: "100%"
   },
   gridButtons: {
     background: "black",

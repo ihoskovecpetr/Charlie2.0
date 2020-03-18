@@ -19,6 +19,8 @@ const useStyles = makeStyles(theme => ({
 export default function WindowEventSnackbar(props) {
   const classes = useStyles();
   let history = useHistory();
+  const [open, setOpen] = useState(true);
+
 
   return (
     <>
@@ -35,12 +37,13 @@ export default function WindowEventSnackbar(props) {
                   <Button color="secondary" size="small" onClick={() => {history.replace(`/event/${window.eventId}`)}}>
                     OPEN
                   </Button>
-                  <IconButton size="small" 
-                            aria-label="close" 
-                            color="inherit" 
-                            onClick={() => {
-                            window.eventId = null
-                            }} >
+                  <IconButton   size="small" 
+                                aria-label="close" 
+                                color="inherit" 
+                                onClick={() => {
+                                    window.eventId = null
+                                    setOpen(false)
+                                    }} >
                     <CloseIcon fontSize="small" />
                   </IconButton>
                 </>

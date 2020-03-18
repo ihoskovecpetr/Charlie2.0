@@ -204,7 +204,9 @@ function App(props) {
   }, [user, setUser]);
 
   const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
+    if(!window.eventId){
+      setMobileOpen(!mobileOpen);
+    } 
   };
 
   const ListOfUrls = user.success
@@ -627,6 +629,27 @@ function App(props) {
                     <main className={classes.content}>
                       <div className={classes.toolbar} />
                       <PlayOutside />
+                    </main>
+                  </>
+                )}
+            />
+              <Route
+                exact
+                path={`/play`}
+                render={() => (
+                  <>
+                    {/* <UpperStripe
+                      //bringOwnUser?? true??
+                      loading={loading}
+                      userApp={false}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    /> */}
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <Play />
                     </main>
                   </>
                 )}

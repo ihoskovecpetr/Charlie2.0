@@ -173,6 +173,7 @@ function Play() {
       context.radius, 
       context.days,
       context.shownEvents,
+      context.name,
       filterOn
   ]);
 
@@ -271,7 +272,7 @@ if (data) {
                 </Grid>
               </Grid>
             )}
-            {!context.name && getPlayEvents && (
+            {!context.name && (
               <Grid container justify="center" alignItems='center' className={classes.loadingGridCont}>
                 <Grid item>
                 <LoginFirstBoard />
@@ -412,21 +413,12 @@ const useStyles = makeStyles(theme => ({
     width: "100%",
     backgroundColor: "transparent",
     paddingTop: 20,
+    paddingBottom: 20,
   },
   light: {
     backgroundColor: "lightgrey"
   },
-  sendJoinContainer: {
-    backgroundColor: "white",
-    height: 0,
-    overflow: 'hidden',
-    transition: 'height 0.6s',
-    transitionTimingFunction: 'ease-out'
-  },
-  openSend: {
-    height: 220,
-    padding: 5,
-  },
+
   thisLine:{
     height: '1px',
     width: '100%',
