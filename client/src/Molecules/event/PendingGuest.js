@@ -15,8 +15,8 @@ import { useMutation } from "@apollo/react-hooks";
 import { ALL_EVENTS } from "../../Services/GQL";
 
 const CONFIRM_BOOKING = gql`
-  mutation confirmBooking($event_id: ID!, $user_id: ID!) {
-    confirmBooking(event_id: $event_id, user_id: $user_id) {
+  mutation confirmBooking($event_id: ID!, $user_id: ID!, $decision: Boolean) {
+    confirmBooking(event_id: $event_id, user_id: $user_id, decision: $decision) {
       success
     }
   }
@@ -76,7 +76,8 @@ export default function PendingGuest(props) {
             confirmBooking({
               variables: {
                 user_id: props.booking.user._id,
-                event_id: props.event._id
+                event_id: props.event._id,
+                decision: true
               },
               refetchQueries: () => [
                 {

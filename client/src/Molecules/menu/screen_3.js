@@ -12,26 +12,34 @@ import "../../Pages/Menu.css";
 
 import Spinner from "../../Atoms/Spinner";
 import LoginFirstBoard from "../../Atoms/LoginFirstBoard";
-import EventCard from "../../Molecules/EventCard";
+import EventCard from "../../Atoms/EventCard";
 
 export default function Screen3(props) {
   const classes = useStyles();
   let Sorted = [];
-  console.log("props.idx: ", props.idx);
+  console.log("props.idx: ", props);
   if (props.idx === 3) {
     console.log("Ano podminka");
   }
   if (props.data) {
-    Sorted = props.data.newestUserBookings.sort(function(a, b) {
-      let aDate = new Date(a.event.dateStart);
-      let bDate = new Date(b.event.dateStart);
-      if (aDate > bDate) {
-        return 1;
-      }
-      if (aDate < bDate) {
-        return -1;
-      }
-    });
+    Sorted = props.data.newestUserBookings.filter(item => {
+      if(item.event)return true
+      return false})
+
+      console.log("FIrst Sort: ", Sorted, Sorted.length, Sorted.length >= 2)
+    if(Sorted.length >= 2){
+          Sorted = props.data.newestUserBookings.sort(function(a, b) {
+          let aDate = new Date(a.event.dateStart);
+          let bDate = new Date(b.event.dateStart);
+          if (aDate > bDate) {
+            return 1;
+          }
+          if (aDate < bDate) {
+            return -1;
+          }
+        });
+    }
+
   }
 
   return (

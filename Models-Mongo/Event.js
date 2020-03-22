@@ -34,7 +34,9 @@ const EventSchema = new Schema({
   description: { type: String },
   confirmed: { type: Boolean },
   hide: { type: Boolean }
-});
+},
+{ timestamps: true }
+);
 
 EventSchema.index({ "geometry": "2dsphere" });
 

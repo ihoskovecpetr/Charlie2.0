@@ -16,7 +16,7 @@ export const resolvers = {
           let oneEvent = await Event.findOne({ _id: _args.id });
           if (oneEvent) {
             let areYouAuthor = oneEvent.author == context.reqO.req.userId;
-            return transformEvent(oneEvent, oneEvent.author == context.reqO.req.userId) 
+            return transformEvent(oneEvent, areYouAuthor) 
             {
               // ...oneEvent._doc,
               // dateStart: new Date(oneEvent._doc.dateStart).toISOString(),
@@ -141,7 +141,10 @@ export const resolvers = {
     deleteOneEvent: async (_, _args, __) => {
       console.log("DEL One Event", _args);
       try {
-        let result = await Event.deleteOne({ _id: _args.delete_id });
+        let result = await Event.findOneAndUpdate({ _id: _args.delete_id }, {hide: true});
+        // let result = await Event.deleteOne({ _id: _args.delete_id });
+        console.log("findOneAndUpdate", result);
+
         if (result.ok) {
           return { success: true };
         } else {
@@ -380,6 +383,8 @@ function newFunction() {
     hide: Boolean
     areYouAuthor: Boolean
     bookings: [Booking]
+    createdAt: String
+    updatedAt: String
   }
 
   type Geometry{

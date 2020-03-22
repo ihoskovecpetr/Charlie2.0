@@ -68,7 +68,25 @@ export const resolvers = {
         return bookings.map(async (booking, index) => {
           return {
             ...booking._doc,
-            createdAt: new Date(booking._doc.createdAt).toISOString()
+            createdAt: new Date(booking._doc.createdAt).toISOString(),
+            updatedAt: new Date(booking._doc.updatedAt).toISOString()
+          };
+        });
+      } catch (err) {
+        throw err;
+      }
+    },
+    showHostBookings: async (_, _args, __) => {
+      try {
+        let bookings = await Booking.find({ host: _args.host_id }).sort({
+          "event.dateStart": -1
+        });
+        //return bookings;
+        return bookings.map(async (booking, index) => {
+          return {
+            ...booking._doc,
+            createdAt: new Date(booking._doc.createdAt).toISOString(),
+            updatedAt: new Date(booking._doc.updatedAt).toISOString()
           };
         });
       } catch (err) {
@@ -101,13 +119,16 @@ export const resolvers = {
           } else return { success: false };
         } else {
           const fetchedEvent = await Event.findOne({ _id: _args.event_id });
+          console.log("FETCHED EVENT: ", fetchedEvent)
 
           const booking = new Booking({
-            user: _args.user_id,
             event: fetchedEvent,
+            host: fetchedEvent.author,
+            user: _args.user_id,
             message: _args.message,
-            confirmed: true,
-            cancelled: false
+            confirmed: false,
+            cancelled: false,
+            decided: false
           });
           const result = await booking.save();
 
@@ -168,8 +189,9 @@ export const resolvers = {
             return { success: false, _id: result.electionId };
           }
         } else {
-          console.log("Creating new BBking: ", existingBooking);
+          const fetchedEventRequesting = await Event.findOne({ _id: _args.event_id });
           const booking = new Booking({
+            host: fetchedEventRequesting.author,
             user: _args.guest_id,
             event: _args.event_id,
             message: _args.message,
@@ -231,7 +253,7 @@ export const resolvers = {
       try {
         const result = await Booking.update(
           { event: _args.event_id, user: _args.user_id },
-          { $set: { cancelled: true } }
+          { $set: { cancelled: true, decided: true } }
         );
         //const result = await booking.save();
 
@@ -249,7 +271,7 @@ export const resolvers = {
       try {
         const result = await Booking.update(
           { event: _args.event_id, user: _args.user_id },
-          { $set: { confirmed: true } }
+          { $set: { confirmed: _args.decision, response: _args.response, decided: true }}
         );
         //const result = await booking.save();
 
@@ -280,6 +302,14 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
+    },
+    host: async a => {
+      try {
+        const user = await User.findById(a.user);
+        return user;
+      } catch (err) {
+        throw err;
+      }
     }
   }
   // Evt: {
@@ -299,6 +329,7 @@ function newFunction() {
   extend type Query {
     showBookings(id: ID): [Booking]
     showUserBookings(user_id: ID!): [Booking]
+    showHostBookings(host_id: ID!): [Booking]
     deleteBookings: String
   }
 
@@ -306,7 +337,7 @@ function newFunction() {
     requestBookEvent(event_id: String!, guest_id: String!, guest_name: String!, message: String!): Hlaska!
     bookEvent(event_id: String!, user_id: String!, message: String): Hlaska!
     cancelBooking(event_id: String!, user_id: String!): Hlaska!
-    confirmBooking(event_id: ID!, user_id: ID!): Hlaska!
+    confirmBooking(event_id: ID!, user_id: ID!, response: String, decision: Boolean): Hlaska!
     newestUserBookings(user_id: ID!): [Booking]
   }
 
@@ -319,12 +350,15 @@ function newFunction() {
   type Booking {
     _id: ID! 
     event: Event
+    host: User!
     user: User!
     message: String
+    response: String
     createdAt: String!
-    udpatedAt: String! 
+    updatedAt: String! 
     confirmed: Boolean
     cancelled: Boolean
+    decided: Boolean
     success: Boolean
   }
 `;

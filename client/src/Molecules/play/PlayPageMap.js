@@ -9,7 +9,7 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
 import PlayMap from "./Carousel/PlayMap";
-import UserCard from "./UserCardPlay";
+import UserCardPlay from "./UserCardPlay";
 import RatingCard from "./RatingCardPlay";
 
 const EVENT_RATINGS = gql`
@@ -53,7 +53,7 @@ const PlayPageMap = ({event}) => {
               className={classes.authorContainer}
             >
               <Grid item xs={12} style={{color: "lightGrey"}}>
-                <UserCard author={event.author} />
+                <UserCardPlay author={event.author} />
               </Grid>
             </Grid>
           </Grid>

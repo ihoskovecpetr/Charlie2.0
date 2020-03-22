@@ -13,7 +13,7 @@ import ConfirmedGuest from "../event/ConfirmedGuest";
 import { displayDate } from "../../Services/transform-services";
 
 
-const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledState, bookingStates}) => {
+const PlayPageList = ({event, showBookings, ONE_EVENT, cancelBooking, cancelledState, bookingStates}) => {
     const classes = useStyles();
 
     return(
@@ -107,9 +107,9 @@ const PlayPageList = ({event, showBookings, ONE_EVENT,cancelBooking, cancelledSt
               ONE_EVENT={ONE_EVENT}
             />
 
-            {bookingStates && bookingStates.loading && (
+            {/* {bookingStates && bookingStates.loading && (
               <Spinner height={100} width={100} />
-            )}
+            )} */}
         </Grid>
         </Grid>
         </Grid>

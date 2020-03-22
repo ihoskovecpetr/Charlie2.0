@@ -1,64 +1,71 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
-import { withRouter, NavLink } from "react-router-dom";
+import { withRouter, NavLink, useHistory } from "react-router-dom";
+
 import gql from "graphql-tag";
 import ModalJoin from "./ModalJoin";
-import ModalRate from "./modal-rate";
+import ModalRate from "./ModalRate";
 
 import { ALL_EVENTS } from "../../Services/GQL";
 
-function EventButtons(props) {
+function EventButtons({user, data, eventId, createReqBooking, ONE_EVENT, createBooking, cancelBooking, deleteOneEvent, EVENT_RATINGS}) {
   const classes = useStyles();
+  let history = useHistory();
   let userIsAttending = false;
   let userRequestedBooking = false;
   let eventIsPast = false;
 
   // const sendBookingRequest = message => {
-  //   props.createReqBooking({
+  //   createReqBooking({
   //     variables: {
-  //       guest_id: props.user._id,
-  //       guest_name: props.user.name,
-  //       event_id: props.data.getOneEvent._id,
+  //       guest_id: user._id,
+  //       guest_name: user.name,
+  //       event_id: data.getOneEvent._id,
   //       message: message
   //     },
   //     refetchQueries: () => [
   //       {
-  //         query: props.ONE_EVENT,
-  //         variables: { id: props.match.params.id }
+  //         query: ONE_EVENT,
+  //         variables: { id: eventId }
   //       }
   //     ]
   //   });
 
-  //   // props.createBooking({
+  //   // createBooking({
   //   //   variables: {
-  //   //     user_id: props.user._id,
-  //   //     event_id: props.data.getOneEvent._id
+  //   //     user_id: user._id,
+  //   //     event_id: data.getOneEvent._id
   //   //   },
   //   //   refetchQueries: () => [
   //   //     {
-  //   //       query: props.ONE_EVENT,
-  //   //       variables: { id: props.match.params.id }
+  //   //       query: ONE_EVENT,
+  //   //       variables: { id: eventId }
   //   //     }
   //   //   ]
   //   // });
   // };
 
-  if (props.data && props.data.getOneEvent.dateStart) {
-    const todayDate = new Date();
-    const eventDate = new Date(props.data.getOneEvent.dateStart);
-    if (todayDate < eventDate) {
-      eventIsPast = false;
-    } else {
-      eventIsPast = true;
-    }
-  }
+  useEffect(() => {
 
-  if (props.data && props.data.showBookings) {
-    props.data.showBookings.map(booking => {
-      if (props.user._id == booking.user._id) {
+    if (data && data.getOneEvent.dateStart) {
+      const todayDate = new Date();
+      const eventDate = new Date(data.getOneEvent.dateStart);
+      if (todayDate < eventDate) {
+        eventIsPast = false;
+      } else {
+        eventIsPast = true;
+      }
+    }
+
+  }, [data.getOneEvent]);
+
+
+  if (data && data.showBookings) {
+    data.showBookings.map(booking => {
+      if (user._id === booking.user._id) {
         if (!booking.confirmed && !booking.cancelled) {
           userRequestedBooking = true;
         }
@@ -70,16 +77,76 @@ function EventButtons(props) {
     });
   }
 
-  {
+
+  const cancelBookingHandle = () => {
+    cancelBooking({
+      variables: {
+        user_id: user._id,
+        event_id: data.getOneEvent._id
+      },
+      refetchQueries: () => [
+        {
+          query: ONE_EVENT,
+          variables: { id: eventId }
+        },
+        {
+          query: ALL_EVENTS,
+          variables: {
+            date: new Date(data.getOneEvent.dateStart)
+              .toISOString()
+              .split("T")[0]
+          }
+        }
+      ]
+    });
+  }
+
+  const deleteOneEventHandle = () => {
+    deleteOneEvent({
+      variables: {
+        delete_id: data.getOneEvent._id
+      },
+      refetchQueries: () => [
+        {
+          query: ALL_EVENTS,
+          variables: { date: "2019-11-11" } //TODO..
+        }
+      ]
+    });
+  }
+
+  if (!user.name){
+    return (
+      <Grid item className={classes.buttonCls}>
+        <Button variant="contained" 
+                className={classes.trueBtn}    
+                onClick={() => { history.push("/signin") }}>
+            LOGIN FIRST
+        </Button>
+      </Grid>
+    )
+  }
+
+  if (data && data.getOneEvent && data.getOneEvent.hide){
+    return (
+      <Grid item className={classes.buttonCls}>
+        <Button variant="contained" 
+                className={classes.trueBtn}>
+            EVENT CANCELLED
+        </Button>
+      </Grid>
+    )
+  }
+
     if (eventIsPast) {
       return (
         <>
           {userIsAttending ? (
             <Grid item className={classes.buttonCls}>
               <ModalRate
-                event={props.data.getOneEvent}
-                user={props.user}
-                EVENT_RATINGS={props.EVENT_RATINGS}
+                event={data.getOneEvent}
+                user={user}
+                EVENT_RATINGS={EVENT_RATINGS}
               />
             </Grid>
           ) : (
@@ -94,7 +161,7 @@ function EventButtons(props) {
             </Grid>
           )}
 
-          {props.data && props.data.getOneEvent.areYouAuthor && (
+          {data && data.getOneEvent.areYouAuthor && (
             <Grid item className={classes.buttonCls}>
               <Button
                 variant="contained"
@@ -105,7 +172,7 @@ function EventButtons(props) {
               </Button>
             </Grid>
           )}
-          {props.data && !props.data.getOneEvent.areYouAuthor && (
+          {data && !data.getOneEvent.areYouAuthor && (
             <Grid item className={classes.buttonCls}>
               <Button
                 variant="contained"
@@ -120,19 +187,18 @@ function EventButtons(props) {
         </>
       );
     }
-  }
 
   return (
     <>
-      {!userIsAttending && !userRequestedBooking && (
+      {!userIsAttending && !userRequestedBooking &&
         <Grid item className={classes.buttonCls}>
           <ModalJoin
-            ONE_EVENT={props.ONE_EVENT}
-            user={props.user}
-            event={props.data.getOneEvent}
+            ONE_EVENT={ONE_EVENT}
+            user={user}
+            event={data.getOneEvent}
           />
         </Grid>
-      )}
+      }
 
       {!userIsAttending && userRequestedBooking && (
         <Grid item className={classes.buttonCls}>
@@ -150,26 +216,7 @@ function EventButtons(props) {
             className={classes.trueBtn}
             onClick={e => {
               e.preventDefault();
-              props.cancelBooking({
-                variables: {
-                  user_id: props.user._id,
-                  event_id: props.data.getOneEvent._id
-                },
-                refetchQueries: () => [
-                  {
-                    query: props.ONE_EVENT,
-                    variables: { id: props.match.params.id }
-                  },
-                  {
-                    query: ALL_EVENTS,
-                    variables: {
-                      date: new Date(props.data.getOneEvent.dateStart)
-                        .toISOString()
-                        .split("T")[0]
-                    }
-                  }
-                ]
-              });
+              cancelBookingHandle();
             }}
           >
             CANCEL ATT.
@@ -177,7 +224,7 @@ function EventButtons(props) {
         </Grid>
       )}
 
-      {props.data && props.data.getOneEvent.areYouAuthor && (
+      {data && data.getOneEvent.areYouAuthor && (
         <Grid item className={classes.buttonCls}>
           <Button
             variant="contained"
@@ -185,17 +232,7 @@ function EventButtons(props) {
             className={classes.trueBtn}
             onClick={e => {
               e.preventDefault();
-              props.deleteOneEvent({
-                variables: {
-                  delete_id: props.data.getOneEvent._id
-                },
-                refetchQueries: () => [
-                  {
-                    query: ALL_EVENTS,
-                    variables: { date: "2019-11-11" } //TODO..
-                  }
-                ]
-              });
+              deleteOneEventHandle()
             }}
           >
             DELETE

@@ -3,7 +3,6 @@ import React, { useState, useEffect, useMemo } from "react";
 export function useLogicPlusMinusValue(idPlus, idMinus, startValue ) {
   const [value, setValue] = useState(startValue ? startValue : 10);
 
-  console.log("idPlus, idMinus ", idPlus, idMinus);
 
   let timerPlus
   let timerMinus
@@ -14,7 +13,6 @@ export function useLogicPlusMinusValue(idPlus, idMinus, startValue ) {
 
   const holdingPlus = () => {
     timerPlus = setInterval(function() {
-      console.log("HOLDDDIIING PLS")
       setValue(prev => (prev + 1));
     }, 100);
   }
@@ -24,13 +22,11 @@ export function useLogicPlusMinusValue(idPlus, idMinus, startValue ) {
   }
 
   const minusClickValue = () => {
-    console.log("Minus CLCK")
     setValue(prev => (prev - 1));
   };
 
   const holdingMinus = () => {
     timerMinus = setInterval(function() {
-      console.log("HOLDDDIIING MInus")
       setValue(prev => (prev - 1));
     }, 100);
   }

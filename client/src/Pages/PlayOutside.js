@@ -4,8 +4,6 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Avatar from "@material-ui/core/Avatar";
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -23,7 +21,7 @@ import PlayPageList from "../Molecules/play/PlayPageList";
 import PlayPageMap from "../Molecules/play/PlayPageMap";
 import PlayGoToApp from "../Molecules/play/PlayGoToApp";
 import TimeDistanceChips from "../Molecules/play/TimeDistanceChips";
-import CharlieLogo from "../Images/charlie-logo.png"
+import Lost from "../Images/lost.png"
 
 
 const ONE_EVENT = gql`
@@ -135,7 +133,7 @@ if (oneEventData.data) {
 
             <PlayGoToApp />
       
-          {getPlayEvents && <>
+          {getPlayEvents && getPlayEvents.success === true && <>
                 <Grid container justify='center'>
                   <Grid item >
                       <Typography variant="h4" className={classes.mainHeader}>
@@ -174,6 +172,11 @@ if (oneEventData.data) {
                       </Grid>
                   </>
               }
+
+          {getPlayEvents && getPlayEvents.success === false && <>
+          <p>There are no data for this event....<img src={Lost} className={classes.lostPng} /></p>
+
+          </>}
             </Grid>
 
       </Paper>
@@ -244,6 +247,10 @@ const useStyles = makeStyles(theme => ({
     marginTop: '2px',
     backgroundColor: "#707070"
   },
+  lostPng: {
+    height: 100,
+    width: 100
+  }
 
 }));
 

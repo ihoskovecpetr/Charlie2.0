@@ -115,7 +115,7 @@ function Create(props) {
 
   const { context } = useContext(UserContext);
   const [customMapParam, setCustomMapParam] = useState();
-  const Price = useLogicPlusMinusValue("plus_btn", "minus_btn", 101)
+  const Price = useLogicPlusMinusValue("plus_btn", "minus_btn", 50)
   const Capacity = useLogicPlusMinusValue("plus_btn_capacity", "minus_btn_capacity", 15)
   const [formValue, setFormValue] = useState({
     startDate: new Date(),
@@ -525,6 +525,7 @@ function Create(props) {
                 //checked={formValue.checkedA}
                 //onChange={handleChange("checkedA")}
                 //value="checkedA"
+                defaultValue={true}
                 inputRef={inputBYO}
               />
             }

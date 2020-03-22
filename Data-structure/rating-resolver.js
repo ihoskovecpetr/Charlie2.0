@@ -24,6 +24,7 @@ export const resolvers = {
           return {
             ...rating._doc,
             createdAt: new Date(rating._doc.createdAt).toISOString(),
+            updatedAt: new Date(rating._doc.updatedAt).toISOString(),
             success: true
           };
         });
@@ -107,8 +108,9 @@ function newFunction() {
     guest: User!
     ratingValue: Int
     message: String
-    createdAt: String
     success: Boolean
+    createdAt: String
+    updatedAt: String
   }
 `;
 }

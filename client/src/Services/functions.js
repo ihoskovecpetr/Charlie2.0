@@ -1,11 +1,5 @@
 export const findEmpty = obj => {
   const empty = [];
-  console.log("find empty in ", obj);
-  //   arr.forEach(item => {
-  //     if (!item.value) {
-  //       empty.push(item);
-  //     }
-  //   });
 
   for (const [key, value] of Object.entries(obj)) {
     console.log(key, value);
@@ -15,4 +9,26 @@ export const findEmpty = obj => {
   }
 
   return empty;
+};
+
+export const sortByDate = (array, sortKey, dirrection) => {
+  
+  console.log("ARR TO BE Soored: ", array, sortKey, dirrection)
+
+  const Sorted = array.sort(function(a, b) {
+  let aDate = new Date(a[sortKey]);
+  let bDate = new Date(b[sortKey]);
+  console.log(aDate, bDate)
+  if (aDate > bDate) {
+    return -1;
+  }
+  if (aDate < bDate) {
+    return 1;
+  }
+})
+
+console.log("after Soored: ", Sorted)
+
+
+  return Sorted;
 };

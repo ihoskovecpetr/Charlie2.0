@@ -52,7 +52,7 @@ export default function ScreenHowItWorks() {
                 </Typography>
             </Grid>
             <Grid item>
-                <Typography variant="body" component="p" className={classes.text}>
+                <Typography variant="body1" component="p" className={classes.text}>
                 “Have you ever seen house on the beach or flat in"
                 </Typography>
             </Grid>
@@ -70,7 +70,7 @@ export default function ScreenHowItWorks() {
             </Typography>
         </Grid>
         <Grid item>
-            <Typography variant="body" component="p" className={classes.text}>
+            <Typography variant="body1" component="p" className={classes.text}>
             “Have you ever seen house on the beach or flat in"
             </Typography>
         </Grid>
@@ -89,7 +89,7 @@ export default function ScreenHowItWorks() {
             </Typography>
         </Grid>
         <Grid item>
-            <Typography variant="body" component="p" className={classes.text}>
+            <Typography variant="body1" component="p" className={classes.text}>
             “Have you ever seen house on the beach or flat in"
             </Typography>
         </Grid>

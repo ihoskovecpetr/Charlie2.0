@@ -9,6 +9,10 @@ const bookingSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Event"
     },
+    host: {
+      type: Schema.Types.ObjectId,
+      ref: "User"
+    },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User"
@@ -19,7 +23,13 @@ const bookingSchema = new Schema(
     cancelled: {
       type: Boolean
     },
+    decided: {
+      type: Boolean
+    },
     message: {
+      type: String
+    },
+    response: {
       type: String
     }
   },

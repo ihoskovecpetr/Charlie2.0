@@ -61,6 +61,7 @@ const ONE_EVENT = gql`
         vwidth
       }
       confirmed
+      hide
       areYouAuthor
       bookings{
         _id
@@ -218,9 +219,6 @@ function Event(props) {
   //   );
   // }
 
-  console.log("DATA EVENT jsou tady: ", dataDB);
-  console.log("RATING data: ", ratings.data);
-
   if (dataDB && dataDB.getOneEvent.success) {
     return (
       <ModalLayout>
@@ -237,6 +235,9 @@ function Event(props) {
                   {dataDB.getOneEvent.name}
                   <p className={classes.thisLineHeader}></p>
                 </Typography>
+                {dataDB.getOneEvent.hide && <Typography component="h3" variant="h3" className={classes.name}>
+                  CANCELLED
+                </Typography>}
               </Grid>
               {/* <Grid item className={classes.galleryGrid}>
                 <Gallery
@@ -336,11 +337,12 @@ function Event(props) {
             createBooking={createBooking}
             cancelBooking={cancelBooking}
             deleteOneEvent={deleteOneEvent}
-            match={props.match.params.id}
+            eventId={props.match.params.id}
             ONE_EVENT={ONE_EVENT}
             EVENT_RATINGS={EVENT_RATINGS}
             className={classes.eventButtons}
           />
+
         </Grid>
       </ModalLayout>
     );

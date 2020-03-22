@@ -4,6 +4,7 @@ const User = require("../Models-Mongo/User");
 const transformEvent = async (event, areYouAuthor) => {
 
   if (event) {
+    console.log("Transofrming Event HRE: ", event._doc.createdAt);
     return {
       ...event._doc,
       _id: event.id,
@@ -12,6 +13,8 @@ const transformEvent = async (event, areYouAuthor) => {
       freeSnack: true,
       success: true,
       areYouAuthor: areYouAuthor,
+      createdAt: event._doc.createdAt.toISOString(),
+      updatedAt: event._doc.updatedAt.toISOString()
     };
   } else {
     console.log("NULL ODMITNUTO TRNS: ", event);

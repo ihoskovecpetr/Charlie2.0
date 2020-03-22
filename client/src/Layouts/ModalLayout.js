@@ -21,6 +21,17 @@ function Layout(props) {
    if(document.getElementById("menu_wrap")){
      document.getElementById("menu_wrap").style.height = "100vh"
    } 
+
+   if(document.getElementById("profile_wrap")){
+    document.getElementById("profile_wrap").style.height = "100vh"
+  } 
+
+  return () => {
+    if(document.getElementById("profile_wrap")){
+      document.getElementById("profile_wrap").style.height = "100vh"
+    } 
+  };
+
 }, []);
 
   return (

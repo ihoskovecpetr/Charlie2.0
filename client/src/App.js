@@ -71,6 +71,19 @@ function App(props) {
   let history = useHistory();
 
   const theme = createMuiTheme({
+    overrides: {
+      MuiTab: {
+        root: {
+          color: 'grey !important',
+          fontWeight: 600
+        },
+      },
+      PrivateTabIndicator: {
+        root: {
+          backgroundColor: 'grey !important',
+        },
+      },
+    },
     palette: {
       violetova: "#600328",
       darkGrey: "#242323",
@@ -288,7 +301,6 @@ function App(props) {
   }
 
   if (prevLocation == props.location) {
-    console.log("Prev Loc a Loc: ", prevLocation, props.location, firstLocation);
     firstPrint = true;
   }
 
@@ -300,8 +312,6 @@ function App(props) {
   ) {
     justGoBack = true;
   }
-
-  console.log("APP window.firstPrintPlay?, firstPrint MODAL ", window.firstPrintPlay, firstPrint, Modal)
 
   return (
       <ThemeProvider theme={theme}>

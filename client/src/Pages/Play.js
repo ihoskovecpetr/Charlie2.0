@@ -110,13 +110,13 @@ const PLAY_EVENTS = gql`
 
 
 
-const BOOKING = gql`
-  mutation bookEvent($user_id: String!, $event_id: String!) {
-    bookEvent(user_id: $user_id, event_id: $event_id) {
-      success
-    }
-  }
-`;
+// const BOOKING = gql`
+//   mutation bookEvent($user_id: String!, $event_id: String!) {
+//     bookEvent(user_id: $user_id, event_id: $event_id) {
+//       success
+//     }
+//   }
+// `;
 
 const CANCELLING = gql`
   mutation cancelBooking($user_id: String!, $event_id: String!) {
@@ -150,7 +150,7 @@ function Play() {
   //   //pollInterval: 500
   // });
   const [cancelBooking, cancelledState] = useMutation(CANCELLING);
-  const [createBooking, bookingStates] = useMutation(BOOKING);
+  // const [createBooking, bookingStates] = useMutation(BOOKING);
 
   useEffect(() => {
     console.log("GRAPHQL:  wndw.firstPrint: ", window.firstPrintPlay);
@@ -325,9 +325,8 @@ if (data) {
                 <Grid container justify='center'>
                   <Grid item style={{ marginTop: index === 0 && 40}}>
                       <Typography variant="h4" className={classes.mainHeader}>
-                    {event.name}
-                    <p className={classes.thisLine}></p>
-
+                        {event.name}
+                        <p className={classes.thisLine}></p>
                       </Typography>
                   </Grid>
                   <TimeDistanceChips event={event} />
@@ -339,7 +338,7 @@ if (data) {
                     ONE_EVENT={PLAY_EVENTS}
                     cancelBooking={cancelBooking}
                     cancelledState={cancelledState}
-                    bookingStates={bookingStates}
+                    // bookingStates={bookingStates}
                   />
                   <PlayPageMap
                     event={event}
