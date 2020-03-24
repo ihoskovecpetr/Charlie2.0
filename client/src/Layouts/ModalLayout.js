@@ -25,7 +25,7 @@ function Layout(props) {
     setWindowHeight(window.innerHeight)
 console.log("XX: ", `${windowHeight}px`)
    if(document.getElementById("menu_wrap")){
-     document.getElementById("menu_wrap").style.height = `${windowHeight}px`
+     document.getElementById("menu_wrap").style.position = "fixed"
    } 
 
    if(document.getElementById("profile_wrap")){
@@ -35,6 +35,9 @@ console.log("XX: ", `${windowHeight}px`)
   return () => {
     if(document.getElementById("profile_wrap")){
       document.getElementById("profile_wrap").style.height = `${windowHeight}px`
+    } 
+    if(document.getElementById("menu_wrap")){
+      document.getElementById("menu_wrap").style.position = "absolute"
     } 
   };
 

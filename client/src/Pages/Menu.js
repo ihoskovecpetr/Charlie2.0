@@ -207,8 +207,6 @@ if(!xs_size_memo && false){
         <Screen6 />
       </div>
   )
-
-
 }
 
 }
