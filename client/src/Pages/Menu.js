@@ -70,9 +70,9 @@ export default function Menu(props) {
     }
   );
 
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  // });
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  });
 
   useEffect(() => {
     console.log(
@@ -80,7 +80,7 @@ export default function Menu(props) {
       "onclick" in document.createElement("div") ? "Joo" : "Noo"
     );
 
-      setWindowHeight(window.innerWidth)
+      setWindowHeight(window.innerHeight)
 
   }, []);
 

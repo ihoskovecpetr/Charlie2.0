@@ -13,22 +13,28 @@ import { withRouter, useHistory } from "react-router-dom";
 function Layout(props) {
 
   const classes = useStyles();
-  const [windowHeight, setWindowHeight] = useState(0);
-
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
   useEffect(() => {
+
     setWindowHeight(window.innerHeight)
+  }, [])
+
+  useEffect(() => {
+
+    setWindowHeight(window.innerHeight)
+console.log("XX: ", `${windowHeight}px`)
    if(document.getElementById("menu_wrap")){
-     document.getElementById("menu_wrap").style.height = "100vh"
+     document.getElementById("menu_wrap").style.height = `${windowHeight}px`
    } 
 
    if(document.getElementById("profile_wrap")){
-    document.getElementById("profile_wrap").style.height = "100vh"
+    document.getElementById("profile_wrap").style.height = `${windowHeight}px`
   } 
 
   return () => {
     if(document.getElementById("profile_wrap")){
-      document.getElementById("profile_wrap").style.height = "100vh"
+      document.getElementById("profile_wrap").style.height = `${windowHeight}px`
     } 
   };
 

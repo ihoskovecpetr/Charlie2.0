@@ -25,7 +25,7 @@ export default function ProfileTopBox({error}) {
     <Grid container justify="center" 
                     direction="column" 
                     alignItems="center" 
-                    // style={{ backgroundImage: `url(${context.picture})`}}
+                    style={{ backgroundImage: `url(${context.picture})`}}
                     className={classes.mainContainer}>
         <Grid item 
               style={{ paddingTop: md_size_memo ? 80 : 40}}
@@ -93,7 +93,7 @@ const useStyles = makeStyles(theme => ({
     },
     profileTopBox: {
         backgroundColor: "rgba(0,0,0,0.05)",
-        background: "linear-gradient(90deg, rgba(76,113,209,1) 0%, rgba(162,88,222,1) 100%)", 
+        // background: "linear-gradient(90deg, rgba(76,113,209,1) 0%, rgba(162,88,222,1) 100%)", 
         width: "100%", 
         height: "100%"
       },

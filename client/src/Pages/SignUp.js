@@ -113,6 +113,9 @@ function SignUp() {
 }
 
 if (dataOut && dataOut.success) {
+  setTimeout(() => {
+    history.goBack();
+  })
   return (
     <ModalLayout>
       <Paper className={classes.paper}>

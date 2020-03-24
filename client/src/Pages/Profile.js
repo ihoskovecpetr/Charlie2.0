@@ -257,6 +257,7 @@ function Profile() {
   // });
   useEffect(() => {
     document.documentElement.style.overflow = "auto"
+    window.scrollTo(0, 0);
     return () =>{
     } 
   }, []);
