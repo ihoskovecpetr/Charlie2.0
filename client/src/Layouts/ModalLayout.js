@@ -29,12 +29,12 @@ console.log("XX: ", `${windowHeight}px`)
    } 
 
    if(document.getElementById("profile_wrap")){
-    document.getElementById("profile_wrap").style.height = `${windowHeight}px`
+    document.getElementById("profile_wrap").style.position = "fixed"
   } 
 
   return () => {
     if(document.getElementById("profile_wrap")){
-      document.getElementById("profile_wrap").style.height = `${windowHeight}px`
+      document.getElementById("profile_wrap").style.position = "absolute"
     } 
     if(document.getElementById("menu_wrap")){
       document.getElementById("menu_wrap").style.position = "absolute"

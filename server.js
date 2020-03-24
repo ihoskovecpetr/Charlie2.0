@@ -53,6 +53,10 @@ app.get("/signin", (req, res, next) => {
   res.sendFile(path.join(__dirname, "build/index.html"));
 });
 
+app.get("/profile", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "build/index.html"));
+});
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS");

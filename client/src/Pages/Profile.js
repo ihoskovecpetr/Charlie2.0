@@ -340,7 +340,7 @@ function Profile() {
                   color="secondary"
                   badgeContent={data && data.showUserBookings && data.showUserBookings.length}
                 >
-                  NOTIFICATIONS
+                  FEED
                 </Badge>
               }
               {...a11yProps(1)}
