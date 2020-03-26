@@ -146,24 +146,15 @@ const useStyles = makeStyles(theme => ({
     // height: "100vh",
     color: "black",
     //background: "rgba(25,25,25,0.3)"
-    backgroundImage: `url(${Skyline})`,
+    // backgroundImage: `url(${Skyline})`,
     backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
+    backgroundPosition: "center bottom",
     marginTop: 60,
     marginBottom: 20,
-    backgroundPosition: "center bottom",
-    [theme.breakpoints.up("sm")]: {
-      background: "none"
-    },
-    [theme.breakpoints.down("xs")]: {
-      paddingTop: "12vh"
-    }
+    paddingTop: 60,
   },
   quarter_grid: {
-    height: "50vh",
-    [theme.breakpoints.down("xs")]: {
-      height: "22vh"
-    }
   },
   quarter_grid_empty: {
     height: 0,
@@ -181,6 +172,8 @@ const useStyles = makeStyles(theme => ({
     height: "100%"
   },
   menuGrid_3: {
+    marginTop: 30,
+    marginBottom: 30,
     width: "100%",
     [theme.breakpoints.down("xs")]: {
       paddingTop: "0vh"

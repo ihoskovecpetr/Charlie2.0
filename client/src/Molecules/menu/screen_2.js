@@ -17,8 +17,7 @@ export default function Screen2() {
 
   return (
     <div 
-      className="section s2"
-      style={{ height: windowSize.height }}>
+      className="section s2">
         
       <Container maxWidth="md" className={classes.container_2}>
         <Grid container id="s_2_id" //style={{ display: "none" }}
@@ -81,9 +80,9 @@ export default function Screen2() {
 
 const useStyles = makeStyles(theme => ({
   container_2: {
-    height: "100vh",
     color: "white",
-    paddingTop: "12vh"
+    paddingTop: 80,
+    paddingBottom: 80
   },
   defaultHeader: {
     color: theme.palette.charliePink,

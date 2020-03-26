@@ -40,7 +40,7 @@ const CONFIRM_BOOKING = gql`
 
 export default function AcceptBookingCard({event, PROFILE_DATA}) {
   const classes = useStyles();
-  const { xs_size_memo } = useXsSize();
+  const { xs_size_memo, md_size_memo } = useXsSize();
   const [expanded, setExpanded] = useState(false);
   const { context } = useContext(UserContext);
   const [confirmBooking, confirmStates] = useMutation(CONFIRM_BOOKING);
@@ -80,13 +80,15 @@ export default function AcceptBookingCard({event, PROFILE_DATA}) {
   }
 
   return (
-    <Grid item xs={12} className={classes.mainItem} 
+    <Grid item className={classes.mainItem} 
           style={{
               boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
-              backgroundColor: expanded ? "white" : "transparent"}}>
+              color: md_size_memo ? "white" : "black",
+              width: xs_size_memo ? "100%" : "70%",
+              backgroundColor: expanded ? "rgba(255,255,255,0.1)" : "transparent"}}>
       <Grid container onClick={handleExpandClick} alignItems="center" className={classes.mainSolidLine} >
 
-      <Grid item xs={2}>
+      <Grid item xs={xs_size_memo ? 3 : 2}>
         <Grid container justify="center">
             <Grid item alignContent="center">
             <IconButton aria-label="settings">
@@ -97,7 +99,7 @@ export default function AcceptBookingCard({event, PROFILE_DATA}) {
            
         </Grid>
 
-        <Grid item xs={8}>
+        <Grid item xs={xs_size_memo ? 9 : 8}>
               <Typography variant="body2" align="left" className={classes.mainHeader}>
               <b>{event.user.name}</b> wants to join your event <b>{event.event.name}</b>
               </Typography>
@@ -106,8 +108,7 @@ export default function AcceptBookingCard({event, PROFILE_DATA}) {
               </Typography>
         </Grid>
 
-
-        <Grid item xs={2}>
+      {!xs_size_memo && <Grid item xs={2}>
           <Grid container justify="center">
             <Grid item 
                   alignContent="center"
@@ -118,20 +119,20 @@ export default function AcceptBookingCard({event, PROFILE_DATA}) {
             </IconButton>
             </Grid>
           </Grid>
-        </Grid>
+        </Grid>}
+
       </Grid>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
 
 
-      <Grid container>
-          <Grid item sm={8} 
+      <Grid container direction="column-reverse" className={classes.middleBody}>
+          <Grid item sm={12} 
                     xs={12} 
-                    className={classes.leftMiddleItem}
-                    style={{ borderRight: xs_size_memo ? "none" : "1px solid grey" }}>
+                    className={classes.leftMiddleItem}>
             <UserAskMessage user={event.user} message={event.message} />
-            <UserAskMessage user={event.event.author} message={event.response} />
+            {event.response && <UserAskMessage user={event.event.author} message={event.response} />}
           </Grid>
-          <Grid item sm={4} xs={12}>
+          <Grid item sm={12} xs={12}>
             <EventInfoLines name={event.event.name} date={event.event.dateStart} />
           </Grid>
         </ Grid>
@@ -181,7 +182,6 @@ export default function AcceptBookingCard({event, PROFILE_DATA}) {
 
 const useStyles = makeStyles(theme => ({
   mainItem: {
-    width: "100%",
     borderRadius: 15,
     // margin: 10,
     // padding: 10
@@ -191,6 +191,9 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 20,
   },
   leftMiddleItem:{
+
+  },
+  middleBody: {
   },
   mainHeader: {
     fontSize: 16,

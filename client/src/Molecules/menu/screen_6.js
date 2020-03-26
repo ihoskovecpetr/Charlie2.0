@@ -167,7 +167,8 @@ const useStyles = makeStyles(theme => ({
   container_6: {
     color: "black",
     //background: "rgba(25,25,25,0.3)"
-    paddingTop: "10vh"
+    paddingTop: 80,
+    paddingBottom: 80
   },
 
   defaultHeader: {
@@ -184,19 +185,16 @@ const useStyles = makeStyles(theme => ({
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(0),
     marginBottom: theme.spacing(5),
-    height: "41vh"
   },
   footer_container: {
     flexGrow: 1,
     backgroundImage: `url(${BluredCity})`,
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    height: "40vh"
   },
   grid_foot_container: {
     background: "rgba(0,0,0,0.4)",
     color: "white",
-    height: "100%",
     textAlign: "center"
   }
 }));

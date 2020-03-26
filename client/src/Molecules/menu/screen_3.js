@@ -83,9 +83,9 @@ export default function Screen3(props) {
 
 const useStyles = makeStyles(theme => ({
   container_2: {
-    height: "100vh",
     color: "black",
-    paddingTop: "12vh"
+    paddingTop: 80,
+    paddingBottom: 80
   },
 
   defaultHeader: {

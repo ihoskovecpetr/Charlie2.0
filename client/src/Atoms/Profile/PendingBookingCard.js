@@ -32,7 +32,7 @@ export default function AcceptBookingCard({event}) {
   };
 
   return (
-    <Grid item xs={12} className={classes.mainItem} style={{backgroundColor: event.confirmed ? "rgba(92,201,68,1)" : "#D9F5D3"}}>
+    <Grid item xs={8} className={classes.mainItem} style={{backgroundColor: event.confirmed ? "rgba(92,201,68,1)" : "#D9F5D3"}}>
       <Grid container alignItems="center" onClick={handleExpandClick} >
         <Grid item xs={9}>
 

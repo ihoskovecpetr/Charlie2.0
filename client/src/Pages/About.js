@@ -17,8 +17,6 @@ import AboutScreen1 from "../Molecules/about/about_screen_1";
 import AboutScreen2 from "../Molecules/about/about_screen_2";
 import Screen6 from "../Molecules/menu/screen_6";
 
-import "./index.css";
-
 const fullpageOptions = {
   anchors: ["firstPage", "secondPage", "thirdPage"],
   sectionsColor: ["#282c34", "#ff5f45", "#0798ec"],

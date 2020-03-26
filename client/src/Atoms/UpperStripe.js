@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
 import Grid from "@material-ui/core/Grid";
@@ -30,6 +31,16 @@ function UpperStripe(props) {
 
 
   const useStyles = makeStyles(theme => ({
+    upperWrap: {
+      position: "fixed",
+      top: 0,
+      width: "100vw"
+    },
+    containerMain: {
+      paddingLeft: 5,
+      paddingRight: 5,
+      zIndex: 100,
+    },
     menuButton: {
       marginRight: theme.spacing(2),
       [theme.breakpoints.up("sm")]: {
@@ -37,7 +48,10 @@ function UpperStripe(props) {
       }
     },
     appBar: {
-      marginLeft: props.drawerWidth,
+      position: "fixed",
+      // width: "100%",
+      // zIndex: 100,
+      // marginLeft: props.drawerWidth,
       color: "black",
     },
     buttonToBeHidden: {
@@ -72,14 +86,19 @@ function UpperStripe(props) {
   console.log("UPPER STR: ", pathSet)
 
   return (
+    // <Grid container className={classes.upperWrap}>
+    //     <Grid item>
+    //     <div className={classes.upperWrap}>
+    //     <Container maxWidth="xl" className={classes.containerMain}>
     <>
-      <CssBaseline />
-      <AppBar position="fixed" 
+<CssBaseline />
+      <AppBar 
               className={classes.appBar} 
               style={{
                 backgroundColor: pathSet[1] === 'map' || displayPlay_memo ? "rgba(255,255,255,0.6)" : "transparent" ,
                 boxShadow: !displayPlay_memo && "none"
                 }}>
+        <Container maxWidth="xl" className={classes.containerMain}>
         <Toolbar>
           <Grid
             justify="space-between" // Add it here :)
@@ -190,8 +209,13 @@ function UpperStripe(props) {
             </Grid>
           </Grid>
         </Toolbar>
+        </Container>
       </AppBar>
-    </>
+      </>
+    //   </ Container>
+    //   </div>
+    //   </Grid>
+    // </Grid>
   );
 }
 

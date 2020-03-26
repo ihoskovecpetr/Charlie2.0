@@ -6,6 +6,7 @@
 .section {
   background-size: cover;
   background-repeat: no-repeat;
+  z-index: 1;
   /* background-color: #fff; */
 }
 

@@ -154,9 +154,9 @@ export default function Screen4(props) {
 
 const useStyles = makeStyles(theme => ({
   container_4: {
-    height: "100vh",
     color: "black",
-    paddingTop: "12vh"
+    paddingTop: 80,
+    paddingBottom: 80
   },
   header_be_gone: {
     [theme.breakpoints.down("xs")]: {

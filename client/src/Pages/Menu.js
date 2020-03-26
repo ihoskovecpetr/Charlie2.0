@@ -195,7 +195,7 @@ if(!xs_size_memo && false){
     // document.getElementById("s_3_id").style.display = "block";
     // document.getElementById("s_4_id").style.display = "block";
   return (
-      <div id="menu_wrap" style={{position: "absolute", top: 0, overflow: "hidden"}}>
+      <div id="menu_wrap" className={classes.menuWrap} style={{position: "absolute", top: 0, overflow: "hidden"}}>
         {xs_size_memo ? <Screen1Mobile /> : <Screen1 />}
         <ScreenHowItWorks />
         <Screen2 />
@@ -212,6 +212,10 @@ if(!xs_size_memo && false){
 }
 
 const useStyles = makeStyles(theme => ({
+  menuWrap: {
+    top: 0,
+    width: "100%",
+  },
   cardMediaBottom: {
     width: "100%",
     height: 200,

@@ -13,12 +13,12 @@ export default function TimeLine({name, date}) {
 
         <Grid item className={classes.listRow}>
           <Grid container item xs={12}>
-            <Grid item sm={12} xs={4}>
+            <Grid item xs={4}>
               <Typography component="p" className={classes.head}>
                 EVENT
               </Typography>
             </Grid>
-            <Grid item sm={12} xs={8}>
+            <Grid item xs={8}>
               <Typography component="p" className={classes.contentName}>
                 {name}
               </Typography>
@@ -28,12 +28,12 @@ export default function TimeLine({name, date}) {
 
         <Grid item className={classes.listRow}>
           <Grid container item xs={12}>
-            <Grid item sm={12} xs={4}>
+            <Grid item xs={4}>
               <Typography component="p" className={classes.head}>
                 DATE
               </Typography>
             </Grid>
-            <Grid item  sm={12} xs={8}>
+            <Grid item xs={8}>
                 <Typography component="p" className={classes.standardContent}>
                   {date &&
                     displayDate(date)}
@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 500,
     fontSize: 16,
     textAlign: 'left',
-    color: "grey"
+    color: "black"
     // backgroundColor: "rgba(136,136,136,0.2)",
     // padding: 10
   },

@@ -245,7 +245,7 @@ function Profile() {
   const { context } = useContext(UserContext);
   const [value, setValue] = useState(0);
   const [feedArray, setFeedArray] = useState([]);
-  const { md_size_memo } = useXsSize();
+  const { xs_size_memo, md_size_memo } = useXsSize();
   const { loading, error, data } = useQuery(PROFILE_DATA, {
     variables: { host_id: context._id }
   });
@@ -311,7 +311,10 @@ function Profile() {
     <div
       className={classes.profileWrap}
       id="profile_wrap"
-      style={{ overflow: "hidden" }}
+      style={{  overflow: "hidden",
+                color: md_size_memo ? "white" : "black",
+                background: md_size_memo ? "linear-gradient(90deg, rgba(29,47,94,1) 0%, rgba(104,81,123,1) 100%)" : null 
+              }}
     >
     <Container
       maxWidth="md"
