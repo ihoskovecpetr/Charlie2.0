@@ -61,7 +61,6 @@ const useStyles = makeStyles(theme => ({
     },
     singleFeed: {
         color: "black",
-        marginTop: 10,
         width: "100%", 
       },
 }));

@@ -36,7 +36,7 @@ export default function TimeLine({ event }) {
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography component="p" className={classes.contentName}>
+              <Typography component="p" className={classes.standardContent}>
                 {countdown(
                   new Date(),
                   new Date(event.dateStart),
@@ -73,7 +73,7 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 15
   },
   wrapDiv: {
-    border: "1px solid black",
+    border: "2px solid #26BFB9",
     borderRadius: 10,
     width: "100%",
     marginLeft: 20,
@@ -89,27 +89,22 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 800,
     fontSize: 18,
     textAlign: "center",
-    color: "black"
+    color: "#26BFB9",
     // backgroundColor: "rgba(136,136,136,0.2)",
     // padding: 10
   },
   head: {
-    fontWeight: 600,
+    fontWeight: 500,
     fontSize: 16,
     textAlign: "right",
-    color: "#59F0EA",
+    color: "#26BFB9",
     // backgroundColor: "rgba(136,136,136,0.2)",
-    padding: 10
-  },
-  contentName: {
-    fontWeight: 600,
-    textAlign: "left",
     padding: 10
   },
   standardContent: {
     fontWeight: 600,
-    textAlign: "right",
-    color: "rgba(50,48,28,1)",
+    textAlign: "left",
+    // color: "rgba(50,48,28,1)",
     padding: 10
   }
 }));

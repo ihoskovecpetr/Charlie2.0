@@ -58,7 +58,7 @@ export default function UserAskMessage({ user, message, reverse }) {
   };
 
   return (
-    <Grid container direction="row-reverse">
+    <Grid container direction={reverse ? "row-reverse" : "row"} className={classes.containerMain}>
       <Grid item xs={4}>
         <Grid container>
           <Grid item xs={12}>
@@ -102,6 +102,11 @@ export default function UserAskMessage({ user, message, reverse }) {
 }
 
 const useStyles = makeStyles(theme => ({
+  containerMain: {
+    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30
+  },
   avatar: {
     backgroundColor: red[500],
     color: "lightgrey",
@@ -110,6 +115,8 @@ const useStyles = makeStyles(theme => ({
   },
   text: {
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    textAlign: "center",
+    fontWeight: 600,
   }
 }));

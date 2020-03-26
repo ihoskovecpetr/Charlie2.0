@@ -4,7 +4,11 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import DoneIcon from '@material-ui/icons/Done';
+import CloseIcon from '@material-ui/icons/Close';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import TextField from "@material-ui/core/TextField";
+import Badge from '@material-ui/core/Badge';
 
 import clsx from "clsx";
 import Collapse from "@material-ui/core/Collapse";
@@ -87,15 +91,36 @@ export default function AcceptBookingCard({ event, PROFILE_DATA }) {
     });
   };
 
+  let color = "transparent"
+  if(expanded){
+    if(xs_size_memo){
+      color = "rgba(255,255,255,0.1)"
+    } else {
+      color = "white" //"rgba(0,0,0,0.05)"
+    }
+  }
+
+let badgeContent 
+if(event.decided){
+    if(event.confirmed){
+      badgeContent =  <DoneIcon fontSize="small" />
+    } else {
+      badgeContent =  <CloseIcon fontSize="small" /> //"rgba(0,0,0,0.05)"
+    }
+  } else {
+    badgeContent = <FiberManualRecordIcon fontSize="small" className={classes.dotBadge} /> 
+  }
+
   return (
     <Grid
       item
       className={classes.mainItem}
       style={{
-        boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
+        // boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
         color: md_size_memo ? "white" : "black",
         width: xs_size_memo ? "100%" : "70%",
-        backgroundColor: expanded ? "rgba(255,255,255,0.1)" : "transparent"
+        backgroundColor: expanded ? color : "transparent",
+        borderBottom: xs_size_memo ? "1px solid white" : "3px solid white"
       }}
     >
       <Grid
@@ -106,14 +131,21 @@ export default function AcceptBookingCard({ event, PROFILE_DATA }) {
       >
         <Grid item xs={xs_size_memo ? 3 : 2}>
           <Grid container justify="center">
-            <Grid item alignContent="center">
+            <Grid item alignContent="center" className={classes.itemAvatar}>
               <IconButton aria-label="settings">
-                <Avatar
-                  src={event.user.picture}
-                  className={classes.mainAvatar}
-                />
+                <Badge badgeContent={badgeContent} 
+                        className={classes.badge} 
+                        color={event.decided ? "primary" : "secondary"}
+                        // style={{ backgroundColor: event.decided ? "grey" : "red"}}
+                        >
+                  <Avatar
+                    src={event.user.picture}
+                    className={classes.mainAvatar}
+                  />
+                </Badge>
               </IconButton>
             </Grid>
+
           </Grid>
         </Grid>
 
@@ -239,7 +271,8 @@ export default function AcceptBookingCard({ event, PROFILE_DATA }) {
 
 const useStyles = makeStyles(theme => ({
   mainItem: {
-    borderRadius: 15
+    // borderRadius: 15,
+    // borderBottom: "3px solid white" //#707070
     // margin: 10,
     // padding: 10
   },
@@ -260,6 +293,13 @@ const useStyles = makeStyles(theme => ({
     color: "grey",
     marginLeft: 20
   },
+  badge: {
+    padding: '0 important'
+  },
+  dotBadge: {
+    height: 15,
+    width: 15
+  },
   userAvatar: {
     backgroundColor: red[500],
     height: 80,
@@ -279,6 +319,9 @@ const useStyles = makeStyles(theme => ({
   btn: {
     // height: 50,
     // width: "50%"
+  },
+  itemAvatar: {
+
   },
   mainAvatar: {
     height: 60,

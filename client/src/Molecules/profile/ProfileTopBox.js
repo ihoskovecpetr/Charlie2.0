@@ -98,13 +98,6 @@ export default function ProfileTopBox({ error }) {
           </Grid>
         </Grid>
       </Grid>
-      {/* <div className={classes.wrapB}>
-      <Grid container 
-            justify="center" 
-            className={classes.mainContainerB}>
-
-      </Grid>
-      </div> */}
     </>
   );
 }
@@ -113,16 +106,8 @@ const useStyles = makeStyles(theme => ({
   mainContainer: {
     // height: 500,
     backgroundSize: "cover",
-    backgroundPosition: "center"
-    // filter: "blur(4px)"
-  },
-  wrapB: {
-    height: 0
-  },
-  mainContainerB: {
-    position: "relative",
-    height: 500,
-    top: -500,
+    backgroundPosition: "center",
+    // filter: "blur(4px),"
     color: "white"
   },
   profileTopBox: {
