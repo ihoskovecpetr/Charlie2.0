@@ -131,7 +131,7 @@ if(event.decided){
       >
         <Grid item xs={xs_size_memo ? 3 : 2}>
           <Grid container justify="center">
-            <Grid item alignContent="center" className={classes.itemAvatar}>
+            <Grid item className={classes.itemAvatar}>
               <IconButton aria-label="settings">
                 <Badge badgeContent={badgeContent} 
                         className={classes.badge} 
@@ -178,7 +178,6 @@ if(event.decided){
             <Grid container justify="center">
               <Grid
                 item
-                alignContent="center"
                 style={{
                   transition: "transform .1s ease-in-out",
                   transform: expanded ? "rotate(-180deg)" : "rotate(0deg)"

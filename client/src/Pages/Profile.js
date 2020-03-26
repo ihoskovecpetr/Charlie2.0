@@ -244,6 +244,7 @@ function Profile() {
   const { context } = useContext(UserContext);
   const [value, setValue] = useState(0);
   const [feedArray, setFeedArray] = useState([]);
+  const [countUndecidedBookings, setCountUndecidedBookings] = useState(0);
   const { xs_size_memo, md_size_memo } = useXsSize();
   const { loading, error, data } = useQuery(PROFILE_DATA, {
     variables: { host_id: context._id }
@@ -276,6 +277,7 @@ function Profile() {
   };
 
   useEffect(() => {
+
     if (data) {
       console.log("I do have DATA: ", data);
       let {
@@ -295,7 +297,13 @@ function Profile() {
 
       setFeedArray(sortedFeed);
 
-      console.log("ALL That SHT: ", sortedFeed);
+      let count = 0
+
+      showHostBookings.map(item => {
+        if(!item.decided) count++
+      })
+      setCountUndecidedBookings(count);
+
     }
   }, [data]);
 
@@ -349,13 +357,9 @@ function Profile() {
                   label={
                     <Badge
                       color="secondary"
-                      badgeContent={
-                        data &&
-                        data.showUserBookings &&
-                        data.showUserBookings.length
-                      }
+                      badgeContent={countUndecidedBookings}
                     >
-                      FEED
+                      BOOKINGS
                     </Badge>
                   }
                   {...a11yProps(1)}
@@ -393,7 +397,7 @@ function Profile() {
                       color="secondary"
                       badgeContent={data && data.showRatings.length}
                     >
-                      RATING
+                      RATINGS
                     </Badge>
                   }
                   {...a11yProps(3)}

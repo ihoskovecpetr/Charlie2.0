@@ -24,20 +24,14 @@ export default function NotificationPrinter({event, PROFILE_DATA}) {
                 return <h1>GOT RATED</h1>
             break;
             case "yourBooking":
-                // return <Grid container justify="center" className={classes.singleFeed}>
-                //     <Grid item>
-                //         <TimeLine name="Your BOOKING status" date={event.createdAt} />
-                //         <PendingBookingCard event={event} PROFILE_DATA={PROFILE_DATA} />
-                //     </Grid>
-
-                // </Grid>
+                return <Grid container justify="center" className={classes.singleFeed}>
+                        <PendingBookingCard event={event} PROFILE_DATA={PROFILE_DATA} />
+                       </Grid>
             break;
             case "askForJoin":
                 return <Grid container justify="center" className={classes.singleFeed}>
-                    
                         <AcceptBookingCard event={event} PROFILE_DATA={PROFILE_DATA} />
-                    
-                </ Grid>
+                       </ Grid>
                 break;
             default:
             // code block
