@@ -1,10 +1,10 @@
-import React, {useState, useRef, useContext} from "react";
+import React, { useState, useRef, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import TextField from '@material-ui/core/TextField';
+import TextField from "@material-ui/core/TextField";
 
 import clsx from "clsx";
 import Collapse from "@material-ui/core/Collapse";
@@ -28,17 +28,25 @@ import ClosePNG from "../../Images/close_black.png";
 import UserAskMessage from "./UserAskMessage";
 import EventInfoLines from "./EventInfoLines";
 
-
 const CONFIRM_BOOKING = gql`
-  mutation confirmBooking($event_id: ID!, $user_id: ID!, $decision: Boolean, $response: String) {
-    confirmBooking(event_id: $event_id, user_id: $user_id, decision: $decision, response: $response) {
+  mutation confirmBooking(
+    $event_id: ID!
+    $user_id: ID!
+    $decision: Boolean
+    $response: String
+  ) {
+    confirmBooking(
+      event_id: $event_id
+      user_id: $user_id
+      decision: $decision
+      response: $response
+    ) {
       success
     }
   }
 `;
 
-
-export default function AcceptBookingCard({event, PROFILE_DATA}) {
+export default function AcceptBookingCard({ event, PROFILE_DATA }) {
   const classes = useStyles();
   const { xs_size_memo, md_size_memo } = useXsSize();
   const [expanded, setExpanded] = useState(false);
@@ -52,7 +60,7 @@ export default function AcceptBookingCard({event, PROFILE_DATA}) {
     setExpanded(!expanded);
   };
 
-  console.log("AcceptBookingCard: ", event)
+  console.log("AcceptBookingCard: ", event);
 
   const ConfirmHandle = () => {
     confirmBooking({
@@ -66,7 +74,7 @@ export default function AcceptBookingCard({event, PROFILE_DATA}) {
         {
           query: PROFILE_DATA,
           variables: { host_id: context._id }
-        },
+        }
         // {
         //   query: ALL_EVENTS,
         //   variables: {
@@ -77,104 +85,153 @@ export default function AcceptBookingCard({event, PROFILE_DATA}) {
         // }
       ]
     });
-  }
+  };
 
   return (
-    <Grid item className={classes.mainItem} 
-          style={{
-              boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
-              color: md_size_memo ? "white" : "black",
-              width: xs_size_memo ? "100%" : "70%",
-              backgroundColor: expanded ? "rgba(255,255,255,0.1)" : "transparent"}}>
-      <Grid container onClick={handleExpandClick} alignItems="center" className={classes.mainSolidLine} >
-
-      <Grid item xs={xs_size_memo ? 3 : 2}>
-        <Grid container justify="center">
+    <Grid
+      item
+      className={classes.mainItem}
+      style={{
+        boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
+        color: md_size_memo ? "white" : "black",
+        width: xs_size_memo ? "100%" : "70%",
+        backgroundColor: expanded ? "rgba(255,255,255,0.1)" : "transparent"
+      }}
+    >
+      <Grid
+        container
+        onClick={handleExpandClick}
+        alignItems="center"
+        className={classes.mainSolidLine}
+      >
+        <Grid item xs={xs_size_memo ? 3 : 2}>
+          <Grid container justify="center">
             <Grid item alignContent="center">
-            <IconButton aria-label="settings">
-              <Avatar src={event.user.picture} className={classes.mainAvatar}/>
-            </IconButton>
+              <IconButton aria-label="settings">
+                <Avatar
+                  src={event.user.picture}
+                  className={classes.mainAvatar}
+                />
+              </IconButton>
             </Grid>
           </Grid>
-           
         </Grid>
 
         <Grid item xs={xs_size_memo ? 9 : 8}>
-              <Typography variant="body2" align="left" className={classes.mainHeader}>
-              <b>{event.user.name}</b> wants to join your event <b>{event.event.name}</b>
-              </Typography>
-              <Typography variant="body2" align="left" className={classes.countdown}>
-              {countdown(new Date(event.createdAt), new Date(), "X", 1).toString()} ago
-              </Typography>
+          <Typography
+            variant="body2"
+            align="left"
+            className={classes.mainHeader}
+          >
+            <b>{event.user.name}</b> wants to join your event{" "}
+            <b>{event.event.name}</b>
+          </Typography>
+          <Typography
+            variant="body2"
+            align="left"
+            className={classes.countdown}
+          >
+            {countdown(
+              new Date(event.createdAt),
+              new Date(),
+              "X",
+              1
+            ).toString()}{" "}
+            ago
+          </Typography>
         </Grid>
 
-      {!xs_size_memo && <Grid item xs={2}>
-          <Grid container justify="center">
-            <Grid item 
-                  alignContent="center"
-                  style={{ transition: "transform .1s ease-in-out", transform: expanded ? "rotate(-180deg)" : "rotate(0deg)"}}>
-              
-              <IconButton aria-label="settings">
-                <ExpandMoreIcon fontSize="large" />
-            </IconButton>
-            </Grid>
-          </Grid>
-        </Grid>}
-
-      </Grid>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-
-
-      <Grid container direction="column-reverse" className={classes.middleBody}>
-          <Grid item sm={12} 
-                    xs={12} 
-                    className={classes.leftMiddleItem}>
-            <UserAskMessage user={event.user} message={event.message} />
-            {event.response && <UserAskMessage user={event.event.author} message={event.response} />}
-          </Grid>
-          <Grid item sm={12} xs={12}>
-            <EventInfoLines name={event.event.name} date={event.event.dateStart} />
-          </Grid>
-        </ Grid>
-
-        <Grid container>
-        <Grid item xs={12}>
-
-        {!event.decided &&  <Grid container className={classes.btnContainer}>
-        <Grid item xs={12} >
+        {!xs_size_memo && (
+          <Grid item xs={2}>
             <Grid container justify="center">
-              <Grid item >
-              
-              <TextField id="outlined-basic" 
-                          label="Response..." 
-                          variant="outlined" 
-                          inputRef={inputDescription} 
-                          className={classes.textField} />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={6} className={classes.btnWrapLeft} >
-            <Grid container justify="center">
-              <Grid item >
-              <IconButton aria-label="settings" >
-                <Avatar src={ClosePNG} className={classes.btnAvatar}/>
-              </IconButton>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={6}>
-            <Grid container justify="center">
-              <Grid item>
-                <IconButton aria-label="settings" onClick={ConfirmHandle}>
-                <Avatar src={ConfirmPNG} className={classes.btnAvatar}/>
+              <Grid
+                item
+                alignContent="center"
+                style={{
+                  transition: "transform .1s ease-in-out",
+                  transform: expanded ? "rotate(-180deg)" : "rotate(0deg)"
+                }}
+              >
+                <IconButton aria-label="settings">
+                  <ExpandMoreIcon fontSize="large" />
                 </IconButton>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-     }
-          </Grid>
+        )}
       </Grid>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <Grid
+          container
+          direction="column-reverse"
+          className={classes.middleBody}
+        >
+          <Grid item sm={12} xs={12} className={classes.leftMiddleItem}>
+            <UserAskMessage user={event.user} message={event.message} />
+            {event.response && (
+              <UserAskMessage
+                reverse={true}
+                user={event.event.author}
+                message={event.response}
+              />
+            )}
+          </Grid>
+          <Grid item sm={12} xs={12}>
+            <EventInfoLines
+              event={event.event}
+              name={event.event.name}
+              date={event.event.dateStart}
+            />
+          </Grid>
+        </Grid>
+
+        <Grid container>
+          <Grid item xs={12}>
+            {!event.decided && (
+              <Grid container className={classes.btnContainer}>
+                <Grid item xs={12}>
+                  <Grid
+                    container
+                    justify="center"
+                    className={classes.textFieldCont}
+                  >
+                    <Grid item>
+                      <TextField
+                        id="outlined-basic"
+                        label="Response..."
+                        variant="outlined"
+                        inputRef={inputDescription}
+                        className={classes.textField}
+                        style={{ width: xs_size_memo ? "100%" : "300px" }}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={6} className={classes.btnWrapLeft}>
+                  <Grid container justify="center">
+                    <Grid item>
+                      <IconButton aria-label="settings">
+                        <Avatar src={ClosePNG} className={classes.btnAvatar} />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={6}>
+                  <Grid container justify="center">
+                    <Grid item>
+                      <IconButton aria-label="settings" onClick={ConfirmHandle}>
+                        <Avatar
+                          src={ConfirmPNG}
+                          className={classes.btnAvatar}
+                        />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
       </Collapse>
     </Grid>
   );
@@ -182,19 +239,16 @@ export default function AcceptBookingCard({event, PROFILE_DATA}) {
 
 const useStyles = makeStyles(theme => ({
   mainItem: {
-    borderRadius: 15,
+    borderRadius: 15
     // margin: 10,
     // padding: 10
   },
   mainSolidLine: {
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 20
   },
-  leftMiddleItem:{
-
-  },
-  middleBody: {
-  },
+  leftMiddleItem: {},
+  middleBody: {},
   mainHeader: {
     fontSize: 16,
     marginLeft: 20,
@@ -204,7 +258,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: 10,
     fontWeight: 600,
     color: "grey",
-    marginLeft: 20,
+    marginLeft: 20
   },
   userAvatar: {
     backgroundColor: red[500],
@@ -215,8 +269,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 5,
     marginTop: 10
   },
-  textField: {
-    width: 300, 
+  textField: {},
+  textFieldCont: {
     margin: 10
   },
   btnWrapLeft: {
@@ -235,9 +289,9 @@ const useStyles = makeStyles(theme => ({
     width: 20
   },
   thisLine: {
-    height: '1px',
-    width: '100%',
-    marginTop: '2px',
+    height: "1px",
+    width: "100%",
+    marginTop: "2px",
     backgroundColor: "#707070"
-  },
+  }
 }));

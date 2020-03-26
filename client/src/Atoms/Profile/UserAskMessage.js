@@ -34,13 +34,12 @@ const HOST_RATINGS = gql`
   }
 `;
 
-export default function UserAskMessage({user, message}) {
+export default function UserAskMessage({ user, message, reverse }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(2);
   const { loading, error, data } = useQuery(HOST_RATINGS, {
     variables: { host_id: user._id }
   });
-
 
   const SubHeader = () => {
     if (loading) {
@@ -59,53 +58,50 @@ export default function UserAskMessage({user, message}) {
   };
 
   return (
-    <Grid container>
+    <Grid container direction="row-reverse">
       <Grid item xs={4}>
-      <Grid container>
-
-        <Grid item xs={12}>
-          <Grid container justify="center">
-            <Grid item>
-              <Avatar
+        <Grid container>
+          <Grid item xs={12}>
+            <Grid container justify="center">
+              <Grid item>
+                <Avatar
                   aria-label="recipe"
                   className={classes.avatar}
                   src={user.picture}
                 />
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
 
-        <Grid item xs={12}>
-          <Grid container justify="center">
-            <Grid item>
-              <Typography variant="subtitle2" className={classes.text}>
-                    {user.name}
-              </Typography>
+          <Grid item xs={12}>
+            <Grid container justify="center">
+              <Grid item>
+                <Typography variant="subtitle2" className={classes.text}>
+                  {user.name}
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-          
-      </Grid>
-      <Grid item  xs={8}>
-      <Grid container>
-        {/* <Grid item >
+      <Grid item xs={8}>
+        <Grid container>
+          {/* <Grid item >
           <SubHeader />
         </Grid> */}
 
-        <Grid item xs={12}>
-          <Typography variant="subtitle2" className={classes.text}>
+          <Grid item xs={12}>
+            <Typography variant="subtitle2" className={classes.text}>
               {message}
-          </Typography>
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
       </Grid>
     </Grid>
   );
 }
 
 const useStyles = makeStyles(theme => ({
-
   avatar: {
     backgroundColor: red[500],
     color: "lightgrey",
@@ -114,6 +110,6 @@ const useStyles = makeStyles(theme => ({
   },
   text: {
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 10
   }
 }));
