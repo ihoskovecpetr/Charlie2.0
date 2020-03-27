@@ -24,6 +24,7 @@ import Copyright from "../Atoms/copyright";
 import Spinner from "../Atoms/Spinner";
 import EventCard from "../Atoms/EventCard";
 import RatingCard from "../Molecules/rating-card";
+import RatingCardNew from "../Atoms/Profile/RatingCardNew";
 import ProfileTopBox from "../Molecules/profile/ProfileTopBox";
 import NotificationPrinter from "../Molecules/profile/NotificationPrinter";
 
@@ -475,7 +476,9 @@ function Profile() {
                 {data &&
                   data.showRatings &&
                   data.showRatings.map((rating, index) => (
-                    <RatingCard rating={rating} key={index} />
+                    <>
+                      <RatingCardNew rating={rating} key={index} />
+                    </>
                   ))}
               </TabPanel>
             </SwipeableViews>

@@ -259,41 +259,48 @@ function Event(props) {
                     bookingStates={dataDB.showBookings}
                   />
 
-              <Grid item>
+              <Grid container className={classes.containerPending}>
                 {dataDB.getOneEvent.areYouAuthor && (
                   <>
-                    <Typography
-                      component="div"
-                      className={classes.standardHeading}
-                    >
-                      PENDING
-                    </Typography>
-                    <Grid container>
-                      <Box textAlign="left" m={1}>
-                        <Grid container direction="row">
-                          {dataDB.showBookings.map(booking => {
-                            if (!booking.confirmed && !booking.cancelled) {
-                              return (
-                                <Grid item>
-                                  <PendingGuest
-                                    booking={booking}
-                                    event={dataDB.getOneEvent}
-                                    ONE_EVENT={ONE_EVENT}
-                                  />
+                    <Grid item xs={12} className={classes.listRow}>
+                      <Grid container item xs={12}>
+                        <Grid item xs={4}>
+                          <Typography component="div" className={classes.standardHeading}>
+                            PENDING
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Typography component="div" className={classes.standardContent}>
+                                <Grid container>
+                                  <Box textAlign="left" m={1}>
+                                    <Grid container direction="row">
+                                      {dataDB.showBookings.map(booking => {
+                                        if (!booking.confirmed && !booking.cancelled) {
+                                          return (
+                                            <Grid item>
+                                              <PendingGuest
+                                                booking={booking}
+                                                event={dataDB.getOneEvent}
+                                                ONE_EVENT={ONE_EVENT}
+                                              />
+                                            </Grid>
+                                          );
+                                        }
+                                        return null;
+                                      })}
+                                    </Grid>
+                                    {bookingStates.loading && (
+                                    <Grid container justify="center" alignItems="center" style={{width: "100%", height: 300}}>
+                                      <Grid item>
+                                        <Spinner height={100} width={100} />
+                                      </Grid>
+                                    </Grid>
+                                    )}
+                                  </Box>
                                 </Grid>
-                              );
-                            }
-                            return null;
-                          })}
+                            </Typography>
                         </Grid>
-                        {bookingStates.loading && (
-                        <Grid container justify="center" alignItems="center" style={{width: "100%", height: 300}}>
-                          <Grid item>
-                            <Spinner height={100} width={100} />
-                          </Grid>
-                        </Grid>
-                        )}
-                      </Box>
+                      </Grid>
                     </Grid>
                   </>
                 )}
@@ -424,14 +431,31 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 4,
     padding: theme.spacing(3, 2)
   },
+  containerPending:{
+    paddingLeft: 20,
+    paddingRight: 20
+  },
+  listRow:{
+    width: '100%',
+    marginTop: 2,
+    marginBottom: 2,
+    backgroundColor: "rgba(255,255,255,0.05)",
+  },
   standardHeading: {
-    //borderBottom: "solid 1px grey",
+    width: '100%',
     fontWeight: 500,
-    color: "lightgrey"
+    textAlign: 'left',
+    backgroundColor: "rgba(255,255,255,0.05)",
+    padding: 10,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   standardContent: {
     fontWeight: 400,
-    color: "white"
+    textAlign: 'right',
+    color: '#29FFF7',
+    padding: 10
   },
   authorContainer: {
     width: "100%"

@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import IconButton from "@material-ui/core/IconButton";
 
 import { useHistory } from "react-router-dom";
 
@@ -25,16 +26,18 @@ export default function RecipeReviewCard(props) {
     alignItems="center" 
     alignContent="center" 
     // spacing={2} 
-    style={{backgroundColor: "rgba(255,255,255,0.3)", padding: 10}}
+    style={{backgroundColor: "rgba(255,255,255,0.1)", padding: 10}}
     onClick={gointToApp}>
 
     <Grid item >
-        <ArrowBackIosIcon />
-        <ArrowBackIosIcon />
+      <IconButton color="secondary"  >
+        <ArrowBackIosIcon style={{right: '-8px', position: 'relative'}} />
+        <ArrowBackIosIcon style={{left: '-2px', position: 'relative'}} />
+      </IconButton>
     </Grid> 
-    <Grid item >
+    {/* <Grid item >
         <Avatar src={CharlieLogo} style={{marginLeft: 10, marginRight: 10}} />
-    </Grid> 
+    </Grid>  */}
     <Grid item >
         Click here to go to main app
     </Grid> 

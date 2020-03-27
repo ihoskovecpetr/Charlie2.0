@@ -481,7 +481,7 @@ function App(props) {
                     key={index}
                     render={() => (
                       <>
-                        <UpperStripe
+                      {text != "play" && <UpperStripe
                           loading={loading}
                           userApp={user}
                           ListOfNames={ListOfNames}
@@ -489,6 +489,7 @@ function App(props) {
                           handleDrawerToggle={handleDrawerToggle}
                           drawerWidth={drawerWidth}
                         />
+                      }
                         <main className={classes.content}>
                           <div className={classes.toolbar} />
                           {returnComponent(index)}

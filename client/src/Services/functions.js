@@ -13,7 +13,6 @@ export const findEmpty = obj => {
 
 export const sortByDate = (array, sortKey, dirrection) => {
   
-  console.log("ARR TO BE Soored: ", array, sortKey, dirrection)
 
   const Sorted = array.sort(function(a, b) {
   let aDate = new Date(a[sortKey]);
@@ -26,9 +25,6 @@ export const sortByDate = (array, sortKey, dirrection) => {
     return 1;
   }
 })
-
-console.log("after Soored: ", Sorted)
-
 
   return Sorted;
 };

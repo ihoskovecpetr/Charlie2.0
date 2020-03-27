@@ -23,7 +23,7 @@ export default function BlogPosts() {
   const classes = useStyles();
 
   return (
-    <Container maxWidth="sm" >
+    <Container maxWidth="sm" className={classes.mainContainer}>
       <Animated
         animationIn="bounceInUp"
         animationOut="fadeOut"
@@ -71,6 +71,9 @@ export default function BlogPosts() {
 }
 
 const useStyles = makeStyles(theme => ({
+  mainContainer: {
+    paddingBottom: 40
+  },
   defaultHeader: {
     color: theme.palette.charliePink,
     fontWeight: 300,

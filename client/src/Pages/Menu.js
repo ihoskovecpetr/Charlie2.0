@@ -18,7 +18,7 @@ import { useXsSize } from "../Hooks/useXsSize";
 import Carousel from "../Atoms/carousel";
 import Screen1 from "../Molecules/menu/screen_1";
 import Screen1Mobile from "../Molecules/menu/Screen1Mobile";
-import ScreenHowItWorks from "../Molecules/menu/ScreenHowItWorks";
+import ScreenHowItWorks from "../Molecules/menu/Screen_2_HowItWorks";
 import Screen2 from "../Molecules/menu/screen_2";
 import Screen3 from "../Molecules/menu/screen_3";
 import Screen4 from "../Molecules/menu/screen_4";

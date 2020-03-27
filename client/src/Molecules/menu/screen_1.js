@@ -213,7 +213,8 @@ const useStyles = makeStyles(theme => ({
     color: "black"
   },
   scrollWrap: {
-    marginTop: 60, 
+    marginTop: 60,
+    transform: "rotate(180deg)", 
   },
   scrollAvatar: {
     height: 80,

@@ -64,7 +64,6 @@ export default function AcceptBookingCard({ event, PROFILE_DATA }) {
     setExpanded(!expanded);
   };
 
-  console.log("AcceptBookingCard: ", event);
 
   const ConfirmHandle = () => {
     confirmBooking({
@@ -94,7 +93,7 @@ export default function AcceptBookingCard({ event, PROFILE_DATA }) {
   let color = "transparent"
   if(expanded){
     if(xs_size_memo){
-      color = "rgba(255,255,255,0.1)"
+      color = "rgba(0,0,0,0.1)"
     } else {
       color = "white" //"rgba(0,0,0,0.05)"
     }

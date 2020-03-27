@@ -159,7 +159,7 @@ const PlayPageList = ({event, showBookings, ONE_EVENT, cancelBooking, cancelledS
           </Typography>
           </Grid>
           <Grid item xs={8}>
-            <Typography component="p" className={classes.standardContent}>
+            <Typography component="p" className={classes.addressContent}>
               {event.address ? event.address : "NO Address"}
             </Typography>
         </Grid>
@@ -200,23 +200,37 @@ const useStyles = makeStyles(theme => ({
         marginBottom: '5px'
       },
       standardHeading: {
+        width: '100%',
         fontWeight: 500,
         // color: "lightGrey",
         textAlign: 'left',
         backgroundColor: "rgba(255,255,255,0.05)",
-        padding: 10
+        padding: 10,
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
       },
       standardDescription: {
         fontWeight: 400,
         textAlign: 'left',
-        padding: 10
+        padding: 10,
       },
       standardContent: {
         fontWeight: 400,
         textAlign: 'right',
         color: '#29FFF7',
         padding: 10
-      }
+      },
+      addressContent: {
+        width: '100%',
+        fontWeight: 400,
+        textAlign: 'right',
+        color: '#29FFF7',
+        padding: 10,
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+       }
   }));
 
 export default PlayPageList

@@ -64,9 +64,6 @@ export default function PendingBokingCard({ event, PROFILE_DATA }) {
     setExpanded(!expanded);
   };
 
-  console.log("Pending Booking: ", event);
-
-
   let color = "transparent"
   if(expanded){
     if(xs_size_memo){

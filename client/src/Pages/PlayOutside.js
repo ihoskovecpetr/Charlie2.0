@@ -92,9 +92,9 @@ function PlayOutside() {
   });
 
   console.log("Play Other:  wndw.firstPrint: ", window.firstPrintPlay);
+  console.log("Data normatXX oneEventData> ", oneEventData.error);
 
 if (oneEventData.data) {
-  console.log("Data normatXX")
     var getPlayEvents = oneEventData.data.getOneEvent;
   }
 
@@ -174,6 +174,10 @@ if (oneEventData.data) {
               }
 
           {getPlayEvents && getPlayEvents.success === false && <>
+          <p>There are no data for this event....<img src={Lost} className={classes.lostPng} /></p>
+
+          </>}
+          {oneEventData && oneEventData.error && <>
           <p>There are no data for this event....<img src={Lost} className={classes.lostPng} /></p>
 
           </>}
