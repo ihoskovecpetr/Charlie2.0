@@ -28,7 +28,6 @@ const PlayMap = ({event}) => {
 
   
       const onMapMount = useCallback(map => {
-        console.log("onMapMount fce RERENDER ");
     
         marker = new window.google.maps.Marker({
           map: map,

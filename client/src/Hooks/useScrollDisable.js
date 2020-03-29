@@ -51,13 +51,11 @@ export const useScrollDisable = id => {
     //     el.addEventListener(item, stopPropagation, false);
     //   });
     // }
-    console.log("Freezing");
     setContext(prev => {
       return { ...prev, freezScroll: true };
     });
     //document.addEventListener("wheel", preventDefault, { passive: false });
     return () => {
-      console.log("UnFreezing");
       setContext(prev => {
         return { ...prev, freezScroll: false };
       });

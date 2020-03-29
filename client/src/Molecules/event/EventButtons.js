@@ -11,7 +11,7 @@ import ModalRate from "./ModalRate";
 
 import { ALL_EVENTS } from "../../Services/GQL";
 
-function EventButtons({user, data, eventId, createReqBooking, ONE_EVENT, createBooking, cancelBooking, deleteOneEvent, EVENT_RATINGS}) {
+function EventButtons({event, bookings, user, eventId, createReqBooking, ONE_EVENT, createBooking, cancelBooking, deleteOneEvent, EVENT_RATINGS}) {
   const classes = useStyles();
   let history = useHistory();
   let userIsAttending = false;
@@ -23,7 +23,7 @@ function EventButtons({user, data, eventId, createReqBooking, ONE_EVENT, createB
   //     variables: {
   //       guest_id: user._id,
   //       guest_name: user.name,
-  //       event_id: data.getOneEvent._id,
+  //       event_id: event._id,
   //       message: message
   //     },
   //     refetchQueries: () => [
@@ -37,7 +37,7 @@ function EventButtons({user, data, eventId, createReqBooking, ONE_EVENT, createB
   //   // createBooking({
   //   //   variables: {
   //   //     user_id: user._id,
-  //   //     event_id: data.getOneEvent._id
+  //   //     event_id: event._id
   //   //   },
   //   //   refetchQueries: () => [
   //   //     {
@@ -50,9 +50,9 @@ function EventButtons({user, data, eventId, createReqBooking, ONE_EVENT, createB
 
   useEffect(() => {
 
-    if (data && data.getOneEvent.dateStart) {
+    if (event.dateStart) {
       const todayDate = new Date();
-      const eventDate = new Date(data.getOneEvent.dateStart);
+      const eventDate = new Date(event.dateStart);
       if (todayDate < eventDate) {
         eventIsPast = false;
       } else {
@@ -60,29 +60,32 @@ function EventButtons({user, data, eventId, createReqBooking, ONE_EVENT, createB
       }
     }
 
-  }, [data.getOneEvent]);
+      if (bookings) {
+        bookings.map(booking => {
+          if (user._id === booking.user._id) {
+            if (!booking.confirmed && !booking.cancelled) {
+              userRequestedBooking = true;
+            }
 
-
-  if (data && data.showBookings) {
-    data.showBookings.map(booking => {
-      if (user._id === booking.user._id) {
-        if (!booking.confirmed && !booking.cancelled) {
-          userRequestedBooking = true;
-        }
-
-        if (booking.confirmed && !booking.cancelled) {
-          userIsAttending = true;
-        }
+            if (booking.confirmed && !booking.cancelled) {
+              userIsAttending = true;
+            }
+          }
+        });
       }
-    });
-  }
 
+  }, [event, bookings]);
+
+
+
+
+  console.log(" Event BNTS event.dateStart: ", event, userIsAttending)
 
   const cancelBookingHandle = () => {
     cancelBooking({
       variables: {
         user_id: user._id,
-        event_id: data.getOneEvent._id
+        event_id: event._id
       },
       refetchQueries: () => [
         {
@@ -92,7 +95,7 @@ function EventButtons({user, data, eventId, createReqBooking, ONE_EVENT, createB
         {
           query: ALL_EVENTS,
           variables: {
-            date: new Date(data.getOneEvent.dateStart)
+            date: new Date(event.dateStart)
               .toISOString()
               .split("T")[0]
           }
@@ -104,17 +107,18 @@ function EventButtons({user, data, eventId, createReqBooking, ONE_EVENT, createB
   const deleteOneEventHandle = () => {
     deleteOneEvent({
       variables: {
-        delete_id: data.getOneEvent._id
+        delete_id: event._id
       },
       refetchQueries: () => [
         {
           query: ALL_EVENTS,
-          variables: { date: "2019-11-11" } //TODO..
+          variables: { date: new Date().toISOString() } //TODO..
         }
       ]
     });
   }
 
+  // NO LOGEG IN
   if (!user.name){
     return (
       <Grid item className={classes.buttonCls}>
@@ -126,25 +130,25 @@ function EventButtons({user, data, eventId, createReqBooking, ONE_EVENT, createB
       </Grid>
     )
   }
-
-  if (data && data.getOneEvent && data.getOneEvent.hide){
+  // CANCELLED EVENT
+  if (event && event.hide){
     return (
       <Grid item className={classes.buttonCls}>
         <Button variant="contained" 
                 className={classes.trueBtn}>
-            EVENT CANCELLED
+            CANCELLED EVENT
         </Button>
       </Grid>
     )
   }
-
+  // PAST EVENT
     if (eventIsPast) {
       return (
         <>
           {userIsAttending ? (
             <Grid item className={classes.buttonCls}>
               <ModalRate
-                event={data.getOneEvent}
+                event={event}
                 user={user}
                 EVENT_RATINGS={EVENT_RATINGS}
               />
@@ -160,42 +164,18 @@ function EventButtons({user, data, eventId, createReqBooking, ONE_EVENT, createB
               </Button>
             </Grid>
           )}
-
-          {data && data.getOneEvent.areYouAuthor && (
-            <Grid item className={classes.buttonCls}>
-              <Button
-                variant="contained"
-                color="secondary"
-                className={classes.trueBtn}
-              >
-                Yours
-              </Button>
-            </Grid>
-          )}
-          {data && !data.getOneEvent.areYouAuthor && (
-            <Grid item className={classes.buttonCls}>
-              <Button
-                variant="contained"
-                color="secondary"
-                style={{ background: "white !important" }}
-                className={classes.trueBtn}
-              >
-                not owner
-              </Button>
-            </Grid>
-          )}
         </>
       );
     }
-
+  // ACTIVE EVENT
   return (
     <>
-      {!userIsAttending && !userRequestedBooking &&
+      {!userIsAttending && !userRequestedBooking && !event.areYouAuthor &&
         <Grid item className={classes.buttonCls}>
           <ModalJoin
             ONE_EVENT={ONE_EVENT}
             user={user}
-            event={data.getOneEvent}
+            event={event}
           />
         </Grid>
       }
@@ -224,7 +204,7 @@ function EventButtons({user, data, eventId, createReqBooking, ONE_EVENT, createB
         </Grid>
       )}
 
-      {data && data.getOneEvent.areYouAuthor && (
+      {event && event.areYouAuthor && (
         <Grid item className={classes.buttonCls}>
           <Button
             variant="contained"

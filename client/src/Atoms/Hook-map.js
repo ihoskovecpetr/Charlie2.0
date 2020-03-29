@@ -18,7 +18,6 @@ function Map({ options, onMount, className, styling }) {
     };
 
     if (!window.google && !scriptAdded) {
-      console.log("CRATING cript");
       scriptAdded = true;
       const script = document.createElement(`script`);
       script.type = `text/javascript`;
@@ -28,7 +27,6 @@ function Map({ options, onMount, className, styling }) {
       headScript.parentNode.insertBefore(script, headScript);
       script.addEventListener(`load`, onLoad);
       return () => {
-        console.log("Returning script");
         return script.removeEventListener(`load`, onLoad);
       }
     } else onLoad();

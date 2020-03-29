@@ -28,139 +28,29 @@ import PlayPageMap from "../Molecules/play/PlayPageMap";
 import NoLocationBck from "../Molecules/play/NoLocationBck";
 import TimeDistanceChips from "../Molecules/play/TimeDistanceChips";
 import LoginFirstBoard from "../Atoms/LoginFirstBoard";
+import { PLAY_EVENTS } from "../Services/GQL_PLAY_EVENTS";
 
-
-const PLAY_EVENTS = gql`
-  mutation getPlayEvents(
-    $plusDays: Int!
-    $lng: Float
-    $lat: Float
-    $radius: Int
-    $shownEvents: [ID]
-  ) {
-    getPlayEvents(
-      playInput: {
-        plusDays: $plusDays
-        lng: $lng
-        lat: $lat
-        radius: $radius
-        shownEvents: $shownEvents
-      }
-    ) {
-      _id
-      success
-      message
-      name
-      author {
-        _id
-        name
-        picture
-        description
-      }
-      dateStart
-      geometry {
-        coordinates
-      }
-      address
-      capacityMax
-      price
-      description
-      BYO
-      currency
-      freeSnack
-      imagesArr {
-        caption
-        src
-        thumbnail
-        thumbnailHeight
-        thumbnailWidth
-        scaletwidth
-        marginLeft
-        vwidth
-      }
-      confirmed
-      areYouAuthor
-      bookings{
-        _id
-        confirmed
-        user{
-          _id
-          name
-          picture
-        }
-      }
-    }
-
-  }
-`;
-
-
-
-// showBookings(id: $id) {
-//   confirmed
-//   cancelled
-//   message
-//   user {
-//     _id
-//     name
-//     email
-//     picture
-//   }
-// }
-
-
-
-// const BOOKING = gql`
-//   mutation bookEvent($user_id: String!, $event_id: String!) {
-//     bookEvent(user_id: $user_id, event_id: $event_id) {
-//       success
-//     }
-//   }
-// `;
-
-const CANCELLING = gql`
-  mutation cancelBooking($user_id: String!, $event_id: String!) {
-    cancelBooking(user_id: $user_id, event_id: $event_id) {
-      _id
-      success
-    }
-  }
-`;
 
 function Play() {
   const classes = useStyles();
-  const theme = useTheme();
   let history = useHistory();
-  // const windowSize = useWindowSize();
   const { context, setContext } = useContext(UserContext);
   const [discovered, setDiscovered] = useState(0);
   const [loadingPlay, setLoadingPlay] = useState(false);
-  const [filterOn, setFilterOn] = useState(true);
 
-  // const [playFilter, setPlayFilter] = useState({
-  //   days: 2,
-  //   radius: 20,
-  // });
   console.log("Hist na PLAY: ", history);
 
   const [getPlayEventsMutation, { loading, error, data, refetch }] = useMutation(PLAY_EVENTS);
-  // const oneEventData = useQuery(ONE_EVENT, {
-  //   variables: { id: history.location.pathname.split("/")[2] },
-  //   skip: !context.firstPrint,
-  //   //pollInterval: 500
-  // });
-  const [cancelBooking, cancelledState] = useMutation(CANCELLING);
-  // const [createBooking, bookingStates] = useMutation(BOOKING);
 
   useEffect(() => {
     console.log("GRAPHQL:  wndw.firstPrint: ", window.firstPrintPlay);
     if(context.geolocationObj && context.days !== null && context.radius && context.name && !context.firstPrint){
       getPlayEventsMutation({
         variables:{
-          plusDays: filterOn ? context.days : 10000,
+          plusDays: context.filterOn ? context.days : 10000,
           lng: context.geolocationObj ? context.geolocationObj.lng : null,
           lat: context.geolocationObj ? context.geolocationObj.lat : null,
-          radius: filterOn ? context.radius : 9999999, // playFilter.radius,
+          radius: context.filterOn ? context.radius : 9999999, // playFilter.radius,
           shownEvents: context.shownEvents
     }})
 
@@ -174,7 +64,7 @@ function Play() {
       context.days,
       context.shownEvents,
       context.name,
-      filterOn
+      context.filterOn
   ]);
 
   useEffect(() => {
@@ -235,14 +125,12 @@ if (data) {
     setTimeout(() => {
       // setDiscovered(discovered + 1)
       setContext(prev => {
-        console.log("prev.shownEvents, getPlayEvents[0] ", getPlayEvents[0]._id);
         return {...prev, shownEvents: [...prev.shownEvents, getPlayEvents[0]._id]}});
       window.scrollTo(0,0);
       setLoadingPlay(false)
     }, 500)
   }
 
-  console.log("History: ", history)
   
   return (
     <div
@@ -261,8 +149,6 @@ if (data) {
                           // setPlayFilter={setPlayFilter}
                           // playFilter={playFilter}
                           loading={loading}
-                          filterOn={filterOn} 
-                          setFilterOn={setFilterOn}
                           />
 
             {loading && (
@@ -289,7 +175,6 @@ if (data) {
             >
             {getPlayEvents && getPlayEvents.map((event, index) => {
 
-              console.log("Iterating EVENTS")
 
               return (
                <div style={{ backgroundColor: (index % 2 === 0) ? "#242323" : "#908E8E", width: "100%", color: (index % 2 === 0) ? "lightgrey" : "black", }} >
@@ -334,10 +219,8 @@ if (data) {
                   <PlayPageGallery event={event} />
                   <PlayPageList
                     event={event}
+                    bookings={event.bookings}
                     showBookings={event.bookings} //showBookings
-                    ONE_EVENT={PLAY_EVENTS}
-                    cancelBooking={cancelBooking}
-                    cancelledState={cancelledState}
                     // bookingStates={bookingStates}
                   />
                   <PlayPageMap

@@ -6,29 +6,80 @@ import Typography from "@material-ui/core/Typography";
 import { Animated } from "react-animated-css";
 
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
+import { useMutation, useQuery } from "@apollo/react-hooks";
+import gql from "graphql-tag";
 
-import "../../Pages/Menu.css";
+// import "../../Pages/Menu.css";
+import { UserContext } from "../../userContext";
 
 import Spinner from "../../Atoms/Spinner";
 import LoginFirstBoard from "../../Atoms/LoginFirstBoard";
 import EventCard from "../../Atoms/EventCard";
 
+const USER_NEW_BOOKINGS = gql`
+  mutation newestUserBookings($user_id: ID!) {
+    newestUserBookings(user_id: $user_id) {
+      event {
+        _id
+        name
+        description
+        dateStart
+        imagesArr {
+          caption
+          src
+          thumbnail
+          thumbnailHeight
+          thumbnailWidth
+          scaletwidth
+          marginLeft
+          vwidth
+        }
+        author {
+          _id
+          name
+          picture
+        }
+      }
+    }
+  }
+`;
+
+
 export default function Screen3(props) {
   const classes = useStyles();
+  const { context } = useContext(UserContext);
+  const [newBookingsArr, { loading, error, data }] = useMutation(
+    USER_NEW_BOOKINGS,
+    {
+      variables: { user_id: context._id }
+    }
+  );
+
   let Sorted = [];
-  console.log("props.idx: ", props);
-  if (props.idx === 3) {
-    console.log("Ano podminka");
+
+  if (context.success) {
+    {
+      !loading && !data && newBookingsArr();
+    }
   }
-  if (props.data) {
-    Sorted = props.data.newestUserBookings.filter(item => {
+
+  useEffect(() => {
+    if (context.success && context._id) {
+        newBookingsArr()
+    }
+
+  }, [context]);
+
+  // if (props.idx === 3) {
+  //   console.log("Ano podminka");
+  // }
+  if (data) {
+    Sorted = data.newestUserBookings.filter(item => {
       if(item.event)return true
       return false})
 
-      console.log("FIrst Sort: ", Sorted, Sorted.length, Sorted.length >= 2)
     if(Sorted.length >= 2){
-          Sorted = props.data.newestUserBookings.sort(function(a, b) {
+          Sorted = data.newestUserBookings.sort(function(a, b) {
           let aDate = new Date(a.event.dateStart);
           let bDate = new Date(b.event.dateStart);
           if (aDate > bDate) {
@@ -63,14 +114,13 @@ export default function Screen3(props) {
         <Grid item xs={12}>
           <Grid justify="center" container>
             <Grid item >
-              {!props.loading && !props.data && <LoginFirstBoard />}
-              {props.loading && <Spinner height={100} width={100} />}
+              {!loading && !data && <LoginFirstBoard />}
+              {loading && <Spinner height={100} width={100} />}
               {Sorted.map((event, index) => {
                 if (new Date(event.event.dateStart) >= new Date()) {
                   return <EventCard event={event.event} key={index} />;
                 } else {
-                  //console.log("PAST EVENT: ", event.event.dateStart);
-                  return null;
+                  return <p>You have got no upconning event</p>;
                 }
               })}
             </Grid>

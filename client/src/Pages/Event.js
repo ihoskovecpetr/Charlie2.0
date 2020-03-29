@@ -66,22 +66,12 @@ const ONE_EVENT = gql`
       bookings{
         _id
         confirmed
+        cancelled
         user{
           _id
           name
           picture
         }
-      }
-    }
-    showBookings(id: $id) {
-      confirmed
-      cancelled
-      message
-      user {
-        _id
-        name
-        email
-        picture
       }
     }
   }
@@ -161,11 +151,11 @@ function Event(props) {
         .addEventListener("scroll", () => {
           console.log("Parent scroll");
         });
-      document
-        .getElementById("paper_scrollable")
-        .addEventListener("click", () => {
-          console.log("Parent click");
-        });
+      // document
+      //   .getElementById("paper_scrollable")
+      //   .addEventListener("click", () => {
+      //     console.log("Parent click");
+      //   });
     }
   });
 
@@ -252,11 +242,9 @@ function Event(props) {
               
               <PlayPageList
                     event={dataDB.getOneEvent}
-                    showBookings={dataDB.showBookings} //showBookings
-                    // ONE_EVENT={PLAY_EVENTS}
-                    // cancelBooking={cancelBooking}
-                    cancelledState={cancelledState}
-                    bookingStates={dataDB.showBookings}
+                    bookings={dataDB.getOneEvent.bookings}
+                    GQL_refetch={ONE_EVENT}
+                    refetchVariables={{ id: props.match.params.id }}
                   />
 
               <Grid container className={classes.containerPending}>
@@ -274,7 +262,7 @@ function Event(props) {
                                 <Grid container>
                                   <Box textAlign="left" m={1}>
                                     <Grid container direction="row">
-                                      {dataDB.showBookings.map(booking => {
+                                      {dataDB.getOneEvent.bookings.map(booking => {
                                         if (!booking.confirmed && !booking.cancelled) {
                                           return (
                                             <Grid item>
@@ -339,7 +327,8 @@ function Event(props) {
           className={classes.gridButtons}
         >
           <EventButtons
-            data={dataDB}
+            event={dataDB && dataDB.getOneEvent}
+            bookings={dataDB && dataDB.showBookings}
             user={context}
             createBooking={createBooking}
             cancelBooking={cancelBooking}

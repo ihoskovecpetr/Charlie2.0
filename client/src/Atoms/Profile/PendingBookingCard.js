@@ -6,20 +6,13 @@ import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import TextField from "@material-ui/core/TextField";
 import Badge from '@material-ui/core/Badge';
 
-import clsx from "clsx";
 import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import countdown from "countdown";
-import { withRouter, useHistory, NavLink } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
@@ -50,6 +43,7 @@ const CONFIRM_BOOKING = gql`
   }
 `;
 
+
 export default function PendingBokingCard({ event, PROFILE_DATA }) {
   const classes = useStyles();
   const { xs_size_memo, md_size_memo } = useXsSize();
@@ -66,8 +60,8 @@ export default function PendingBokingCard({ event, PROFILE_DATA }) {
 
   let color = "transparent"
   if(expanded){
-    if(xs_size_memo){
-      color = "rgba(255,255,255,0.1)"
+    if(md_size_memo){
+      color = "rgba(0,0,0,0.1)"
     } else {
       color = "white" //"rgba(0,0,0,0.05)"
     }
@@ -91,7 +85,7 @@ if(event.decided){
       style={{
         // boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
         color: md_size_memo ? "white" : "black",
-        width: xs_size_memo ? "100%" : "70%",
+        width: xs_size_memo ? "100%" : "85%",
         backgroundColor: expanded ? color : "transparent",
         borderBottom: xs_size_memo ? "1px solid white" : "3px solid white"
       }}
@@ -165,7 +159,7 @@ if(event.decided){
           </Grid>
         )}
       </Grid>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
+      <Collapse in={expanded} timeout="auto" collapsedHeight="50px" unmountOnExit>
         <Grid
           container
           direction="column-reverse"

@@ -15,6 +15,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import CharlieHalf from "../../Images/charlie_half.png";
 import CharBckg from "../../Images/charbckg.png";
 import Scroll from "../../Images/scroll.png";
+import ScrollAnimated from "../../Atoms/ScrollAnimated";
 
 import "../../Pages/Menu.css";
 
@@ -128,7 +129,7 @@ export default function Screen1() {
                         <Grid item xs={12}>
                       <Fab variant="extended" className={classes.fab_pink} onClick={redirectPlay}>
                         JOIN
-                        <PlayArrowIcon className={classes.extendedIcon} />
+                        <PlayArrowIcon className={classes.playIcon} />
                       </Fab>
                       </Grid>
                       </Grid>
@@ -138,7 +139,7 @@ export default function Screen1() {
                         <Grid item xs={12}>
                             <Fab variant="extended" className={classes.fab_grey} onClick={redirectCreate}>
                               CREATE
-                            <AddIcon className={classes.extendedIcon} />
+                            <AddIcon className={classes.createIcon} />
                           </Fab>
                         </Grid>
                       </Grid>
@@ -152,7 +153,8 @@ export default function Screen1() {
                     <Grid item>
                       {/* <ArrowDownwardIcon color='secondary' className={classes.arrowIcon}/> */}
                       {/* <FilterListIcon color='secondary' className={classes.arrowIcon} /> */}
-                      <img src={Scroll} className={classes.scrollAvatar}/>
+                      {/* <img src={Scroll} className={classes.scrollAvatar}/> */}
+                      <ScrollAnimated height={40} width={10}  />
                     </Grid>
                   </Grid>
                 </Grid>
@@ -255,7 +257,7 @@ const useStyles = makeStyles(theme => ({
     color: 'white',
     fontWeight: 700,
     fontSize: 20,
-    letterSpacing: 8,
+    letterSpacing: 4,
     width: '100%'
   },
   fab_grey: {
@@ -263,9 +265,13 @@ const useStyles = makeStyles(theme => ({
     fontSize: 20,
     width: '100%'
   },
-  extendedIcon: {
+  playIcon: {
     marginLeft: theme.spacing(1),
     color: "white"
+  },
+  createIcon: {
+    marginLeft: theme.spacing(1),
+    color: "black"
   },
   arrowWrapItem: {
   },

@@ -62,7 +62,7 @@ export default function AcceptBookingCard({ rating }) {
 
   let color = "transparent"
   if(expanded){
-    if(xs_size_memo){
+    if(md_size_memo){
       color = "rgba(0,0,0,0.1)"
     } else {
       color = "white" //"rgba(0,0,0,0.05)"
@@ -79,7 +79,7 @@ let badgeContent
       style={{
         // boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
         color: md_size_memo ? "white" : "black",
-        width: xs_size_memo ? "100%" : "70%",
+        width: xs_size_memo ? "100%" : "85%",
         backgroundColor: expanded ? color : "transparent",
         borderBottom: xs_size_memo ? "1px solid white" : "3px solid white"
       }}
@@ -111,8 +111,7 @@ let badgeContent
             align="left"
             className={classes.mainHeader}
           >
-            <b>{rating.guest.name}</b> rated you for
-            <b>{rating._id}</b>
+            <b>{rating.guest.name}</b> rated you <b>{rating.ratingValue}*</b> for event <b>{rating.event.name}</b>
           </Typography>
           <Typography
             variant="body2"
@@ -151,22 +150,32 @@ let badgeContent
         <Grid
           container
           alignItems="center"
-          direction="column"
+          direction="row"
           spacing={2}
           className={classes.middleBody}
         >
+      <Grid container alignItems="center" direction="column" className={classes.starsBody}>
+            <Grid item className={classes.body}>
+            <Rating name="simple-controlled" readOnly value={rating.ratingValue} />
+            </Grid>
+            <Grid item className={classes.body}>
+              <Typography
+              variant="body2"
+              align="left"
+              className={classes.mainHeader}
+            >
+              <b>{rating.message}</b>
+            </Typography>
+            </Grid>
+      </Grid>
 
-          <Grid item className={classes.body}>
-          <Rating name="simple-controlled" readOnly value={rating.ratingValue} />
-          </Grid>
-          <Grid item className={classes.body}>
-            <Typography
-            variant="body2"
-            align="left"
-            className={classes.mainHeader}
-          >
-            <b>{rating.message}</b>
-          </Typography>
+
+          <Grid item xs={12}>
+              <EventInfoLines
+                event={rating.event}
+                name={rating.event.name}
+                date={rating.event.dateStart}
+              />
           </Grid>
         </Grid>
       </Collapse>
@@ -192,6 +201,11 @@ const useStyles = makeStyles(theme => ({
   },
   leftMiddleItem: {},
   middleBody: {
+    paddingBottom: 10,
+    width: "100%"
+  },
+  starsBody: {
+    paddingTop: 10,
     paddingBottom: 10
   },
   mainHeader: {

@@ -20,6 +20,7 @@ import EmpireOriginal from "../../Images/empire.jpg";
 import CharlieBlack from "../../Images/charlie_black.png";
 import Skyline from "../../Images/skyline.png";
 import Scroll from "../../Images/scroll.png";
+import ScrollAnimated from "../../Atoms/ScrollAnimated";
 
 
 export default function Screen1() {
@@ -130,7 +131,8 @@ export default function Screen1() {
           <Grid item xs={12} className={classes.scrollWrap}>
                 <Grid container justify="center">
                    <Grid item>
-                      <img src={Scroll} className={classes.scrollAvatar}/>
+                      {/* <img src={Scroll} className={classes.scrollAvatar}/> */}
+                      <ScrollAnimated height={70} width={15} />
                     </Grid>
                 </Grid>
             </Grid>
@@ -214,7 +216,7 @@ const useStyles = makeStyles(theme => ({
   },
   scrollWrap: {
     marginTop: 60,
-    transform: "rotate(180deg)", 
+    // transform: "rotate(180deg)", 
   },
   scrollAvatar: {
     height: 80,

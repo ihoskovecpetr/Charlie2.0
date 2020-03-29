@@ -83,7 +83,6 @@ const FullpageWrapper = fullpageProps => {
     <ReactFullpage
       {...fullpageProps}
       render={({ state, fullpageApi }) => {
-        console.log("render prop change", state); // eslint-disable-line no-console
         
           return (
             <div>

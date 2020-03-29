@@ -83,7 +83,6 @@ function UpperStripe(props) {
   const pathSet = props.location.pathname.split("/");
   const disabledFromOut = window.eventId ? true : false
 
-  console.log("UPPER STR: ", pathSet)
 
   return (
     // <Grid container className={classes.upperWrap}>

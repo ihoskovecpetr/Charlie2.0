@@ -9,14 +9,12 @@ import Button from "@material-ui/core/Button";
 import { displayDate } from "../Services/transform-services";
 
 function Infowindow(props) {
-  console.log("props.location: ", props.location);
   let Pic = props.location.imagesArr[0];
   let Author = props.location.author;
 
   const classes = useStyles();
 
   const openModalEvent = () => {
-    console.log("openModalEvent: window history??: ", window);
 
     var youOwnerVar = false;
 
@@ -24,9 +22,7 @@ function Infowindow(props) {
       youOwnerVar = true;
     } else {
     }
-    console.log("Event _id: ", props.location._id);
     var string = "/event/" + props.location._id;
-    console.log("correct string: ", string);
 
     window.AppHistory.push(string, {
       //tady: napsatStateKdyžtak
@@ -72,7 +68,6 @@ function Infowindow(props) {
           className={classes.buttonOpen}
           onClick={e => {
             e.preventDefault();
-            console.log("INFW user: ", props.user);
             if (props.user.success) {
               openModalEvent();
             } else {

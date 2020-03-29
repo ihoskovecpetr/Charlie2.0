@@ -30,8 +30,6 @@ const Carousel = ({children, setPosition, heightHook, getPlayEventsMutation}) =>
   const [state, dispatch] = useReducer(reducer, initialState);
   const numItems = React.Children.count(children);
 
-  console.log("Poset deti: ", numItems)
-
   const slide = dir => {
     dispatch({ type: dir, numItems });
     setTimeout(() => {
@@ -56,7 +54,6 @@ const Carousel = ({children, setPosition, heightHook, getPlayEventsMutation}) =>
         </div>
         <CarouselContainer dir={state.dir} sliding={state.sliding} heightHook={heightHook}>
           {React.Children.map(children, (child, index) => {
-            console.log("Carousel child: ", child);
            return (
             <CarouselSlot
               key={index}
@@ -85,7 +82,6 @@ const Carousel = ({children, setPosition, heightHook, getPlayEventsMutation}) =>
 };
 
 function reducer(state, { type, numItems }) {
-  console.log(state)
   switch (type) {
     case "reset":
       return initialState;

@@ -59,7 +59,7 @@ export default function AcceptBookingCard({ event, PROFILE_DATA }) {
 
   const inputDescription = useRef(null);
 
-  // console.log("event card props: ", props);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -92,7 +92,7 @@ export default function AcceptBookingCard({ event, PROFILE_DATA }) {
 
   let color = "transparent"
   if(expanded){
-    if(xs_size_memo){
+    if(md_size_memo){
       color = "rgba(0,0,0,0.1)"
     } else {
       color = "white" //"rgba(0,0,0,0.05)"
@@ -117,7 +117,7 @@ if(event.decided){
       style={{
         // boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
         color: md_size_memo ? "white" : "black",
-        width: xs_size_memo ? "100%" : "70%",
+        width: xs_size_memo ? "100%" : "85%",
         backgroundColor: expanded ? color : "transparent",
         borderBottom: xs_size_memo ? "1px solid white" : "3px solid white"
       }}
@@ -190,7 +190,7 @@ if(event.decided){
           </Grid>
         )}
       </Grid>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
+      <Collapse in={expanded} timeout="auto" collapsedHeight="50px" unmountOnExit>
         <Grid
           container
           direction="column-reverse"

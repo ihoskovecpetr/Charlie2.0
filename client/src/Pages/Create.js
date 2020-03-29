@@ -131,7 +131,6 @@ function Create(props) {
   const plusClickCapacity = Capacity.plusClickValue
   const minusClickCapacity = Capacity.minusClickValue
 
-  console.log("Capacity: ", capacity);
 
   const [FeErrors, setFeErrors] = useState([]);
   const [createEvent, { loading, error, data }] = useMutation(NEW_EVENT, {

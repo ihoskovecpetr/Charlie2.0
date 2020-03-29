@@ -152,6 +152,7 @@ function App(props) {
     freezScroll: false,
     getLoggedInUser: () => getLoggedInUser(),
     deleteToken: () => window.localStorage.setItem("token", "_deleted_"),
+    filterOn: true,
     shownEvents: [],
     playEventsCount: null,
     radius: 20,
@@ -165,7 +166,6 @@ function App(props) {
 
 
   useEffect(() => {
-    console.log("App UseEffect []")
     getLoggedInUser();
     if(props.location.pathname.split("/")[1] === "play" && !window.firstPrintPlay){
       window.firstPrintPlay = "play"
@@ -190,6 +190,7 @@ function App(props) {
   // if (data) {
     useEffect(() => {
       if (data && data.getLoggedInUser) {
+
         setUser(prev => {return {
           ...prev,
           _id: data.getLoggedInUser._id,
@@ -197,7 +198,7 @@ function App(props) {
           name: data.getLoggedInUser.name,
           email: data.getLoggedInUser.email,
           picture: data.getLoggedInUser.picture,
-          description: data.getLoggedInUser.description
+          description: data.getLoggedInUser.description,
         }});
       }
     }, [data]);

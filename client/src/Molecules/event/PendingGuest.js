@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -12,7 +12,8 @@ import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 
-import { ALL_EVENTS } from "../../Services/GQL";
+import { ALL_EVENTS, PROFILE_DATA } from "../../Services/GQL";
+import { UserContext } from "../../userContext";
 
 const CONFIRM_BOOKING = gql`
   mutation confirmBooking($event_id: ID!, $user_id: ID!, $decision: Boolean) {
@@ -22,8 +23,11 @@ const CONFIRM_BOOKING = gql`
   }
 `;
 
-export default function PendingGuest(props) {
+export default function PendingGuest({event, booking, ONE_EVENT}) {
   const [confirmBooking, confirmStates] = useMutation(CONFIRM_BOOKING);
+  const { context } = useContext(UserContext);
+
+  console.log(" PEnding GST event, booking: ", event, booking);
 
   const useStyles = makeStyles(theme => ({
     card: {
@@ -54,7 +58,7 @@ export default function PendingGuest(props) {
         avatar={
           <Avatar
             aria-label="recipe"
-            src={props.booking.user.picture}
+            src={booking.user.picture}
             className={classes.avatar}
           >
             R
@@ -65,9 +69,9 @@ export default function PendingGuest(props) {
         //     <MoreVertIcon />
         //   </IconButton>
         // }
-        title={props.booking.user.name}
+        title={booking.user.name}
         //title={props.rating.guest.name}
-        subheader={props.booking.message}
+        subheader={booking.message}
       />
       <CardActions disableSpacing>
         <IconButton
@@ -75,23 +79,29 @@ export default function PendingGuest(props) {
           onClick={() => {
             confirmBooking({
               variables: {
-                user_id: props.booking.user._id,
-                event_id: props.event._id,
+                user_id: booking.user._id,
+                event_id: event._id,
                 decision: true
               },
               refetchQueries: () => [
-                {
-                  query: props.ONE_EVENT,
-                  variables: { id: props.event._id }
-                },
+                // {
+                //   query: ONE_EVENT,
+                //   variables: { id: event._id }
+                // },
                 {
                   query: ALL_EVENTS,
                   variables: {
-                    date: new Date(props.event.dateStart)
+                    date: new Date(event.dateStart)
                       .toISOString()
                       .split("T")[0]
                   }
-                }
+                },
+                {
+                  query: PROFILE_DATA,
+                  variables: { 
+                    host_id: context._id 
+                  }
+                },
               ]
             });
           }}

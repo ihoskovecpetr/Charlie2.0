@@ -71,10 +71,12 @@ export const resolvers = {
   Rating: {
     event: async a => {
       try {
-        console.log("RATING event:: ", a);
-        const event = await Event.findById(a);
-        //return transformEvent(event);
-        return event;
+        console.log("RATING event:: ", a.event, Event);
+        const eventX = await Event.findById(a.event);
+        console.log("event", eventX)
+        console.log("eve async")
+        return transformEvent(eventX);
+        // return event;
       } catch (err) {
         throw err;
       }

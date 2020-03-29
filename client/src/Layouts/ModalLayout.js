@@ -23,7 +23,6 @@ function Layout(props) {
   useEffect(() => {
 
     setWindowHeight(window.innerHeight)
-console.log("XX: ", `${windowHeight}px`)
    if(document.getElementById("menu_wrap")){
      document.getElementById("menu_wrap").style.position = "fixed"
    } 

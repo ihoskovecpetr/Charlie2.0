@@ -28,7 +28,7 @@ import { UserContext } from "../../userContext";
 import SliderCustom from "../../Atoms/SliderCustom";
 import { useBackdrop } from "../../Hooks/useBackdrop";
 
-const SettingsPanel = ({getPlayEventsMutation, loading, filterOn, setFilterOn}) => {
+const SettingsPanel = ({getPlayEventsMutation, loading}) => {
   const classes = useStyles();
   let history = useHistory();
   const { context, setContext } = useContext(UserContext);
@@ -68,19 +68,16 @@ const SettingsPanel = ({getPlayEventsMutation, loading, filterOn, setFilterOn}) 
 
   const handleFilterOn = (e) => {
     e.stopPropagation();
-    setContext(prev => {return {...prev,shownEvents: []}});
-    setFilterOn(prev => !prev);
+    setContext(prev => {return {...prev, filterOn: !context.filterOn ,shownEvents: []}});
   };
 
   const handleChangeRadius = (e, newValue) => {
-    console.log("Handle Change rad", newValue )
     e.preventDefault()
     setContext(prev => {return {...prev,shownEvents: [], playEventsCount: null, radius: newValue}});
     // setPlayFilter(prev => {return {...prev,radius: newValue}});
   };
 
   const handleChangeDays = (e, newValue) => {
-    console.log("Handle Change Days", newValue)
     e.preventDefault()
     setContext(prev => {return {...prev,shownEvents: [], playEventsCount: null, days: newValue}});
     // setPlayFilter(prev => {return {...prev,days: newValue}});
@@ -123,18 +120,18 @@ const SettingsPanel = ({getPlayEventsMutation, loading, filterOn, setFilterOn}) 
                             variant="outlined" 
                             color="secondary" 
                             onClick={() => console.log("Yess")}
-                            className={clsx(classes.anyChip, !filterOn && classes.lightGrey)} />
+                            className={clsx(classes.anyChip, !context.filterOn && classes.lightGrey)} />
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid item xs={5}>
                   <Grid container justify="center">
                     <Grid item xs={12}>
-                        <Chip icon={<DateRangeIcon style={{height: 20, width: 20, color: !filterOn ? '#D1D0D0' : "#59F0EA"}} />} // '#D1D0D0'
+                        <Chip icon={<DateRangeIcon style={{height: 20, width: 20, color: !context.filterOn ? '#D1D0D0' : "#59F0EA"}} />} // '#D1D0D0'
                               label={`+ ${context.days} days`} 
                               variant="outlined" 
                               
-                              className={clsx(classes.anyChip, classes.lightBlue, !filterOn && classes.lightGrey)} />
+                              className={clsx(classes.anyChip, classes.lightBlue, !context.filterOn && classes.lightGrey)} />
                     </Grid>
                   </Grid>
                 </Grid>            
@@ -154,7 +151,7 @@ const SettingsPanel = ({getPlayEventsMutation, loading, filterOn, setFilterOn}) 
                 <Collapse in={checked}>
                   <Grid container alignItems="center" className={classes.collapseGrid}>
                       <Grid item xs={2}>
-                          <Typography id="range-slider" color="secondary" gutterBottom className={clsx(classes.textSize, !filterOn && classes.lightGrey)}>
+                          <Typography id="range-slider" color="secondary" gutterBottom className={clsx(classes.textSize, !context.filterOn && classes.lightGrey)}>
                               0 km
                           </Typography>
                       </Grid>
@@ -167,25 +164,25 @@ const SettingsPanel = ({getPlayEventsMutation, loading, filterOn, setFilterOn}) 
                               step={5}
                               min={5}
                               max={50}
-                              disabled={!filterOn}
+                              disabled={!context.filterOn}
                               onChangeCommitted={(e_, value) => {
                                 handleChangeRadius(e_ , value)
                               } 
                             }
-                            style={{color: filterOn ? '#E8045D' : '#D1D0D0'}}
+                            style={{color: context.filterOn ? '#E8045D' : '#D1D0D0'}}
                               // valueLabelDisplay="auto"
                               // aria-labelledby="range-slider"
                               // getAriaValueText={valuetext}
                           /> 
                       </Grid>
                       <Grid item xs={2}>
-                          <Typography id="range-slider" color="secondary" gutterBottom className={clsx(classes.textSize, !filterOn && classes.lightGrey)}>
+                          <Typography id="range-slider" color="secondary" gutterBottom className={clsx(classes.textSize, !context.filterOn && classes.lightGrey)}>
                               {50} km
                           </Typography>
                       </Grid>
 
                       <Grid item xs={2} className={classes.lightBlue}>
-                          <Typography id="range-slider" gutterBottom className={classes.textSize, !filterOn && classes.lightGrey}>
+                          <Typography id="range-slider" gutterBottom className={classes.textSize, !context.filterOn && classes.lightGrey}>
                               Today
                           </Typography>
                       </Grid>
@@ -198,17 +195,16 @@ const SettingsPanel = ({getPlayEventsMutation, loading, filterOn, setFilterOn}) 
                                   step={1}
                                   min={0}
                                   max={7}
-                                  disabled={!filterOn}
+                                  disabled={!context.filterOn}
                                   onChangeCommitted={(e_, value) => {
-                                    console.log("Commited Days")
                                     handleChangeDays(e_ , value)
                                   } 
                                 }
-                                  style={{color: filterOn ? "#59F0EA" : '#D1D0D0'}}
+                                  style={{color: context.filterOn ? "#59F0EA" : '#D1D0D0'}}
                             /> 
                       </Grid>
                       <Grid item xs={2} className={classes.lightBlue}>
-                          <Typography id="range-slider" gutterBottom className={classes.textSize, !filterOn && classes.lightGrey}>
+                          <Typography id="range-slider" gutterBottom className={classes.textSize, !context.filterOn && classes.lightGrey}>
                             + {context.days} days
                           </Typography>
                       </Grid>
@@ -217,13 +213,13 @@ const SettingsPanel = ({getPlayEventsMutation, loading, filterOn, setFilterOn}) 
                   </Grid>
                 </Collapse>  
                 <Grid item xs={12} className={classes.turnOffItem}>
-                      <FormControlLabel control={<Switch  checked={filterOn} 
+                      <FormControlLabel control={<Switch  checked={context.filterOn} 
                                               onChange={handleFilterOn}
                                               onClick={(e) => {e.stopPropagation()}}
                                               value="checkedA"
                                               inputProps={{ 'aria-label': 'secondary checkbox' }}
                                       />} 
-                            label={`filter ${filterOn ? "ON" : "OFF"}`} />
+                            label={`filter ${context.filterOn ? "ON" : "OFF"}`} />
                       </Grid>   
                 
                 </Grid>

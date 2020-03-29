@@ -28,7 +28,6 @@ export default function Screen1() {
 
 
   const handleValueChange = (e) => {
-    console.log("e: ", e.currentTarget.name, e.currentTarget.value);
     const name = e.currentTarget.name
     const value = e.currentTarget.value
     setFormValue(prev => {

@@ -19,194 +19,16 @@ import { useHistory, NavLink } from "react-router-dom";
 import { UserContext } from "../userContext";
 import { sortByDate } from "../Services/functions";
 import { useXsSize } from "../Hooks/useXsSize";
+import {PROFILE_DATA} from "../Services/GQL";
 
 import Copyright from "../Atoms/copyright";
 import Spinner from "../Atoms/Spinner";
-import EventCard from "../Atoms/EventCard";
 import RatingCard from "../Molecules/rating-card";
 import RatingCardNew from "../Atoms/Profile/RatingCardNew";
 import ProfileTopBox from "../Molecules/profile/ProfileTopBox";
 import NotificationPrinter from "../Molecules/profile/NotificationPrinter";
+import UserEventsProfile from "../Molecules/profile/UserEventsProfile";
 
-// const USER_EVENTS = gql`
-//   query userEvents($user_id: ID!) {
-//     userEvents(user_id: $user_id) {
-//       _id
-//       success
-//       name
-//       dateStart
-//       description
-//       author {
-//         name
-//         picture
-//       }
-//       imagesArr {
-//         caption
-//         src
-//         thumbnail
-//         thumbnailHeight
-//         thumbnailWidth
-//         scaletwidth
-//         marginLeft
-//         vwidth
-//       }
-//     }
-//   }
-// `;
-
-// const USER_BOOKING = gql`
-//   query showUserBookings($user_id: ID!) {
-//     showUserBookings(user_id: $user_id) {
-//       event {
-//         _id
-//         name
-//         description
-//         dateStart
-//         imagesArr {
-//           caption
-//           src
-//           thumbnail
-//           thumbnailHeight
-//           thumbnailWidth
-//           scaletwidth
-//           marginLeft
-//           vwidth
-//         }
-//         author {
-//           _id
-//           name
-//           picture
-//         }
-//       }
-//     }
-//   }
-// `;
-
-const PROFILE_DATA = gql`
-  query showRatings($host_id: ID!) {
-    userEvents(user_id: $host_id) {
-      createdAt
-      updatedAt
-      _id
-      success
-      name
-      dateStart
-      description
-      author {
-        _id
-        name
-        picture
-      }
-      imagesArr {
-        caption
-        src
-        thumbnail
-        thumbnailHeight
-        thumbnailWidth
-        scaletwidth
-        marginLeft
-        vwidth
-      }
-    }
-    showRatings(host_id: $host_id) {
-      createdAt
-      updatedAt
-      _id
-      message
-      ratingValue
-      guest {
-        _id
-        picture
-        name
-      }
-    }
-    showUserBookings(user_id: $host_id) {
-      createdAt
-      updatedAt
-      message
-      response
-      confirmed
-      cancelled
-      decided
-      host {
-        _id
-        name
-      }
-      user {
-        _id
-        name
-        picture
-      }
-      event {
-        _id
-        name
-        description
-        dateStart
-        geometry {
-          coordinates
-        }
-        imagesArr {
-          caption
-          src
-          thumbnail
-          thumbnailHeight
-          thumbnailWidth
-          scaletwidth
-          marginLeft
-          vwidth
-        }
-        author {
-          _id
-          name
-          picture
-        }
-      }
-    }
-
-    showHostBookings(host_id: $host_id) {
-      createdAt
-      updatedAt
-      message
-      response
-      confirmed
-      cancelled
-      decided
-      host {
-        _id
-        name
-      }
-      user {
-        _id
-        name
-        picture
-      }
-      event {
-        _id
-        name
-        description
-        dateStart
-        geometry {
-          coordinates
-        }
-        imagesArr {
-          caption
-          src
-          thumbnail
-          thumbnailHeight
-          thumbnailWidth
-          scaletwidth
-          marginLeft
-          vwidth
-        }
-        author {
-          _id
-          name
-          picture
-        }
-      }
-    }
-  }
-`;
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -280,7 +102,7 @@ function Profile() {
   useEffect(() => {
 
     if (data) {
-      console.log("I do have DATA: ", data);
+
       let {
         userEvents,
         showRatings,
@@ -436,6 +258,7 @@ function Profile() {
                       <NotificationPrinter
                         event={event}
                         PROFILE_DATA={PROFILE_DATA}
+                        refetchVariables={{ host_id: context._id }}
                       />
                     </Grid>
                   ))}
@@ -443,28 +266,9 @@ function Profile() {
               </TabPanel>
               <TabPanel value={value} index={1} dir={theme.direction}>
                 {loading && <Spinner />}
-                <Grid
-                  container
-                  justify="center"
-                  direction="column"
-                  alignItems="center"
-                  alignContent="center"
-                >
-                  {data &&
-                    data.showUserBookings &&
-                    data.showUserBookings.map((event, index) => (
-                      <Grid item key={index}>
-                        <EventCard event={event.event} />
-                      </Grid>
-                    ))}
-                  {data &&
-                    data.userEvents &&
-                    data.userEvents.map((event, index) => (
-                      <Grid item key={index} style={{ width: "100%" }}>
-                        <EventCard event={event} />
-                      </Grid>
-                    ))}
-                </Grid>
+                {data && <UserEventsProfile 
+                              showUserBookings={data.showUserBookings} 
+                              userEvents={data.userEvents} />}
               </TabPanel>
               <TabPanel
                 value={value}

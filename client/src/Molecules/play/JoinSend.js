@@ -48,6 +48,7 @@ export default function JoinSend({event, getPlayEventsMutation}) {
 
     const inputDescription = useRef(null);
 
+    console.log("JoinSend event: ", event)
 
     let pending = false
     let attending = false
@@ -68,7 +69,6 @@ export default function JoinSend({event, getPlayEventsMutation}) {
         }
     })
 
-    console.log("loading, error, data: ", loading, error, data );
 
     function openJoin(){
       if(!attending && !pending){
@@ -83,7 +83,6 @@ export default function JoinSend({event, getPlayEventsMutation}) {
     }
 
     function sendBooking(params) {
-      console.log("Creating booking: ", context._id, context.name, event._id, inputDescription.current.value )
         createReqBooking({
             variables: {
               guest_id: context._id,
@@ -105,7 +104,6 @@ export default function JoinSend({event, getPlayEventsMutation}) {
     if(data && data.requestBookEvent.success && !refetched){
       setRefetched(true)
       setChecked(false)
-      console.log("Refetching EVT")
       setTimeout(() => {getPlayEventsMutation({variables:{
             plusDays: context.days,
             lng: context.geolocationObj ? context.geolocationObj.lng : null,
@@ -117,6 +115,8 @@ export default function JoinSend({event, getPlayEventsMutation}) {
       , 1000)
     }
 
+    if(event.areYouAuthor) return null
+
 
     return (
         <>
@@ -126,7 +126,7 @@ export default function JoinSend({event, getPlayEventsMutation}) {
         icon={icon[0]}
         //variant="outlined" 
         color="secondary" 
-        style={{width: "90%", fontWeight: 500, fontSize: 25, padding: 20, margin: "5%"}} 
+        className={classes.chipOne} 
         onClick={openJoin}
         disabled={checked || attending || pending}
         />
@@ -151,22 +151,19 @@ export default function JoinSend({event, getPlayEventsMutation}) {
                     margin="normal"
                     required
                     fullWidth
-                    // id="decsription"
                     defaultValue="Hi, let me please come and pay you money :)"
                     multiline
                     rows="4"
                     color="primary"
                     inputRef={inputDescription}
-                    //label="Description"
                     name="decsription"
-                    autoComplete="false" //improvisation, should be "off", or random "string"
+                    autoComplete="false"
                     className={classes.textField}
                     />
                     <Chip label={`SEND`} 
-                        //variant="outlined" 
                         color="secondary" 
                         icon={<SendIcon fontSize="large" />}
-                        style={{width: "90%", fontWeight: 500, fontSize: 25, padding: 20, margin: "5%"}} 
+                        className={classes.chipSend}
                         onClick={sendBooking}
                         />
                 </Animated>
@@ -213,6 +210,20 @@ const useStyles = makeStyles(theme => ({
       },
     displayBlock: {
         display: "block",
-      }
+      },
+    chipOne: {
+      width: "90%", 
+      fontWeight: 500, 
+      fontSize: 25, 
+      padding: 20, 
+      margin: "5%"
+      },
+    chipSend: {
+      width: "90%", 
+      fontWeight: 500, 
+      fontSize: 25, 
+      padding: 20, 
+      margin: "5%" 
+    }
   
   }));

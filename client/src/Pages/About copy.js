@@ -68,7 +68,6 @@ const useStyles = makeStyles(theme => ({
 export default function Menu(props) {
   const classes = useStyles();
 
-  //console.log("Menu props: ", props);
 
   useEffect(() => {
     window.scrollTo(0, 0);

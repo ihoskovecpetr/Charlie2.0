@@ -8,13 +8,19 @@ import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import Tooltip from "@material-ui/core/Tooltip";
 
 import { NavLink } from "react-router-dom";
-import { ALL_EVENTS } from "../../Services/GQL";
+import { useMutation } from "@apollo/react-hooks";
+import { ALL_EVENTS, CANCELLING_BOOKING } from "../../Services/GQL";
 
-function ConfirmedGuest({bookings, event, cancelBooking, cancelledState, ONE_EVENT}) {
+
+function ConfirmedGuest({event, bookings, GQL_refetch, refetchVariables}) {
   const classes = useStyles();
+  const [cancellingMutation, cancellingState] = useMutation(CANCELLING_BOOKING);
+
   let countGuests = 0;
   let overFlowGst = false;
   let leftoverGst = [];
+
+  console.log("ConfirmedGuest, bookings: ", bookings,);
 
   return (
     <Grid container justify="flex-start" alignItems="center" direction="row">
@@ -22,7 +28,7 @@ function ConfirmedGuest({bookings, event, cancelBooking, cancelledState, ONE_EVE
         <>
           {bookings && bookings.map((booking, index) => 
             booking.confirmed && !booking.cancelled && <Grid item key={index}>
-                    {cancelledState.loading && (
+                    {cancellingState && cancellingState.loading && (
                       <Chip
                         className={classes.chip}
                         avatar={
@@ -39,7 +45,7 @@ function ConfirmedGuest({bookings, event, cancelBooking, cancelledState, ONE_EVE
                         disabled
                       />
                     )}
-                    {!cancelledState.loading && event && event.areYouAuthor && (
+                    {cancellingState && !cancellingState.loading && (
                       <Chip
                         className={classes.chip}
                         avatar={
@@ -55,15 +61,15 @@ function ConfirmedGuest({bookings, event, cancelBooking, cancelledState, ONE_EVE
                         variant="outlined"
                         onClick={() => console.log("XX")}
                         onDelete={() => {
-                          cancelBooking({
+                          cancellingMutation({
                             variables: {
                               user_id: booking.user._id,
                               event_id: event._id
                             },
                             refetchQueries: () => [
                               {
-                                query: ONE_EVENT,
-                                variables: { id: event._id }
+                                query: GQL_refetch,
+                                variables: { id: event._id, ...refetchVariables }
                               },
                               {
                                 query: ALL_EVENTS,
@@ -78,7 +84,7 @@ function ConfirmedGuest({bookings, event, cancelBooking, cancelledState, ONE_EVE
                         }}
                       />
                     )}
-                    {cancelledState && !cancelledState.loading && event &&
+                    {cancellingState && !cancellingState.loading && event &&
                       !event.areYouAuthor && (
                         <Chip
                           className={classes.chip}

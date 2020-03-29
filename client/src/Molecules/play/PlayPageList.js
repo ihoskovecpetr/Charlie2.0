@@ -13,8 +13,10 @@ import ConfirmedGuest from "../event/ConfirmedGuest";
 import { displayDate } from "../../Services/transform-services";
 
 
-const PlayPageList = ({event, showBookings, ONE_EVENT, cancelBooking, cancelledState, bookingStates}) => {
+const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBooking, cancelledState}) => {
     const classes = useStyles();
+
+    console.log("PlayPageList: bookings ", bookings);
 
     return(
         <Grid
@@ -25,26 +27,23 @@ const PlayPageList = ({event, showBookings, ONE_EVENT, cancelBooking, cancelledS
         className={classes.mainContainer}
         style={{touchAction: "inherit"}}
       >
-      <Grid item xs={12}>
-          <Grid container 
-                justify="center">
-            <Grid item>
-              <Typography variant="h4" className={classes.mainHeader}>
-              {event.name}
-              
-              <p className={classes.thisLineHeader}></p>
-
-              </Typography>
+        {/* <Grid item xs={12}>
+            <Grid container 
+                  justify="center">
+              <Grid item>
+                <Typography variant="h4" className={classes.mainHeader}>
+                {event.name}
+                <p className={classes.thisLineHeader}></p>
+                </Typography>
+              </Grid>
             </Grid>
-          </Grid>
-      </Grid>
+        </Grid> */}
         <Grid item xs={12}>
             <Typography component="p" className={classes.standardDescription}>
               {event.description}
             </Typography>
-  
-        </Grid>
 
+        </Grid>
 
         <Grid item xs={12} className={classes.listRow}>
           <Grid container item xs={12}>
@@ -100,11 +99,12 @@ const PlayPageList = ({event, showBookings, ONE_EVENT, cancelBooking, cancelledS
         </Grid>
         <Grid item xs={8}>
             <ConfirmedGuest
-              bookings={event.bookings}
+              event={event}
+              bookings={bookings}
               cancelBooking={cancelBooking}
               cancelledState={cancelledState}
-              event={event}
-              ONE_EVENT={ONE_EVENT}
+              GQL_refetch={GQL_refetch}
+              refetchVariables={refetchVariables}
             />
 
             {/* {bookingStates && bookingStates.loading && (
@@ -114,57 +114,59 @@ const PlayPageList = ({event, showBookings, ONE_EVENT, cancelBooking, cancelledS
         </Grid>
         </Grid>
 
-        {/* <Grid item xs={12}>
-          {event.areYouAuthor && (
-            <>
-              <Typography
-                component="div"
-                className={classes.standardHeading}
-              >
-                PENDING
-              </Typography>
-              <Grid container>
-                <Box textAlign="left" m={1}>
-                  <Grid container direction="row">
-                    {showBookings && showBookings.map(booking => {
-                      console.log("Pending GSTS: ", !booking.confirmed && !booking.cancelled)
-                      if (!booking.confirmed && !booking.cancelled) {
-                        return (
-                          <Grid item>
-                            <PendingGuest
-                              booking={booking}
-                              event={event}
-                              ONE_EVENT={ONE_EVENT}
-                            />
-                          </Grid>
-                        );
-                      }
-                      return null;
-                    })}
-                  </Grid>
-                  {bookingStates.loading && (
-                    <Spinner height={100} width={100} />
-                  )}
-                </Box>
-              </Grid>
-              <p className={classes.thisLine}></p>
-            </>
-          )}
-        </Grid> */}
         <Grid item xs={12} className={classes.listRow}>
-        <Grid container item xs={12}>
-        <Grid item xs={4}>
-          <Typography component="div" className={classes.standardHeading}>
-            ADDRESS
-          </Typography>
+          <Grid container item xs={12}>
+            <Grid item xs={4}>
+              <Typography component="div" className={classes.standardHeading}>
+                ADDRESS
+              </Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Typography component="p" className={classes.standardContent}>
+                  {event.address}
+                </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={8}>
-            <Typography component="p" className={classes.addressContent}>
-              {event.address ? event.address : "NO Address"}
-            </Typography>
         </Grid>
-        </Grid>
-        </Grid>
+        <Grid item xs={12} className={classes.listRow}>
+                      <Grid container item xs={12}>
+                        <Grid item xs={4}>
+                          <Typography component="div" className={classes.standardHeading}>
+                            PENDING
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={8}>
+                            <Typography component="div" className={classes.standardContent}>
+                                <Grid container>
+                                    <Grid container direction="row">
+                                      {bookings && bookings.map(booking => {
+                                        if (!booking.confirmed && !booking.cancelled) {
+                                          return (
+                                            <Grid item>
+                                              <PendingGuest
+                                                booking={booking}
+                                                event={booking.event}
+                                                // ONE_EVENT={ONE_EVENT}
+                                              />
+                                            </Grid>
+                                          );
+                                        }
+                                        return null;
+                                      })}
+                                    </Grid>
+                                    {/* {bookingStates.loading && (
+                                    <Grid container justify="center" alignItems="center" style={{width: "100%", height: 300}}>
+                                      <Grid item>
+                                        <Spinner height={100} width={100} />
+                                      </Grid>
+                                    </Grid>
+                                    )} */}
+                                </Grid>
+                            </Typography>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+
       </Grid>
     )
 }
@@ -203,7 +205,7 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         fontWeight: 500,
         // color: "lightGrey",
-        textAlign: 'left',
+        textAlign: 'right',
         backgroundColor: "rgba(255,255,255,0.05)",
         padding: 10,
         whiteSpace: 'nowrap',
@@ -216,21 +218,15 @@ const useStyles = makeStyles(theme => ({
         padding: 10,
       },
       standardContent: {
-        fontWeight: 400,
-        textAlign: 'right',
-        color: '#29FFF7',
-        padding: 10
-      },
-      addressContent: {
         width: '100%',
         fontWeight: 400,
-        textAlign: 'right',
+        textAlign: 'left',
         color: '#29FFF7',
         padding: 10,
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-       }
+      },
   }));
 
 export default PlayPageList

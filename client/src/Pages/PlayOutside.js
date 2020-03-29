@@ -92,10 +92,12 @@ function PlayOutside() {
   });
 
   console.log("Play Other:  wndw.firstPrint: ", window.firstPrintPlay);
-  console.log("Data normatXX oneEventData> ", oneEventData.error);
+  console.log("Data normatXX oneEventData> ERR ", oneEventData.error);
+  console.log("Data normatXX oneEventData> DATA ", oneEventData.data);
 
 if (oneEventData.data) {
     var getPlayEvents = oneEventData.data.getOneEvent;
+    var bookings = oneEventData.data.showBookings;
   }
 
   const gointToApp = () => {
@@ -147,7 +149,8 @@ if (oneEventData.data) {
                   <PlayPageGallery event={getPlayEvents} />
                   <PlayPageList
                     event={getPlayEvents}
-                    showBookings={getPlayEvents.bookings} //showBookings
+                    bookings={getPlayEvents.bookings}
+                    // showBookings={getPlayEvents.bookings} //showBookings
                     // ONE_EVENT={PLAY_EVENTS}
                     // cancelBooking={cancelBooking}
                     // cancelledState={cancelledState}

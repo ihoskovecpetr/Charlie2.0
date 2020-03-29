@@ -24,7 +24,6 @@ function MapCreate(props) {
   }
 
   const MapOptions = useMemo(() => {
-    console.log("MAP OPTions RERENDER");
     return {
       center: LngLatCenter,
       zoom: 10,
@@ -37,7 +36,6 @@ function MapCreate(props) {
   }, [LngLatCenter]);
 
   const onMapMount = useCallback(map => {
-    console.log("onMapMount fce RERENDER ");
 
     marker = new window.google.maps.Marker({
       map: map,
@@ -91,7 +89,6 @@ function MapCreate(props) {
         // User entered the name of a Place that was not suggested and
         // pressed the Enter key, or the Place Details request failed.
         //window.alert("No details available for input: '" + place.name + "'");
-        console.log(`No details available for input:  ${place.name}`);
         return;
       }
 

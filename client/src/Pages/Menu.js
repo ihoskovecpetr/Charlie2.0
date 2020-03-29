@@ -8,8 +8,8 @@ import ReactFullpage from "@fullpage/react-fullpage";
 
 import "./Menu.css";
 
-import { useMutation, useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
+// import { useMutation, useQuery } from "@apollo/react-hooks";
+// import gql from "graphql-tag";
 import { NavLink } from "react-router-dom";
 
 import { UserContext } from "../userContext";
@@ -28,51 +28,52 @@ import BlogPost1 from "../Molecules/menu/blog/BlogPost1";
 import BlogPost2 from "../Molecules/menu/blog/BlogPost2";
 import BlogPost3 from "../Molecules/menu/blog/BlogPost3";
 
-const USER_NEW_BOOKINGS = gql`
-  mutation newestUserBookings($user_id: ID!) {
-    newestUserBookings(user_id: $user_id) {
-      event {
-        _id
-        name
-        description
-        dateStart
-        imagesArr {
-          caption
-          src
-          thumbnail
-          thumbnailHeight
-          thumbnailWidth
-          scaletwidth
-          marginLeft
-          vwidth
-        }
-        author {
-          _id
-          name
-          picture
-        }
-      }
-    }
-  }
-`;
+// const USER_NEW_BOOKINGS = gql`
+//   mutation newestUserBookings($user_id: ID!) {
+//     newestUserBookings(user_id: $user_id) {
+//       event {
+//         _id
+//         name
+//         description
+//         dateStart
+//         imagesArr {
+//           caption
+//           src
+//           thumbnail
+//           thumbnailHeight
+//           thumbnailWidth
+//           scaletwidth
+//           marginLeft
+//           vwidth
+//         }
+//         author {
+//           _id
+//           name
+//           picture
+//         }
+//       }
+//     }
+//   }
+// `;
 
 export default function Menu(props) {
   const classes = useStyles();
 
-  const { context } = useContext(UserContext);
+  // const { context } = useContext(UserContext);
   const { xs_size_memo } = useXsSize();
   const [windowHeight, setWindowHeight] = useState(0);
 
-  const [newBookingsArr, { loading, error, data }] = useMutation(
-    USER_NEW_BOOKINGS,
-    {
-      variables: { user_id: context._id }
-    }
-  );
+  // const [newBookingsArr, { loading, error, data }] = useMutation(
+  //   USER_NEW_BOOKINGS,
+  //   {
+  //     variables: { user_id: context._id }
+  //   }
+  // );
 
   useEffect(() => {
+    console.log("Scroll TOP")
     window.scrollTo(0, 0);
-  });
+  }, []);
 
   useEffect(() => {
     console.log(
@@ -85,11 +86,11 @@ export default function Menu(props) {
   }, []);
 
 
-  if (context.success) {
-    {
-      !loading && !data && newBookingsArr();
-    }
-  }
+  // if (context.success) {
+  //   {
+  //     !loading && !data && newBookingsArr();
+  //   }
+  // }
 
   const fullpageOptions = {
     anchors: ["firstPage", "secondPage", "thirdPage"],
@@ -97,99 +98,100 @@ export default function Menu(props) {
     callbacks: ["onLeave"],
     scrollOverflow: true
   };
-if(!xs_size_memo && false){
-    return (
-    <ReactFullpage
-      {...props}
-      slidesNavigation={false}
-      navigation={!xs_size_memo}
-      //navigationTooltips={["firstSlide", "secondSlide"]}
-      onLeave={function(origin, destination, direction) {
-        switch (destination.index) {
-          case 1:
-            document.getElementById("s_2_id").style.display = "block";
-            break;
-          case 2:
-            document.getElementById("s_3_id").style.display = "block";
-            break;
-          case 3:
-            document.getElementById("s_4_id").style.display = "block";
-            break;
-          case 4:
-            if (document.getElementById("s_posts_id")) {
-              document.getElementById("s_posts_id").style.display = "block";
-            } else {
-              document.getElementById("s_post_1_id").style.display = "block";
-            }
-            break;
-          case 5:
-            if (document.getElementById("s_post_2_id")) {
-              document.getElementById("s_post_2_id").style.display = "block";
-            }
-            break;
-          case 6:
-            if (document.getElementById("s_post_3_id")) {
-              document.getElementById("s_post_3_id").style.display = "block";
-            }
-            break;
-        }
-      }}
-      render={({ state, fullpageApi }) => {
-        // if (fullpageApi) {
-        //   // fullpageApi.setAllowScrolling(user.freezScroll);
-        // }
+if( false){ //!xs_size_memo &&
+  //   return (
+  //   <ReactFullpage
+  //     {...props}
+  //     slidesNavigation={false}
+  //     navigation={!xs_size_memo}
+  //     //navigationTooltips={["firstSlide", "secondSlide"]}
+  //     onLeave={function(origin, destination, direction) {
+  //       switch (destination.index) {
+  //         case 1:
+  //           document.getElementById("s_2_id").style.display = "block";
+  //           break;
+  //         case 2:
+  //           document.getElementById("s_3_id").style.display = "block";
+  //           break;
+  //         case 3:
+  //           document.getElementById("s_4_id").style.display = "block";
+  //           break;
+  //         case 4:
+  //           if (document.getElementById("s_posts_id")) {
+  //             document.getElementById("s_posts_id").style.display = "block";
+  //           } else {
+  //             document.getElementById("s_post_1_id").style.display = "block";
+  //           }
+  //           break;
+  //         case 5:
+  //           if (document.getElementById("s_post_2_id")) {
+  //             document.getElementById("s_post_2_id").style.display = "block";
+  //           }
+  //           break;
+  //         case 6:
+  //           if (document.getElementById("s_post_3_id")) {
+  //             document.getElementById("s_post_3_id").style.display = "block";
+  //           }
+  //           break;
+  //       }
+  //     }}
+  //     render={({ state, fullpageApi }) => {
+  //       // if (fullpageApi) {
+  //       //   // fullpageApi.setAllowScrolling(user.freezScroll);
+  //       // }
 
-          return (
-            <div id="fullpage-wrapper" >
-              <Screen1 />
-              <Screen2 />
-              <Screen3 loading={loading} data={data} />
-              <Screen4 props={props} />
+  //         return (
+  //           <div id="fullpage-wrapper" >
+  //             <Screen1 />
+  //             <Screen2 />
+  //             <Screen3 //loading={loading} data={data} 
+  //             />
+  //             <Screen4 props={props} />
 
-              {/* {xs_size_memo && (
-                <>
-                <div
-                  className="section s5"
-                  id="s_post_1_id"
-                  //style={{ display: "none" }}
-                >
-                  <Container maxWidth="md">
-                    <BlogPost1 />
-                  </Container>
-                </div>
-                <div
-                  className="section s6"
-                  id="s_post_2_id"
-                  //style={{ display: "none" }}
-                >
-                  <Container maxWidth="md">
-                    <BlogPost2 />
-                  </Container>
-                </div>
-                <div
-                  className="section s7"
-                  id="s_post_3_id"
-                  //style={{ display: "none" }}
-                  >
-                  <Container maxWidth="md">
-                    <BlogPost3 />
-                  </Container>
-                </div>
-                </>
-              )} */}
+  //             {/* {xs_size_memo && (
+  //               <>
+  //               <div
+  //                 className="section s5"
+  //                 id="s_post_1_id"
+  //                 //style={{ display: "none" }}
+  //               >
+  //                 <Container maxWidth="md">
+  //                   <BlogPost1 />
+  //                 </Container>
+  //               </div>
+  //               <div
+  //                 className="section s6"
+  //                 id="s_post_2_id"
+  //                 //style={{ display: "none" }}
+  //               >
+  //                 <Container maxWidth="md">
+  //                   <BlogPost2 />
+  //                 </Container>
+  //               </div>
+  //               <div
+  //                 className="section s7"
+  //                 id="s_post_3_id"
+  //                 //style={{ display: "none" }}
+  //                 >
+  //                 <Container maxWidth="md">
+  //                   <BlogPost3 />
+  //                 </Container>
+  //               </div>
+  //               </>
+  //             )} */}
 
-              {/* {!xs_size_memo && ( */}
-                <div className="section s5">
-                  <Posts />
-                </div>
-              {/* )} */}
+  //             {/* {!xs_size_memo && ( */}
+  //               <div className="section s5">
+  //                 <Posts />
+  //               </div>
+  //             {/* )} */}
 
-              <Screen6 />
-            </div>
-        );
-      }}
-    />
-  );
+  //             <Screen6 />
+  //           </div>
+  //       );
+  //     }}
+  //   />
+  // );
 } else {
     // document.getElementById("s_2_id").style.display = "block";
     // document.getElementById("s_3_id").style.display = "block";
@@ -199,7 +201,8 @@ if(!xs_size_memo && false){
         {xs_size_memo ? <Screen1Mobile /> : <Screen1 />}
         <ScreenHowItWorks />
         <Screen2 />
-        <Screen3 loading={loading} data={data} />
+        <Screen3 //loading={loading} data={data} 
+        />
         <Screen4 props={props} />
         <BlogPost1 />
         <BlogPost2 />

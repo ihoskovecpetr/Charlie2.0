@@ -71,7 +71,7 @@ export const resolvers = {
         throw err;
       }
     },
-    userEvents: async (_, _args, __) => {
+    userEvents: async (_, _args, context) => {
       try {
         const userEvents = await Event.find({ author: _args.user_id }).sort({
           "dateStart": -1
@@ -81,7 +81,8 @@ export const resolvers = {
           return userEvents.map(event => {
             //let result = await transformEvent(event);
             //console.log("RESOLVR LEVL: ", result);
-            return transformEvent(event);
+            let areYouAuthor = event.author == context.reqO.req.userId;
+            return transformEvent(event, areYouAuthor);
           });
         } else {
           return [{ success: false }];

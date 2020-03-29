@@ -3,6 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
+import { useHistory } from "react-router-dom";
+
 import { displayDate } from "../../Services/transform-services";
 import { useCountDistance } from "../../Hooks/useCountDistance";
 import { UserContext } from "../../userContext";
@@ -12,6 +14,8 @@ import countdown from "countdown";
 export default function TimeLine({ event }) {
   const classes = useStyles();
   const { context, setContext } = useContext(UserContext);
+  let history = useHistory();
+
   const distance = useCountDistance(
     event.geometry.coordinates[1],
     event.geometry.coordinates[0],
@@ -22,7 +26,9 @@ export default function TimeLine({ event }) {
 
   return (
     <Grid container className={classes.mainContainer}>
-      <div className={classes.wrapDiv}>
+      <div className={classes.wrapDiv} onClick={() => {
+        history.push(`/event/${event._id}`)
+      }}>
         <Grid item>
           <Typography component="p" className={classes.mainHead}>
             {event.name}

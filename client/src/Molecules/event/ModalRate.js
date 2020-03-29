@@ -57,7 +57,6 @@ function ModalRate(props) {
   //   setStars(nextValue);
   // };
 
-  console.log("MODAL RATING: props, stars, open ", props, stars, open);
 
   if (rateEventState.data && rateEventState.data.rateEvent.success) {
     setTimeout(() => {
@@ -129,7 +128,6 @@ function ModalRate(props) {
                       } /* is component available for editing, default `true` */
                       onStarClick={(nextValue, prevValue, name) => {
                         setStars(nextValue);
-                        console.log("SATRT SET: ", stars);
                       }}
                     />
                   </Grid>
@@ -158,14 +156,7 @@ function ModalRate(props) {
                   color="primary"
                   onClick={e => {
                     e.preventDefault();
-                    console.log(
-                      "GRAPH send: ",
-                      props.event._id,
-                      props.event.author._id,
-                      props.user._id,
-                      stars,
-                      message
-                    );
+
                     rateEvent({
                       variables: {
                         event_id: props.event._id,
