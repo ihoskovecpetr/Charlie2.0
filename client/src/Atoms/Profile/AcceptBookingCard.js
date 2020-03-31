@@ -10,23 +10,17 @@ import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import TextField from "@material-ui/core/TextField";
 import Badge from '@material-ui/core/Badge';
 
-import clsx from "clsx";
 import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import countdown from "countdown";
-import { withRouter, useHistory, NavLink } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
 import { useXsSize } from "../../Hooks/useXsSize";
 import { UserContext } from "../../userContext";
 
-import { displayDate } from "../../Services/transform-services";
 import ConfirmPNG from "../../Images/confirm_pink.png";
 import ClosePNG from "../../Images/close_black.png";
 import UserAskMessage from "./UserAskMessage";
@@ -89,7 +83,7 @@ export default function AcceptBookingCard({ event, PROFILE_DATA }) {
       ]
     });
   };
-
+  
   let color = "transparent"
   if(expanded){
     if(md_size_memo){
@@ -190,7 +184,7 @@ if(event.decided){
           </Grid>
         )}
       </Grid>
-      <Collapse in={expanded} timeout="auto" collapsedHeight="50px" unmountOnExit>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Grid
           container
           direction="column-reverse"
@@ -198,12 +192,12 @@ if(event.decided){
         >
           <Grid item sm={12} xs={12} className={classes.leftMiddleItem}>
             <UserAskMessage user={event.user} message={event.message} />
-            {event.response && (
-              <UserAskMessage
-                reverse={true}
-                user={event.event.author}
-                message={event.response}
-              />
+            {event.decided && (
+                <UserAskMessage
+                  reverse={true}
+                  user={event.event.author}
+                  message={event.response}
+                />
             )}
           </Grid>
           <Grid item sm={12} xs={12}>

@@ -8,12 +8,14 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import CloseIcon from "@material-ui/icons/Close";
 
 import { withRouter, useHistory } from "react-router-dom";
+import {useSpring, animated} from 'react-spring'
 
 
 function Layout(props) {
 
   const classes = useStyles();
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  const swingIn = useSpring({transform: "scale(1)", opacity: 1, from: {opacity: 0, transform: "scale(0.8)"}})
 
   useEffect(() => {
 
@@ -45,9 +47,9 @@ function Layout(props) {
   return (
       <div
         className={classes.modalBackdrop}
-        style={{ height: windowHeight }}
+        style={{ height: windowHeight}}
       >
-        <div className={classes.modalWrap}>
+        <animated.div className={classes.modalWrap} style={swingIn}>
           <CssBaseline />
           <Grid
             container
@@ -79,7 +81,7 @@ function Layout(props) {
             </Grid>
           </Grid>
           <Container maxWidth="xs">{props.children}</Container>
-        </div>
+        </animated.div>
       </div>
   );
 }
@@ -98,7 +100,7 @@ const useStyles = makeStyles(theme => ({
   },
   gridClose: {
     position: "absolute",
-    top: "10vh",
+    top: "0vh",
     height: 0,
     color: "white",
     margin: "0 !important",

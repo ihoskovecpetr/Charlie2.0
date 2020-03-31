@@ -17,6 +17,7 @@ import Rating from "@material-ui/lab/Rating";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { NavLink } from "react-router-dom";
+import {useSpring, animated} from 'react-spring'
 
 import Spinner from "../../Atoms/Spinner";
 
@@ -40,25 +41,14 @@ export default function UserAskMessage({ user, message, reverse }) {
   const { loading, error, data } = useQuery(HOST_RATINGS, {
     variables: { host_id: user._id }
   });
+  const swingIn = useSpring({transform: "translateX(0px)", opacity: 1, from: {opacity: 0, transform: "translateX(-100px)"}})
 
-  const SubHeader = () => {
-    if (loading) {
-      return <Spinner height={100} width={100} />;
-    }
-    if (data) {
-      let celkem;
-      let arrValues = data.showRatings.map(x => x.ratingValue);
-      const arrAvg = arrValues.reduce((a, b) => a + b, 0) / arrValues.length;
-      return (
-        <>
-          <Rating name="simple-controlled" readOnly value={arrAvg} />
-        </>
-      );
-    }
-  };
 
   return (
-    <Grid container direction={reverse ? "row-reverse" : "row"} className={classes.containerMain}>
+    <animated.div style={swingIn}>
+    <Grid container 
+          direction={reverse ? "row-reverse" : "row"} 
+          className={classes.containerMain}>
       <Grid item xs={4}>
         <Grid container>
           <Grid item xs={12}>
@@ -98,6 +88,7 @@ export default function UserAskMessage({ user, message, reverse }) {
         </Grid>
       </Grid>
     </Grid>
+    </animated.div>
   );
 }
 

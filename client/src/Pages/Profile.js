@@ -233,43 +233,49 @@ function Profile() {
               onChangeIndex={handleChangeIndex}
               style={{ width: "100%", padding: 0 }}
             >
+              {/* TAB PANEL 1 */}
               <TabPanel
                 value={value}
                 index={0}
                 dir={theme.direction}
                 style={{ padding: 0 }}
               >
-                {loading && (
-                  <Grid container justify="center">
-                    <Grid item>
-                      <Spinner height={100} width={100} />
-                    </Grid>
-                  </Grid>
-                )}
-                <Grid
-                  container
-                  justify="center"
-                  alignItems="center"
-                  alignContent="center"
-                  style={{ width: "100%", padding: 0 }}
-                >
-                  {feedArray.map((event, index) => (
-                    <Grid item xs={12} key={index}>
-                      <NotificationPrinter
-                        event={event}
-                        PROFILE_DATA={PROFILE_DATA}
-                        refetchVariables={{ host_id: context._id }}
-                      />
-                    </Grid>
+                    {loading && (
+                      <Grid container justify="center">
+                        <Grid item>
+                          <Spinner height={100} width={100} />
+                        </Grid>
+                      </Grid>
+                    )}
+                  {feedArray && feedArray.map((event, index) => (
+                    <Grid
+                      container
+                      justify="center"
+                      alignItems="center"
+                      alignContent="center"
+                      style={{ width: "100%", padding: 0 }}>
+                          <Grid item xs={12} key={index}>
+                            <NotificationPrinter
+                              event={event}
+                              PROFILE_DATA={PROFILE_DATA}
+                              refetchVariables={{ host_id: context._id }}
+                            />
+                          </Grid>
+                      </Grid>
                   ))}
-                </Grid>
               </TabPanel>
-              <TabPanel value={value} index={1} dir={theme.direction}>
-                {loading && <Spinner />}
-                {data && <UserEventsProfile 
-                              showUserBookings={data.showUserBookings} 
-                              userEvents={data.userEvents} />}
+              {/* TAB PANEL 2 */}
+              <TabPanel 
+                  value={value} 
+                  index={1} 
+                  dir={theme.direction}
+                  className={classes.tabPanel}>
+                    {loading && <Spinner />}
+                    {data && <UserEventsProfile 
+                                  showUserBookings={data.showUserBookings} 
+                                  userEvents={data.userEvents} />}
               </TabPanel>
+              {/* TAB PANEL 3 */}
               <TabPanel
                 value={value}
                 index={2}
@@ -315,6 +321,9 @@ const useStyles = makeStyles(theme => ({
     color: "white !important",
     backgroundColor: "transparent",
     boxShadow: "none"
+  },
+  tabPanel:{
+    minHeight: "100vh"
   },
   colorPrimary: {
     color: "white !important",

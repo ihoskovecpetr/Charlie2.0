@@ -58,7 +58,7 @@ export default function UserEventsProfile({ showUserBookings, userEvents }) {
     container
     justify="center"
     direction="column"
-    alignItems="center"
+    alignItems="flex-start"
     alignContent="center"
     className={classes.mainContainer}
   >

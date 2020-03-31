@@ -26,7 +26,7 @@ const EVENT_RATINGS = gql`
   }
 `;
 
-const PlayPageMap = ({event}) => {
+const PlayPageMap = ({event, paddingSides}) => {
     const classes = useStyles();
     const ratings = useQuery(EVENT_RATINGS, {
       variables: { event_id: event._id }
@@ -36,6 +36,7 @@ const PlayPageMap = ({event}) => {
 
     return(
         <Grid container 
+            style={{padding: paddingSides ? paddingSides : '20px'}}
               className={classes.mapContainer}>
         <PlayMap event={event} />
         <Grid
@@ -83,8 +84,8 @@ const PlayPageMap = ({event}) => {
 const useStyles = makeStyles(theme => ({
   mapContainer: {
     width: '100%',
-    paddingLeft: '20px',
-    paddingRight: '20px',
+    paddingTop: '10px',
+    paddingBottom: '10px',
   },
   ratingAuthorContainer: {
       padding: '0px',

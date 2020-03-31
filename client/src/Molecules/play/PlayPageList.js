@@ -13,7 +13,7 @@ import ConfirmedGuest from "../event/ConfirmedGuest";
 import { displayDate } from "../../Services/transform-services";
 
 
-const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBooking, cancelledState}) => {
+const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBooking, cancelledState, paddingSides}) => {
     const classes = useStyles();
 
     console.log("PlayPageList: bookings ", bookings);
@@ -25,7 +25,7 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
         alignItems="flex-start"
         alignContent="flex-start"
         className={classes.mainContainer}
-        style={{touchAction: "inherit"}}
+        style={{touchAction: "inherit", padding: paddingSides ? paddingSides : '20px'}}
       >
         {/* <Grid item xs={12}>
             <Grid container 
@@ -174,7 +174,6 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
 const useStyles = makeStyles(theme => ({
    
     mainContainer:{
-        padding: '20px',
         paddingTop: '5px',
         paddingBottom: '0px',
         width: '100%',

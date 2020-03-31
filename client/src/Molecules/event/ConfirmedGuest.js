@@ -23,7 +23,7 @@ function ConfirmedGuest({event, bookings, GQL_refetch, refetchVariables}) {
   console.log("ConfirmedGuest, bookings: ", bookings,);
 
   return (
-    <Grid container justify="flex-start" alignItems="center" direction="row">
+    <Grid container justify="flex-start" alignItems="center" direction="row" className={classes.mainContainer}>
       {event && event.areYouAuthor ? ( //
         <>
           {bookings && bookings.map((booking, index) => 
@@ -144,6 +144,9 @@ function ConfirmedGuest({event, bookings, GQL_refetch, refetchVariables}) {
 }
 
 const useStyles = makeStyles(theme => ({
+  mainContainer: {
+    paddingLeft: 10
+  },
   chip: {},
   noBorder: {
     border: "0px solid black"

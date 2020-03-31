@@ -72,7 +72,7 @@ export default function AcceptBookingCard({ rating }) {
 let badgeContent 
 
   return (
-    <Grid container justify="center" className={classes.singleFeed}>
+    <Grid container justify="center" alignItems="flex-start" className={classes.naimContainer}>
     <Grid
       item
       className={classes.mainItem}
@@ -112,6 +112,12 @@ let badgeContent
             className={classes.mainHeader}
           >
             <b>{rating.guest.name}</b> rated you <b>{rating.ratingValue}*</b> for event <b>{rating.event.name}</b>
+          </Typography>
+          <Typography
+            variant="body2"
+            align="left"
+          >
+            {!expanded ? <Rating name="simple-controlled" readOnly value={rating.ratingValue}  className={classes.ratingSmall}/> : null}
           </Typography>
           <Typography
             variant="body2"
@@ -185,9 +191,10 @@ let badgeContent
 }
 
 const useStyles = makeStyles(theme => ({
-  singleFeed: {
+  naimContainer: {
     color: "black",
     width: "100%", 
+    minHeight: "100vh"
   },
   mainItem: {
     // borderRadius: 15,
@@ -203,6 +210,11 @@ const useStyles = makeStyles(theme => ({
   middleBody: {
     paddingBottom: 10,
     width: "100%"
+  },
+  ratingSmall:{
+    marginLeft: 20,
+    marginTop: 10,
+    fontSize: 14,
   },
   starsBody: {
     paddingTop: 10,
@@ -253,14 +265,5 @@ const useStyles = makeStyles(theme => ({
     height: 60,
     width: 60
   },
-  btnAvatar: {
-    height: 20,
-    width: 20
-  },
-  thisLine: {
-    height: "1px",
-    width: "100%",
-    marginTop: "2px",
-    backgroundColor: "#707070"
-  }
+
 }));

@@ -1,12 +1,16 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useRef } from "react";
 import Grid from "@material-ui/core/Grid";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import CreateIcon from "@material-ui/icons/Create";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Rating from "@material-ui/lab/Rating";
+import Collapse from "@material-ui/core/Collapse";
+import TextField from "@material-ui/core/TextField";
+
 import { makeStyles } from "@material-ui/core/styles";
 
 import { NavLink, useHistory } from "react-router-dom";
@@ -19,6 +23,12 @@ export default function ProfileTopBox({ error }) {
   const history = useHistory();
   const { md_size_memo } = useXsSize();
   const { context } = useContext(UserContext);
+  const [expanded, setExpanded] = useState(false)
+
+  const inputDescription = useRef(null);
+  const inputEmail = useRef(null);
+  const inputName = useRef(null);
+
 
   return (
     <>
@@ -64,7 +74,7 @@ export default function ProfileTopBox({ error }) {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={4} onClick={() => {setExpanded(!expanded)}}>
               <Avatar className={classes.pen}>
                 <CreateIcon />
               </Avatar>
@@ -92,10 +102,53 @@ export default function ProfileTopBox({ error }) {
               </Typography>
             </Grid>
             <Grid item xs={10}>
-              <Typography variant="body1">{context.description}</Typography>
+              <Typography variant="body1" className={classes.oneLineDescription}>{context.description}</Typography>
               {error && <h1>ERROR</h1>}
             </Grid>
           </Grid>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <Grid item className={classes.descWrap}>
+        <Typography variant="body1" className={classes.standardHeading}>NAME</Typography>
+              <TextField
+                      id="outlined-basic"
+                      label="Email"
+                      variant="filled"
+                      defaultValue={context.name}
+                      inputRef={inputName}
+                      className={classes.textFieldDesc}
+                      multiline
+                      rows="2"
+                    />
+        <Typography variant="body1" className={classes.standardHeading}>EMAIL</Typography>
+              <TextField
+                      id="outlined-basic"
+                      label="Email"
+                      variant="filled"
+                      defaultValue={context.email}
+                      inputRef={inputEmail}
+                      className={classes.textFieldDesc}
+                      multiline
+                      rows="2"
+                    />
+        <Typography variant="body1" className={classes.standardHeading}>DESCRIPTION</Typography>
+              <TextField
+                      id="outlined-basic"
+                      label="Description"
+                      variant="filled"
+                      defaultValue={context.description}
+                      inputRef={inputDescription}
+                      className={classes.textFieldDesc}
+                      multiline
+                      rows="4"
+                    />
+                                <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+            >SAVE</Button>
+            </Grid>
+        </ Collapse>
         </Grid>
       </Grid>
     </>
@@ -118,9 +171,32 @@ const useStyles = makeStyles(theme => ({
     height: "100%",
     paddingBottom: 20
   },
-  buttonNavi: {
-    marginBottom: 10,
+  oneLineDescription: {
+    width: "100%",
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     backgroundColor: "rgba(255,255,255,0.2)"
+  },
+  descWrap: {
+    width: "100%",
+    padding: 5,
+  },
+  textFieldDesc: {
+    width: "100%",
+    borderRadius: 5,
+    backgroundColor: "rgba(255,255,255,0.2)"
+  },
+  standardHeading: {
+    width: '100%',
+    fontWeight: 500,
+    // color: "lightGrey",
+    textAlign: 'left',
+    backgroundColor: "rgba(255,255,255,0.05)",
+    padding: 10,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   avatar: {
     height: 80,

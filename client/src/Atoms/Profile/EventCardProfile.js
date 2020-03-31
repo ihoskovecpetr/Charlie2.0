@@ -179,6 +179,7 @@ if(event.decided){
             />
           <PlayPageMap
               event={event}
+              paddingSides={"0px"}
               // showBookings={getPlayEvents.bookings} //showBookings
             /> 
 

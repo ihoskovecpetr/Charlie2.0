@@ -16,7 +16,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 
 import { UserContext } from "../userContext";
-import { useWindowSize } from "../Hooks/useWindowSize";
+// import { useWindowSize } from "../Hooks/useWindowSize";
 
 import mapSetup from "../Services/map-settings";
 import { ALL_EVENTS } from "../Services/GQL";
@@ -37,7 +37,8 @@ let LngLatCenter = { lat: 50.068645, lng: 14.457364 }; //Default position
 function MapPage(props) {
   const classes = useStyles();
   let history = useHistory();
-  const windowSize = useWindowSize()
+  // const windowSize = useWindowSize()
+  const [windowHeight, setWindowHeight] = useState(0);
   const { context, setContext } = useContext(UserContext);
   const { loading, error, data, fetchMore } = useQuery(ALL_EVENTS, {
     variables: { date: props.workingPosition.date, 
@@ -52,6 +53,10 @@ function MapPage(props) {
       window.AppHistory = history;
     }
   }, []);
+
+  useEffect(() => {
+    setWindowHeight(window.innerHeight)
+}, []);
   // console.log("dat", data);
   // console.log("load", loading);
   // console.log("err", error);
@@ -378,7 +383,7 @@ function MapPage(props) {
     () => (
       <div style={{ 
             width: "100%",
-            height: `${1*windowSize.height}px`,
+            height: `${1*windowHeight}px`,
             top: 0,
             position: "absolute",
             background: "black"
@@ -390,7 +395,7 @@ function MapPage(props) {
         styling={{
           width: "100%", 
           position: 'absolute', 
-          height: `${1*windowSize.height}px`,
+          height: `${1*windowHeight}px`,
           top: 0,
           bottom: 0}}
       />

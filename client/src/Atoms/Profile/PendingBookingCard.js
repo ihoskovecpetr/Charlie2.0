@@ -159,7 +159,7 @@ if(event.decided){
           </Grid>
         )}
       </Grid>
-      <Collapse in={expanded} timeout="auto" collapsedHeight="50px" unmountOnExit>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Grid
           container
           direction="column-reverse"
