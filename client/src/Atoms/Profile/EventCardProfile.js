@@ -96,7 +96,7 @@ if(event.decided){
         color: md_size_memo ? "white" : "black",
         width: xs_size_memo ? "100%" : "85%",
         backgroundColor: expanded ? bgColor : "transparent",
-        borderBottom: xs_size_memo ? "1px solid white" : "3px solid white"
+        borderBottom: xs_size_memo ? "1px solid white" : "2px solid lightGrey"
       }}
     >
       <Grid

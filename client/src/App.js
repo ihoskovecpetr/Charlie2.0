@@ -24,6 +24,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
+import { useXsSize } from "./Hooks/useXsSize";
 
 import UpperStripe from "./Atoms/UpperStripe";
 import DrawerContent from "./Atoms/DrawerContent";
@@ -69,12 +70,13 @@ const LOGIN = gql`
 function App(props) {
   //  const windowSize = useWindowSize()
   let history = useHistory();
+  const { md_size_memo } = useXsSize();
 
   const theme = createMuiTheme({
     overrides: {
       MuiTab: {
         root: {
-          color: 'grey !important',
+          color: md_size_memo ? 'white !important' : 'black !important',
           fontWeight: 600
         },
       },

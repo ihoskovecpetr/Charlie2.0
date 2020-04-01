@@ -77,6 +77,7 @@ export default function PendingGuest({event, booking, ONE_EVENT}) {
         <IconButton
           aria-label="add to favorites"
           onClick={() => {
+            console.log("Confirm Book: evt ", event)
             confirmBooking({
               variables: {
                 user_id: booking.user._id,

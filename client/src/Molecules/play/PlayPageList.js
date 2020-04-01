@@ -16,7 +16,7 @@ import { displayDate } from "../../Services/transform-services";
 const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBooking, cancelledState, paddingSides}) => {
     const classes = useStyles();
 
-    console.log("PlayPageList: bookings ", bookings);
+    console.log("PlayPageList evt: ", event);
 
     return(
         <Grid
@@ -128,6 +128,7 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
             </Grid>
           </Grid>
         </Grid>
+        {event.areYouAuthor &&
         <Grid item xs={12} className={classes.listRow}>
                       <Grid container item xs={12}>
                         <Grid item xs={4}>
@@ -145,8 +146,7 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
                                             <Grid item>
                                               <PendingGuest
                                                 booking={booking}
-                                                event={booking.event}
-                                                // ONE_EVENT={ONE_EVENT}
+                                                event={event}
                                               />
                                             </Grid>
                                           );
@@ -166,7 +166,7 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
                         </Grid>
                       </Grid>
                     </Grid>
-
+        }
       </Grid>
     )
 }

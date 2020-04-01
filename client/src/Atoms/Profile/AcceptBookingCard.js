@@ -20,6 +20,7 @@ import gql from "graphql-tag";
 
 import { useXsSize } from "../../Hooks/useXsSize";
 import { UserContext } from "../../userContext";
+import {PROFILE_DATA} from "../../Services/GQL";
 
 import ConfirmPNG from "../../Images/confirm_pink.png";
 import ClosePNG from "../../Images/close_black.png";
@@ -44,7 +45,7 @@ const CONFIRM_BOOKING = gql`
   }
 `;
 
-export default function AcceptBookingCard({ event, PROFILE_DATA }) {
+export default function AcceptBookingCard({ event }) {
   const classes = useStyles();
   const { xs_size_memo, md_size_memo } = useXsSize();
   const [expanded, setExpanded] = useState(false);
@@ -113,7 +114,7 @@ if(event.decided){
         color: md_size_memo ? "white" : "black",
         width: xs_size_memo ? "100%" : "85%",
         backgroundColor: expanded ? color : "transparent",
-        borderBottom: xs_size_memo ? "1px solid white" : "3px solid white"
+        borderBottom: xs_size_memo ? "1px solid white" : "2px solid lightGrey"
       }}
     >
       <Grid

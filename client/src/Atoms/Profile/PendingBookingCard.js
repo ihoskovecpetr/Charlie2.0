@@ -44,11 +44,10 @@ const CONFIRM_BOOKING = gql`
 `;
 
 
-export default function PendingBokingCard({ event, PROFILE_DATA }) {
+export default function PendingBokingCard({ event }) {
   const classes = useStyles();
   const { xs_size_memo, md_size_memo } = useXsSize();
   const [expanded, setExpanded] = useState(false);
-  const { context } = useContext(UserContext);
   const [confirmBooking, confirmStates] = useMutation(CONFIRM_BOOKING);
 
   const inputDescription = useRef(null);
@@ -87,7 +86,7 @@ if(event.decided){
         color: md_size_memo ? "white" : "black",
         width: xs_size_memo ? "100%" : "85%",
         backgroundColor: expanded ? color : "transparent",
-        borderBottom: xs_size_memo ? "1px solid white" : "3px solid white"
+        borderBottom: xs_size_memo ? "1px solid white" : "2px solid lightGrey"
       }}
     >
       <Grid

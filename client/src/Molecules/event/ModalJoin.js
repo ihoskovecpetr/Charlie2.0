@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useContext} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
@@ -10,6 +10,9 @@ import Button from "@material-ui/core/Button";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { withRouter } from "react-router-dom";
+
+import {GET_ONE_EVENT} from "../../Services/GQL_GET_ONE_EVENT";
+import { UserContext } from "../../userContext";
 
 import Spinner from "../../Atoms/Spinner";
 
@@ -33,11 +36,14 @@ const BOOKING_REQ = gql`
   }
 `;
 
-function ModalJoin(props) {
+function ModalJoin({event, match}) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [message, setMessage] = React.useState("Hi, please let me in");
+  const { context } = useContext(UserContext);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("Hi, please let me in");
   const [createReqBooking, bookingReqStates] = useMutation(BOOKING_REQ);
+
+  console.log("ModalJoin: event: ", event)
 
   const handleOpen = () => {
     setOpen(true);
@@ -46,6 +52,23 @@ function ModalJoin(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleBooking = () => {
+    createReqBooking({
+      variables: {
+        guest_id: context._id,
+        guest_name: context.name,
+        event_id: event._id,
+        message: message
+      },
+      refetchQueries: () => [
+        {
+          query: GET_ONE_EVENT,
+          variables: { id: match.params.id }
+        }
+      ]
+    });
+  }
 
   if (bookingReqStates.data && bookingReqStates.data.requestBookEvent.success) {
     setTimeout(() => {
@@ -142,23 +165,7 @@ function ModalJoin(props) {
                   <Button
                     variant="contained"
                     color="secondary"
-                    onClick={() => {
-                      //props.sendBookingRequest(message);
-                      createReqBooking({
-                        variables: {
-                          guest_id: props.user._id,
-                          guest_name: props.user.name,
-                          event_id: props.event._id,
-                          message: message
-                        },
-                        refetchQueries: () => [
-                          {
-                            query: props.ONE_EVENT,
-                            variables: { id: props.match.params.id }
-                          }
-                        ]
-                      });
-                    }}
+                    onClick={handleBooking}
                   >
                     SEND
                   </Button>

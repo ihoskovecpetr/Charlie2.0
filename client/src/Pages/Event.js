@@ -21,61 +21,14 @@ import PlayPageList from "../Molecules/play/PlayPageList";
 import PlayPageGallery from "../Molecules/play/PlayPageGallery";
 import PlayPageMap from "../Molecules/play/PlayPageMap";
 
+import {GET_ONE_EVENT} from "../Services/GQL_GET_ONE_EVENT";
+
 import ModalLayout from "../Layouts/ModalLayout";
 import EventButtons from "../Molecules/event/EventButtons";
 import RatingCard from "../Molecules/rating-card";
 import Spinner from "../Atoms/Spinner";
 import PendingGuest from "../Molecules/event/PendingGuest";
 
-const ONE_EVENT = gql`
-  query getOneEvent($id: ID!) {
-    getOneEvent(id: $id) {
-      _id
-      success
-      message
-      name
-      author {
-        _id
-        name
-        picture
-        description
-      }
-      dateStart
-      geometry {
-        coordinates
-      }
-      address
-      capacityMax
-      price
-      description
-      BYO
-      freeSnack
-      imagesArr {
-        caption
-        src
-        thumbnail
-        thumbnailHeight
-        thumbnailWidth
-        scaletwidth
-        marginLeft
-        vwidth
-      }
-      confirmed
-      hide
-      areYouAuthor
-      bookings{
-        _id
-        confirmed
-        cancelled
-        user{
-          _id
-          name
-          picture
-        }
-      }
-    }
-  }
-`;
 
 const EVENT_RATINGS = gql`
   query showRatings($event_id: ID!) {
@@ -122,13 +75,12 @@ function Event(props) {
   let history = useHistory();
 
   const [windowHeight, setWindowHeight] = useState(0);
-  const { context } = useContext(UserContext);
 
   const [createBooking, bookingStates] = useMutation(BOOKING);
   //const [createReqBooking, bookingReqStates] = useMutation(BOOKING_REQ);
   const [cancelBooking, cancelledState] = useMutation(CANCELLING);
   const [deleteOneEvent, deleteState] = useMutation(DELETE);
-  const { loading, error, data, refetch } = useQuery(ONE_EVENT, {
+  const { loading, error, data, refetch } = useQuery(GET_ONE_EVENT, {
     variables: { id: props.match.params.id }
     //skip: !id,
     //pollInterval: 500
@@ -243,62 +195,14 @@ function Event(props) {
               <PlayPageList
                     event={dataDB.getOneEvent}
                     bookings={dataDB.getOneEvent.bookings}
-                    GQL_refetch={ONE_EVENT}
+                    GQL_refetch={GET_ONE_EVENT}
                     refetchVariables={{ id: props.match.params.id }}
                   />
-
-              <Grid container className={classes.containerPending}>
-                {dataDB.getOneEvent.areYouAuthor && (
-                  <>
-                    <Grid item xs={12} className={classes.listRow}>
-                      <Grid container item xs={12}>
-                        <Grid item xs={4}>
-                          <Typography component="div" className={classes.standardHeading}>
-                            PENDING
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={8}>
-                            <Typography component="div" className={classes.standardContent}>
-                                <Grid container>
-                                  <Box textAlign="left" m={1}>
-                                    <Grid container direction="row">
-                                      {dataDB.getOneEvent.bookings.map(booking => {
-                                        if (!booking.confirmed && !booking.cancelled) {
-                                          return (
-                                            <Grid item>
-                                              <PendingGuest
-                                                booking={booking}
-                                                event={dataDB.getOneEvent}
-                                                ONE_EVENT={ONE_EVENT}
-                                              />
-                                            </Grid>
-                                          );
-                                        }
-                                        return null;
-                                      })}
-                                    </Grid>
-                                    {bookingStates.loading && (
-                                    <Grid container justify="center" alignItems="center" style={{width: "100%", height: 300}}>
-                                      <Grid item>
-                                        <Spinner height={100} width={100} />
-                                      </Grid>
-                                    </Grid>
-                                    )}
-                                  </Box>
-                                </Grid>
-                            </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </>
-                )}
-              </Grid>
 
               <PlayPageMap
                     event={dataDB.getOneEvent}
                     showBookings={dataDB.getOneEvent.bookings} //showBookings
                   /> 
-
 
               <Grid
                 container
@@ -315,10 +219,19 @@ function Event(props) {
                     </Grid>
                   ))}
               </Grid>
+              <EventButtons
+            event={dataDB && dataDB.getOneEvent}
+            bookings={dataDB && dataDB.getOneEvent.bookings}
+            createBooking={createBooking}
+            cancelBooking={cancelBooking}
+            deleteOneEvent={deleteOneEvent}
+            EVENT_RATINGS={EVENT_RATINGS}
+            className={classes.eventButtons}
+          />
             </Grid>
           </PaperEvent>
         </div>
-        <Grid
+        {/* <Grid
           container
           direction="row"
           justify="center"
@@ -328,18 +241,17 @@ function Event(props) {
         >
           <EventButtons
             event={dataDB && dataDB.getOneEvent}
-            bookings={dataDB && dataDB.showBookings}
-            user={context}
+            bookings={dataDB && dataDB.getOneEvent.bookings}
             createBooking={createBooking}
             cancelBooking={cancelBooking}
             deleteOneEvent={deleteOneEvent}
             eventId={props.match.params.id}
-            ONE_EVENT={ONE_EVENT}
+            ONE_EVENT={GET_ONE_EVENT}
             EVENT_RATINGS={EVENT_RATINGS}
             className={classes.eventButtons}
           />
 
-        </Grid>
+        </Grid> */}
       </ModalLayout>
     );
   }

@@ -81,7 +81,7 @@ let badgeContent
         color: md_size_memo ? "white" : "black",
         width: xs_size_memo ? "100%" : "85%",
         backgroundColor: expanded ? color : "transparent",
-        borderBottom: xs_size_memo ? "1px solid white" : "3px solid white"
+        borderBottom: xs_size_memo ? "1px solid white" : "2px solid lightGrey"
       }}
     >
       <Grid
@@ -111,20 +111,21 @@ let badgeContent
             align="left"
             className={classes.mainHeader}
           >
-            <b>{rating.guest.name}</b> rated you <b>{rating.ratingValue}*</b> for event <b>{rating.event.name}</b>
+            <b>{rating.guest.name}</b> rated you. Event <b>{rating.event.name}</b>
           </Typography>
           <Typography
             variant="body2"
             align="left"
           >
-            {!expanded ? <Rating name="simple-controlled" readOnly value={rating.ratingValue}  className={classes.ratingSmall}/> : null}
+            
           </Typography>
           <Typography
             variant="body2"
             align="left"
             className={classes.countdown}
           >
-            {countdown(
+           {!expanded ? <Rating name="simple-controlled" readOnly value={rating.ratingValue}  className={classes.ratingSmall}/> : null}
+          {countdown(
               new Date(rating.createdAt),
               new Date(),
               "X",
@@ -212,7 +213,7 @@ const useStyles = makeStyles(theme => ({
     width: "100%"
   },
   ratingSmall:{
-    marginLeft: 20,
+    marginRight: 20,
     marginTop: 10,
     fontSize: 14,
   },

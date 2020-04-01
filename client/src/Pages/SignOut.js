@@ -74,7 +74,7 @@ function SignIn(props) {
           Sing Out
         </Button>
       </Paper>
-      <Box mt={8}>
+      <Box mt={8} className={classes.copyRight}>
         <Copyright />
       </Box>
     </ModalLayout>
@@ -101,7 +101,10 @@ const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
     width: "50%"
-  }
+  },
+  copyRight:{
+    color: "white"
+  },
 }));
 
 export default SignIn;

@@ -2,6 +2,7 @@ import React, { useState, useContext, useRef } from "react";
 import Grid from "@material-ui/core/Grid";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import CreateIcon from "@material-ui/icons/Create";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -50,22 +51,8 @@ export default function ProfileTopBox({ error }) {
           style={{ paddingTop: md_size_memo ? 80 : 40 }}
           className={classes.profileTopBox}
         >
-          <Grid container direction="row">
-            <Grid item xs={4}>
-              <Grid container justify="flex-end">
-                <Grid item>
-                  <Avatar
-                    className={classes.pen}
-                    onClick={() => {
-                      history.push(`/signout`);
-                    }}
-                  >
-                    <ExitToAppIcon />
-                  </Avatar>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={4}>
+          <Grid container direction="row" justify="center">
+            <Grid item>
               <Grid container justify="center">
                 <Grid item>
                   <Avatar className={classes.avatar} src={context.picture}>
@@ -73,11 +60,6 @@ export default function ProfileTopBox({ error }) {
                   </Avatar>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item xs={4} onClick={() => {setExpanded(!expanded)}}>
-              <Avatar className={classes.pen}>
-                <CreateIcon />
-              </Avatar>
             </Grid>
           </Grid>
 
@@ -104,6 +86,23 @@ export default function ProfileTopBox({ error }) {
             <Grid item xs={10}>
               <Typography variant="body1" className={classes.oneLineDescription}>{context.description}</Typography>
               {error && <h1>ERROR</h1>}
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container spacing={2} justify="flex-end">
+                <Grid item>
+                    <Button
+                      className={classes.outButton}
+                      onClick={() => {history.push(`/signout`); }}
+                    >
+                      SIGN OUT
+                    </Button>
+                  </Grid>
+                  <Grid item onClick={() => {setExpanded(!expanded)}}>
+                  <Button className={classes.settingsButton}>
+                    <CreateIcon />
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -165,18 +164,17 @@ const useStyles = makeStyles(theme => ({
   },
   profileTopBox: {
     zIndex: 2,
-    backgroundColor: "rgba(255,255,255,0.15)",
+    backgroundColor: "rgba(0,0,0,0.1)",
     // background: "linear-gradient(90deg, rgba(76,113,209,1) 0%, rgba(162,88,222,1) 100%)",
     width: "100%",
     height: "100%",
-    paddingBottom: 20
+    paddingBottom: 5
   },
   oneLineDescription: {
     width: "100%",
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    backgroundColor: "rgba(255,255,255,0.2)"
   },
   descWrap: {
     width: "100%",
@@ -192,7 +190,6 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 500,
     // color: "lightGrey",
     textAlign: 'left',
-    backgroundColor: "rgba(255,255,255,0.05)",
     padding: 10,
     whiteSpace: 'nowrap',
     overflow: 'hidden',
@@ -205,9 +202,18 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.secondary.main,
     boxShadow: "4px 3px 5px 0px rgba(0,0,0,0.5)"
   },
-  pen: {
+  outButton: {
+    color: "white",
+    fontWeight: 600,
     height: 40,
-    width: 40,
+    width: "100%",
+    backgroundColor: "rgba(0,0,0,0.3)",
+    boxShadow: "4px 3px 5px 0px rgba(0,0,0,0.5)"
+  },
+  settingsButton: {
+    color: "white",
+    height: 40,
+    width: "100%",
     backgroundColor: "rgba(0,0,0,0.3)",
     boxShadow: "4px 3px 5px 0px rgba(0,0,0,0.5)"
   }

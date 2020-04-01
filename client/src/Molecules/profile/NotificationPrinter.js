@@ -20,9 +20,6 @@ export default function NotificationPrinter({event, PROFILE_DATA}) {
 
   const eventSwitch = (event) => {
         switch(event.type) {
-            case "iGotRating":
-                return <h1>GOT RATED</h1>
-            break;
             case "yourBooking":
                 return <Grid container justify="center" className={classes.singleFeed}>
                         <PendingBookingCard event={event} PROFILE_DATA={PROFILE_DATA} />

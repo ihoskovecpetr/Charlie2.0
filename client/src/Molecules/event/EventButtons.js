@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -6,91 +6,64 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { withRouter, NavLink, useHistory } from "react-router-dom";
 
 import gql from "graphql-tag";
+
+import { UserContext } from "../../userContext";
+import { ALL_EVENTS } from "../../Services/GQL";
+import {GET_ONE_EVENT} from "../../Services/GQL_GET_ONE_EVENT";
+
 import ModalJoin from "./ModalJoin";
 import ModalRate from "./ModalRate";
 
-import { ALL_EVENTS } from "../../Services/GQL";
-
-function EventButtons({event, bookings, user, eventId, createReqBooking, ONE_EVENT, createBooking, cancelBooking, deleteOneEvent, EVENT_RATINGS}) {
+function EventButtons({event, bookings, user, createReqBooking, createBooking, cancelBooking, deleteOneEvent, EVENT_RATINGS}) {
   const classes = useStyles();
   let history = useHistory();
-  let userIsAttending = false;
-  let userRequestedBooking = false;
-  let eventIsPast = false;
+  const { context } = useContext(UserContext);
+  const [userIsAtt, setUserIsAtt] = useState(false)
+  const [userIsPend, setUserIsPend] = useState(false)
+  const [eventIsPast, setEventIsPast] = useState(false)
 
-  // const sendBookingRequest = message => {
-  //   createReqBooking({
-  //     variables: {
-  //       guest_id: user._id,
-  //       guest_name: user.name,
-  //       event_id: event._id,
-  //       message: message
-  //     },
-  //     refetchQueries: () => [
-  //       {
-  //         query: ONE_EVENT,
-  //         variables: { id: eventId }
-  //       }
-  //     ]
-  //   });
-
-  //   // createBooking({
-  //   //   variables: {
-  //   //     user_id: user._id,
-  //   //     event_id: event._id
-  //   //   },
-  //   //   refetchQueries: () => [
-  //   //     {
-  //   //       query: ONE_EVENT,
-  //   //       variables: { id: eventId }
-  //   //     }
-  //   //   ]
-  //   // });
-  // };
 
   useEffect(() => {
 
     if (event.dateStart) {
       const todayDate = new Date();
       const eventDate = new Date(event.dateStart);
+
       if (todayDate < eventDate) {
-        eventIsPast = false;
+        setEventIsPast(false);
       } else {
-        eventIsPast = true;
+        setEventIsPast(true);
       }
     }
 
       if (bookings) {
         bookings.map(booking => {
-          if (user._id === booking.user._id) {
+          console.log("Iter booking: ", context._id, booking.user._id, booking)
+          if (!userIsAtt && context._id === booking.user._id) {
             if (!booking.confirmed && !booking.cancelled) {
-              userRequestedBooking = true;
+              setUserIsPend(true)
             }
 
             if (booking.confirmed && !booking.cancelled) {
-              userIsAttending = true;
+              setUserIsAtt(true)
             }
           }
         });
       }
 
-  }, [event, bookings]);
+  }, [event, bookings, context]);
 
-
-
-
-  console.log(" Event BNTS event.dateStart: ", event, userIsAttending)
 
   const cancelBookingHandle = () => {
     cancelBooking({
       variables: {
-        user_id: user._id,
+        user_id: context._id,
         event_id: event._id
       },
       refetchQueries: () => [
         {
-          query: ONE_EVENT,
-          variables: { id: eventId }
+          query: GET_ONE_EVENT,
+          variables: { id: event._id }
         },
         {
           query: ALL_EVENTS,
@@ -118,8 +91,9 @@ function EventButtons({event, bookings, user, eventId, createReqBooking, ONE_EVE
     });
   }
 
-  // NO LOGEG IN
-  if (!user.name){
+
+  // NO LOGED IN
+  if (!context.name){
     return (
       <Grid item className={classes.buttonCls}>
         <Button variant="contained" 
@@ -145,11 +119,11 @@ function EventButtons({event, bookings, user, eventId, createReqBooking, ONE_EVE
     if (eventIsPast) {
       return (
         <>
-          {userIsAttending ? (
+          {userIsAtt ? (
             <Grid item className={classes.buttonCls}>
               <ModalRate
                 event={event}
-                user={user}
+                user={context}
                 EVENT_RATINGS={EVENT_RATINGS}
               />
             </Grid>
@@ -157,10 +131,9 @@ function EventButtons({event, bookings, user, eventId, createReqBooking, ONE_EVE
             <Grid item className={classes.buttonCls}>
               <Button
                 variant="contained"
-                color="secondary"
                 className={classes.trueBtn}
               >
-                Past Event, did not attend
+                Past Event
               </Button>
             </Grid>
           )}
@@ -170,25 +143,23 @@ function EventButtons({event, bookings, user, eventId, createReqBooking, ONE_EVE
   // ACTIVE EVENT
   return (
     <>
-      {!userIsAttending && !userRequestedBooking && !event.areYouAuthor &&
+      {!userIsAtt && !userIsPend && !event.areYouAuthor &&
         <Grid item className={classes.buttonCls}>
           <ModalJoin
-            ONE_EVENT={ONE_EVENT}
-            user={user}
             event={event}
           />
         </Grid>
       }
 
-      {!userIsAttending && userRequestedBooking && (
+      {!userIsAtt && userIsPend && (
         <Grid item className={classes.buttonCls}>
-          <Button variant="contained" color="grey" className={classes.trueBtn}>
+          <Button variant="contained" className={classes.trueBtn}>
             PENDING REQ
           </Button>
         </Grid>
       )}
 
-      {userIsAttending && (
+      {userIsAtt && (
         <Grid item className={classes.buttonCls}>
           <Button
             variant="contained"
@@ -225,7 +196,7 @@ function EventButtons({event, bookings, user, eventId, createReqBooking, ONE_EVE
 
 const useStyles = makeStyles(theme => ({
   buttonCls: {
-    margin: 0,
+    margin: 10,
     width: "50%"
   },
   disabledBtn: {

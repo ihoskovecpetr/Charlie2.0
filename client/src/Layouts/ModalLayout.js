@@ -49,7 +49,7 @@ function Layout(props) {
         className={classes.modalBackdrop}
         style={{ height: windowHeight}}
       >
-        <animated.div className={classes.modalWrap} style={swingIn}>
+        
           <CssBaseline />
           <Grid
             container
@@ -80,6 +80,7 @@ function Layout(props) {
               </Button>
             </Grid>
           </Grid>
+          <animated.div className={classes.modalContentWrap} style={swingIn}>
           <Container maxWidth="xs">{props.children}</Container>
         </animated.div>
       </div>
@@ -95,16 +96,17 @@ const useStyles = makeStyles(theme => ({
     "z-index": 20,
     top: 0,
   },
-  modalWrap: {
+  modalContentWrap: {
     padding: 0
   },
   gridClose: {
     position: "absolute",
-    top: "0vh",
+    top: "10vh",
     height: 0,
     color: "white",
     margin: "0 !important",
     padding: 0,
+    "z-index": 30,
     width: "100%"
   },
   closeButton: {
