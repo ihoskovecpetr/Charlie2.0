@@ -20,6 +20,7 @@ export const GET_ONE_EVENT = gql`
       address
       capacityMax
       price
+      currency
       description
       BYO
       freeSnack

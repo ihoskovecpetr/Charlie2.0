@@ -66,6 +66,7 @@ const PlayMap = ({event}) => {
         styling={{
             height: "300px",
             width: "100%",
+            borderRadius: 20,
             marginBottom: 20
           }} />} 
         </>

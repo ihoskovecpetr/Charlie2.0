@@ -12,6 +12,7 @@ import ExploreIcon from "@material-ui/icons/Explore";
 import SubjectIcon from "@material-ui/icons/Subject";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import HomeIcon from '@material-ui/icons/Home';
 
 import { makeStyles } from "@material-ui/core/styles";
 import { NavLink } from "react-router-dom";
@@ -32,11 +33,11 @@ function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth
         avatar: {
           margin: theme.spacing(1),
           backgroundColor: "transparent",
-          color: "black"
+          color: "grey"
         //   theme.palette.secondary.main
         },
         itemText: {
-            marginLeft: 20
+            marginLeft: 20,
         }
 
       }));
@@ -63,17 +64,20 @@ function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth
             <ListItem button key={text}>
                 {index === 0 && (
                 <ListItemIcon>
-                    <Avatar
+                    {/* <Avatar
                     className={classes.avatarCharlie}
                     alt="Remy Sharp"
                     src={CharlieLogo}
-                    />
+                    /> */}
+                     <Avatar className={classes.avatar}>
+                        <HomeIcon fontSize="large"  />
+                    </Avatar>
                 </ListItemIcon>
                 )}
                 {index === 1 && (
                 <ListItemIcon>
                     <Avatar className={classes.avatar}>
-                    <PlayArrowIcon fontSize="large" />
+                        <PlayArrowIcon fontSize="large"  />
                     </Avatar>
                 </ListItemIcon>
                 )}

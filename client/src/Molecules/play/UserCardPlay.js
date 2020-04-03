@@ -138,7 +138,7 @@ const useStyles = makeStyles(theme => ({
 
   avatar: {
     backgroundColor: red[500],
-    color: "lightgrey",
+    // color: "lightgrey",
     width: 70,
     height: 70
   },

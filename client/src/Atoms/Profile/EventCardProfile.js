@@ -2,6 +2,7 @@ import React, { useState, useRef, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DoneIcon from '@material-ui/icons/Done';
@@ -72,7 +73,7 @@ export default function EventCardProfile({ event }) {
     if(md_size_memo){
       bgColor = "rgba(0,0,0,0.1)"
     } else {
-      bgColor = "white" //"rgba(0,0,0,0.05)"
+      bgColor = "transparent" //"rgba(0,0,0,0.05)"
     }
   }
 
@@ -94,7 +95,7 @@ if(event.decided){
       style={{
         // boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
         color: md_size_memo ? "white" : "black",
-        width: xs_size_memo ? "100%" : "85%",
+        width: xs_size_memo ? "100%" : "86%",
         backgroundColor: expanded ? bgColor : "transparent",
         borderBottom: xs_size_memo ? "1px solid white" : "2px solid lightGrey"
       }}
@@ -182,6 +183,27 @@ if(event.decided){
               paddingSides={"0px"}
               // showBookings={getPlayEvents.bookings} //showBookings
             /> 
+
+            <Grid container justify="center">
+              <Grid
+                item
+                xs={12}
+                style={{
+                  transition: "transform .1s ease-in-out",
+                  transform: expanded ? "rotate(-180deg)" : "rotate(0deg)"
+                }}
+              >
+                <Button fullWidth
+                      aria-label="settings" 
+                      style={{
+                        backgroundColor: "lightGrey",
+                        marginTop: 10
+                      }}
+                      onClick={handleExpandClick}>
+                  <ExpandMoreIcon fontSize="large" />
+                </Button>
+            </Grid>
+          </Grid>
 
       </Collapse>
     </Grid>

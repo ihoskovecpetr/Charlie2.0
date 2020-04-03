@@ -16,7 +16,9 @@ export function useCountDistance(lat1, lon1, lat2, lon2, unit) {
 		dist = Math.acos(dist);
 		dist = dist * 180/Math.PI;
 		dist = dist * 60 * 1.1515;
-		if (unit=="K") { dist = dist * 1.609344 }
+		if (unit=="K") { 
+			dist = dist * 1.609344
+		 }
 		if (unit=="N") { dist = dist * 0.8684 }
 		return dist;
 	}

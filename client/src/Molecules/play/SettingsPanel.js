@@ -115,10 +115,11 @@ const SettingsPanel = ({getPlayEventsMutation, loading}) => {
                 <Grid item xs={5} >
                   <Grid container justify="center">
                     <Grid item xs={12}>
-                      <Chip icon={<AllOutIcon style={{height: 20, width: 20,}} />} 
+                      <Chip icon={<AllOutIcon className={classes.allOutIcon} style={{color: !context.filterOn ? '#D1D0D0' : "#E8045D"}}/>} 
                             label={`+ ${context.radius} km`} 
                             variant="outlined" 
-                            color="secondary" 
+                            // color="secondary" 
+                            style={{color: !context.filterOn ? '#D1D0D0' : "#E8045D"}}
                             onClick={() => console.log("Yess")}
                             className={clsx(classes.anyChip, !context.filterOn && classes.lightGrey)} />
                     </Grid>
@@ -337,21 +338,25 @@ const useStyles = makeStyles(theme => ({
     marginLeft: '5%',
     marginRight: '5%',
     fontWeight: 400,
-    fontSize: 16
+    fontSize: 16,
   },
   textSize: {
     fontWeight: 400,
     fontSize: 16
   },
   lightBlue: {
-    borderColor: '#59F0EA', 
+    // borderColor: '#59F0EA', 
     color: '#59F0EA'
   },
   lightGrey: {
     color: '#D1D0D0',
-    borderColor: '#D1D0D0',
+    // borderColor: '#D1D0D0',
   },
-
+  allOutIcon:{
+    height: 20, 
+    width: 20, 
+    color: '#E8045D'
+  },
   turnOffItem: {
     // backgroundColor: "lightGrey"
     height: 0

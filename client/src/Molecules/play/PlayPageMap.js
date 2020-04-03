@@ -9,7 +9,6 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
 import PlayMap from "./Carousel/PlayMap";
-import UserCardPlay from "./UserCardPlay";
 import RatingCard from "./RatingCardPlay";
 
 const EVENT_RATINGS = gql`
@@ -47,7 +46,7 @@ const PlayPageMap = ({event, paddingSides}) => {
           direction="row"
           className={classes.ratingAuthorContainer}
         >
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Grid
               container
               justify="center"
@@ -58,7 +57,7 @@ const PlayPageMap = ({event, paddingSides}) => {
               </Grid>
             </Grid>
           </Grid>
-          <p className={classes.thisLine}></p>
+          <p className={classes.thisLine}></p> */}
 
           {/* <Grid item xs={3}>
             <Typography component="div" className={classes.standardHeading}>
@@ -86,6 +85,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     paddingTop: '10px',
     paddingBottom: '10px',
+    borderRadius: 20
   },
   ratingAuthorContainer: {
       padding: '0px',

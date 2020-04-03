@@ -17,7 +17,7 @@ import { useHistory, NavLink } from "react-router-dom";
 import { UserContext } from "../userContext";
 // import { useWindowSize } from "../Hooks/useWindowSize";
 
-import Spinner from "../Atoms/Spinner";
+import Spinner from "src/Atoms/Spinner";
 
 import SettingsPanel from "../Molecules/play/SettingsPanel";
 import JoinSend from "../Molecules/play/JoinSend";
@@ -177,7 +177,7 @@ if (data) {
 
 
               return (
-               <div style={{ backgroundColor: (index % 2 === 0) ? "#242323" : "#908E8E", width: "100%", color: (index % 2 === 0) ? "lightgrey" : "black", }} >
+               <div style={{ width: "100%", color: (index % 2 === 0) ? "lightgrey" : "black", }} >
               {index != 0 && index <= discovered + 1 && 
               <Grid container
                     className={classes.nextEventBox}
@@ -205,9 +205,9 @@ if (data) {
                     </Grid>
               </Grid>}
               <Collapse in={index <= discovered }>
-              <div style={{display: index <= discovered ? "block" : "none"}}>
+              <div style={{display: index <= discovered ? "block" : "none", marginTop: index === 0 && 80}}>
               
-                <Grid container justify='center'>
+                {/* <Grid container justify='center'>
                   <Grid item style={{ marginTop: index === 0 && 40}}>
                       <Typography variant="h4" className={classes.mainHeader}>
                         {event.name}
@@ -215,7 +215,7 @@ if (data) {
                       </Typography>
                   </Grid>
                   <TimeDistanceChips event={event} />
-                </Grid>
+                </Grid> */}
                   <PlayPageGallery event={event} />
                   <PlayPageList
                     event={event}
@@ -253,16 +253,18 @@ if (data) {
   );
 }
 const useStyles = makeStyles(theme => ({
+  playWrap: {
+    width: '100%',
+    top: 0,
+    minHeight: "100%",
+    background:
+    "linear-gradient(90deg, #311F26 30%, #90053B 100%)",
+  },
   playContainer: {
     padding: 0,
   },
   loadingGridCont: {
     minHeight: "100vh",
-  },
-  playWrap: {
-    width: '100%',
-    top: 0,
-    minHeight: "100%",
   },
   paper: {
     width: "100%",
@@ -271,7 +273,9 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: "#242323",
+    // backgroundColor: "#242323",
+    background:
+    "linear-gradient(90deg, #311F26 30%, #90053B 100%)",
     color: "white"
   },
   mainHeader:{

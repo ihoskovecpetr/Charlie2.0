@@ -19,7 +19,7 @@ const PlayPageGallery = ({event}) => {
 
     return(
         <Grid item className={classes.galleryGrid}>
-          <Collapse in={expanded} timeout="auto" collapsedHeight="200px">
+          <Collapse in={expanded} timeout="auto" collapsedHeight="277px">
             <Gallery
             images={event.imagesArr}
             rowHeight={250}
@@ -28,12 +28,18 @@ const PlayPageGallery = ({event}) => {
             width={'100%'}
             />
              </ Collapse>
-             <Grid container justify="flex-end">
+             <Grid container 
+                  justify="flex-end" 
+                  alignItems="center"
+                  style={{backgroundColor: "rgba(0,0,0,0.2)",
+                          position: "relative", 
+                          height: 55,   
+                          top: -55}}>
                 <Grid item>
                 <IconButton 
                     aria-label="settings" 
                     color="secondary" 
-                    style={{backgroundColor: "rgba(255,255,255,0.2)", padding: 8, top: -10}}
+                    style={{backgroundColor: "rgba(255,255,255,0.2)", padding: 6, top: 0}}
                     onClick={handleToggleExpand}>
                     {expanded ? <ExpandLessIcon fontSize="large" /> : <ExpandMoreIcon fontSize="large" />}
                 </IconButton>

@@ -35,7 +35,9 @@ export default function PendingGuest({event, booking, ONE_EVENT}) {
       //minWidth: 300,
       width: "100%",
       display: "block",
-      marginBottom: 5
+      marginBottom: 5,
+      backgroundColor: "rgba(0,0,0,0.1)",
+      color: "white"
     },
     cardHeader: {
       width: "100%"
