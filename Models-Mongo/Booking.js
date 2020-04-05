@@ -31,7 +31,13 @@ const bookingSchema = new Schema(
     },
     response: {
       type: String
-    }
+    },
+    seenUser: {
+      type: Boolean
+    },
+    seenHost: {
+      type: Boolean
+    },
   },
   { timestamps: true }
 );

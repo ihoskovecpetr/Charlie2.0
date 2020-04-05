@@ -27,8 +27,9 @@ import PlayPageList from "../Molecules/play/PlayPageList";
 import PlayPageMap from "../Molecules/play/PlayPageMap";
 import NoLocationBck from "../Molecules/play/NoLocationBck";
 import TimeDistanceChips from "../Molecules/play/TimeDistanceChips";
-import LoginFirstBoard from "../Atoms/LoginFirstBoard";
-import { PLAY_EVENTS } from "../Services/GQL_PLAY_EVENTS";
+import LoginFirstBoard from "src/Atoms/LoginFirstBoard";
+import NoEventsBoard from "src/Atoms/NoEventsBoard";
+import { PLAY_EVENTS } from "src/Services/GQL/GQL_PLAY_EVENTS";
 
 
 function Play() {
@@ -165,6 +166,15 @@ if (data) {
                 </Grid>
               </Grid>
             )}
+
+            {getPlayEvents && getPlayEvents.length === 0 && (
+              <Grid container justify="center" alignItems='center' className={classes.loadingGridCont}>
+                <Grid item>
+                <NoEventsBoard />
+                </Grid>
+              </Grid>
+            )}
+            
             <Grid
               container
               justify="center"

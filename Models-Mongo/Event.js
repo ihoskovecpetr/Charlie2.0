@@ -33,11 +33,11 @@ const EventSchema = new Schema({
   imagesArr: { type: Array },
   description: { type: String },
   confirmed: { type: Boolean },
-  hide: { type: Boolean }
+  hide: { type: Boolean },
 },
 { timestamps: true }
 );
 
-EventSchema.index({ "geometry": "2dsphere" });
+EventSchema.index({ "geometry": "2dsphere", "name": "text", "address": "text", "description": "text" },{weights: {email: 1,address: 2, description: 2}});
 
 module.exports = mongoose.models.Event || mongoose.model("Event", EventSchema);

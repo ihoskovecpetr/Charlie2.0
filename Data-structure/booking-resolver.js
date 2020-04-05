@@ -128,7 +128,9 @@ export const resolvers = {
             message: _args.message,
             confirmed: false,
             cancelled: false,
-            decided: false
+            decided: false,
+            seenUser: false,
+            seenHost: false,
           });
           const result = await booking.save();
 
@@ -196,7 +198,10 @@ export const resolvers = {
             event: _args.event_id,
             message: _args.message,
             confirmed: false,
-            cancelled: false
+            cancelled: false,
+            decided: false,
+            seenUser: false,
+            seenHost: false,
           });
           const result = await booking.save();
           if (result._id) {
@@ -284,6 +289,28 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
+    },
+    markBookingSeen: async (_, _args, __) => {
+      try {
+        let userHost
+        if(_args.user === true){
+          userHost = {seenUser: true}
+        }else{
+          userHost = {seenHost: true}
+        }
+        const result = await Booking.update(
+          { event: _args.event_id},
+          { $set: userHost}
+        );
+
+        if (result.ok) {
+          return { success: true };
+        } else {
+          return { success: false };
+        }
+      } catch (err) {
+        throw err;
+      }
     }
   },
   Booking: {
@@ -338,6 +365,7 @@ function newFunction() {
     bookEvent(event_id: String!, user_id: String!, message: String): Hlaska!
     cancelBooking(event_id: String!, user_id: String!): Hlaska!
     confirmBooking(event_id: ID!, user_id: ID!, response: String, decision: Boolean): Hlaska!
+    markBookingSeen(event_id: ID!, user: Boolean): Hlaska
     newestUserBookings(user_id: ID!): [Booking]
   }
 
@@ -360,6 +388,8 @@ function newFunction() {
     cancelled: Boolean
     decided: Boolean
     success: Boolean
+    seenUser: Boolean
+    seenHost: Boolean
   }
 `;
 }

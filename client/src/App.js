@@ -32,6 +32,8 @@ import WindowEventSnackbar from "./Atoms/WindowEventSnackbar";
 
 import { UserContext } from "./userContext";
 import { usePosition } from "./Hooks/useGeolocation";
+import { LOGIN } from "src/Services/GQL/LOGIN";
+
 // import { useWindowSize } from "./Hooks/useWindowSize";
 
 import Menu from "./Pages/Menu";
@@ -54,18 +56,6 @@ const drawerWidth = 240;
 let prevLocation;
 let firstLocation
 
-const LOGIN = gql`
-  mutation {
-    getLoggedInUser {
-      _id
-      success
-      name
-      email
-      picture
-      description
-    }
-  }
-`;
 
 function App(props) {
   //  const windowSize = useWindowSize()
@@ -134,14 +124,15 @@ function App(props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [finishedAnimation, setFinishedAnimation] = useState(false);
 
-
-  //const { loading, error, data } = useQuery(LOGIN);
   const [getLoggedInUser, { loading, error, data }] = useMutation(
     LOGIN,
     {
       variables: { user_id: "FAKE" }
     }
   );
+
+  console.log("Rerendering whole App");
+
   const { container } = props;
   const [user, setUser] = useState({
     success: false,
@@ -151,9 +142,13 @@ function App(props) {
     picture: null,
     description: null,
     geolocationObj: null,
-    freezScroll: false,
+    countUnseenBookings: 0,
+    countUnseenRatings: 0,
     getLoggedInUser: () => getLoggedInUser(),
     deleteToken: () => window.localStorage.setItem("token", "_deleted_"),
+
+    freezScroll: false,
+    expanded_id: null,
     filterOn: true,
     shownEvents: [],
     playEventsCount: null,
@@ -161,14 +156,14 @@ function App(props) {
     days: 2,
     // firstPrint: props.location.pathname.split("/")[1] === "play" ? true : false
   });
+
   const [workingPosition, setWorkingPosition] = useState({
     date: new Date().toISOString().split("T")[0],
     geolocation: null
   });
 
-
   useEffect(() => {
-    getLoggedInUser();
+    // getLoggedInUser();
     if(props.location.pathname.split("/")[1] === "play" && !window.firstPrintPlay){
       window.firstPrintPlay = "play"
     }else{
@@ -178,6 +173,7 @@ function App(props) {
 
   useEffect(() => {
 
+    getLoggedInUser();
     prevLocation = props.location;
     firstLocation = props.location.pathname.split("/")[1];
     // if(props.location.pathname.split("/")[1] === "play"){

@@ -128,7 +128,8 @@ export const resolvers = {
             imagesArr: _args.eventInput.imagesArr,
             description: _args.eventInput.description,
             confirmed: true,
-            hide: false
+            hide: false,
+            seen: false
           });
           const result = await newEvent.save();
           console.log("Saved: ", result);
@@ -263,6 +264,22 @@ export const resolvers = {
         throw err;
       }
     },
+    markEventSeen: async (_, _args, __) => {
+      console.log("DEL One Event", _args);
+      // try {
+      //   let result = await Event.findOneAndUpdate({ _id: _args.delete_id }, {hide: true});
+      //   // let result = await Event.deleteOne({ _id: _args.delete_id });
+      //   console.log("findOneAndUpdate", result);
+
+      //   if (result.ok) {
+      //     return { success: true };
+      //   } else {
+      //     return { success: false };
+      //   }
+      // } catch (err) {
+      //   throw err;
+      // }
+    },
   },
   Event: {
     author: async a => {
@@ -297,6 +314,7 @@ function newFunction() {
     createEvent(eventInput: EventInput!): ResponseEvent
     deleteOneEvent(delete_id: ID!): Hlaska
     getPlayEvents(playInput: PlayInput): [Event]
+    markEventSeen(event_id: ID!): Hlaska
   }
 
   type ResponseEvent {
@@ -382,6 +400,7 @@ function newFunction() {
     description: String
     confirmed: Boolean 
     hide: Boolean
+    seen: Boolean
     areYouAuthor: Boolean
     bookings: [Booking]
     createdAt: String

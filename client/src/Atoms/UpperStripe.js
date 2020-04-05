@@ -19,7 +19,9 @@ import { useXsSize } from "../Hooks/useXsSize";
 import { withRouter, useHistory } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
-import { UserContext } from "../userContext";
+import { UserContext } from "src/userContext";
+import { useCountUnseenBookingsRatings } from "src/Hooks/useCountUnseenBookingsRatings";
+
 import Spinner from "./Spinner";
 import CharlieLogo from "../Images/charlie-logo.png"
 
@@ -28,7 +30,7 @@ function UpperStripe(props) {
   const { context } = useContext(UserContext);
   let history = useHistory(); 
   const {displayPlay_memo} = useScrollY({y: 100})
-
+  useCountUnseenBookingsRatings()
 
   const useStyles = makeStyles(theme => ({
     upperWrap: {
@@ -68,7 +70,14 @@ function UpperStripe(props) {
     },
     buttonNavi: {
       fontWeight: "600 !important",
-      float: "right"
+      float: "right",
+    },
+    ellipsName: {
+      maxWidth: 100,
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      textAlign: "center",
     },
     middle: {
       position: 'absolute',
@@ -85,12 +94,8 @@ function UpperStripe(props) {
 
 
   return (
-    // <Grid container className={classes.upperWrap}>
-    //     <Grid item>
-    //     <div className={classes.upperWrap}>
-    //     <Container maxWidth="xl" className={classes.containerMain}>
     <>
-<CssBaseline />
+    <CssBaseline />
       <AppBar 
               className={classes.appBar} 
               style={{
@@ -117,9 +122,6 @@ function UpperStripe(props) {
               </IconButton>
               <Typography variant="h5">
                 {props.ListOfNames.map((text, index) => (
-                // <NavLink 
-                //   //to={`/${props.ListOfUrls[index]}`} 
-                //   key={index}>
                   <Button
                     color="inherit"
                     className={classes.buttonToBeHidden}
@@ -136,7 +138,6 @@ function UpperStripe(props) {
                         text
                       )}
                     </Button>
-                  // </NavLink>
                 ))}
               </Typography>
             </Grid>
@@ -146,7 +147,7 @@ function UpperStripe(props) {
                             className={classes.buttonNavi} 
                             disabled={disabledFromOut}
                             onClick={() => history.push(`/profile`)}>
-                      {context.name}
+                      <p className={classes.ellipsName}>{context.name} X</p>
                       <Avatar
                         alt="Remy Sharp"
                         src={context.picture}
@@ -189,12 +190,12 @@ function UpperStripe(props) {
                 </Badge>
               )}
               {props.userApp.success && (
-                // <NavLink to={`/profile`} >
                   <Button color="inherit" 
                           className={classes.buttonNavi}
                           disabled={disabledFromOut}
                           onClick={() => {history.push("/profile")}}>
-                    {props.userApp.name}
+                    
+                    <p className={classes.ellipsName}>{props.userApp.name}</p>
                     <Avatar
                       alt="Remy Sharp"
                       src={props.userApp.picture}
@@ -203,7 +204,6 @@ function UpperStripe(props) {
                       x
                     </Avatar>
                   </Button>
-                // </NavLink>
               )}
             </Grid>
           </Grid>
@@ -211,10 +211,6 @@ function UpperStripe(props) {
         </Container>
       </AppBar>
       </>
-    //   </ Container>
-    //   </div>
-    //   </Grid>
-    // </Grid>
   );
 }
 

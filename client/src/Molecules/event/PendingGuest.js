@@ -12,7 +12,8 @@ import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 
-import { ALL_EVENTS, PROFILE_DATA } from "../../Services/GQL";
+import { ALL_EVENTS } from "src/Services/GQL";
+import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
 import { UserContext } from "../../userContext";
 
 const CONFIRM_BOOKING = gql`

@@ -5,42 +5,17 @@ import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Rating from "@material-ui/lab/Rating";
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { NavLink } from "react-router-dom";
+import { withRouter, useHistory } from "react-router-dom";
 import {useSpring, animated} from 'react-spring'
-
-import Spinner from "../../Atoms/Spinner";
-
-const HOST_RATINGS = gql`
-  query showRatings($host_id: ID!) {
-    showRatings(host_id: $host_id) {
-      guest {
-        picture
-        name
-      }
-      message
-      ratingValue
-      createdAt
-    }
-  }
-`;
 
 export default function UserAskMessage({ user, message, reverse }) {
   const classes = useStyles();
+  let history = useHistory(); 
   const [value, setValue] = React.useState(2);
-  const { loading, error, data } = useQuery(HOST_RATINGS, {
-    variables: { host_id: user._id }
-  });
   const swingIn = useSpring({transform: "translateX(0px)", opacity: 1, from: {opacity: 0, transform: "translateX(-100px)"}})
 
 
@@ -58,6 +33,7 @@ export default function UserAskMessage({ user, message, reverse }) {
                   aria-label="recipe"
                   className={classes.avatar}
                   src={user.picture}
+                  onClick={() => {history.push(`/user/${user._id}`)}}
                 />
               </Grid>
             </Grid>
@@ -99,7 +75,7 @@ const useStyles = makeStyles(theme => ({
     paddingRight: 30
   },
   avatar: {
-    backgroundColor: red[500],
+    backgroundColor: "red",
     color: "lightgrey",
     width: 40,
     height: 40

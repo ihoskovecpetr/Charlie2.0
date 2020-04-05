@@ -16,6 +16,8 @@ import gql from "graphql-tag";
 import { Animated } from "react-animated-css";
 
 import { UserContext } from "../../userContext";
+import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
+
 import Spinner from "../../Atoms/Spinner";
 
 
@@ -92,12 +94,12 @@ export default function JoinSend({event, getPlayEventsMutation}) {
                         ? inputDescription.current.value
                         : null,
             },
-            // refetchQueries: () => [
-            //   {
-            //     query: props.ONE_EVENT,
-            //     variables: { id: props.match.params.id }
-            //   }
-            // ]
+            refetchQueries: () => [
+              {
+                query: PROFILE_DATA,
+                variables: { host_id: context._id }
+              }
+            ]
           })
     }
 

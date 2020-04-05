@@ -53,7 +53,8 @@ export const resolvers = {
           host: _args.host_id,
           guest: _args.guest_id,
           ratingValue: _args.ratingValue,
-          message: _args.message
+          message: _args.message,
+          seenHost: false
         });
         const result = await rating.save();
         console.log("RESSSU: ", result);
@@ -66,15 +67,28 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
+    },
+    markRatingSeen: async (_, _args, __) => {
+      try {
+        const result = await Rating.update(
+          { _id: _args.rating_id},
+          { $set: {seenHost: true}}
+        );
+
+        if (result.ok) {
+          return { success: true };
+        } else {
+          return { success: false };
+        }
+      } catch (err) {
+        throw err;
+      }
     }
   },
   Rating: {
     event: async a => {
       try {
-        console.log("RATING event:: ", a.event, Event);
         const eventX = await Event.findById(a.event);
-        console.log("event", eventX)
-        console.log("eve async")
         return transformEvent(eventX);
         // return event;
       } catch (err) {
@@ -101,6 +115,7 @@ function newFunction() {
 
   extend type Mutation {
     rateEvent(event_id: ID!, host_id: ID!, guest_id: ID!, ratingValue: Int! message: String): Rating
+    markRatingSeen(rating_id: ID!): Hlaska
   }
 
   type Rating { 
@@ -113,6 +128,7 @@ function newFunction() {
     success: Boolean
     createdAt: String
     updatedAt: String
+    seenHost: Boolean
   }
 `;
 }

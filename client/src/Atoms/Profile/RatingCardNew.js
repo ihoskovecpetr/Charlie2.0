@@ -6,59 +6,50 @@ import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Rating from "@material-ui/lab/Rating";
 
-
-import clsx from "clsx";
 import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import countdown from "countdown";
-import { withRouter, useHistory, NavLink } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
 import { useXsSize } from "../../Hooks/useXsSize";
 import { UserContext } from "../../userContext";
+import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
+import { SEEN_RATING } from "src/Services/GQL/SEEN_RATING";
 
-import { displayDate } from "../../Services/transform-services";
-import ConfirmPNG from "../../Images/confirm_pink.png";
-import ClosePNG from "../../Images/close_black.png";
-import UserAskMessage from "./UserAskMessage";
 import EventInfoLines from "./EventInfoLines";
-
-const CONFIRM_BOOKING = gql`
-  mutation confirmBooking(
-    $event_id: ID!
-    $user_id: ID!
-    $decision: Boolean
-    $response: String
-  ) {
-    confirmBooking(
-      event_id: $event_id
-      user_id: $user_id
-      decision: $decision
-      response: $response
-    ) {
-      success
-    }
-  }
-`;
+import ListTopHalf from "src/Atoms/Play/ListTopHalf";
 
 export default function AcceptBookingCard({ rating }) {
   const classes = useStyles();
   const { xs_size_memo, md_size_memo } = useXsSize();
-  const [expanded, setExpanded] = useState(false);
   const { context } = useContext(UserContext);
+
+  const [expanded, setExpanded] = useState(false);
+
+  const [markRatingSeen, seenStates] = useMutation(SEEN_RATING);
+
 
   // console.log("event card props: ", props);
   const handleExpandClick = () => {
     setExpanded(!expanded);
+    if(rating.seenHost === false){ seenHostHandle() }
   };
 
-  console.log("RatCRD: ", rating);
+  const seenHostHandle = () => {
+    markRatingSeen({
+      variables: {
+        rating_id: rating._id,
+      },
+      refetchQueries: () => [
+        {
+          query: PROFILE_DATA,
+          variables: { host_id: context._id }
+        }
+      ]
+    });
+  };
 
   let color = "transparent"
   if(expanded){
@@ -66,6 +57,16 @@ export default function AcceptBookingCard({ rating }) {
       color = "rgba(0,0,0,0.1)"
     } else {
       color = "white" //"rgba(0,0,0,0.05)"
+    }
+  }else{
+    if(md_size_memo){
+      if(rating.seenHost === false){
+        color = "rgba(0,0,0,0.1)"
+      }
+    }else{
+          if(rating.seenHost === false){
+      color = "white"
+    }
     }
   }
 
@@ -80,7 +81,7 @@ let badgeContent
         // boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
         color: md_size_memo ? "white" : "black",
         width: xs_size_memo ? "100%" : "85%",
-        backgroundColor: expanded ? color : "transparent",
+        backgroundColor: color, //expanded ? color : "transparent",
         borderBottom: xs_size_memo ? "1px solid white" : "2px solid lightGrey"
       }}
     >
@@ -94,11 +95,11 @@ let badgeContent
           <Grid container justify="center">
             <Grid item className={classes.itemAvatar}>
               <IconButton aria-label="settings">
-
                   <Avatar
-                    src={rating.guest.picture}
+                    alt={rating.guest.name}
+                    src={rating.guest.picture ? rating.guest.picture : null}
                     className={classes.mainAvatar}
-                  />
+                  >X</Avatar>
               </IconButton>
             </Grid>
 
@@ -161,29 +162,30 @@ let badgeContent
           spacing={2}
           className={classes.middleBody}
         >
-      <Grid container alignItems="center" direction="column" className={classes.starsBody}>
-            <Grid item className={classes.body}>
-            <Rating name="simple-controlled" readOnly value={rating.ratingValue} />
-            </Grid>
-            <Grid item className={classes.body}>
-              <Typography
-              variant="body2"
-              align="left"
-              className={classes.mainHeader}
-            >
-              <b>{rating.message}</b>
-            </Typography>
-            </Grid>
-      </Grid>
-
-
-          <Grid item xs={12}>
-              <EventInfoLines
+                        {/* <EventInfoLines
                 event={rating.event}
                 name={rating.event.name}
                 date={rating.event.dateStart}
-              />
-          </Grid>
+              />           */}
+            <Grid container className={classes.middleBody}>
+                <ListTopHalf event={rating.event} transparent={true}/>
+            </Grid>
+
+            <Grid container alignItems="center" direction="column" className={classes.starsBody}>
+                  <Grid item className={classes.body}>
+                  <Rating name="simple-controlled" readOnly value={rating.ratingValue} />
+                  </Grid>
+                  <Grid item className={classes.body}>
+                    <Typography
+                    variant="body2"
+                    align="left"
+                    className={classes.mainHeader}
+                  >
+                    <b>{rating.message}</b>
+                  </Typography>
+                  </Grid>
+            </Grid>
+
         </Grid>
       </Collapse>
     </Grid>
@@ -195,7 +197,6 @@ const useStyles = makeStyles(theme => ({
   naimContainer: {
     color: "black",
     width: "100%", 
-    minHeight: "100vh"
   },
   mainItem: {
     // borderRadius: 15,
@@ -264,7 +265,9 @@ const useStyles = makeStyles(theme => ({
   },
   mainAvatar: {
     height: 60,
-    width: 60
+    width: 60,
+    backgroundColor: "grey",
+    color: "white"
   },
 
 }));

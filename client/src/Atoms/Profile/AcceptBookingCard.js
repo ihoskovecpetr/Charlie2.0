@@ -1,11 +1,13 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import TextField from "@material-ui/core/TextField";
 import Badge from '@material-ui/core/Badge';
@@ -20,12 +22,14 @@ import gql from "graphql-tag";
 
 import { useXsSize } from "../../Hooks/useXsSize";
 import { UserContext } from "../../userContext";
-import {PROFILE_DATA} from "../../Services/GQL";
+import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
+import { SEEN_BOOKING } from "src/Services/GQL/SEEN_BOOKING";
 
 import ConfirmPNG from "../../Images/confirm_pink.png";
 import ClosePNG from "../../Images/close_black.png";
 import UserAskMessage from "./UserAskMessage";
 import EventInfoLines from "./EventInfoLines";
+import ListTopHalf from "src/Atoms/Play/ListTopHalf";
 
 const CONFIRM_BOOKING = gql`
   mutation confirmBooking(
@@ -45,27 +49,66 @@ const CONFIRM_BOOKING = gql`
   }
 `;
 
+
 export default function AcceptBookingCard({ event }) {
   const classes = useStyles();
   const { xs_size_memo, md_size_memo } = useXsSize();
   const [expanded, setExpanded] = useState(false);
-  const { context } = useContext(UserContext);
+  const { context, setContext } = useContext(UserContext);
   const [confirmBooking, confirmStates] = useMutation(CONFIRM_BOOKING);
+  const [markBookingSeen, seenStates] = useMutation(SEEN_BOOKING);
 
   const inputDescription = useRef(null);
 
+  useEffect(() => {
+    if(context.expanded_id === event._id){
+      setExpanded(true)
+    }else{
+      setExpanded(false)
+    }
+  }, [context.expanded_id])
+
 
   const handleExpandClick = () => {
-    setExpanded(!expanded);
+
+    if(context.expanded_id === event._id){
+      setContext(prev => {
+        return { ...prev, 
+          expanded_id: null
+        };
+        })
+    } else{
+          setContext(prev => {
+            return { ...prev, 
+              expanded_id: event._id
+            };
+        })
+    }
+    seenHostHandle()
+  };
+
+  const seenHostHandle = () => {
+    markBookingSeen({
+      variables: {
+        event_id: event.event._id,
+        user: false,
+      },
+      refetchQueries: () => [
+        {
+          query: PROFILE_DATA,
+          variables: { host_id: context._id }
+        }
+      ]
+    });
   };
 
 
-  const ConfirmHandle = () => {
+  const ConfirmHandle = (decision) => {
     confirmBooking({
       variables: {
         user_id: event.user._id,
         event_id: event.event._id,
-        decision: true,
+        decision: decision,
         response: inputDescription.current.value
       },
       refetchQueries: () => [
@@ -73,14 +116,6 @@ export default function AcceptBookingCard({ event }) {
           query: PROFILE_DATA,
           variables: { host_id: context._id }
         }
-        // {
-        //   query: ALL_EVENTS,
-        //   variables: {
-        //     date: new Date(props.event.dateStart)
-        //       .toISOString()
-        //       .split("T")[0]
-        //   }
-        // }
       ]
     });
   };
@@ -92,6 +127,16 @@ export default function AcceptBookingCard({ event }) {
     } else {
       color = "white" //"rgba(0,0,0,0.05)"
     }
+  }else{
+    if(md_size_memo){
+      if(event.seenHost === false){
+        color = "rgba(0,0,0,0.1)"
+      }
+    }else{
+          if(event.seenHost === false){
+      color = "white"
+    }
+    }
   }
 
 let badgeContent 
@@ -102,7 +147,7 @@ if(event.decided){
       badgeContent =  <CloseIcon fontSize="small" /> //"rgba(0,0,0,0.05)"
     }
   } else {
-    badgeContent = <FiberManualRecordIcon fontSize="small" className={classes.dotBadge} /> 
+    badgeContent = <HelpOutlineIcon fontSize="small" className={classes.dotBadge} /> 
   }
 
   return (
@@ -113,7 +158,7 @@ if(event.decided){
         // boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
         color: md_size_memo ? "white" : "black",
         width: xs_size_memo ? "100%" : "85%",
-        backgroundColor: expanded ? color : "transparent",
+        backgroundColor: color, //expanded ? color : "transparent",
         borderBottom: xs_size_memo ? "1px solid white" : "2px solid lightGrey"
       }}
     >
@@ -185,66 +230,49 @@ if(event.decided){
           </Grid>
         )}
       </Grid>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <Grid
-          container
-          direction="column-reverse"
-          className={classes.middleBody}
-        >
-          <Grid item sm={12} xs={12} className={classes.leftMiddleItem}>
-            <UserAskMessage user={event.user} message={event.message} />
-            {event.decided && (
-                <UserAskMessage
-                  reverse={true}
-                  user={event.event.author}
-                  message={event.response}
-                />
-            )}
-          </Grid>
-          <Grid item sm={12} xs={12}>
-            <EventInfoLines
-              event={event.event}
-              name={event.event.name}
-              date={event.event.dateStart}
-            />
-          </Grid>
+      <Collapse in={context.expanded_id === event._id} timeout="auto" unmountOnExit>
+        <Grid container className={classes.middleBody}>
+          <ListTopHalf event={event.event} transparent={true}/>
         </Grid>
-
-        <Grid container>
-          <Grid item xs={12}>
-            {!event.decided && (
-              <Grid container className={classes.btnContainer}>
+        <Grid container className={classes.messageWrap}>
+          <Grid item>
+            <Grid container className={classes.messageContainer}>
                 <Grid item xs={12}>
-                  <Grid
-                    container
-                    justify="center"
-                    className={classes.textFieldCont}
-                  >
-                    <Grid item>
-                      <TextField
-                        id="outlined-basic"
-                        label="Response..."
-                        variant="outlined"
-                        inputRef={inputDescription}
-                        className={classes.textField}
-                        style={{ width: xs_size_memo ? "100%" : "300px" }}
-                      />
-                    </Grid>
-                  </Grid>
+                  <UserAskMessage user={event.user} message={event.message} />
+                      {event.decided && (
+                          <UserAskMessage
+                            reverse={true}
+                            user={event.event.author}
+                            message={event.response}
+                          />
+                      )}
                 </Grid>
-                <Grid item xs={6} className={classes.btnWrapLeft}>
+                <Grid item xs={12}>
+            {!event.decided && (
+              <Grid container alignItems="center" className={classes.decideContainer}>
+                <Grid item xs={2}>
                   <Grid container justify="center">
                     <Grid item>
-                      <IconButton aria-label="settings">
+                      <IconButton aria-label="settings" className={classes.iconBtn} onClick={() => {ConfirmHandle(false)}}>
                         <Avatar src={ClosePNG} className={classes.btnAvatar} />
                       </IconButton>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={8}>
+                  <TextField
+                          id="outlined-basic"
+                          label="Response..."
+                          variant="outlined"
+                          inputRef={inputDescription}
+                          className={classes.textField}
+                          style={{ width: xs_size_memo ? "100%" : "300px" }}
+                        />
+                </Grid>
+                <Grid item xs={2}>
                   <Grid container justify="center">
                     <Grid item>
-                      <IconButton aria-label="settings" onClick={ConfirmHandle}>
+                      <IconButton aria-label="settings" className={classes.iconBtn} onClick={() => {ConfirmHandle(true)}}>
                         <Avatar
                           src={ConfirmPNG}
                           className={classes.btnAvatar}
@@ -255,6 +283,17 @@ if(event.decided){
                 </Grid>
               </Grid>
             )}
+          </Grid>
+    
+
+                </Grid>
+          </Grid>
+        </Grid>
+        <Grid container justify="center">
+          <Grid item style={{margin: 5}}>
+            <IconButton aria-label="settings" className={classes.iconBtn} onClick={handleExpandClick}>
+              <ExpandLessIcon />
+            </IconButton>
           </Grid>
         </Grid>
       </Collapse>
@@ -273,7 +312,6 @@ const useStyles = makeStyles(theme => ({
     marginTop: 10,
     marginBottom: 20
   },
-  leftMiddleItem: {},
   middleBody: {},
   mainHeader: {
     fontSize: 16,
@@ -298,20 +336,32 @@ const useStyles = makeStyles(theme => ({
     height: 80,
     width: 80
   },
-  btnContainer: {
-    marginBottom: 5,
-    marginTop: 10
+  messageWrap: {
+    padding: 10
   },
-  textField: {},
+  messageContainer: {
+    backgroundColor: "rgba(0,0,0,0.38)",
+    borderRadius: 10
+  },
+  decideContainer: {
+    marginBottom: 10
+  },
+  textField: {
+    backgroundColor: "white",
+    borderRadius: 10,
+  },
   textFieldCont: {
     margin: 10
   },
   btnWrapLeft: {
-    borderRight: "1px solid #707070"
+    // borderRight: "1px solid #707070"
   },
   btn: {
     // height: 50,
     // width: "50%"
+  },
+  iconBtn: {
+    backgroundColor: "rgba(255,255,255,0.4)"
   },
   itemAvatar: {
 

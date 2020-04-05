@@ -1,23 +1,18 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import TextField from "@material-ui/core/TextField";
 import Badge from '@material-ui/core/Badge';
 
-import clsx from "clsx";
 import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import countdown from "countdown";
 import { withRouter, useHistory, NavLink } from "react-router-dom";
@@ -27,43 +22,44 @@ import gql from "graphql-tag";
 import { useXsSize } from "../../Hooks/useXsSize";
 import { UserContext } from "../../userContext";
 
-import { displayDate } from "../../Services/transform-services";
-import ConfirmPNG from "../../Images/confirm_pink.png";
-import ClosePNG from "../../Images/close_black.png";
-import UserAskMessage from "./UserAskMessage";
-import EventInfoLines from "./EventInfoLines";
 import PlayListWrap from "./PlayListWrap";
 import PlayPageGallery from "../../Molecules/play/PlayPageGallery";
 import PlayPageMap from "../../Molecules/play/PlayPageMap";
 
-const CONFIRM_BOOKING = gql`
-  mutation confirmBooking(
-    $event_id: ID!
-    $user_id: ID!
-    $decision: Boolean
-    $response: String
-  ) {
-    confirmBooking(
-      event_id: $event_id
-      user_id: $user_id
-      decision: $decision
-      response: $response
-    ) {
-      success
-    }
-  }
-`;
 
 export default function EventCardProfile({ event }) {
   const classes = useStyles();
   const { xs_size_memo, md_size_memo } = useXsSize();
   const [expanded, setExpanded] = useState(false);
-  const { context } = useContext(UserContext);
+  const { context, setContext } = useContext(UserContext);
 
   const inputDescription = useRef(null);
 
+  useEffect(() => {
+    if(context.expanded_id === event._id){
+      setExpanded(true)
+    }else{
+      setExpanded(false)
+    }
+  }, [context.expanded_id])
+
   const handleExpandClick = () => {
-    setExpanded(!expanded);
+
+    console.log("event._id: ", event._id)
+
+    if(context.expanded_id === event._id){
+      setContext(prev => {
+        return { ...prev, 
+          expanded_id: null
+        };
+        })
+    } else{
+          setContext(prev => {
+            return { ...prev, 
+              expanded_id: event._id
+            };
+        })
+    }
   };
 
   console.log("EventCardProfile evnt: ", event);
@@ -187,21 +183,13 @@ if(event.decided){
             <Grid container justify="center">
               <Grid
                 item
-                xs={12}
-                style={{
-                  transition: "transform .1s ease-in-out",
-                  transform: expanded ? "rotate(-180deg)" : "rotate(0deg)"
-                }}
               >
-                <Button fullWidth
+                <IconButton
                       aria-label="settings" 
-                      style={{
-                        backgroundColor: "lightGrey",
-                        marginTop: 10
-                      }}
+                      style={{backgroundColor: "lightGrey",margin: 5}}
                       onClick={handleExpandClick}>
-                  <ExpandMoreIcon fontSize="large" />
-                </Button>
+                  <ExpandLessIcon fontSize="large" />
+                </IconButton>
             </Grid>
           </Grid>
 

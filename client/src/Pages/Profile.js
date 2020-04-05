@@ -19,11 +19,10 @@ import { useHistory, NavLink } from "react-router-dom";
 import { UserContext } from "../userContext";
 import { sortByDate } from "../Services/functions";
 import { useXsSize } from "../Hooks/useXsSize";
-import {PROFILE_DATA} from "../Services/GQL";
+import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
 
 import Copyright from "../Atoms/copyright";
 import Spinner from "../Atoms/Spinner";
-import RatingCard from "../Molecules/rating-card";
 import RatingCardNew from "../Atoms/Profile/RatingCardNew";
 import ProfileTopBox from "../Molecules/profile/ProfileTopBox";
 import NotificationPrinter from "../Molecules/profile/NotificationPrinter";
@@ -64,10 +63,10 @@ function Profile() {
   const classes = useStyles();
   const theme = useTheme();
   const history = useHistory();
-  const { context } = useContext(UserContext);
+  const { context, setContext } = useContext(UserContext);
   const [value, setValue] = useState(0);
   const [feedArray, setFeedArray] = useState([]);
-  const [countUndecidedBookings, setCountUndecidedBookings] = useState(0);
+  const [countUnseenBookings, setCountUnseenBookings] = useState(0);
   const { xs_size_memo, md_size_memo } = useXsSize();
   const { loading, error, data } = useQuery(PROFILE_DATA, {
     variables: { host_id: context._id }
@@ -84,17 +83,6 @@ function Profile() {
     return () => {};
   }, []);
 
-  console.log(
-    "Rerendering PROFILE: data loading error ",
-    // hostingStates.data,
-    // bookingStates.data,
-    data,
-    loading,
-    error
-  );
-
-  let showUserBookings = [];
-
   const trsfmFeed = (events, type) => {
     return events.map(item => ({ ...item, type: type }));
   };
@@ -102,7 +90,6 @@ function Profile() {
   useEffect(() => {
 
     if (data) {
-
       let {
         userEvents,
         showRatings,
@@ -119,13 +106,6 @@ function Profile() {
       const sortedFeed = sortByDate(transformedArr, "createdAt", "DESC");
 
       setFeedArray(sortedFeed);
-
-      let count = 0
-
-      showHostBookings.map(item => {
-        if(!item.decided) count++
-      })
-      setCountUndecidedBookings(count);
 
     }
   }, [data]);
@@ -157,7 +137,7 @@ function Profile() {
       >
         <Grid container justify="center" spacing={2}>
           <Grid item md={4} xs={12}>
-            <ProfileTopBox error={error} />
+            <ProfileTopBox errorQuery={error} />
           </Grid>
           <Grid item md={8} xs={12}>
             <AppBar
@@ -180,7 +160,7 @@ function Profile() {
                   label={
                     <Badge
                       color="secondary"
-                      badgeContent={countUndecidedBookings}
+                      badgeContent={context.countUnseenBookings}
                     >
                       BOOKINGS
                     </Badge>
@@ -190,8 +170,8 @@ function Profile() {
                 <Tab
                   label={
                     <Badge
-                      color="secondary"
-                      badgeContent={
+                      color="primary"
+                      badgeContent={                       
                         data &&
                         data.showUserBookings &&
                         data.showUserBookings.length
@@ -202,23 +182,12 @@ function Profile() {
                   }
                   {...a11yProps(2)}
                 />
-                {/* <Tab
-              label={
-                <Badge
-                  color="secondary"
-                  badgeContent={data && data.userEvents.length}
-                >
-                  HOSTING
-                </Badge>
-              }
-              {...a11yProps(1)}
-            /> */}
 
                 <Tab
                   label={
                     <Badge
                       color="secondary"
-                      badgeContent={data && data.showRatings.length}
+                      badgeContent={context.countUnseenRatings}
                     >
                       RATINGS
                     </Badge>
@@ -280,6 +249,7 @@ function Profile() {
                 value={value}
                 index={2}
                 dir={theme.direction}
+                className={classes.tabPanel}
                 style={{ width: "100%" }}
               >
                 {loading && <Spinner height={100} width={100} />}
@@ -323,7 +293,8 @@ const useStyles = makeStyles(theme => ({
     boxShadow: "none"
   },
   tabPanel:{
-    minHeight: "100vh"
+    minHeight: "100vh",
+    width: "100%"
   },
   colorPrimary: {
     color: "white !important",

@@ -63,8 +63,7 @@ function SignIn(props) {
 
   const { dataOut } = data ? data.login : { dataOut: undefined };
   const { errorOut } = data ? data.login : { errorOut: undefined };
-  console.log("DataOut: ", dataOut);
-  console.log("ErrOut: ", errorOut);
+
   if (context.success) {
     setTimeout(() => {
       console.log("SignIn: EVENT", window.eventId)

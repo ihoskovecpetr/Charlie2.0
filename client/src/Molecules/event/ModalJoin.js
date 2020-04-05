@@ -11,7 +11,7 @@ import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { withRouter } from "react-router-dom";
 
-import {GET_ONE_EVENT} from "../../Services/GQL_GET_ONE_EVENT";
+import {GET_ONE_EVENT} from "src/Services/GQL/GQL_GET_ONE_EVENT";
 import { UserContext } from "../../userContext";
 
 import Spinner from "../../Atoms/Spinner";

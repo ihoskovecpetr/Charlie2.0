@@ -15,6 +15,9 @@ const useStyles = makeStyles(theme => ({
       hwIcon: {
         height: 90,
       },
+      hwIconOut: {
+        height: 95,
+      },
       subtitle: {
         fontSize: 22,
         fontWeight: 500,
@@ -52,7 +55,7 @@ export default function HowItWorksItem({image, subtitle, text}) {
     <Grid container alignItems="center" direction="column">
     {isVisible ? <animated.div style={swingIn}>
     <img src={image} className={classes.hwIcon}/>
-   </animated.div> : <div className={classes.hwIcon}> </div>}
+   </animated.div> : <div className={classes.hwIconOut}> </div>}
    <Grid item>
         <Typography variant="subtitle1" className={classes.subtitle} ref={rootNode}>
           {subtitle}

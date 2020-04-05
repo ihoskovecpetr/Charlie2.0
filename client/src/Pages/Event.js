@@ -21,7 +21,7 @@ import PlayPageList from "../Molecules/play/PlayPageList";
 import PlayPageGallery from "../Molecules/play/PlayPageGallery";
 import PlayPageMap from "../Molecules/play/PlayPageMap";
 
-import {GET_ONE_EVENT} from "../Services/GQL_GET_ONE_EVENT";
+import {GET_ONE_EVENT} from "src/Services/GQL/GQL_GET_ONE_EVENT";
 
 import ModalLayout from "../Layouts/ModalLayout";
 import EventButtons from "../Molecules/event/EventButtons";
@@ -120,7 +120,7 @@ function Event(props) {
   const PaperEvent = props => {
     return <Paper 
                   className={classes.paper}
-                  style={{marginTop: window.eventId ? "8vh" : "10vh", height: 0.7 * windowHeight}}
+                  style={{marginTop: window.eventId ? "8vh" : "10vh", height: 0.85 * windowHeight}}
                   >
               {props.children}
           </Paper>;
@@ -173,10 +173,10 @@ function Event(props) {
               justify="center"
             >
               <Grid item className={classes.nameGrid}>
-                <Typography component="h4" variant="h4" className={classes.name}>
+                {/* <Typography component="h4" variant="h4" className={classes.name}>
                   {dataDB.getOneEvent.name}
                   <p className={classes.thisLineHeader}></p>
-                </Typography>
+                </Typography> */}
                 {dataDB.getOneEvent.hide && <Typography component="h3" variant="h3" className={classes.name}>
                   CANCELLED
                 </Typography>}

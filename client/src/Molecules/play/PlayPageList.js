@@ -10,16 +10,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import clsx from 'clsx'
 import countdown from "countdown";
 
-import Spinner from "../../Atoms/Spinner";
-import PendingGuest from "../event/PendingGuest";
-import ConfirmedGuest from "../event/ConfirmedGuest";
-import UserCardPlay from "./UserCardPlay";
-
 import { UserContext } from "src/userContext";
 import { displayDate } from "../../Services/transform-services";
 import { useCountDistance } from "src/Hooks/useCountDistance";
 import { useXsSize } from "src/Hooks/useXsSize";
 
+import Spinner from "../../Atoms/Spinner";
+import ListTopHalf from "src/Atoms/Play/ListTopHalf";
+import PendingGuest from "../event/PendingGuest";
+import ConfirmedGuest from "../event/ConfirmedGuest";
+import UserCardPlay from "./UserCardPlay";
 
 const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBooking, cancelledState, paddingSides}) => {
     const classes = useStyles();
@@ -49,7 +49,7 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
                 paddingLeft: paddingSides ? paddingSides : '20px',
                 paddingRight: paddingSides ? paddingSides : '20px'}}
       >
-        <Grid item xs={12} 
+        {/* <Grid item xs={12} 
               className={classes.blackBackContainer} 
               style={{backgroundColor: bgColor }}>
             <Grid container 
@@ -69,57 +69,9 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
                 </Typography>
               </Grid>
             </Grid>
-        </Grid>
+        </Grid> */}
 
-        <Grid item xs={12}>
-            <Grid container 
-                  alignItems="center"
-                  justify="center">
-              <Grid item className={classes.separatorLineItem}>
-            </Grid>
-            </Grid>
-        </Grid>
-        
-
-        <Grid item xs={12} 
-              className={classes.blackBackContainer} 
-              style={{backgroundColor: bgColor }}>
-            <Grid container 
-                  alignItems="center">
-              <Grid item xs={6} className={classes.addressGreyWrap}>
-                <Typography variant="p" className={classes.addressGrey}>
-                {event.address}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <RoomIcon color="secondary" />
-              </Grid>
-              <Grid item xs={4} className={classes.timeDistanceWrap}>
-                <Typography variant="p" className={classes.timeDistance}>
-                <b>{`${Math.floor(distance * 10)/10} Km`}</b> away
-                </Typography>
-              </Grid>
-            </Grid>
-            <p className={classes.thisLine}></p>
-            <Grid container 
-                  alignItems="center"
-                  justify="center">
-              <Grid item xs={6} className={classes.addressGreyWrap}>
-                <Typography variant="p" className={classes.addressGrey}>
-                  {event.dateStart && displayDate(event.dateStart)}
-                </Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <EventIcon color="secondary" />
-              </Grid>
-              <Grid item xs={4} className={classes.timeDistanceWrap}>
-                <Typography variant="p" className={classes.timeDistance}>
-                In <b>{`${countdown(new Date(event.dateStart), new Date(), "X", 1).toString()}`}</b>
-                </Typography>
-              </Grid>
-            </Grid>
-        </Grid>
-
+        <ListTopHalf event={event} />
 
         <Grid item xs={12}>
             <Grid container 

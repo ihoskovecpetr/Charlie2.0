@@ -2,7 +2,7 @@ import User from "../Models-Mongo/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { authorsEvents } from "./merge.js";
-import { userYupSchema } from "./Utils/userYupSchema.js";
+import { updateUserYupSchema } from "./Utils/updateUserYupSchema.js";
 import { formatYupError } from "./Utils/formatError.js";
 import {
   duplicate_email_Error,
@@ -18,8 +18,9 @@ export const typeDef = `
 
   extend type Mutation {
     newUser(name: String!, password: String!, email: String!, description: String!, picture: String): ResponseUser
+    updateUser(name: String, email: String, description: String, picture: String): ResponseUser
     login(email: String! password: String!): ResponseUser
-    getLoggedInUser: User
+    getLoggedInUser(user_id: ID): User
   }
 
   type User {
@@ -42,17 +43,14 @@ export const typeDef = `
 export const resolvers = {
   Mutation: {
     newUser: async (_, _args, __) => {
-      console.log("NeWUser args: ", _args);
       try {
         await userYupSchema.validate(_args, { abortEarly: false });
       } catch (err) {
-        console.log("Yup Err")
         return formatYupError(err);
       }
       try {
         let existing = await User.find({ email: _args.email });
         if (existing.length) {
-          console.log("Duplicate Email> ")
           return duplicate_email_Error;
         } else {
           if (!_args.picture) {
@@ -71,12 +69,35 @@ export const resolvers = {
           });
 
           const result = await newUser.save();
-          console.log("Saved: ", result);
           return { dataOut: { ...result._doc, success: true } };
         }
       } catch (err) {
         throw err;
       }
+    },
+    updateUser: async (_, _args, context) => {
+      console.log("UPDATING START: ", _args, context);
+      try {
+        await updateUserYupSchema.validate(_args, { abortEarly: false });
+      } catch (err) {
+        return formatYupError(err);
+      }
+
+
+      try {
+        let existing = await User.findOneAndUpdate({ _id: context.reqO.req.userId }, {
+          name: _args.name,
+          description: _args.description,
+          picture: _args.picture
+        });
+        console.log("UPDATING THIS: ", existing);
+
+          return { dataOut: { success: true } };
+
+      } catch (err) {
+        throw err;
+      }
+      
     },
     login: async (_, _args, __) => {
       try {

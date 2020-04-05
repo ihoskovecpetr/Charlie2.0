@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Chip from "@material-ui/core/Chip";
 import Badge from '@material-ui/core/Badge';
+import Typography from '@material-ui/core/Typography';
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
@@ -86,11 +87,13 @@ export default function DrawerProfileBox({handleDrawerToggle}) {
             <Grid container justify='center' alignItems="center" className={classes.bottomPart}>
             {context.name && <>
             <Grid item className={classes.actBtns} onClick={handleDrawerToggle}>
-            <Badge badgeContent={4} color="secondary">
+            <Badge badgeContent={context.countUnseenBookings + context.countUnseenRatings} color="secondary">
+            
+            
                 <NavLink
                 to={`/profile`}
                 >
-                    <Chip
+                    {/* <Chip
                     className={classes.chip}
                     // avatar={
                     //   <Avatar
@@ -101,8 +104,11 @@ export default function DrawerProfileBox({handleDrawerToggle}) {
                     //   </Avatar>
                     // }
                     label="Actions"
-                    style={{backgroundColor: "#696565", color: "white"}}
-                    />
+                    style={{ color: "white"}}
+                    /> */}
+                        <Typography component="p">
+                            FEED
+                        </Typography>
                 </NavLink>
             </Badge>
             </Grid>

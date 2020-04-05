@@ -8,13 +8,18 @@ import Box from "@material-ui/core/Box";
 import Avatar from "@material-ui/core/Avatar";
 import CloseIcon from "@material-ui/icons/Close";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Rating from "@material-ui/lab/Rating";
 
 import { withRouter, useHistory } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
+import { useAverageRating } from "src/Hooks/useAverageRating";
+
 import ModalLayout from "../Layouts/ModalLayout";
 import RatingCard from "../Molecules/rating-card";
+import RatingCardNew from "src/Atoms/Profile/RatingCardNew";
+
 import Spinner from "../Atoms/Spinner";
 import Copyright from "../Atoms/copyright";
 
@@ -25,6 +30,8 @@ const GET_USER = gql`
       _id
       name
       picture
+      email
+      description
       createdEvents{
         _id
       	name
@@ -36,26 +43,27 @@ const GET_USER = gql`
 const HOST_RATINGS = gql`
   query showRatings($host_id: ID!) {
     showRatings(host_id: $host_id) {
+      message
+      ratingValue
+      createdAt
       guest {
         picture
         name
       }
-      message
-      ratingValue
-      createdAt
+      event {
+        _id
+        name
+        address
+        dateStart
+        price
+        currency
+        geometry {
+          coordinates
+        }
+      }
     }
   }
 `;
-
-let dataMock;
-// dataMock = {
-//   getOneUser: {
-//     success: true,
-//     name: "Petr H. McOcker",
-//     picture:
-//       "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
-//   }
-// };
 
 function UserModal(props) {
   const classes = useStyles();
@@ -72,6 +80,9 @@ function UserModal(props) {
   const ratingStates = useQuery(HOST_RATINGS, {
     variables: { host_id: props.match.params.id }
   });
+
+  const { averageRating } = useAverageRating(ratingStates.data && ratingStates.data.showRatings)
+
 
   // const ratingStates ={
   //   data: {
@@ -93,7 +104,9 @@ function UserModal(props) {
   let dataDB;
 
   const PaperUser = props => {
-    return <Paper className={classes.paper}>{props.children}</Paper>;
+    return <Grid container justify="center" className={classes.paperUser}>
+              {props.children}
+          </Grid>;
   };
 
   // if (bookingStates.loading) {
@@ -104,9 +117,7 @@ function UserModal(props) {
   //   refetch();
   // }
 
-  if (dataMock) {
-    dataDB = dataMock;
-  } else if (data) {
+  if (data) {
     dataDB = data;
   }
 
@@ -132,42 +143,59 @@ function UserModal(props) {
   if (dataDB && dataDB.getOneUser.success) {
     return (
       <ModalLayout>
-        <Grid container justify="flex-start" className={classes.gridClose}>
-          <Grid item>
-            <Button
-              variant="contained"
-              //color={theme.background}
-              size="small"
-              className={classes.closeButton}
-              onClick={() => {
-                props.history.goBack();
-              }}
-            >
-              <CloseIcon fontSize="large" />
-            </Button>
-          </Grid>
-        </Grid>
         <PaperUser className={classes.paper}>
           <Grid
             container
             justify="center"
             alignItems="center"
             alignContent="center"
-            direction="column"
-            spacing={2}
             className={classes.mainGrid}
           >
+            <Grid item xs={12}>
+              <Grid container justify="center">
+                <Grid item>
+                  <Avatar
+                    className={classes.avatarMain}
+                    src={dataDB.getOneUser.picture}
+                  >
+                    <LockOutlinedIcon />
+                  </Avatar>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h4" className={classes.nameHeader}>
+                {dataDB.getOneUser.name}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" className={classes.email}>
+                {dataDB.getOneUser.email}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+            <Grid container justify="center" alignItems="center" spacing={2}>
             <Grid item>
-              <Avatar
-                className={classes.avatar}
-                src={dataDB.getOneUser.picture}
-              >
-                <LockOutlinedIcon />
-              </Avatar>
+              <Typography variant="subtitle1" className={classes.email}>
+                  <Rating name="simple-controlled" readOnly value={averageRating} />
+              </Typography>
             </Grid>
             <Grid item>
-              <Typography variant="subtitle2">
-                {dataDB.getOneUser.name}
+              <Typography variant="subtitle1" className={classes.email}>
+                 {(averageRating)}
+              </Typography>
+            </Grid>
+            </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" className={classes.description}>
+                {dataDB.getOneUser.description}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" className={classes.subHeader}>
+                RATINGS
               </Typography>
             </Grid>
 
@@ -175,7 +203,7 @@ function UserModal(props) {
             {ratingStates.data &&
               ratingStates.data.showRatings &&
               ratingStates.data.showRatings.map((rating, index) => (
-                <RatingCard rating={rating} key={index} />
+                <RatingCardNew rating={rating} key={index} />
               ))}
           </Grid>
         </PaperUser>
@@ -186,7 +214,13 @@ function UserModal(props) {
     );
   }
 
-  return <p>No</p>;
+  return (
+    <ModalLayout>
+      <PaperUser>
+        No DATA
+      </PaperUser>
+    </ModalLayout>
+  );
 }
 
 const useStyles = makeStyles(theme => ({
@@ -200,50 +234,32 @@ const useStyles = makeStyles(theme => ({
   mainGrid: {
     width: "100%"
   },
-  paper: {
-    background: "#600328",
+  paperUser: {
+    // background: "#600328",
+    background:
+    "linear-gradient(90deg, #E8045D 0%, #76517B 100%)",
     color: "white",
     marginTop: "10vh",
     padding: theme.spacing(3, 2),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    width: 300,
-    maxHeight: "70vh",
-    minHeight: "50vh",
+    height: "80vh",
     overflow: "scroll",
     borderBottomRightRadius: 0,
     borderBottomLeftRadius: 0
   },
-  gridClose: {
-    position: "absolute",
-    top: "10vh",
-    height: 0,
-    color: "white",
-    margin: 0,
-    marginLeft: 10,
-    padding: 0,
-    width: "100%"
-  },
-  closeButton: {
-    background: theme.palette.violetova,
-    color: "white"
-  },
-  nameGrid: {
-    borderBottom: "solid 1px white"
-  },
-  avatar: {
-    height: 80,
-    width: 80,
-    margin: theme.spacing(1),
+  avatarMain: {
+    height: 120,
+    width: 120,
+    margin: 10,
+    border: "2px solid white",
+    boxShadow: "4px 3px 5px 0px rgba(0,0,0,0.5)",
     backgroundColor: theme.palette.secondary.main
   },
-  standardHeading: {
-    //borderBottom: "solid 1px grey",
-    fontWeight: 600,
-    color: "lightgrey"
+  nameHeader: {
+    textAlign: "center"
   },
-
+  email: {
+    textAlign: "center"
+  },
   ratingContainer: {
     width: "100%",
     maxHeight: 200,
@@ -252,6 +268,10 @@ const useStyles = makeStyles(theme => ({
   eventButtons: {
     position: "absolute",
     bottom: 0
+  },
+  subHeader:{
+    fontWeight: 600,
+    margin: 15
   }
 }));
 

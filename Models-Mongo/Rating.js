@@ -16,7 +16,8 @@ const RatingSchema = new Schema(
       ref: "User"
     },
     ratingValue: { type: Number },
-    message: { type: String }
+    message: { type: String },
+    seenHost: { type: Boolean }
   },
   { timestamps: true }
 );

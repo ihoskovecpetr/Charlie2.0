@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
@@ -18,43 +18,62 @@ import gql from "graphql-tag";
 
 import { useXsSize } from "../../Hooks/useXsSize";
 import { UserContext } from "../../userContext";
+import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
+import { SEEN_BOOKING } from "src/Services/GQL/SEEN_BOOKING";
 
-import { displayDate } from "../../Services/transform-services";
-import ConfirmPNG from "../../Images/confirm_pink.png";
-import ClosePNG from "../../Images/close_black.png";
 import UserAskMessage from "./UserAskMessage";
 import EventInfoLines from "./EventInfoLines";
-
-const CONFIRM_BOOKING = gql`
-  mutation confirmBooking(
-    $event_id: ID!
-    $user_id: ID!
-    $decision: Boolean
-    $response: String
-  ) {
-    confirmBooking(
-      event_id: $event_id
-      user_id: $user_id
-      decision: $decision
-      response: $response
-    ) {
-      success
-    }
-  }
-`;
-
+import ListTopHalf from "src/Atoms/Play/ListTopHalf";
 
 export default function PendingBokingCard({ event }) {
   const classes = useStyles();
   const { xs_size_memo, md_size_memo } = useXsSize();
-  const [expanded, setExpanded] = useState(false);
-  const [confirmBooking, confirmStates] = useMutation(CONFIRM_BOOKING);
+  const { context, setContext } = useContext(UserContext);
+  const [expanded, setExpanded] = useState(context.expanded_id === event._id);
+  const [markBookingSeen, seenStates] = useMutation(SEEN_BOOKING);
 
-  const inputDescription = useRef(null);
+  console.log("Exp sts: ", expanded)
 
-  // console.log("event card props: ", props);
+useEffect(() => {
+  if(context.expanded_id === event._id){
+    setExpanded(true)
+  }else{
+    setExpanded(false)
+  }
+}, [context.expanded_id])
+
+
   const handleExpandClick = () => {
-    setExpanded(!expanded);
+
+    if(context.expanded_id === event._id){
+      setContext(prev => {
+        return { ...prev, 
+          expanded_id: null
+        };
+        })
+    } else{
+          setContext(prev => {
+            return { ...prev, 
+              expanded_id: event._id
+            };
+        })
+    }
+    seenUserHandle()
+  };
+
+  const seenUserHandle = () => {
+    markBookingSeen({
+      variables: {
+        event_id: event.event._id,
+        user: true,
+      },
+      refetchQueries: () => [
+        {
+          query: PROFILE_DATA,
+          variables: { host_id: context._id }
+        }
+      ]
+    });
   };
 
   let color = "transparent"
@@ -63,6 +82,16 @@ export default function PendingBokingCard({ event }) {
       color = "rgba(0,0,0,0.1)"
     } else {
       color = "white" //"rgba(0,0,0,0.05)"
+    }
+  }else{
+    if(md_size_memo){
+      if(event.seenUser === false){
+        color = "rgba(0,0,0,0.1)"
+      }
+    }else{
+          if(event.seenUser === false){
+      color = "white"
+    }
     }
   }
 
@@ -85,7 +114,7 @@ if(event.decided){
         // boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
         color: md_size_memo ? "white" : "black",
         width: xs_size_memo ? "100%" : "85%",
-        backgroundColor: expanded ? color : "transparent",
+        backgroundColor: color, //expanded ? color : "transparent",
         borderBottom: xs_size_memo ? "1px solid white" : "2px solid lightGrey"
       }}
     >
@@ -123,7 +152,7 @@ if(event.decided){
         
         <Grid item xs={xs_size_memo ? 3 : 2}>
           <Grid container justify="center">
-            <Grid item className={classes.itemAvatar}>
+            <Grid item>
               <IconButton aria-label="settings">
                 <Badge badgeContent={badgeContent} 
                         className={classes.badge} 
@@ -159,12 +188,13 @@ if(event.decided){
         )}
       </Grid>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <Grid
-          container
-          direction="column-reverse"
-          className={classes.middleBody}
-        >
-          <Grid item sm={12} xs={12} className={classes.leftMiddleItem}>
+        <Grid container className={classes.middleBody}>
+          <ListTopHalf event={event.event} transparent={true}/>
+        </Grid>
+        <Grid item sm={12} xs={12} className={classes.leftMiddleItem}>
+        <Grid container className={classes.messageWrap}>
+          <Grid item>
+            <Grid container className={classes.messageContainer}>
             <UserAskMessage user={event.user} message={event.message} />
             {event.response && (
               <UserAskMessage
@@ -174,14 +204,9 @@ if(event.decided){
               />
             )}
           </Grid>
-          <Grid item sm={12} xs={12}>
-            <EventInfoLines
-              event={event.event}
-              name={event.event.name}
-              date={event.event.dateStart}
-            />
           </Grid>
-        </Grid>
+          </Grid>
+          </Grid>
       </Collapse>
     </Grid>
   );
@@ -223,31 +248,20 @@ const useStyles = makeStyles(theme => ({
     height: 80,
     width: 80
   },
-  btnContainer: {
-    marginBottom: 5,
-    marginTop: 10
-  },
   textField: {},
   textFieldCont: {
     margin: 10
   },
-  btnWrapLeft: {
-    borderRight: "1px solid #707070"
+  messageWrap: {
+    padding: 10
   },
-  btn: {
-    // height: 50,
-    // width: "50%"
-  },
-  itemAvatar: {
-
+  messageContainer: {
+    backgroundColor: "rgba(0,0,0,0.38)",
+    borderRadius: 10
   },
   mainAvatar: {
     height: 80,
     width: 80
-  },
-  btnAvatar: {
-    height: 20,
-    width: 20
   },
   thisLine: {
     height: "1px",

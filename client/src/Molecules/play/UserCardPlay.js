@@ -1,18 +1,11 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
-import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
-import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Rating from "@material-ui/lab/Rating";
+import { useHistory } from "react-router-dom";
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
@@ -36,6 +29,8 @@ const HOST_RATINGS = gql`
 
 export default function UserCardPlay(props) {
   const classes = useStyles();
+  let history = useHistory();
+
   const [value, setValue] = React.useState(2);
   const { loading, error, data } = useQuery(HOST_RATINGS, {
     variables: { host_id: props.author._id }
@@ -59,7 +54,7 @@ export default function UserCardPlay(props) {
   };
 
   return (<>
-    <Grid container>
+    <Grid container onClick={() => {history.push(`/user/${props.author._id}`)}}>
       <Grid item xs={4}>
       <Grid container>
         <Grid item xs={12}>

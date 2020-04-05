@@ -9,7 +9,7 @@ import gql from "graphql-tag";
 
 import { UserContext } from "../../userContext";
 import { ALL_EVENTS } from "../../Services/GQL";
-import {GET_ONE_EVENT} from "../../Services/GQL_GET_ONE_EVENT";
+import {GET_ONE_EVENT} from "src/Services/GQL/GQL_GET_ONE_EVENT";
 
 import ModalJoin from "./ModalJoin";
 import ModalRate from "./ModalRate";

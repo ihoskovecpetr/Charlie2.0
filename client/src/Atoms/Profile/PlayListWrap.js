@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { UserContext } from "../../userContext";
-import {PROFILE_DATA} from "../../Services/GQL";
+import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
 
 import PlayPageList from "../../Molecules/play/PlayPageList";
 

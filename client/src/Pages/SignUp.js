@@ -25,7 +25,7 @@ import { findEmpty } from "../Services/functions";
 import ModalLayout from "../Layouts/ModalLayout";
 import Copyright from "../Atoms/copyright";
 import Spinner from "../Atoms/Spinner";
-import Dropzone from "../Molecules/dropzone-signup";
+import DropzoneSignup from "../Molecules/DropzoneSignup";
 
 const NEW_USER = gql`
   mutation newUser(
@@ -191,7 +191,7 @@ if (dataOut && dataOut.success) {
             className={classes.gridDropzone}
           >
             <Grid item>
-              <Dropzone setFormValue={setFormValue} formValue={formValue} />
+              <DropzoneSignup setFormValue={setFormValue} formValue={formValue} />
             </Grid>
           </Grid>
           <form className={classes.form} noValidate autocomplete="off">

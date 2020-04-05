@@ -6,11 +6,15 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
-import { displayDate } from "../Services/transform-services";
+import countdown from "countdown";
+
+import { displayDate } from "src/Services/transform-services";
 
 function Infowindow(props) {
   let Pic = props.location.imagesArr[0];
   let Author = props.location.author;
+
+  console.log("Pic: ", Pic)
 
   const classes = useStyles();
 
@@ -37,7 +41,8 @@ function Infowindow(props) {
           <h3 className={classes.h3Name}>{props.location.name}</h3>
         </Grid>
       </Grid>
-      <img src={Pic.src} alt={Pic.capture} className={classes.img} />
+      {/* <img src={Pic.src} alt={Pic.capture} className={classes.img} /> */}
+      <div className={classes.img} style={{backgroundImage: `url('${Pic.thumbnail}')`}}> </div>
       <Grid container justify="center" className={classes.authorGrid}>
         <Avatar
           alt="Author picture"
@@ -48,12 +53,22 @@ function Infowindow(props) {
 
       <Grid
         container
-        direction="column"
+        direction="row"
         justify="center"
-        alignItems="center"
+        alignItems="flex-end"
         className={classes.infoWindBody}
       >
-        <Grid item>{displayDate(props.location.dateStart)}</Grid>
+        <Grid item xs={12}>
+          <Typography variant="body1" className={classes.countdown}>
+            {countdown(
+              new Date(props.location.dateStart),
+              new Date(),
+              "X",
+              1
+            ).toString()}{" "}
+            ago
+          </Typography>
+          </Grid>
       </Grid>
 
       <Grid
@@ -85,7 +100,8 @@ function Infowindow(props) {
 const useStyles = makeStyles(theme => ({
   img: {
     height: 100,
-    width: 200
+    width: 200,
+    backgroundSize: "cover"
   },
   topbar: {
     position: "absolute",
@@ -112,6 +128,7 @@ const useStyles = makeStyles(theme => ({
 
   authorGrid: {
     top: -30,
+    height: 0,
     position: "relative"
   },
   avatar: {
@@ -120,11 +137,20 @@ const useStyles = makeStyles(theme => ({
     height: 60
   },
   infoWindBody: {
-    top: -30,
+    position: "relative",
+    padding: 5,
+    width: "100%",
+    height: 84,
+  },
+  countdown: {
     position: "relative",
     width: "100%",
-    color: "white",
-    flexGrow: 1
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    fontWeight: 600,
+    color: "grey",
+    textAlign: "center"
   },
   gridButton: {
     width: "100%",
