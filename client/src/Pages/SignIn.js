@@ -320,7 +320,7 @@ function SignIn(props) {
                 }}
               >
                 <Link href="/signup" className={classes.linkClass}>
-                  Sign Up here!
+                  Sign Up here! OR FB
                 </Link>
               </Badge>
             </Grid>
