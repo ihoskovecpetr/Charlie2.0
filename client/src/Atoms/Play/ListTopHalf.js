@@ -35,7 +35,9 @@ const ListTopHalf = ({event, transparent}) => {
               style={{backgroundColor: bgColor }}>
             <Grid container 
                   alignItems="center"
-                  justify="center">
+                  justify="center"
+                  className={classes.nameAndPrice} 
+                  >
               <Grid item xs={8}>
                 <Typography variant="h4" className={classes.mainHeader}>
                 {event.name}
@@ -117,6 +119,9 @@ const useStyles = makeStyles(theme => ({
         marginLeft: '10%',
         marginRight: '10%',
         backgroundColor: "#707070"
+      },
+      nameAndPrice:{
+        marginBottom: 25
       },
       mainHeader:{
         textAlign: "center",

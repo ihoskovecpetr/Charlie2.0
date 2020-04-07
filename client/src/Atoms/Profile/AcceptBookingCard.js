@@ -90,7 +90,7 @@ export default function AcceptBookingCard({ event }) {
   const seenHostHandle = () => {
     markBookingSeen({
       variables: {
-        event_id: event.event._id,
+        booking_id: event._id,
         user: false,
       },
       refetchQueries: () => [
@@ -234,7 +234,7 @@ if(event.decided){
         <Grid container className={classes.middleBody}>
           <ListTopHalf event={event.event} transparent={true}/>
         </Grid>
-        <Grid container className={classes.messageWrap}>
+        <Grid container justify="center" className={classes.messageWrap}>
           <Grid item>
             <Grid container className={classes.messageContainer}>
                 <Grid item xs={12}>
@@ -260,14 +260,18 @@ if(event.decided){
                   </Grid>
                 </Grid>
                 <Grid item xs={8}>
-                  <TextField
-                          id="outlined-basic"
-                          label="Response..."
-                          variant="outlined"
-                          inputRef={inputDescription}
-                          className={classes.textField}
-                          style={{ width: xs_size_memo ? "100%" : "300px" }}
-                        />
+                  <Grid container justify="center">
+                    <Grid item>
+                      <TextField
+                              id="outlined-basic"
+                              label="Response..."
+                              variant="outlined"
+                              inputRef={inputDescription}
+                              className={classes.textField}
+                              style={{ width: xs_size_memo ? "100%" : "300px" }}
+                            />
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item xs={2}>
                   <Grid container justify="center">

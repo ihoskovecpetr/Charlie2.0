@@ -208,7 +208,7 @@ const useStyles = makeStyles(theme => ({
   },
   link_main_pink: {
     width: "100%",
-    boxShadow: "2px 4px 6px 0px white !important",
+    boxShadow: "2px 4px 6px 0px black !important",
   },
   link_main_grey: {
     width: "100%",

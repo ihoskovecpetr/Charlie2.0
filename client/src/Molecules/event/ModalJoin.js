@@ -9,7 +9,8 @@ import Button from "@material-ui/core/Button";
 
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
 
 import {GET_ONE_EVENT} from "src/Services/GQL/GQL_GET_ONE_EVENT";
 import { UserContext } from "../../userContext";
@@ -36,14 +37,16 @@ const BOOKING_REQ = gql`
   }
 `;
 
-function ModalJoin({event, match}) {
+function ModalJoin({event}) {
   const classes = useStyles();
   const { context } = useContext(UserContext);
+  let history = useHistory();
+
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("Hi, please let me in");
   const [createReqBooking, bookingReqStates] = useMutation(BOOKING_REQ);
 
-  console.log("ModalJoin: event: ", event)
+  console.log("ModalJoin: history: ", history)
 
   const handleOpen = () => {
     setOpen(true);
@@ -64,7 +67,7 @@ function ModalJoin({event, match}) {
       refetchQueries: () => [
         {
           query: GET_ONE_EVENT,
-          variables: { id: match.params.id }
+          variables: { id: history.location.pathname.split("/")[2] }
         }
       ]
     });
@@ -209,4 +212,4 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default withRouter(ModalJoin);
+export default ModalJoin;

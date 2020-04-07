@@ -13,10 +13,12 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import clsx from "clsx";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
+import { useHistory } from "react-router-dom";
 import { Animated } from "react-animated-css";
 
 import { UserContext } from "../../userContext";
 import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
+import {GET_ONE_EVENT} from "src/Services/GQL/GQL_GET_ONE_EVENT";
 
 import Spinner from "../../Atoms/Spinner";
 
@@ -43,37 +45,67 @@ const BOOKING_REQ = gql`
 
 export default function JoinSend({event, getPlayEventsMutation}) {
     const classes = useStyles();
+    let history = useHistory();
+    const { context, setContext } = useContext(UserContext);
     const [checked, setChecked] = useState(false);
     const [refetched, setRefetched] = useState(false);
-    const { context, setContext } = useContext(UserContext);
+
+    const [localState, setLocalState] = useState({
+      message: "JOIN",
+      pending: false,
+      attending: false,
+      icon: [<WhatshotIcon fontSize="large" />]
+    });
     const [createReqBooking,  { loading, error, data }] = useMutation(BOOKING_REQ);
 
     const inputDescription = useRef(null);
 
     console.log("JoinSend event: ", event)
 
-    let pending = false
-    let attending = false
-    let message = "JOIN"
-    let icon = [<WhatshotIcon fontSize="large" />]
+    useEffect(() => {
 
-    event && event.bookings && event.bookings.map(item => {
+      event && event.bookings && event.bookings.map(item => {
+        console.log("Iterace", item)
         if( item.user._id === context._id) {
             if(item.confirmed){
-                attending = true
-                message = "Attending"
-                icon = [<DoneIcon fontSize="large" />]
+              console.log("change sts Attending")
+                // attending = true
+                // icon = [<DoneIcon fontSize="large" />]
+                setLocalState(prev => {
+                  {
+                    return { 
+                      ...prev, 
+                      message: "Attending",
+                    attending: true,
+                    icon: [<DoneIcon fontSize="large" />]
+                   };
+                  }
+                })
             } else{
-                pending = true
-                message = "Pending"
-                icon = [<HourglassEmptyIcon fontSize="large" />]
+              console.log("change sts Pending")
+                // pending = true
+                // icon = [<HourglassEmptyIcon fontSize="large" />]
+                // setMessage("Pending")
+                setLocalState(prev => {
+                  {
+                    return { 
+                      ...prev, 
+                      message: "Pending",
+                      pending: true,
+                    icon: [<HourglassEmptyIcon fontSize="large" />]
+                   };
+                  }
+                })
             }
         }
     })
 
+    console.log("USEEEFFF JOINSEND RES: ", localState.pending, localState.attending, localState.message)
+
+    }, [event, event.bookings, context._id])
 
     function openJoin(){
-      if(!attending && !pending){
+      if(!localState.attending && !localState.pending){
         setChecked(true)
         setTimeout(() => { window.scrollBy({
           top: 200,
@@ -98,12 +130,16 @@ export default function JoinSend({event, getPlayEventsMutation}) {
               {
                 query: PROFILE_DATA,
                 variables: { host_id: context._id }
-              }
+              },
+              {
+                query: GET_ONE_EVENT,
+                variables: { id: history.location.pathname.split("/")[2] }
+              },
             ]
           })
     }
-
-    if(data && data.requestBookEvent.success && !refetched){
+    // Just for PLAY Page
+    if(data && data.requestBookEvent.success && !refetched && getPlayEventsMutation){
       setRefetched(true)
       setChecked(false)
       setTimeout(() => {getPlayEventsMutation({variables:{
@@ -116,21 +152,24 @@ export default function JoinSend({event, getPlayEventsMutation}) {
 
       , 1000)
     }
+    console.log("Gping to??")
+
 
     if(event.areYouAuthor) return null
 
+    console.log("Gping to return??")
 
     return (
         <>
         <Chip 
-        label={`${message}`} 
+        label={`${localState.message}`} 
         // icon={attending && <DoneIcon fontSize="large" />}
-        icon={icon[0]}
+        icon={localState.icon[0]}
         //variant="outlined" 
         color="secondary" 
         className={classes.chipOne} 
         onClick={openJoin}
-        disabled={checked || attending || pending}
+        disabled={checked || localState.attending || localState.pending}
         />
         <Grid container
             className={clsx(classes.sendJoinContainer, checked && classes.openSend, )}

@@ -5,14 +5,13 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import { withRouter, NavLink, useHistory } from "react-router-dom";
 
-import gql from "graphql-tag";
-
 import { UserContext } from "../../userContext";
 import { ALL_EVENTS } from "../../Services/GQL";
 import {GET_ONE_EVENT} from "src/Services/GQL/GQL_GET_ONE_EVENT";
 
 import ModalJoin from "./ModalJoin";
 import ModalRate from "./ModalRate";
+import JoinSend from "src/Molecules/play/JoinSend";
 
 function EventButtons({event, bookings, user, createReqBooking, createBooking, cancelBooking, deleteOneEvent, EVENT_RATINGS}) {
   const classes = useStyles();
@@ -148,6 +147,7 @@ function EventButtons({event, bookings, user, createReqBooking, createBooking, c
           <ModalJoin
             event={event}
           />
+
         </Grid>
       }
 
@@ -158,6 +158,8 @@ function EventButtons({event, bookings, user, createReqBooking, createBooking, c
           </Button>
         </Grid>
       )}
+      
+       <JoinSend event={event}/>
 
       {userIsAtt && (
         <Grid item className={classes.buttonCls}>

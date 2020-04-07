@@ -299,7 +299,7 @@ export const resolvers = {
           userHost = {seenHost: true}
         }
         const result = await Booking.update(
-          { event: _args.event_id},
+          { _id: _args.booking_id},
           { $set: userHost}
         );
 
@@ -365,7 +365,7 @@ function newFunction() {
     bookEvent(event_id: String!, user_id: String!, message: String): Hlaska!
     cancelBooking(event_id: String!, user_id: String!): Hlaska!
     confirmBooking(event_id: ID!, user_id: ID!, response: String, decision: Boolean): Hlaska!
-    markBookingSeen(event_id: ID!, user: Boolean): Hlaska
+    markBookingSeen(booking_id: ID!, user: Boolean): Hlaska
     newestUserBookings(user_id: ID!): [Booking]
   }
 

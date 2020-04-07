@@ -299,7 +299,7 @@ const useStyles = makeStyles(theme => ({
   },
   buttonContainer: {
     width: "100%",
-    marginBottom: 20
+    marginBottom: 10
   },
   descWrap: {
     width: "100%",
@@ -332,14 +332,14 @@ const useStyles = makeStyles(theme => ({
     color: "white",
     fontWeight: 600,
     height: 40,
-    width: 150,
+    width: 120,
     backgroundColor: "rgba(0,0,0,0.3)",
     boxShadow: "4px 3px 5px 0px rgba(0,0,0,0.5)"
   },
   settingsButton: {
     color: "white",
     height: 40,
-    width: 150,
+    width: 120,
     backgroundColor: "rgba(0,0,0,0.3)",
     boxShadow: "4px 3px 5px 0px rgba(0,0,0,0.5)"
   },

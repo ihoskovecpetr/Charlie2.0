@@ -64,7 +64,7 @@ useEffect(() => {
   const seenUserHandle = () => {
     markBookingSeen({
       variables: {
-        event_id: event.event._id,
+        booking_id: event._id,
         user: true,
       },
       refetchQueries: () => [

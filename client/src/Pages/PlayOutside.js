@@ -137,14 +137,14 @@ if (oneEventData.data) {
       
           {getPlayEvents && getPlayEvents.success === true && <>
                 <Grid container justify='center'>
-                  <Grid item >
+                  {/* <Grid item >
                       <Typography variant="h4" className={classes.mainHeader}>
                     {getPlayEvents.name}
                     <p className={classes.thisLine}></p>
 
                       </Typography>
                   </Grid>
-                  <TimeDistanceChips event={getPlayEvents} />
+                  <TimeDistanceChips event={getPlayEvents} /> */}
                 </Grid>
                   <PlayPageGallery event={getPlayEvents} />
                   <PlayPageList

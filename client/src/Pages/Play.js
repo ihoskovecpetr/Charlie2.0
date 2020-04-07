@@ -244,7 +244,7 @@ if (data) {
                         <Grid item xs={12}>
                           
 
-                            <JoinSend event={event} getPlayEventsMutation={getPlayEventsMutation} />
+                            <JoinSend event={event} getPlayEventsMutation={getPlayEventsMutation} getPlayEvents={getPlayEvents} />
 
                         </Grid>
                       </Grid>
