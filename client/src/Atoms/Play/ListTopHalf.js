@@ -11,10 +11,13 @@ import { UserContext } from "src/userContext";
 import { displayDate } from "src/Services/transform-services";
 import { useCountDistance } from "src/Hooks/useCountDistance";
 import { useXsSize } from "src/Hooks/useXsSize";
+import { useCountdown } from "src/Hooks/useCountdown";
+
 
 const ListTopHalf = ({event, transparent}) => {
     const classes = useStyles();
     const { context, setContext } = useContext(UserContext);
+    const { counteddownDate } = useCountdown(event.dateStart, 1)
     const { xs_size_memo, md_size_memo } = useXsSize();
     const distance = useCountDistance(event.geometry.coordinates[1], event.geometry.coordinates[0], context.geolocationObj && context.geolocationObj.lat, context.geolocationObj && context.geolocationObj.lng, "K")
 
@@ -91,7 +94,7 @@ const ListTopHalf = ({event, transparent}) => {
               </Grid>
               <Grid item xs={4} className={classes.timeDistanceWrap}>
                 <Typography variant="p" className={classes.timeDistance}>
-                In <b>{`${countdown(new Date(event.dateStart), new Date(), "X", 1).toString()}`}</b>
+                {counteddownDate}
                 </Typography>
               </Grid>
             </Grid>

@@ -142,23 +142,23 @@ function EventButtons({event, bookings, user, createReqBooking, createBooking, c
   // ACTIVE EVENT
   return (
     <>
-      {!userIsAtt && !userIsPend && !event.areYouAuthor &&
+      {/* {!userIsAtt && !userIsPend && !event.areYouAuthor &&
         <Grid item className={classes.buttonCls}>
           <ModalJoin
             event={event}
           />
 
         </Grid>
-      }
+      } */}
 
-      {!userIsAtt && userIsPend && (
+      {/* {!userIsAtt && userIsPend && (
         <Grid item className={classes.buttonCls}>
           <Button variant="contained" className={classes.trueBtn}>
             PENDING REQ
           </Button>
         </Grid>
-      )}
-      
+      )} */}
+
        <JoinSend event={event}/>
 
       {userIsAtt && (

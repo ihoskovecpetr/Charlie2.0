@@ -174,7 +174,7 @@ function Profile() {
                       badgeContent={                       
                         data &&
                         data.showUserBookings &&
-                        data.showUserBookings.length
+                        data.showUserBookings.length + data.userEvents.length
                       }
                     >
                       EVENTS

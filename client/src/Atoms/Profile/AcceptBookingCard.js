@@ -202,13 +202,13 @@ if(event.decided){
             align="left"
             className={classes.countdown}
           >
-            {countdown(
-              new Date(event.createdAt),
+            updated <b>{countdown(
+              new Date(event.updatedAt),
               new Date(),
               "X",
               1
             ).toString()}{" "}
-            ago
+            ago</b>
           </Typography>
         </Grid>
 
@@ -324,7 +324,7 @@ const useStyles = makeStyles(theme => ({
   },
   countdown: {
     marginTop: 10,
-    fontWeight: 600,
+    fontWeight: 400,
     color: "grey",
     marginLeft: 20
   },

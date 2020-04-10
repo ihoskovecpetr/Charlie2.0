@@ -8,7 +8,6 @@ import EventIcon from '@material-ui/icons/Event';
 import { makeStyles } from "@material-ui/core/styles";
 
 import clsx from 'clsx'
-import countdown from "countdown";
 
 import { UserContext } from "src/userContext";
 import { displayDate } from "../../Services/transform-services";

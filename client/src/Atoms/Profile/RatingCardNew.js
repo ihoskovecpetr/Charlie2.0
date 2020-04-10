@@ -126,13 +126,13 @@ let badgeContent
             className={classes.countdown}
           >
            {!expanded ? <Rating name="simple-controlled" readOnly value={rating.ratingValue}  className={classes.ratingSmall}/> : null}
-          {countdown(
+          rated <b>{countdown(
               new Date(rating.createdAt),
               new Date(),
               "X",
               1
             ).toString()}{" "}
-            ago
+            ago</b>
           </Typography>
         </Grid>
 
@@ -229,7 +229,7 @@ const useStyles = makeStyles(theme => ({
   },
   countdown: {
     marginTop: 10,
-    fontWeight: 600,
+    fontWeight: 400,
     color: "grey",
     marginLeft: 20
   },

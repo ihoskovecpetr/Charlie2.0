@@ -20,6 +20,7 @@ import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
 import { useXsSize } from "../../Hooks/useXsSize";
+import { useCountdown } from "src/Hooks/useCountdown";
 import { UserContext } from "../../userContext";
 
 import PlayListWrap from "./PlayListWrap";
@@ -30,6 +31,7 @@ import PlayPageMap from "../../Molecules/play/PlayPageMap";
 export default function EventCardProfile({ event }) {
   const classes = useStyles();
   const { xs_size_memo, md_size_memo } = useXsSize();
+  const { counteddownDate } = useCountdown(event.dateStart, 1)
   const [expanded, setExpanded] = useState(false);
   const { context, setContext } = useContext(UserContext);
 
@@ -136,13 +138,7 @@ if(event.decided){
             align="left"
             className={classes.countdown}
           >
-            {countdown(
-              new Date(event.dateStart),
-              new Date(),
-              "X",
-              1
-            ).toString()}{" "}
-            ago
+           event start <b>{counteddownDate}</b>
           </Typography>
         </Grid>
 
@@ -218,7 +214,7 @@ const useStyles = makeStyles(theme => ({
   },
   countdown: {
     marginTop: 10,
-    fontWeight: 600,
+    fontWeight: 400,
     color: "grey",
     marginLeft: 20
   },
