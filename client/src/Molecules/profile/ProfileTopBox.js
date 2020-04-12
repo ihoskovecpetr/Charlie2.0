@@ -28,12 +28,17 @@ import { UserContext } from "src/userContext";
 
 import DropzoneSignup from "src/Molecules/DropzoneSignup";
 
+import QRCode from "qrcode";
+
+
+
 export default function ProfileTopBox({ errorQuery }) {
   const classes = useStyles();
   const history = useHistory();
   const { md_size_memo } = useXsSize();
   const { context } = useContext(UserContext);
   const [expanded, setExpanded] = useState(false)
+  const [qrImage, setQrImage] = useState("")
   const [formValue, setFormValue] = useState({ picture: context.picture });
   
   const [updateUser, { loading, error, data }] = useMutation(UPDATE_USER);
@@ -52,6 +57,22 @@ export default function ProfileTopBox({ errorQuery }) {
       context.getLoggedInUser()
     }
   }, [dataOut])
+
+  useEffect(() => {
+
+const getQR = async () => {
+    try{
+          const QRulr = await QRCode.toDataURL('I am a pony!')
+          console.log("QRulr: ", QRulr);
+          setQrImage(QRulr)
+    }catch{
+      console.log("error QRkode")
+    }
+  }
+
+  getQR()
+
+  }, [])
 
 
   const onSubmitHandler = (e) => {
@@ -77,11 +98,7 @@ export default function ProfileTopBox({ errorQuery }) {
           {
             query: PROFILE_DATA,
             variables: { host_id: context._id }
-          },
-          // {
-          //   query: LOGIN,
-          //   variables: { user_id: "FAKE" }
-          // }
+          }
         ]
       })
       setExpanded(!expanded)
@@ -89,6 +106,8 @@ export default function ProfileTopBox({ errorQuery }) {
       // setFEerrors(empty);
     }
 }
+
+
 
 
   return (
@@ -304,6 +323,10 @@ const useStyles = makeStyles(theme => ({
   descWrap: {
     width: "100%",
     padding: 5,
+  },
+  qr_code:{
+    height: 100,
+    width: 100
   },
   textFieldDesc: {
     margin: 5,

@@ -126,10 +126,13 @@ function Create(props) {
   const price = Price.value
   const plusClickPrice = Price.plusClickValue
   const minusClickPrice = Price.minusClickValue
+  const setNewValuePrice = Price.setNewValue
+
 
   const capacity = Capacity.value
   const plusClickCapacity = Capacity.plusClickValue
   const minusClickCapacity = Capacity.minusClickValue
+  const setNewValueCapacity = Capacity.setNewValue
 
 
   const [FeErrors, setFeErrors] = useState([]);
@@ -234,6 +237,12 @@ function Create(props) {
       return { ...prev, currency: event.target.value };
     });
   };
+
+  const handleChangeBYO = () => {
+    setFormValue(prev => {
+      return { ...prev, BYO: !formValue.BYO };
+    });
+  }
 
   if (dataOut) {
     setTimeout(() => {
@@ -441,6 +450,10 @@ function Create(props) {
                 type="number"
                 value={price}
                 //onChange={handleChange("amount")}
+                onChange={(value) => {
+                  console.log("CHange Price: ", value)
+                  setNewValuePrice(value.target.value)
+                }}
                 startAdornment={
                   <InputAdornment position="start">
                     {formValue.currency}
@@ -495,6 +508,9 @@ function Create(props) {
               <TextField
                 value={capacity}
                 type="number"
+                onChange={(value) => {
+                  setNewValueCapacity(value.target.value)
+                }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -516,15 +532,14 @@ function Create(props) {
               </IconButton>
             </Grid>
           </Grid>
-          <InputLabel htmlFor="standard-adornment-amount">BYO Event</InputLabel>
+          <InputLabel htmlFor="standard-adornment-amount">BYO Event (guest can bring his own dring/snack)</InputLabel>
           <FormControlLabel
             className={classes.switchBYO}
             control={
               <Switch
                 //checked={formValue.checkedA}
-                //onChange={handleChange("checkedA")}
-                //value="checkedA"
-                defaultValue={true}
+                onChange={handleChangeBYO}
+                checked={formValue.BYO}
                 inputRef={inputBYO}
               />
             }
@@ -544,7 +559,7 @@ function Create(props) {
                 required
                 fullWidth
                 id="decsription"
-                defaultValue="Example: Upon arrival, you will get welcome drink and some snacks will be ready on the balcony. Grill be ready too."
+                placeholder="Example: Upon arrival, you will get welcome drink and some snacks will be ready on the balcony. Grill be ready too."
                 multiline
                 rows="4"
                 inputRef={inputDescription}

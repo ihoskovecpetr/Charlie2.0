@@ -77,10 +77,7 @@ export const resolvers = {
           "dateStart": -1
         });
         if (userEvents) {
-          console.log("Tohle chci:", userEvents)
           return userEvents.map(event => {
-            //let result = await transformEvent(event);
-            //console.log("RESOLVR LEVL: ", result);
             let areYouAuthor = event.author == context.reqO.req.userId;
             return transformEvent(event, areYouAuthor);
           });
@@ -182,11 +179,9 @@ export const resolvers = {
             "dateStart"
           )
           if (playEvents) {
-            console.log("PlayEventd is there distance?: ", playEvents);
             let filtered = playEvents.filter((item) => item.dateStart > new Date()) 
 
             filtered = filtered.filter((item) => {
-              console.log("!_args.playInput.shownEvents.includes(item._id): ", item._id , _args.playInput.shownEvents && _args.playInput.shownEvents.includes(item._id.toString()))
               if(_args.playInput.shownEvents){
                 return !_args.playInput.shownEvents.includes(item._id.toString())
               }else{

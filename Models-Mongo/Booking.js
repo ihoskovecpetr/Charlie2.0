@@ -26,6 +26,9 @@ const bookingSchema = new Schema(
     decided: {
       type: Boolean
     },
+    entered: {
+      type: Boolean
+    },
     message: {
       type: String
     },

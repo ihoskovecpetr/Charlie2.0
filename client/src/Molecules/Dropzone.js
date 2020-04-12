@@ -5,7 +5,7 @@ import request from "superagent";
 import WallpaperIcon from "@material-ui/icons/Wallpaper";
 import { makeStyles } from "@material-ui/core/styles";
 
-import Spinner from "../Atoms/Spinner";
+import Spinner from "src/Atoms/Spinner";
 
 // const CLOUDINARY_UPLOAD_PRESET = "simple-preset-1";
 const CLOUDINARY_UPLOAD_PRESET = "simpl_pst"; 

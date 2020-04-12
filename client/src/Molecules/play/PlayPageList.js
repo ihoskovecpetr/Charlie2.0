@@ -3,8 +3,6 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import RoomIcon from '@material-ui/icons/Room';
-import EventIcon from '@material-ui/icons/Event';
 import { makeStyles } from "@material-ui/core/styles";
 
 import clsx from 'clsx'
@@ -16,6 +14,7 @@ import { useXsSize } from "src/Hooks/useXsSize";
 
 import Spinner from "../../Atoms/Spinner";
 import ListTopHalf from "src/Atoms/Play/ListTopHalf";
+import QRCodeEntering from "src/Atoms/Play/QRCodeEntering";
 import PendingGuest from "../event/PendingGuest";
 import ConfirmedGuest from "../event/ConfirmedGuest";
 import UserCardPlay from "./UserCardPlay";
@@ -100,7 +99,7 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
                   justify="flex-end">
               <Grid item xs={12}>
                 <Typography variant="p" className={classes.lineHeader}>
-                ATTENDEES
+                ATTENDEES (x/{event.capacityMax})
                 </Typography>
               </Grid>
               <Grid item xs={10} className={classes.attendeesWrap}>
@@ -129,6 +128,7 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
                           checked={event.BYO}
                           //onChange={handleChange("checkedA")}
                           value="checkedA"
+                          disabled={true}
                           // defaultValue={true}
                           // inputRef={inputBYO}
                         />
@@ -181,6 +181,12 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
                         </Grid>
                     </Typography>
               </Grid>
+              <Grid item xs={12}>
+                <Typography component="div" className={classes.lineHeader}>
+                  CONFIRM comming guests
+                </Typography>
+              </Grid>
+              <QRCodeEntering bookings={bookings} />
               </>}
 
             </Grid>

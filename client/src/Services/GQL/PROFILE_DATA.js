@@ -9,6 +9,7 @@ export const PROFILE_DATA = gql`
       success
       name
       price
+      capacityMax
       currency
       dateStart
       address
@@ -67,6 +68,7 @@ export const PROFILE_DATA = gql`
       confirmed
       cancelled
       decided
+      entered
       seenUser
       seenHost
       host {
@@ -85,6 +87,7 @@ export const PROFILE_DATA = gql`
         dateStart
         price
         currency
+        capacityMax
         address
         areYouAuthor
         geometry {
@@ -118,6 +121,7 @@ export const PROFILE_DATA = gql`
       confirmed
       cancelled
       decided
+      entered
       seenUser
       seenHost
       host {

@@ -87,12 +87,9 @@ export default function DrawerProfileBox({handleDrawerToggle}) {
             <Grid container justify='center' alignItems="center" className={classes.bottomPart}>
             {context.name && <>
             <Grid item className={classes.actBtns} onClick={handleDrawerToggle}>
-            <Badge badgeContent={context.countUnseenBookings + context.countUnseenRatings} color="secondary">
-            
-            
-                <NavLink
-                to={`/profile`}
-                >
+            <Badge badgeContent={context.countUnseenBookings + context.countUnseenRatings} 
+                    color="secondary">
+                <NavLink to={`/profile`}>
                     {/* <Chip
                     className={classes.chip}
                     // avatar={
@@ -107,7 +104,7 @@ export default function DrawerProfileBox({handleDrawerToggle}) {
                     style={{ color: "white"}}
                     /> */}
                         <Typography component="p">
-                            FEED
+                            ACTIVITY
                         </Typography>
                 </NavLink>
             </Badge>

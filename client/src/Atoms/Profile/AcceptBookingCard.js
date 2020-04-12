@@ -30,6 +30,7 @@ import ClosePNG from "../../Images/close_black.png";
 import UserAskMessage from "./UserAskMessage";
 import EventInfoLines from "./EventInfoLines";
 import ListTopHalf from "src/Atoms/Play/ListTopHalf";
+import Spinner from "../Spinner";
 
 const CONFIRM_BOOKING = gql`
   mutation confirmBooking(
@@ -150,6 +151,8 @@ if(event.decided){
     badgeContent = <HelpOutlineIcon fontSize="small" className={classes.dotBadge} /> 
   }
 
+  console.log("confirmStates: ", confirmStates)
+
   return (
     <Grid
       item
@@ -253,8 +256,12 @@ if(event.decided){
                 <Grid item xs={2}>
                   <Grid container justify="center">
                     <Grid item>
-                      <IconButton aria-label="settings" className={classes.iconBtn} onClick={() => {ConfirmHandle(false)}}>
-                        <Avatar src={ClosePNG} className={classes.btnAvatar} />
+                      <IconButton aria-label="settings" 
+                                  className={classes.iconBtn} 
+                                  onClick={() => {ConfirmHandle(false)}}>
+                                    {confirmStates.loading 
+                                    ? <Spinner height={20} width={20} /> 
+                                    : <Avatar src={ClosePNG} className={classes.btnAvatar} />}
                       </IconButton>
                     </Grid>
                   </Grid>
@@ -266,6 +273,7 @@ if(event.decided){
                               id="outlined-basic"
                               label="Response..."
                               variant="outlined"
+                              disabled={confirmStates.loading ? true : false}
                               inputRef={inputDescription}
                               className={classes.textField}
                               style={{ width: xs_size_memo ? "100%" : "300px" }}
@@ -276,11 +284,12 @@ if(event.decided){
                 <Grid item xs={2}>
                   <Grid container justify="center">
                     <Grid item>
-                      <IconButton aria-label="settings" className={classes.iconBtn} onClick={() => {ConfirmHandle(true)}}>
-                        <Avatar
-                          src={ConfirmPNG}
-                          className={classes.btnAvatar}
-                        />
+                      <IconButton aria-label="settings" 
+                                  className={classes.iconBtn} 
+                                  onClick={() => {ConfirmHandle(true)}}>
+                        {confirmStates.loading 
+                                    ? <Spinner height={20} width={20} /> 
+                                    : <Avatar src={ConfirmPNG} className={classes.btnAvatar} />}
                       </IconButton>
                     </Grid>
                   </Grid>

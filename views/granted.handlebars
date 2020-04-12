@@ -362,6 +362,11 @@ img.img-responsive {
     text-align: center;
 }
 
+.qr_code_img{
+    width: 140px;
+    height: 140px;
+}
+
 .creator{
     width: 200px;
     text-align: center;
@@ -399,20 +404,34 @@ console.log("EventId: ", {{eventURL}})
     					<table>
     						<tr>
     							<td class="inner-td td-ticket">                           
-                                <div class="line"><p><b>Your Access is Granted</b></p></div>
-                                <div class="line"><p>from host:</p></div>
+                                <div class="line"><p>Booking <b>RESOLVED</b></p></div>
 
                                 <div class="line">
-                                    <p class="dark"><b>
-                                    {{creatorName}}
-                                    </b></p>
-                                </div>
-                                <div class="line">
-                                    <p class="dark"><b>
-                                    {{creatorEmail}}
-                                    </b></p>
+                                    <p class="dark">
+                                        Event: <b>{{event_name}}</b>
+                                    </p>
                                 </div>
 
+                                <div class="line">
+                                    <p class="dark">
+                                    Decision: <b>{{decision}}</b>
+                                    </p>
+                                </div>
+
+                                <div class="line">
+                                    <p class="dark">
+                                    Message: <b>{{message}}</b>
+                                    </p>
+                                </div>
+
+                                <div class="line">
+                                    <p class="dark">
+                                       Start: <b>{{event_dateStart}}</b>
+                                    </p>
+                                </div>
+                                <div class="line">
+                                     <img src="{{{event_QRCode}}}" alt="QR-code" class="qr_code_img" />
+                                </div>
                                 <div class="line"><p>for event:</p></div>
                                 <div class="line"><p><b>{{event_name}}</b></p></div>
                                 <p class="button-holder-center">

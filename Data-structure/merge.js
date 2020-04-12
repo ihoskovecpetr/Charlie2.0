@@ -4,7 +4,6 @@ const User = require("../Models-Mongo/User");
 const transformEvent = async (event, areYouAuthor) => {
 
   if (event) {
-    console.log("Transofrming Event HRE: ", event._doc.createdAt);
     return {
       ...event._doc,
       _id: event.id,

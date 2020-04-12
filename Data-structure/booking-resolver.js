@@ -1,13 +1,20 @@
 import Event from "../Models-Mongo/Event.js";
 import User from "../Models-Mongo/User.js";
 import Booking from "../Models-Mongo/Booking.js";
+import createHTMLconfirmation from "../Helpers/createHTMLconf.js";
 import {
   userLookup,
   singleEvent,
   //transformBooking,
   transformEvent
 } from "./merge";
+import QRCode from 'qrcode'
+
+const Promise = require('bluebird');
+const pdf = Promise.promisifyAll(require('html-pdf'));
+var base64Img = require('base64-img');
 const nodemailer = require("nodemailer");
+const path = require('path');
 const { google } = require("googleapis");
 const hbs = require("nodemailer-express-handlebars");
 
@@ -21,6 +28,7 @@ const hbs = require("nodemailer-express-handlebars");
 //     updatedAt: new Date(booking._doc.updatedAt).toISOString()
 //   };
 // };
+
 
 const OAuth2 = google.auth.OAuth2;
 
@@ -129,6 +137,7 @@ export const resolvers = {
             confirmed: false,
             cancelled: false,
             decided: false,
+            entered: false,
             seenUser: false,
             seenHost: false,
           });
@@ -170,6 +179,7 @@ export const resolvers = {
     },
     requestBookEvent: async (_, _args, __) => {
       try {
+        console.log("requestBookEvent: START")
         let event = await Event.findById(_args.event_id);
         let author = await User.findById(event.author);
         //poslat mail a udelat booking with confirmed false
@@ -177,6 +187,7 @@ export const resolvers = {
           event: _args.event_id,
           user: _args.guest_id
         });
+
         console.log("existingBooking: ", existingBooking);
 
         if (existingBooking.length) {
@@ -200,11 +211,13 @@ export const resolvers = {
             confirmed: false,
             cancelled: false,
             decided: false,
+            entered: false,
             seenUser: false,
             seenHost: false,
           });
           const result = await booking.save();
           if (result._id) {
+            console.log("SENDINGG MAIL")
             smtpTransport.use(
               "compile",
               hbs({
@@ -273,19 +286,94 @@ export const resolvers = {
       }
     },
     confirmBooking: async (_, _args, __) => {
+
       try {
+        const guest = await User.find({_id: _args.user_id})
+        const event = await Event.find({_id: _args.event_id})
         const result = await Booking.update(
           { event: _args.event_id, user: _args.user_id },
           { $set: { confirmed: _args.decision, response: _args.response, decided: true }}
         );
-        //const result = await booking.save();
 
-        console.log("confirming finished: ", result);
         if (result.ok) {
-          return { success: true };
+          smtpTransport.use(
+            "compile",
+            hbs({
+              viewEngine: {
+                extName: ".handlebars",
+                partialsDir: "./views/",
+                layoutsDir: "./views/",
+                defaultLayout: "granted.handlebars"
+              },
+              viewPath: "views"
+            })
+          );
+          const QRKod = await QRCode.toDataURL(`I am a pony NEW! ${event[0].name}, ${event[0].address} `)
+
+
+          const eventURL = "https://www.charlieparty.club/event/"; //+ req.body.event._id
+          const dateString = new Date(event[0].dateStart).toISOString().split("T");
+          const timeString = dateString[1].split(":");
+
+          let html = createHTMLconfirmation({QRCode: QRKod, 
+            message: _args.response,
+            event_name: event[0].name, 
+            event_address: event[0].address,
+            event_dateStart: dateString[0] + " " + timeString[0] + ":" + timeString[1],
+            event_description: event[0].description,
+            guest_name: guest[0].name,
+
+          })
+
+          const pdfResult = await pdf.createAsync(html, { format: 'A4', filename: `PDF/${guest[0].name} - ${event[0].name}.pdf` });
+
+          
+          var mailOptions1 = {
+            from: "Charlie Party: " + event[0].name ,
+            to: guest[0].email, //req.body.user_email,
+            subject: "You just got confirmed",
+            template: "monkey",
+            context: {
+              eventURL: eventURL,
+              event_QRCode: QRKod,
+              event_name: event[0].name,
+              event_dateStart: dateString[0] + " " + timeString[0] + ":" + timeString[1],
+              message: _args.response,
+              decision: _args.decision ? "CONFIRMED" : "DECLINED"
+            },
+            attachments: [
+              {
+                  filename: `Event ${event[0].name}.pdf'`, // <= Here: made sure file name match
+                  // path: path.join(__dirname, '../PDF/pozdrav.pdf'), // <= Here
+                  path: pdfResult.filename,
+                  // content: pdfResult.filename,
+                  contentType: 'application/pdf'
+              }
+          ]
+          };
+          
+          console.log("mailOptions1: ", mailOptions1);
+
+
+          console.log("pdfResult: ", pdfResult);
+
+          const resMail = await smtpTransport.sendMail(mailOptions1);
+
+
+          if (pdfResult && resMail.rejected.length !== 0) {
+            return {
+              success: false,
+              message: `Sending mail to ${author.email} has failed`
+            };
+          } else {
+            smtpTransport.close();
+            return { success: true, message: "Email has been sent" };
+          }
+
         } else {
-          return { success: false };
+          return { success: false, message: "Creating of booking failed" };
         }
+
       } catch (err) {
         throw err;
       }
@@ -364,7 +452,7 @@ function newFunction() {
     requestBookEvent(event_id: String!, guest_id: String!, guest_name: String!, message: String!): Hlaska!
     bookEvent(event_id: String!, user_id: String!, message: String): Hlaska!
     cancelBooking(event_id: String!, user_id: String!): Hlaska!
-    confirmBooking(event_id: ID!, user_id: ID!, response: String, decision: Boolean): Hlaska!
+    confirmBooking(event_id: ID!, user_id: ID!, host_id: ID, response: String, decision: Boolean): Hlaska!
     markBookingSeen(booking_id: ID!, user: Boolean): Hlaska
     newestUserBookings(user_id: ID!): [Booking]
   }
@@ -387,6 +475,7 @@ function newFunction() {
     confirmed: Boolean
     cancelled: Boolean
     decided: Boolean
+    entered: Boolean
     success: Boolean
     seenUser: Boolean
     seenHost: Boolean

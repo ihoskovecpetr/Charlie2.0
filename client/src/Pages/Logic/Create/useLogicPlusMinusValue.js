@@ -7,14 +7,34 @@ export function useLogicPlusMinusValue(idPlus, idMinus, startValue ) {
   let timerPlus
   let timerMinus
 
+  const setNewValue = (value) => {
+    if(parseInt(value, 10) <= -1){
+      setValue(0)
+    }else{
+      setValue(parseInt(value, 10)) 
+    }
+    
+  };
+
   const plusClickValue = () => {
-    setValue(prev => (prev + 1 ));
+
+    setValue(prev => {
+        if(prev || prev == 0){
+          return(parseInt(prev, 10) + 1)
+        }else{
+          return(0)
+        }
+      }
+    )
+
   };
 
   const holdingPlus = () => {
     timerPlus = setInterval(function() {
-      setValue(prev => (prev + 1));
-    }, 100);
+      setValue(prev => {
+        return(parseInt(prev + 1, 10)) 
+      });
+    }, 200);
   }
 
   const resetTimerPlus = () => {
@@ -22,13 +42,25 @@ export function useLogicPlusMinusValue(idPlus, idMinus, startValue ) {
   }
 
   const minusClickValue = () => {
-    setValue(prev => (prev - 1));
+    setValue(prev => {
+      if(parseInt(prev - 1, 10) <= -1){
+        return(0)
+      }else{
+        return(parseInt(prev - 1, 10)) 
+      }
+    });
   };
 
   const holdingMinus = () => {
     timerMinus = setInterval(function() {
-      setValue(prev => (prev - 1));
-    }, 100);
+      setValue(prev => {
+        if(parseInt(prev - 1, 10) <= -1){
+          return(0)
+        }else{
+          return(parseInt(prev - 1, 10)) 
+        }
+      });
+    }, 200);
   }
 
   const resetTimerMinus = () => {
@@ -58,7 +90,7 @@ export function useLogicPlusMinusValue(idPlus, idMinus, startValue ) {
   //   return xs_size;
   // }, [xs_size]);
 
-  let Package = { value, plusClickValue, minusClickValue }
+  let Package = { value, plusClickValue, minusClickValue, setNewValue }
 
   return Package;
 }

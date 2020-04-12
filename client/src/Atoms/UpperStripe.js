@@ -14,10 +14,8 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Badge from "@material-ui/core/Badge";
 
 import { useScrollY } from "../Hooks/useScrollY";
-import { useXsSize } from "../Hooks/useXsSize";
 
 import { withRouter, useHistory } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 
 import { UserContext } from "src/userContext";
 import { useCountUnseenBookingsRatings } from "src/Hooks/useCountUnseenBookingsRatings";
@@ -149,7 +147,7 @@ function UpperStripe(props) {
                             onClick={() => history.push(`/profile`)}>
                       <p className={classes.ellipsName}>{context.name} X</p>
                       <Avatar
-                        alt="Remy Sharp"
+                        alt="Remy SharpXX"
                         src={context.picture}
                         className={classes.ButtonAvatar}
                       >
@@ -196,13 +194,20 @@ function UpperStripe(props) {
                           onClick={() => {history.push("/profile")}}>
                     
                     <p className={classes.ellipsName}>{props.userApp.name}</p>
+                    <Badge
+                        badgeContent={context.countUnseenBookings + context.countUnseenRatings} 
+                        // className={classes.badge} 
+                        color="secondary"
+                        // style={{ backgroundColor: event.decided ? "grey" : "red"}}
+                        >
                     <Avatar
-                      alt="Remy Sharp"
+                      alt="Remy Sharping"
                       src={props.userApp.picture}
                       className={classes.ButtonAvatar}
                     >
                       x
                     </Avatar>
+                    </ Badge>
                   </Button>
               )}
             </Grid>

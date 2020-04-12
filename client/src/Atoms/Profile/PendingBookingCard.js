@@ -193,16 +193,22 @@ if(event.decided){
         </Grid>
         <Grid item sm={12} xs={12} className={classes.leftMiddleItem}>
         <Grid container className={classes.messageWrap}>
-          <Grid item>
-            <Grid container className={classes.messageContainer}>
-            <UserAskMessage user={event.user} message={event.message} />
-            {event.response && (
-              <UserAskMessage
-                reverse={true}
-                user={event.event.author}
-                message={event.response}
-              />
-            )}
+          <Grid item xs={12}>
+            <Grid container justify="center">
+            <Grid item>
+              <Grid container className={classes.messageContainer}>
+                  <Grid item xs={12}>
+                    <UserAskMessage user={event.user} message={event.message} />
+                    {event.response && (
+                      <UserAskMessage
+                        reverse={true}
+                        user={event.event.author}
+                        message={event.response}
+                      />
+                    )}
+                  </Grid>
+              </Grid>
+          </Grid>
           </Grid>
           </Grid>
           </Grid>
