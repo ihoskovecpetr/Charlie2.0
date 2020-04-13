@@ -18,6 +18,10 @@ function MyDropzone({setQrCodeData}) {
     acceptedFiles.map(file => {
       var reader = new FileReader();
       reader.onload = function(input) {
+        const str = input.target.toString()
+        console.log("SHOOT: ", str)
+        console.log("INPUT: ", input)
+        alert("SHOOT: ", input.target.result);
               var qr = new QrCode();
               qr.callback = function(err, value) {
                   if (err) {
@@ -35,10 +39,12 @@ function MyDropzone({setQrCodeData}) {
       }
 
       reader.readAsDataURL(file);
+
+      // var barcodeDetector = new BarcodeDetector();
+      // console.log("Barcode detector: ", barcodeDetector)
     });
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
 
   return (
     <>

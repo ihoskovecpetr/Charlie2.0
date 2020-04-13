@@ -115,7 +115,7 @@ function SignUp() {
 if (dataOut && dataOut.success) {
   setTimeout(() => {
     history.goBack();
-  })
+  },200)
   return (
     <ModalLayout>
       <Paper className={classes.paper}>
@@ -335,6 +335,7 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     marginTop: "10vh",
+    paddingTop: 40,
     padding: theme.spacing(2),
     display: "flex",
     flexDirection: "column",

@@ -10,10 +10,11 @@ import CloseIcon from "@material-ui/icons/Close";
 import { withRouter, useHistory } from "react-router-dom";
 import {useSpring, animated} from 'react-spring'
 
+import { useXsSize } from "src/Hooks/useXsSize";
 
 function Layout(props) {
-
   const classes = useStyles();
+  const { xs_size_memo } = useXsSize();
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
   const swingIn = useSpring({transform: "scale(1)", opacity: 1, from: {opacity: 0, transform: "scale(0.8)"}})
 
@@ -81,7 +82,7 @@ function Layout(props) {
             </Grid>
           </Grid>
           <animated.div className={classes.modalContentWrap} style={swingIn}>
-          <Container maxWidth="xs">{props.children}</Container>
+          <Container maxWidth="xs" className={classes.containerMain}>{props.children}</Container>
         </animated.div>
       </div>
   );
@@ -97,6 +98,9 @@ const useStyles = makeStyles(theme => ({
     top: 0,
   },
   modalContentWrap: {
+    padding: 0
+  },
+  containerMain:{
     padding: 0
   },
   gridClose: {
