@@ -19,6 +19,7 @@
     "countdown": "^2.6.0",
     "date-fns": "^2.7.0",
     "dateformat": "^3.0.3",
+    "instascan": "^1.0.0",
     "jsqr": "^1.2.0",
     "prop-types": "^15.7.2",
     "qrcode": "^1.4.4",

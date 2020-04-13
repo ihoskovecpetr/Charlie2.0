@@ -48,7 +48,7 @@ import About from "./Pages/About";
 import UserModal from "./Pages/UserModal";
 import Play from "./Pages/Play";
 import PlayOutside from "./Pages/PlayOutside";
-
+import AcceptPage from "./Pages/AcceptPage"
 import FloatingBtnWrap from "./Molecules/FloatingBtnWrap";
 
 
@@ -222,8 +222,10 @@ function App(props) {
   };
 
   const ListOfUrls = user.success
-    ? ["", "play", "create", "map", "about", "signout", "user", "profile"]
-    : ["", "play", "create", "map", "about", "signin", "user", "signup"];
+    ? ["", "play", "create", "map", "about", "signout", "user", "profile", "accept"]
+    : ["", "play", "create", "map", "about", "signin", "user", "signup", "accept"];
+
+    // Just for DRAWER and NavigationHeader (UpperStripe) 
   const ListOfNames = user.success
     ? ["Charlie", "Play", "Create", "Map", "About", "Sign Out"]
     : ["Charlie", "Play", "Create", "Map", "About", "Sign In"];
@@ -565,6 +567,26 @@ function App(props) {
                     <main className={classes.content}>
                       <div className={classes.toolbar} />
                       <Event />
+                    </main>
+                  </>
+                )}
+              />
+            <Route
+                exact
+                path={`/accept/:event_id/:user_id`}
+                render={() => (
+                  <>
+                  <UpperStripe
+                          loading={loading}
+                          userApp={user}
+                          ListOfNames={ListOfNames}
+                          ListOfUrls={ListOfUrls}
+                          handleDrawerToggle={handleDrawerToggle}
+                          drawerWidth={drawerWidth}
+                        />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <AcceptPage />
                     </main>
                   </>
                 )}

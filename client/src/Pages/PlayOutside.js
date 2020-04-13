@@ -150,11 +150,6 @@ if (oneEventData.data) {
                   <PlayPageList
                     event={getPlayEvents}
                     bookings={getPlayEvents.bookings}
-                    // showBookings={getPlayEvents.bookings} //showBookings
-                    // ONE_EVENT={PLAY_EVENTS}
-                    // cancelBooking={cancelBooking}
-                    // cancelledState={cancelledState}
-                    // bookingStates={bookingStates}
                   />
                   <PlayPageMap
                     event={getPlayEvents}

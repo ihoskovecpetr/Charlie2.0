@@ -54,13 +54,10 @@ if(data){
         <PlayPageList
             event={event}
             bookings={data && data.getOneEvent && data.getOneEvent.bookings}
-            
-            // showBookings={dataDB.showBookings} //showBookings
+  
             GQL_refetch={PROFILE_DATA}
             refetchVariables={{host_id: context._id}}
             paddingSides={"0px"}
-            // cancelBooking={cancelBooking}
-            // cancelledState={cancelledState}
             />
     </>
   );

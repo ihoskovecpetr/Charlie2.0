@@ -8,6 +8,8 @@ import QrCode from 'qrcode-reader';
 
 import Spinner from "src/Atoms/Spinner";
 
+var Instascan = require('instascan');
+
 function MyDropzone({setQrCodeData}) {
   const classes = useStyles();
   const [isUploading, setIsUploading] = useState(false);
@@ -80,40 +82,27 @@ function MyDropzone({setQrCodeData}) {
 
       // var barcodeDetector = new BarcodeDetector();
       console.log("Barcode detector: ", window.navigator)
-      navigator.mediaDevices.enumerateDevices().then((devices) => {
-        console.log("mediaDevices: ", navigator.mediaDevices)
-        console.log("devices: ", devices)
-        let id = devices.filter((device) => device.kind === "videoinput").slice(-1).pop().deviceId;
-        let constrains = {video: {optional: [{sourceId: id }]}};
-      
-        navigator.mediaDevices.getUserMedia(constrains).then((stream) => {
-          console.log("Stream: ", stream)
-          let capturer = new ImageCapture(stream.getVideoTracks()[0]);
-          step(capturer);
-        });
+
+      // let id = devices.filter((device) => device.kind === "videoinput").slice(-1).pop().deviceId;
+      // let constrains = {video: {optional: [{sourceId: id }]}};
+
+      navigator.mediaDevices.getUserMedia({}).then((stream) => {
+        console.log("stream: ", stream)
+        document.getElementById('preview').src = stream;
       })
     });
   }, []);
 
+  // var scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+  // scanner.addListener('scan', function (content, image) {
+  //   console.log(content);
+  // });
 
-  function step(capturer) {
-    capturer.grabFrame().then((bitmap) => {
-      console.log("BTIMP: ", bitmap)
-      let canvas = document.getElementById("canvas");
-      let ctx = canvas.getContext("2d");
-      ctx.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height, 0, 0, canvas.width, canvas.height);
-      // var barcodeDetector = new BarcodeDetector();
-      // barcodeDetector.detect(bitmap)
-      //   .then(barcodes => {
-      //     document.getElementById("barcodes").innerHTML = barcodes.map(barcode => barcode.rawValue).join(', ');
-      //     step(capturer);
-      //   })
-      //   .catch((e) => {
-      //     console.error(e);
-      //     document.getElementById("barcodes").innerHTML = 'None';
-      //   });
-    });
-}
+  // Instascan.Camera.getCameras().then(function (cameras) {
+  //   if (cameras.length > 0) {
+  //     scanner.start(cameras[0]);
+  //   }
+  // });
 
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -153,7 +142,7 @@ function MyDropzone({setQrCodeData}) {
                                 canvas 
                               </canvas>
         {/* <p>Place HERE your pictures</p> */}
-
+        <video id="preview"></video>
        
         
       </div>

@@ -5,7 +5,7 @@ import createHTMLconfirmation from "../Helpers/createHTMLconf.js";
 import {
   userLookup,
   singleEvent,
-  //transformBooking,
+  // transformBooking,
   transformEvent
 } from "./merge";
 import QRCode from 'qrcode'
@@ -62,7 +62,13 @@ export const resolvers = {
     showBookings: async (_, _args, __) => {
       try {
         let bookings = await Booking.find({ event: _args.id });
-        return bookings;
+        return bookings.map(async (booking, index) => {
+          return {
+            ...booking._doc,
+            createdAt: new Date(booking._doc.createdAt).toISOString(),
+            updatedAt: new Date(booking._doc.updatedAt).toISOString()
+          };
+        });
       } catch (err) {
         throw err;
       }
@@ -308,7 +314,7 @@ export const resolvers = {
               viewPath: "views"
             })
           );
-          const QRKod = await QRCode.toDataURL(`${event[0]._id},${guest[0]._id}`)
+          const QRKod = await QRCode.toDataURL(`https://serene-woodland-32668.herokuapp.com/accept/${event[0]._id}/${guest[0]._id}`)
 
 
           const eventURL = "https://www.charlieparty.club/event/"; //+ req.body.event._id
@@ -399,6 +405,25 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
+    },
+    markEntered: async (_, _args, __) => {
+      try {
+        console.log("markEntered: markEntered: ", _args.event_id, _args.user_id)
+        const result = await Booking.update(
+          { event: _args.event_id, user: _args.user_id},
+          { $set: {entered: true}}
+        );
+
+        console.log("Entered: res: ", result)
+
+        if (result.ok) {
+          return { success: true };
+        } else {
+          return { success: false };
+        }
+      } catch (err) {
+        throw err;
+      }
     }
   },
   Booking: {
@@ -454,6 +479,7 @@ function newFunction() {
     cancelBooking(event_id: String!, user_id: String!): Hlaska!
     confirmBooking(event_id: ID!, user_id: ID!, host_id: ID, response: String, decision: Boolean): Hlaska!
     markBookingSeen(booking_id: ID!, user: Boolean): Hlaska
+    markEntered(event_id: ID!, user_id: ID!): Hlaska
     newestUserBookings(user_id: ID!): [Booking]
   }
 

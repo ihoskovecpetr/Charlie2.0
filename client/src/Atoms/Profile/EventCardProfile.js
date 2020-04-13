@@ -165,15 +165,10 @@ if(event.decided){
           <PlayPageGallery event={event} />
           <PlayListWrap
               event={event}
-              // showBookings={dataDB.showBookings} //showBookings
-              // ONE_EVENT={PLAY_EVENTS}
-              // cancelBooking={cancelBooking}
-              // cancelledState={cancelledState}
             />
           <PlayPageMap
               event={event}
               paddingSides={"0px"}
-              // showBookings={getPlayEvents.bookings} //showBookings
             /> 
 
             <Grid container justify="center">
