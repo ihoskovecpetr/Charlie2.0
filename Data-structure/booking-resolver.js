@@ -308,7 +308,7 @@ export const resolvers = {
               viewPath: "views"
             })
           );
-          const QRKod = await QRCode.toDataURL(`I am a pony NEW! ${event[0].name}, ${event[0].address} `)
+          const QRKod = await QRCode.toDataURL(`${event[0]._id},${guest[0]._id}`)
 
 
           const eventURL = "https://www.charlieparty.club/event/"; //+ req.body.event._id

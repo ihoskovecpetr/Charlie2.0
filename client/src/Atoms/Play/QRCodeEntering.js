@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react"
+import React, {useContext, useState, useEffect} from "react"
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -18,71 +18,19 @@ import QrCode from 'qrcode-reader';
 
 const ListTopHalf = ({bookings}) => {
     const [qrCodeData, setQrCodeData] = useState();
+    const [GRDecoded, setQRDecoded] = useState({user_id: null, event_id: null});
     const classes = useStyles();
     const { context, setContext } = useContext(UserContext);
 
-    const handleQRCodeInput = (input) => {
-        var reader = new FileReader();
-
-        reader.onload = function(input) {
-
-                // const image = new Image;
-                // image.onload = () => {
-                //     console.log("onload image: ", image)
-                //     const canvas = document.createElement("CANVAS");
-                //     const ctx = canvas.getContext("2d");
-                //     const width = image.naturalWidth;
-                //     const height = image.naturalHeight;
-                //     console.log("NATTY: ", image, width, height)
-                //     ctx.drawImage(image, 0, 0);
-                //     const imageData = ctx.getImageData(0, 0, width, height);
-                //     console.log("imageData: ", imageData);
-                //     console.log("jsQR: ", jsQR);
-                //     const code = jsQR(imageData.data, imageData.width, imageData.height, {dontInvert: true});
-                //     console.log("ELSE Found QR code", code); 
-                // }
-                // image.src =  input.target.result
-
-                var qr = new QrCode();
-
-                qr.callback = function(err, value) {
-                    if (err) {
-                        console.error(err);
-                        // setQrCodeData(nu)
-                    }
-                    console.log("ER: ", value);
-                    if(value){
-                      console.log("XX+: ", value.result);  
-                    }
-                };
-                qr.decode(input.target.result);
+    useEffect(( ) => {
+            if(qrCodeData){
             
-        }
+            }
+    },[qrCodeData])
 
-        
-
-
-        reader.readAsDataURL(input.target.files[0]);
-        
-        // image.onload = async function() {
-        //     console.log("Image Loaded: ", image , image.naturalWidth, image.naturalHeight );
-        //    }
-        }
 
     return(
             <Grid item xs={12}>
-                <TextField 
-                    type="file"
-                    onChange={handleQRCodeInput}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <CropFreeIcon />
-                        </InputAdornment>
-                      )
-                    }}
-                    variant="filled">
-                </TextField>
                     <Typography component="div" className={classes.standardContent}>
                         <Grid container>
                             <Grid item direction="row">
@@ -105,7 +53,7 @@ const ListTopHalf = ({bookings}) => {
                             </Grid>
                             )} */}
                             <Grid item xs={12}>
-                            <Dropzone_QR  setQrCodeData={setQrCodeData} />
+                            <Dropzone_QR setQrCodeData={setQrCodeData} />
                             </Grid>
                             <Grid item xs={12}>
                             <Grid container justify="center">

@@ -258,6 +258,7 @@ if(event.decided){
                     <Grid item>
                       <IconButton aria-label="settings" 
                                   className={classes.iconBtn} 
+                                  disabled={confirmStates.loading ? true : false}
                                   onClick={() => {ConfirmHandle(false)}}>
                                     {confirmStates.loading 
                                     ? <Spinner height={20} width={20} /> 
@@ -286,6 +287,7 @@ if(event.decided){
                     <Grid item>
                       <IconButton aria-label="settings" 
                                   className={classes.iconBtn} 
+                                  disabled={confirmStates.loading ? true : false}
                                   onClick={() => {ConfirmHandle(true)}}>
                         {confirmStates.loading 
                                     ? <Spinner height={20} width={20} /> 
