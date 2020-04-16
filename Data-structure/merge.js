@@ -8,6 +8,8 @@ const transformEvent = async (event, areYouAuthor) => {
       ...event._doc,
       _id: event.id,
       dateStart: new Date(event._doc.dateStart).toISOString(),
+      dateEnd: new Date(event._doc.dateEnd).toISOString(),
+      happeningNow: new Date() > new Date(event._doc.dateStart) && new Date() < new Date(event._doc.dateEnd) && true,
       author: await userLookup(event._doc.author),
       freeSnack: true,
       success: true,

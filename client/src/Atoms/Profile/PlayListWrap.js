@@ -15,6 +15,7 @@ const ONE_EVENT = gql`
         _id
         confirmed
         cancelled
+        entered
         user{
           _id
           name

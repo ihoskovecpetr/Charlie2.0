@@ -9,7 +9,6 @@ import clsx from 'clsx'
 
 import { UserContext } from "src/userContext";
 import { displayDate } from "../../Services/transform-services";
-import { useCountDistance } from "src/Hooks/useCountDistance";
 import { useXsSize } from "src/Hooks/useXsSize";
 
 import Spinner from "../../Atoms/Spinner";
@@ -18,15 +17,14 @@ import QRCodeEntering from "src/Atoms/Play/QRCodeEntering";
 import PendingGuest from "../event/PendingGuest";
 import ConfirmedGuest from "../event/ConfirmedGuest";
 import UserCardPlay from "./UserCardPlay";
+import EnteredGuests from "src/Atoms/Play/EnteredGuests";
 
 const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBooking, cancelledState, paddingSides}) => {
     const classes = useStyles();
     const { context, setContext } = useContext(UserContext);
     const { xs_size_memo, md_size_memo } = useXsSize();
-    const distance = useCountDistance(event.geometry.coordinates[1], event.geometry.coordinates[0], context.geolocationObj && context.geolocationObj.lat, context.geolocationObj && context.geolocationObj.lng, "K")
 
-    console.log("PlayPageList evt: ", event);
-
+    console.log("PlayPageList Bookings: ", bookings);
 
     let bgColor = "transparent"
 
@@ -72,9 +70,7 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
         <ListTopHalf event={event} />
 
         <Grid item xs={12}>
-            <Grid container 
-                  alignItems="center"
-                  justify="center">
+            <Grid container alignItems="center" justify="center">
               <Grid item className={classes.separatorLineItem}>
             </Grid>
             </Grid>
@@ -84,15 +80,12 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
         <Grid item xs={12} 
               className={classes.blackBackContainer}
               style={{backgroundColor: bgColor }}>
-            <Grid container 
-                  alignItems="center">
-
+            <Grid container alignItems="center">
               <Grid item className={classes.descWrap}>
                 <Typography variant="p" className={classes.standardDescription}>
                 {event.description}
                 </Typography>
               </Grid>
-             
             </Grid>
             <Grid container 
                   alignItems="center"
@@ -181,16 +174,23 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
                         </Grid>
                     </Typography>
               </Grid>
-              <Grid item xs={12}>
-                <Typography component="div" className={classes.lineHeader}>
-                  CONFIRM comming guests
-                </Typography>
-              </Grid>
-              <QRCodeEntering bookings={bookings} />
               </>}
-
+              {event.happeningNow &&
+              <>
+                <Grid item xs={12}>
+                  <Typography component="div" className={classes.lineHeader}>
+                    ENTERED guests
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <QRCodeEntering bookings={bookings} />
+                </Grid>
+                <Grid item xs={12}>
+                  <EnteredGuests bookings={bookings} />
+                </Grid>
+              </>
+              }
             </Grid>
-
         </Grid>
 
 
@@ -346,7 +346,7 @@ const useStyles = makeStyles(theme => ({
       },
 
       separatorLineItem:{
-        backgroundColor: "grey",
+        backgroundColor: "rgba(129, 123,123,0.5)",
         height: 10,
         width: 45,
         borderRadius: 5

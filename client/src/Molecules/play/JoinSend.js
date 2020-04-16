@@ -152,12 +152,8 @@ export default function JoinSend({event, getPlayEventsMutation}) {
 
       , 1000)
     }
-    console.log("Gping to??")
 
-
-    if(event.areYouAuthor) return null
-
-    console.log("Gping to return??")
+    if(event.areYouAuthor) return <p className={classes.textAuthor}> You are author of this event </p>
 
     return (
         <>
@@ -245,6 +241,9 @@ const useStyles = makeStyles(theme => ({
       display: "block",
       height: 248,
       padding: 10,
+    },
+    textAuthor:{
+      textAlign: "center"
     },
     itemSend: {
         display: "none",

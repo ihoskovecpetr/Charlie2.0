@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 export const PROFILE_DATA = gql`
-  query showRatings($host_id: ID!) {
+  query profileData($host_id: ID!) {
     userEvents(user_id: $host_id) {
       _id
       createdAt
@@ -12,6 +12,8 @@ export const PROFILE_DATA = gql`
       capacityMax
       currency
       dateStart
+      dateEnd
+      happeningNow
       address
       description
       areYouAuthor
@@ -85,6 +87,8 @@ export const PROFILE_DATA = gql`
         name
         description
         dateStart
+        dateEnd
+        happeningNow
         price
         currency
         capacityMax
@@ -111,7 +115,6 @@ export const PROFILE_DATA = gql`
         }
       }
     }
-
     showHostBookings(host_id: $host_id) {
       _id
       createdAt
@@ -138,6 +141,8 @@ export const PROFILE_DATA = gql`
         name
         description
         dateStart
+        dateEnd
+        happeningNow
         address
         price
         currency

@@ -122,23 +122,28 @@ export default function AcceptBookingCard({ event }) {
   };
   
   let color = "transparent"
-  if(expanded){
-    if(md_size_memo){
-      color = "rgba(0,0,0,0.1)"
-    } else {
-      color = "white" //"rgba(0,0,0,0.05)"
-    }
-  }else{
-    if(md_size_memo){
-      if(event.seenHost === false){
+  console.log("event.happeningNow: ", event.event.happeningNow)
+  if(event.event.happeningNow){
+    color = "rgba(232,4,93,0.67)"
+  }else{ if(expanded){
+      if(md_size_memo){
         color = "rgba(0,0,0,0.1)"
+      } else {
+        color = "white" //"rgba(0,0,0,0.05)"
       }
     }else{
+      if(md_size_memo){
           if(event.seenHost === false){
-      color = "white"
-    }
+            color = "rgba(0,0,0,0.1)"
+          }
+        }else{
+            if(event.seenHost === false){
+            color = "white"
+          }
+        }
     }
   }
+
 
 let badgeContent 
 if(event.decided){

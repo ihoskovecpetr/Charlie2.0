@@ -67,7 +67,9 @@ export default function EventCardProfile({ event }) {
   console.log("EventCardProfile evnt: ", event);
 
   let bgColor = "transparent"
-  if(expanded){
+  if(event.happeningNow){
+    bgColor = "rgba(232,4,93,0.67)"
+  }else if(expanded){
     if(md_size_memo){
       bgColor = "rgba(0,0,0,0.1)"
     } else {
@@ -94,7 +96,7 @@ if(event.decided){
         // boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
         color: md_size_memo ? "white" : "black",
         width: xs_size_memo ? "100%" : "86%",
-        backgroundColor: expanded ? bgColor : "transparent",
+        backgroundColor: bgColor, //expanded ? bgColor : "transparent",
         borderBottom: xs_size_memo ? "1px solid white" : "2px solid lightGrey"
       }}
     >

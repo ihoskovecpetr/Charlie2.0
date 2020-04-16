@@ -58,6 +58,7 @@ const NEW_EVENT = gql`
     $address: String
     $author: String!
     $dateStart: String
+    $duration: Float
     $price: Float
     $currency: String
     $capacityMax: Int
@@ -73,6 +74,7 @@ const NEW_EVENT = gql`
         address: $address
         author: $author
         dateStart: $dateStart
+        duration: $duration
         price: $price
         currency: $currency
         capacityMax: $capacityMax
@@ -210,6 +212,7 @@ function Create(props) {
       author: context._id,
       eventType: 1,
       dateStart: formValue.startDate,
+      duration: duration,
       price: price,
       currency: formValue.currency,
       capacityMax: capacity,

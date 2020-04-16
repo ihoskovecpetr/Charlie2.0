@@ -77,7 +77,9 @@ useEffect(() => {
   };
 
   let color = "transparent"
-  if(expanded){
+  if(event.event.happeningNow){
+    color = "rgba(232,4,93,0.67)"
+  }else if(expanded){
     if(md_size_memo){
       color = "rgba(0,0,0,0.1)"
     } else {

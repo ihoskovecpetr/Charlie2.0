@@ -22,12 +22,12 @@ export default function NotificationPrinter({event, PROFILE_DATA}) {
         switch(event.type) {
             case "yourBooking":
                 return <Grid container justify="center" className={classes.singleFeed}>
-                        <PendingBookingCard event={event} PROFILE_DATA={PROFILE_DATA} />
+                        <PendingBookingCard event={event} />
                        </Grid>
             break;
             case "askForJoin":
                 return <Grid container justify="center" className={classes.singleFeed}>
-                        <AcceptBookingCard event={event} PROFILE_DATA={PROFILE_DATA} />
+                        <AcceptBookingCard event={event} />
                        </ Grid>
                 break;
             default:

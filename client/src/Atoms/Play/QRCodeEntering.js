@@ -16,7 +16,7 @@ import QrCode from 'qrcode-reader';
 
 // import qrCode from "jsqrcode"
 
-const ListTopHalf = ({bookings}) => {
+const QRCodeEntering = ({bookings}) => {
     const [qrCodeData, setQrCodeData] = useState();
     const [GRDecoded, setQRDecoded] = useState({user_id: null, event_id: null});
     const classes = useStyles();
@@ -53,14 +53,14 @@ const ListTopHalf = ({bookings}) => {
                             </Grid>
                             )} */}
                             <Grid item xs={12}>
-                            <Dropzone_QR setQrCodeData={setQrCodeData} />
+                              <Dropzone_QR setQrCodeData={setQrCodeData} />
                             </Grid>
                             <Grid item xs={12}>
-                            <Grid container justify="center">
-                            <Grid item>
-                            {qrCodeData}
-                            </Grid>
-                            </Grid>
+                              <Grid container justify="center">
+                                <Grid item>
+                                  {qrCodeData}
+                                </Grid>
+                              </Grid>
                             </Grid>
                         </Grid>
                     </Typography>
@@ -118,4 +118,4 @@ const useStyles = makeStyles(theme => ({
       },
   }));
 
-export default ListTopHalf
+export default QRCodeEntering

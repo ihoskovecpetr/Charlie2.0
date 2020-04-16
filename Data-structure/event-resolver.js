@@ -103,7 +103,7 @@ export const resolvers = {
           console.log("Duplicate of EVENT NAME");
           return duplicate_name_Error;
         } else {
-          console.log("CRE-ENT: curry ", _args.eventInput.currency);
+          const dateEnd = new Date(_args.eventInput.dateStart).setHours(new Date(_args.eventInput.dateStart).getHours() + _args.eventInput.duration)
           let newEvent = new Event({
             name: _args.eventInput.name,
             author: _args.eventInput.author,
@@ -113,6 +113,7 @@ export const resolvers = {
             address: _args.eventInput.address,
             eventType: _args.eventInput.eventType,
             dateStart: _args.eventInput.dateStart,
+            dateEnd: dateEnd,
             duration: _args.eventInput.duration,
             price: _args.eventInput.price,
             currency: _args.eventInput.currency,
@@ -156,15 +157,14 @@ export const resolvers = {
     getPlayEvents: async (_, _args, context) => {
       try {
         if (context.reqO.req.isAuth) {
-          console.log("args: ", _args.playInput)
-          console.log("context: ", context)
-          let nowD = new Date();
+          let nowD = new Date(); // end of duration
           let nextD = new Date().toISOString().split("T")[0];
           nextD = new Date(nextD)
           nextD.setDate(nextD.getDate() + _args.playInput.plusDays + 1);
 
           let playEvents = await Event.find({
-            dateStart: { $gte: nowD, $lte: nextD }, 
+            dateEnd: { $gte: nowD },
+            dateStart: { $lte: nextD }, 
             geometry:{
               $near: {
                     $geometry: {
@@ -179,9 +179,9 @@ export const resolvers = {
             "dateStart"
           )
           if (playEvents) {
-            let filtered = playEvents.filter((item) => item.dateStart > new Date()) 
+            let filtered // = playEvents.filter((item) => item.dateStart > new Date()) 
 
-            filtered = filtered.filter((item) => {
+            filtered = playEvents.filter((item) => {
               if(_args.playInput.shownEvents){
                 return !_args.playInput.shownEvents.includes(item._id.toString())
               }else{
@@ -327,7 +327,7 @@ function newFunction() {
     author: String!
     eventType: Int
     dateStart: String
-    duration: String
+    duration: Float
     price: Float
     currency: String
     capacityMax: Int
@@ -382,7 +382,9 @@ function newFunction() {
     author: User
     eventType: Int
     dateStart: String
-    duration: String
+    dateEnd: String
+    duration: Float
+    happeningNow: Boolean
     price: Float
     currency: String
     capacityMax: Int

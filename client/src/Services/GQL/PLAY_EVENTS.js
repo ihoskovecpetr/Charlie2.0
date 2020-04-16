@@ -19,8 +19,16 @@ export const PLAY_EVENTS = gql`
     ) {
       _id
       success
-      message
       name
+      dateStart
+      happeningNow
+      address
+      capacityMax
+      price
+      description
+      BYO
+      currency
+      confirmed
       areYouAuthor
       author {
         _id
@@ -28,17 +36,9 @@ export const PLAY_EVENTS = gql`
         picture
         description
       }
-      dateStart
       geometry {
         coordinates
       }
-      address
-      capacityMax
-      price
-      description
-      BYO
-      currency
-      freeSnack
       imagesArr {
         caption
         src
@@ -49,8 +49,6 @@ export const PLAY_EVENTS = gql`
         marginLeft
         vwidth
       }
-      confirmed
-      areYouAuthor
       bookings{
         _id
         confirmed

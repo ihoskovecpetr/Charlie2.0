@@ -69,7 +69,8 @@ function Profile() {
   const [countUnseenBookings, setCountUnseenBookings] = useState(0);
   const { xs_size_memo, md_size_memo } = useXsSize();
   const { loading, error, data } = useQuery(PROFILE_DATA, {
-    variables: { host_id: context._id }
+    variables: { host_id: context._id },
+    fetchPolicy: "network-only"
   });
   // const hostingStates = useQuery(USER_EVENTS, {
   //   variables: { user_id: user._id }

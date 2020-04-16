@@ -81,15 +81,14 @@ function MyDropzone({setQrCodeData}) {
       reader.readAsDataURL(file);
 
       // var barcodeDetector = new BarcodeDetector();
-      console.log("Barcode detector: ", window.navigator)
 
       // let id = devices.filter((device) => device.kind === "videoinput").slice(-1).pop().deviceId;
       // let constrains = {video: {optional: [{sourceId: id }]}};
 
-      navigator.mediaDevices.getUserMedia({}).then((stream) => {
-        console.log("stream: ", stream)
-        document.getElementById('preview').src = stream;
-      })
+      // navigator.mediaDevices.getUserMedia({}).then((stream) => {
+      //   console.log("stream: ", stream)
+      //   document.getElementById('preview').src = stream;
+      // })
     });
   }, []);
 
@@ -138,13 +137,6 @@ function MyDropzone({setQrCodeData}) {
                             </div>}
           </ Grid>
         </ Grid>
-        <canvas id="canvas" className={classes.canvas}> 
-                                canvas 
-                              </canvas>
-        {/* <p>Place HERE your pictures</p> */}
-        <video id="preview"></video>
-       
-        
       </div>
     </>
   );
