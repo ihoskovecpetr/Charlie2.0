@@ -13,7 +13,7 @@ function FloatingBtnWrap(){
 
     return(
         <>
-        {pathSet[1] !== "play" && pathSet[1] !== "profile" && pathSet[1] !== "" && <FloatingPlayBtn />}
+        {pathSet[1] !== "play" && pathSet[1] !== "profile" && pathSet[1] !== "accept" && pathSet[1] !== "" && <FloatingPlayBtn />}
         {pathSet[1] == "" && <div style={{display: displayPlay_memo ? "block" : "none"}}><FloatingPlayBtn  /></div> }
         </>
     )

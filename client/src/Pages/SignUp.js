@@ -194,7 +194,7 @@ if (dataOut && dataOut.success) {
               <DropzoneSignup setFormValue={setFormValue} formValue={formValue} />
             </Grid>
           </Grid>
-          <form className={classes.form} noValidate autocomplete="off">
+          <form className={classes.form} noValidate>
 
           {errorOut &&
             errorOut.map(item => (
@@ -209,8 +209,8 @@ if (dataOut && dataOut.success) {
             id="name"
             label="User name"
             name="name"
-            autoFocus
-            autocomplete="off"
+            // autoFocus
+            // autocomplete="off"
           />
           <TextField
             margin="normal"
@@ -226,20 +226,20 @@ if (dataOut && dataOut.success) {
             margin="normal"
             required
             fullWidth
-            name="password"
+            name="password2"
             label="Password"
             type="password"
-            id="password"
+            id="password2"
           />
           <TextField
             variant="filled"
             margin="normal"
             required
             fullWidth
-            name="password2"
+            name="password"
             label="Confirm password"
             type="password"
-            id="password2"
+            id="password"
           />
            <InputLabel htmlFor="standard-adornment-amount">
             DESCRIBE YOURSELF
@@ -256,13 +256,13 @@ if (dataOut && dataOut.success) {
                 required
                 fullWidth
                 id="decsription"
-                defaultValue="Hi there, I am an upcomming enterpreneur commig to the sceen, join and witness my rise."
+                placeholder="Hi there, I am an upcomming enterpreneur commig to the sceen, join and witness my rise."
                 multiline
                 rows="4"
                 inputRef={inputDescRef}
                 //label="Description"
                 name="decsription"
-                autoComplete="false" //imporvizace
+                // autoComplete="false" //imporvizace
               />
             </Grid>
           </Grid>
@@ -340,8 +340,9 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    height: "75vh",
-    overflow: "scroll"
+    height: "90vh",
+    overflow: "scroll",
+    paddingBottom: 40
   },
   avatar: {
     margin: theme.spacing(4),

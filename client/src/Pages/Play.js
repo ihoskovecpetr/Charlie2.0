@@ -29,8 +29,7 @@ import NoLocationBck from "../Molecules/play/NoLocationBck";
 import TimeDistanceChips from "../Molecules/play/TimeDistanceChips";
 import LoginFirstBoard from "src/Atoms/LoginFirstBoard";
 import NoEventsBoard from "src/Atoms/NoEventsBoard";
-import { PLAY_EVENTS } from "src/Services/GQL/GQL_PLAY_EVENTS";
-
+import { PLAY_EVENTS } from "src/Services/GQL/PLAY_EVENTS";
 
 function Play() {
   const classes = useStyles();
@@ -38,8 +37,6 @@ function Play() {
   const { context, setContext } = useContext(UserContext);
   const [discovered, setDiscovered] = useState(0);
   const [loadingPlay, setLoadingPlay] = useState(false);
-
-  console.log("Hist na PLAY: ", history);
 
   const [getPlayEventsMutation, { loading, error, data, refetch }] = useMutation(PLAY_EVENTS);
 

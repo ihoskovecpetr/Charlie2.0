@@ -117,6 +117,7 @@ function Create(props) {
   const [customMapParam, setCustomMapParam] = useState();
   const Price = useLogicPlusMinusValue("plus_btn", "minus_btn", 50)
   const Capacity = useLogicPlusMinusValue("plus_btn_capacity", "minus_btn_capacity", 15)
+  const Duration = useLogicPlusMinusValue("plus_btn_duration", "minus_btn_duration", 3)
   const [formValue, setFormValue] = useState({
     startDate: new Date(),
     currency: "CZK",
@@ -133,6 +134,11 @@ function Create(props) {
   const plusClickCapacity = Capacity.plusClickValue
   const minusClickCapacity = Capacity.minusClickValue
   const setNewValueCapacity = Capacity.setNewValue
+
+  const duration = Duration.value
+  const plusClickDuration = Duration.plusClickValue
+  const minusClickDuration = Duration.minusClickValue
+  const setNewValueDuration = Duration.setNewValue
 
 
   const [FeErrors, setFeErrors] = useState([]);
@@ -181,6 +187,7 @@ function Create(props) {
       return { ...prev, startDate: `${isoDen}:00:00.000Z` };
     });
   };
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -397,10 +404,7 @@ function Create(props) {
             </Grid>
             <Grid item>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardTimePicker
-                  margin="normal"
-                  id="time-picker"
-                  inputRef={inputTime}
+                <KeyboardTimePicker margin="normal" id="time-picker" inputRef={inputTime}
                   //label="Time picker"
                   value={formValue.startDate}
                   onChange={e => {
@@ -413,10 +417,7 @@ function Create(props) {
               </MuiPickersUtilsProvider>
             </Grid>
             <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
+              <IconButton color="inherit" aria-label="open drawer" edge="start"
                 onClick={() => {
                   plusHour();
                 }}
@@ -428,6 +429,49 @@ function Create(props) {
               </IconButton>
             </Grid>
           </Grid>
+
+          <InputLabel htmlFor="standard-adornment-amount">DURATION</InputLabel>
+          <Grid
+            container
+            className={clsx(classes.settingsPanel, classes.formRow)}
+          >
+            <Grid item>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                id="minus_btn_duration"
+                onClick={() => minusClickDuration}
+              >
+                <ArrowBackIosIcon color="primary" />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <Input
+                type="number"
+                value={duration}
+                //onChange={handleChange("amount")}
+                onChange={(value) => {setNewValueDuration(value.target.value)}}
+                endAdornment={
+                  <InputAdornment position="start">
+                    hours  
+                  </InputAdornment>
+                }
+              />
+            </Grid>
+            <Grid item>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                id="plus_btn_duration"
+                onClick={() => plusClickDuration}
+              >
+                <ArrowForwardIosIcon color="primary" />
+              </IconButton>
+            </Grid>
+          </Grid>
+
 
           <InputLabel htmlFor="standard-adornment-amount">PRICE</InputLabel>
           <Grid
@@ -532,6 +576,7 @@ function Create(props) {
               </IconButton>
             </Grid>
           </Grid>
+          
           <InputLabel htmlFor="standard-adornment-amount">BYO Event (guest can bring his own dring/snack)</InputLabel>
           <FormControlLabel
             className={classes.switchBYO}
@@ -543,7 +588,6 @@ function Create(props) {
                 inputRef={inputBYO}
               />
             }
-            //label="BYO Event"
           />
           <InputLabel htmlFor="standard-adornment-amount">
             DESCRIPTION

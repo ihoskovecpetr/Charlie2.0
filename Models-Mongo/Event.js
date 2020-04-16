@@ -21,7 +21,7 @@ const EventSchema = new Schema({
   address: { type: String },
   eventType: { type: Number },
   dateStart: { type: Date },
-  dateEnd: { type: Date },
+  duration: { type: Number },
   price: { type: Number },
   currency: { type: String },
   capacityMax: { type: Number },

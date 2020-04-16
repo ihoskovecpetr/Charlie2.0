@@ -33,3 +33,21 @@ export const duplicate_name_Error = {
     }
   ]
 };
+
+export const not_author_Error = {
+  errorOut: [
+    {
+      name: "Not Author Error",
+      message: "You are not author of this event"
+    }
+  ]
+};
+
+export const not_found_Error = {
+  errorOut: [
+    {
+      name: "Not Found Error",
+      message: "We could not find any data"
+    }
+  ]
+};

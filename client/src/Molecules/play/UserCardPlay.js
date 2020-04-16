@@ -11,7 +11,7 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { NavLink } from "react-router-dom";
 
-import Spinner from "../../Atoms/Spinner";
+import Spinner from "src/Atoms/Spinner";
 
 const HOST_RATINGS = gql`
   query showRatings($host_id: ID!) {

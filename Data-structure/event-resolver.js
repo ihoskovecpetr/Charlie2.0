@@ -113,7 +113,7 @@ export const resolvers = {
             address: _args.eventInput.address,
             eventType: _args.eventInput.eventType,
             dateStart: _args.eventInput.dateStart,
-            dateEnd: _args.eventInput.dateEnd,
+            duration: _args.eventInput.duration,
             price: _args.eventInput.price,
             currency: _args.eventInput.currency,
             capacityMax: _args.eventInput.capacityMax,
@@ -327,7 +327,7 @@ function newFunction() {
     author: String!
     eventType: Int
     dateStart: String
-    dateEnd: String
+    duration: String
     price: Float
     currency: String
     capacityMax: Int
@@ -382,7 +382,7 @@ function newFunction() {
     author: User
     eventType: Int
     dateStart: String
-    dateEnd: String
+    duration: String
     price: Float
     currency: String
     capacityMax: Int

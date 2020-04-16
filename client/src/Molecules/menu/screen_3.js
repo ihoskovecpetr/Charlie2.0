@@ -13,7 +13,7 @@ import gql from "graphql-tag";
 import { UserContext } from "../../userContext";
 
 import Spinner from "../../Atoms/Spinner";
-import LoginFirstBoard from "../../Atoms/LoginFirstBoard";
+import LoginFirstBoard from "src/Atoms/LoginFirstBoard";
 import EventCard from "../../Atoms/EventCard";
 
 const USER_NEW_BOOKINGS = gql`

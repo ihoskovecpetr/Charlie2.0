@@ -8,6 +8,8 @@ import {
   // transformBooking,
   transformEvent
 } from "./merge";
+import { not_author_Error, not_found_Error, server_Error} from "./Utils/errorPile";
+
 import QRCode from 'qrcode'
 
 const Promise = require('bluebird');
@@ -71,6 +73,28 @@ export const resolvers = {
         });
       } catch (err) {
         throw err;
+      }
+    },
+    acceptShowBooking: async (_, _args, context) => {
+      try {
+        let oneBooking = await Booking.findOne({ event: _args.event_id, user: _args.user_id });
+        if (oneBooking) {
+          let areYouAuthor = oneBooking.host == context.reqO.req.userId;
+          if(areYouAuthor){
+              return {dataOut: {
+                ...oneBooking._doc,
+                createdAt: new Date(oneBooking._doc.createdAt).toISOString(),
+                updatedAt: new Date(oneBooking._doc.updatedAt).toISOString()
+              }};
+          }else{
+            return not_author_Error
+          }
+        }else{
+          return not_found_Error
+        }
+      } catch (err) {
+        console.log(err);
+        return server_Error;
       }
     },
     showUserBookings: async (_, _args, __) => {
@@ -298,7 +322,7 @@ export const resolvers = {
         const event = await Event.find({_id: _args.event_id})
         const result = await Booking.update(
           { event: _args.event_id, user: _args.user_id },
-          { $set: { confirmed: _args.decision, response: _args.response, decided: true }}
+          { $set: { confirmed: _args.decision, response: _args.response, decided: true, seenUser: false }}
         );
 
         if (result.ok) {
@@ -468,6 +492,7 @@ function newFunction() {
   return `
   extend type Query {
     showBookings(id: ID): [Booking]
+    acceptShowBooking(event_id: ID!, user_id: ID!): ResponseAcceptBooking
     showUserBookings(user_id: ID!): [Booking]
     showHostBookings(host_id: ID!): [Booking]
     deleteBookings: String
@@ -487,6 +512,11 @@ function newFunction() {
     _id: String
     success: Boolean
     message: String
+  }
+
+  type ResponseAcceptBooking {
+    dataOut: Booking
+    errorOut:[Error]
   }
 
   type Booking {
