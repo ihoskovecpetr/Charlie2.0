@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from "react"
-import Map from "../../../Atoms/Hook-map";
-import mapSetup from "../../../Services/map-settings";
-import CharlieMarker from "../../../Images/charlie-marker.png";
+import MapAtom from "src/Atoms/MapAtom";
+import mapSetup from "src/Services/map-settings";
+import CharlieMarker from "src/Images/charlie-marker.png";
 
 const PlayMap = ({event}) => {
   //{ options, onMount, className, styling }
@@ -59,7 +59,7 @@ const PlayMap = ({event}) => {
 
     return (
       <>
-      {event && <Map
+      {event && <MapAtom
         onMount={onMapMount}
         options={MapOptions}
         className="Play-map-className"

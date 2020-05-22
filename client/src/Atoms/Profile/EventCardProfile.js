@@ -14,10 +14,10 @@ import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 
-import countdown from "countdown";
-import { withRouter, useHistory, NavLink } from "react-router-dom";
-import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
+// import countdown from "countdown";
+// import { withRouter, useHistory, NavLink } from "react-router-dom";
+// import { useMutation } from "@apollo/react-hooks";
+// import gql from "graphql-tag";
 
 import { useXsSize } from "../../Hooks/useXsSize";
 import { useCountdown } from "src/Hooks/useCountdown";
@@ -26,6 +26,8 @@ import { UserContext } from "../../userContext";
 import PlayListWrap from "./PlayListWrap";
 import PlayPageGallery from "../../Molecules/play/PlayPageGallery";
 import PlayPageMap from "../../Molecules/play/PlayPageMap";
+import PartyOn from "src/Atoms/PartyOn";
+import EventButtons from "src/Molecules/event/EventButtons";
 
 
 export default function EventCardProfile({ event }) {
@@ -64,11 +66,9 @@ export default function EventCardProfile({ event }) {
     }
   };
 
-  console.log("EventCardProfile evnt: ", event);
-
   let bgColor = "transparent"
   if(event.happeningNow){
-    bgColor = "rgba(232,4,93,0.67)"
+    bgColor = "transparent"
   }else if(expanded){
     if(md_size_memo){
       bgColor = "rgba(0,0,0,0.1)"
@@ -87,6 +87,8 @@ if(event.decided){
   } else {
     badgeContent = <FiberManualRecordIcon fontSize="small" className={classes.dotBadge} /> 
   }
+  badgeContent = <Avatar src={event.author.picture} />
+
 
   return (
     <Grid
@@ -106,17 +108,17 @@ if(event.decided){
         alignItems="center"
         className={classes.mainSolidLine}
       >
-        <Grid item xs={xs_size_memo ? 3 : 2}>
+        <Grid item xs={xs_size_memo ? 4 : 3}>
           <Grid container justify="center">
             <Grid item className={classes.itemAvatar}>
               <IconButton aria-label="settings">
                 <Badge badgeContent={badgeContent} 
                         className={classes.badge} 
-                        color={event ? "primary" : "secondary"}
+                        //color={event ? "primary" : "secondary"}
                         // style={{ backgroundColor: event.decided ? "grey" : "red"}}
                         >
-                  <Avatar
-                    src={event.author.picture}
+                  <img
+                    src={event.imagesArr[0].thumbnail}
                     className={classes.mainAvatar}
                   />
                 </Badge>
@@ -126,22 +128,28 @@ if(event.decided){
           </Grid>
         </Grid>
 
-        <Grid item xs={xs_size_memo ? 9 : 8}>
+        <Grid item xs={xs_size_memo ? 8 : 7}>
           <Typography
             variant="body2"
             align="left"
             className={classes.mainHeader}
           >
-            <b>{event.author.name}</b> and his Event{" "}
-            <b>{event.name}</b>
+            <b>{event.name}</b> hosted by <b>{event.author.name}</b>
           </Typography>
+          <Grid container>
+          <Grid item xs={6}>
           <Typography
             variant="body2"
             align="left"
             className={classes.countdown}
           >
-           event start <b>{counteddownDate}</b>
+           Start <b>{counteddownDate}</b>
           </Typography>
+          </Grid>
+          <Grid item xs={6} className={classes.partyOnGrid}>
+            {event.happeningNow && <PartyOn />}
+          </Grid>
+          </Grid>
         </Grid>
 
         {!xs_size_memo && (
@@ -172,7 +180,9 @@ if(event.decided){
               event={event}
               paddingSides={"0px"}
             /> 
-
+            <EventButtons
+                event={event}
+              />
             <Grid container justify="center">
               <Grid
                 item
@@ -215,6 +225,9 @@ const useStyles = makeStyles(theme => ({
     color: "grey",
     marginLeft: 20
   },
+  partyOnGrid: {
+    marginTop: 10
+  },
   badge: {
     padding: '0 important'
   },
@@ -246,8 +259,8 @@ const useStyles = makeStyles(theme => ({
 
   },
   mainAvatar: {
-    height: 60,
-    width: 60
+    height: 90,
+    width: 90
   },
   btnAvatar: {
     height: 20,

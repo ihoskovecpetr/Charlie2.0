@@ -8,8 +8,6 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
-import TextField from "@material-ui/core/TextField";
 import Badge from '@material-ui/core/Badge';
 
 import Collapse from "@material-ui/core/Collapse";
@@ -18,80 +16,49 @@ import { red } from "@material-ui/core/colors";
 
 import countdown from "countdown";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 
-import { useXsSize } from "../../Hooks/useXsSize";
-import { UserContext } from "../../userContext";
+import { useXsSize } from "src/Hooks/useXsSize";
+import { UserContext } from "src/userContext";
 import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
 import { SEEN_BOOKING } from "src/Services/GQL/SEEN_BOOKING";
 
-import ConfirmPNG from "../../Images/confirm_pink.png";
-import ClosePNG from "../../Images/close_black.png";
-import UserAskMessage from "./UserAskMessage";
-import EventInfoLines from "./EventInfoLines";
 import ListTopHalf from "src/Atoms/Play/ListTopHalf";
-import Spinner from "../Spinner";
-
-const CONFIRM_BOOKING = gql`
-  mutation confirmBooking(
-    $event_id: ID!
-    $user_id: ID!
-    $decision: Boolean
-    $response: String
-  ) {
-    confirmBooking(
-      event_id: $event_id
-      user_id: $user_id
-      decision: $decision
-      response: $response
-    ) {
-      success
-    }
-  }
-`;
+import PartyOn from "src/Atoms/PartyOn";
+import BookingMessages from "src/Atoms/BookingMessages";
+import BookingAcceptInput from "src/Atoms/BookingAcceptInput";
+import EventButtons from "src/Molecules/event/EventButtons";
 
 
-export default function AcceptBookingCard({ event }) {
+export default function AcceptBookingCard({ booking }) {
   const classes = useStyles();
   const { xs_size_memo, md_size_memo } = useXsSize();
   const [expanded, setExpanded] = useState(false);
   const { context, setContext } = useContext(UserContext);
-  const [confirmBooking, confirmStates] = useMutation(CONFIRM_BOOKING);
   const [markBookingSeen, seenStates] = useMutation(SEEN_BOOKING);
 
-  const inputDescription = useRef(null);
-
   useEffect(() => {
-    if(context.expanded_id === event._id){
-      setExpanded(true)
-    }else{
-      setExpanded(false)
-    }
-  }, [context.expanded_id])
+    // if(context.expanded_id === booking._id){
+    //   setExpanded(true)
+    // }else{
+    //   setExpanded(false)
+    // }
+  }, [])
 
 
   const handleExpandClick = () => {
 
-    if(context.expanded_id === event._id){
-      setContext(prev => {
-        return { ...prev, 
-          expanded_id: null
-        };
-        })
+    if(expanded){
+      setExpanded(false)
     } else{
-          setContext(prev => {
-            return { ...prev, 
-              expanded_id: event._id
-            };
-        })
+        setExpanded(true)
     }
-    seenHostHandle()
+    // seenHostHandle()
   };
 
   const seenHostHandle = () => {
     markBookingSeen({
       variables: {
-        booking_id: event._id,
+        booking_id: booking._id,
         user: false,
       },
       refetchQueries: () => [
@@ -104,27 +71,11 @@ export default function AcceptBookingCard({ event }) {
   };
 
 
-  const ConfirmHandle = (decision) => {
-    confirmBooking({
-      variables: {
-        user_id: event.user._id,
-        event_id: event.event._id,
-        decision: decision,
-        response: inputDescription.current.value
-      },
-      refetchQueries: () => [
-        {
-          query: PROFILE_DATA,
-          variables: { host_id: context._id }
-        }
-      ]
-    });
-  };
   
   let color = "transparent"
-  console.log("event.happeningNow: ", event.event.happeningNow)
-  if(event.event.happeningNow){
-    color = "rgba(232,4,93,0.67)"
+  console.log("event.happeningNow: ", booking.event.happeningNow)
+  if(booking.event.happeningNow){
+    // color = "rgba(232,4,93,1)"
   }else{ if(expanded){
       if(md_size_memo){
         color = "rgba(0,0,0,0.1)"
@@ -133,11 +84,11 @@ export default function AcceptBookingCard({ event }) {
       }
     }else{
       if(md_size_memo){
-          if(event.seenHost === false){
+          if(booking.seenHost === false){
             color = "rgba(0,0,0,0.1)"
           }
         }else{
-            if(event.seenHost === false){
+            if(booking.seenHost === false){
             color = "white"
           }
         }
@@ -146,8 +97,8 @@ export default function AcceptBookingCard({ event }) {
 
 
 let badgeContent 
-if(event.decided){
-    if(event.confirmed){
+if(booking.decided){
+    if(booking.confirmed){
       badgeContent =  <DoneIcon fontSize="small" />
     } else {
       badgeContent =  <CloseIcon fontSize="small" /> //"rgba(0,0,0,0.05)"
@@ -155,8 +106,6 @@ if(event.decided){
   } else {
     badgeContent = <HelpOutlineIcon fontSize="small" className={classes.dotBadge} /> 
   }
-
-  console.log("confirmStates: ", confirmStates)
 
   return (
     <Grid
@@ -178,15 +127,15 @@ if(event.decided){
       >
         <Grid item xs={xs_size_memo ? 3 : 2}>
           <Grid container justify="center">
-            <Grid item className={classes.itemAvatar}>
+            <Grid item>
               <IconButton aria-label="settings">
                 <Badge badgeContent={badgeContent} 
                         className={classes.badge} 
-                        color={event.decided ? "primary" : "secondary"}
-                        // style={{ backgroundColor: event.decided ? "grey" : "red"}}
+                        color={booking.decided ? "primary" : "secondary"}
+                        // style={{ backgroundColor: booking.decided ? "grey" : "red"}}
                         >
                   <Avatar
-                    src={event.user.picture}
+                    src={booking.user.picture}
                     className={classes.mainAvatar}
                   />
                 </Badge>
@@ -202,22 +151,29 @@ if(event.decided){
             align="left"
             className={classes.mainHeader}
           >
-            <b>{event.user.name}</b> wants to join your event{" "}
-            <b>{event.event.name}</b>
+            <b>{booking.user.name}</b> wants to join your event{" "}
+            <b>{booking.event.name}</b>
           </Typography>
-          <Typography
-            variant="body2"
-            align="left"
-            className={classes.countdown}
-          >
-            updated <b>{countdown(
-              new Date(event.updatedAt),
-              new Date(),
-              "X",
-              1
-            ).toString()}{" "}
-            ago</b>
-          </Typography>
+          <Grid container >
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                align="left"
+                className={classes.countdown}
+              >
+                created <b>{countdown(
+                  new Date(booking.createdAt),
+                  new Date(),
+                  "X",
+                  1
+                ).toString()}{" "}
+                ago</b>
+              </Typography>
+            </Grid>
+            <Grid item xs={6} className={classes.partyOnGrid}>
+              {booking.event.happeningNow && <PartyOn />}
+            </Grid>
+          </Grid>
         </Grid>
 
         {!xs_size_memo && (
@@ -238,77 +194,20 @@ if(event.decided){
           </Grid>
         )}
       </Grid>
-      <Collapse in={context.expanded_id === event._id} timeout="auto" unmountOnExit>
-        <Grid container className={classes.middleBody}>
-          <ListTopHalf event={event.event} transparent={true}/>
-        </Grid>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Grid container justify="center" className={classes.messageWrap}>
           <Grid item>
             <Grid container className={classes.messageContainer}>
-                <Grid item xs={12}>
-                  <UserAskMessage user={event.user} message={event.message} />
-                      {event.decided && (
-                          <UserAskMessage
-                            reverse={true}
-                            user={event.event.author}
-                            message={event.response}
-                          />
-                      )}
-                </Grid>
-                <Grid item xs={12}>
-            {!event.decided && (
-              <Grid container alignItems="center" className={classes.decideContainer}>
-                <Grid item xs={2}>
-                  <Grid container justify="center">
-                    <Grid item>
-                      <IconButton aria-label="settings" 
-                                  className={classes.iconBtn} 
-                                  disabled={confirmStates.loading ? true : false}
-                                  onClick={() => {ConfirmHandle(false)}}>
-                                    {confirmStates.loading 
-                                    ? <Spinner height={20} width={20} /> 
-                                    : <Avatar src={ClosePNG} className={classes.btnAvatar} />}
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs={8}>
-                  <Grid container justify="center">
-                    <Grid item>
-                      <TextField
-                              id="outlined-basic"
-                              label="Response..."
-                              variant="outlined"
-                              disabled={confirmStates.loading ? true : false}
-                              inputRef={inputDescription}
-                              className={classes.textField}
-                              style={{ width: xs_size_memo ? "100%" : "300px" }}
-                            />
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs={2}>
-                  <Grid container justify="center">
-                    <Grid item>
-                      <IconButton aria-label="settings" 
-                                  className={classes.iconBtn} 
-                                  disabled={confirmStates.loading ? true : false}
-                                  onClick={() => {ConfirmHandle(true)}}>
-                        {confirmStates.loading 
-                                    ? <Spinner height={20} width={20} /> 
-                                    : <Avatar src={ConfirmPNG} className={classes.btnAvatar} />}
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-            )}
-          </Grid>
-    
-
-                </Grid>
+                <BookingMessages booking={booking} />
+                <BookingAcceptInput booking={booking} />
+           
+            </Grid>    
           </Grid>
         </Grid>
+        <Grid container className={classes.middleBody}>
+          <ListTopHalf event={booking.event} transparent={true}/>
+        </Grid>
+        <EventButtons event={booking.event} />
         <Grid container justify="center">
           <Grid item style={{margin: 5}}>
             <IconButton aria-label="settings" className={classes.iconBtn} onClick={handleExpandClick}>
@@ -356,44 +255,22 @@ const useStyles = makeStyles(theme => ({
     height: 80,
     width: 80
   },
+  partyOnGrid: {
+    marginTop: 10
+  },
   messageWrap: {
     padding: 10
   },
+  
   messageContainer: {
     backgroundColor: "rgba(0,0,0,0.38)",
     borderRadius: 10
-  },
-  decideContainer: {
-    marginBottom: 10
-  },
-  textField: {
-    backgroundColor: "white",
-    borderRadius: 10,
-  },
-  textFieldCont: {
-    margin: 10
-  },
-  btnWrapLeft: {
-    // borderRight: "1px solid #707070"
-  },
-  btn: {
-    // height: 50,
-    // width: "50%"
-  },
-  iconBtn: {
-    backgroundColor: "rgba(255,255,255,0.4)"
-  },
-  itemAvatar: {
-
   },
   mainAvatar: {
     height: 60,
     width: 60
   },
-  btnAvatar: {
-    height: 20,
-    width: 20
-  },
+
   thisLine: {
     height: "1px",
     width: "100%",

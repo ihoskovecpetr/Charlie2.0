@@ -22,73 +22,19 @@ import PlayPageMap from "../Molecules/play/PlayPageMap";
 import PlayGoToApp from "../Molecules/play/PlayGoToApp";
 import TimeDistanceChips from "../Molecules/play/TimeDistanceChips";
 import Lost from "../Images/lost.png"
+import { GET_ONE_EVENT } from "src/Services/GQL/GET_ONE_EVENT";
 
 
-const ONE_EVENT = gql`
-  query getOneEvent($id: ID!) {
-    getOneEvent(id: $id) {
-      _id
-      success
-      message
-      name
-      author {
-        _id
-        name
-        picture
-        description
-      }
-      dateStart
-      geometry {
-        coordinates
-      }
-      address
-      capacityMax
-      price
-      description
-      BYO
-      freeSnack
-      imagesArr {
-        caption
-        src
-        thumbnail
-        thumbnailHeight
-        thumbnailWidth
-        scaletwidth
-        marginLeft
-        vwidth
-      }
-      confirmed
-      areYouAuthor
-    }
-    showBookings(id: $id) {
-      confirmed
-      cancelled
-      message
-      user {
-        _id
-        name
-        email
-        picture
-      }
-    }
-  }
-`;
-
-
-
-function PlayOutside() {
+export default function PlayOutside() {
   const classes = useStyles();
   const theme = useTheme();
   let history = useHistory();
-  // const windowSize = useWindowSize();
   const { context, setContext } = useContext(UserContext);
   const [loadingPlay, setLoadingPlay] = useState(false);
 
 
-  const oneEventData = useQuery(ONE_EVENT, {
-    variables: { id: history.location.pathname.split("/")[2] },
-    // skip: !context.firstPrint,
-    //pollInterval: 500
+  const oneEventData = useQuery(GET_ONE_EVENT, {
+    variables: { event_id: history.location.pathname.split("/")[2] },
   });
 
   console.log("Play Other:  wndw.firstPrint: ", window.firstPrintPlay);
@@ -255,5 +201,3 @@ const useStyles = makeStyles(theme => ({
   }
 
 }));
-
-export default PlayOutside;

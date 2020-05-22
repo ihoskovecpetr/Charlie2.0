@@ -1,8 +1,4 @@
 import React, { useState, useReducer, useEffect, useContext } from "react";
-
-import clsx from "clsx";
-
-import { withRouter, useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
@@ -17,49 +13,23 @@ import Backdrop from '@material-ui/core/Backdrop';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import AllOutIcon from '@material-ui/icons/AllOut';
 import DateRangeIcon from '@material-ui/icons/DateRange';
-
 import CloseIcon from "@material-ui/icons/Close";
-import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import CircularProgress from '@material-ui/core/CircularProgress';
+
+import clsx from "clsx";
+import { withRouter, useHistory } from "react-router-dom";
 
 import { UserContext } from "../../userContext";
 
 import SliderCustom from "../../Atoms/SliderCustom";
-import { useBackdrop } from "../../Hooks/useBackdrop";
 
-const SettingsPanel = ({getPlayEventsMutation, loading}) => {
+const SettingsPanel = ({loading}) => {
   const classes = useStyles();
   let history = useHistory();
   const { context, setContext } = useContext(UserContext);
   const [workingValue, setWorkingValue] = useState({radius: context.radius, days: context.days});
   const [close, setClose] = useState(false);
   const [checked, setChecked] = useState(false);
-
-  // const [playFilter, setPlayFilter] = useState({
-  //   days: 2,
-  //   radius: 20,
-  // });
-
-  // useEffect(() => {
-  //   console.log("Fertching useEff");
-
-  //   !filterOn && getPlayEventsMutation({variables:{
-  //       plusDays: 1000,
-  //       lng: context.geolocationObj ? context.geolocationObj.lng : null,
-  //       lat: context.geolocationObj ? context.geolocationObj.lat : null,
-  //       radius: 999999999, // playFilter.radius,
-  //       shownEvents: []
-  //   }})
-
-  //   filterOn && getPlayEventsMutation({variables:{
-  //     plusDays: context.days,
-  //     lng: context.geolocationObj ? context.geolocationObj.lng : null,
-  //     lat: context.geolocationObj ? context.geolocationObj.lat : null,
-  //     radius: context.radius, // playFilter.radius,
-  //     shownEvents: context.shownEvents
-  //   }})
-  // }, [filterOn]);
 
   const handleChange = (e) => {
     e.stopPropagation();

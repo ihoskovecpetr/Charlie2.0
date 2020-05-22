@@ -14,14 +14,14 @@ import { withRouter, useHistory } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-import { useAverageRating } from "src/Hooks/useAverageRating";
+import { USER_RATINGS } from "src/Services/GQL/USER_RATINGS";
 
 import ModalLayout from "../Layouts/ModalLayout";
 import RatingCard from "../Molecules/rating-card";
 import RatingCardNew from "src/Atoms/Profile/RatingCardNew";
-
 import Spinner from "../Atoms/Spinner";
 import Copyright from "../Atoms/copyright";
+import AverageRatingStars from "src/Atoms/AverageRatingStars";
 
 const GET_USER = gql`
   query getOneUser($user_id: ID!) {
@@ -40,30 +40,6 @@ const GET_USER = gql`
   }
 `;
 
-const HOST_RATINGS = gql`
-  query showRatings($host_id: ID!) {
-    showRatings(host_id: $host_id) {
-      message
-      ratingValue
-      createdAt
-      guest {
-        picture
-        name
-      }
-      event {
-        _id
-        name
-        address
-        dateStart
-        price
-        currency
-        geometry {
-          coordinates
-        }
-      }
-    }
-  }
-`;
 
 function UserModal(props) {
   const classes = useStyles();
@@ -77,12 +53,9 @@ function UserModal(props) {
     //pollInterval: 500
   });
 
-  const ratingStates = useQuery(HOST_RATINGS, {
+  const ratingStates = useQuery(USER_RATINGS, {
     variables: { host_id: props.match.params.id }
   });
-
-  const { averageRating } = useAverageRating(ratingStates.data && ratingStates.data.showRatings)
-
 
   // const ratingStates ={
   //   data: {
@@ -177,12 +150,7 @@ function UserModal(props) {
             <Grid container justify="center" alignItems="center" spacing={2}>
             <Grid item>
               <Typography variant="subtitle1" className={classes.email}>
-                  <Rating name="simple-controlled" readOnly value={averageRating} />
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="subtitle1" className={classes.email}>
-                 {(averageRating)}
+                  <AverageRatingStars userId={dataDB.getOneUser._id}/>
               </Typography>
             </Grid>
             </Grid>

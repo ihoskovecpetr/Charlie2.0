@@ -5,37 +5,16 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { UserContext } from "../../userContext";
 import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
+import { GET_ONE_EVENT } from "src/Services/GQL/GET_ONE_EVENT";
 
 import PlayPageList from "../../Molecules/play/PlayPageList";
-
-const ONE_EVENT = gql`
-  query getOneEvent($id: ID!) {
-    getOneEvent(id: $id) {
-      bookings{
-        _id
-        confirmed
-        cancelled
-        entered
-        user{
-          _id
-          name
-          picture
-        }
-        event{
-            _id
-            dateStart
-          }
-      }
-    }
-  }
-`;
 
 
 export default function PlayListWrap({ event }) {
   const classes = useStyles();
   const { context } = useContext(UserContext);
-  const { loading, error, data, refetch } = useQuery(ONE_EVENT, {
-    variables: { id: event._id }
+  const { loading, error, data, refetch } = useQuery(GET_ONE_EVENT, {
+    variables: { event_id: event._id }
     //skip: !id,
     //pollInterval: 500
   });

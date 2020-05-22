@@ -51,13 +51,24 @@ export const PLAY_EVENTS = gql`
       }
       bookings{
         _id
+        createdAt
+        updatedAt
+        message
+        response
         confirmed
         cancelled
         decided
+        entered
+        seenUser
+        seenHost
         user{
           _id
           name
           picture
+        }
+        event{
+          _id
+          name
         }
       }
     }

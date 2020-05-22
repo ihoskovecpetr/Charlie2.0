@@ -1,17 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
-import PropTypes from "prop-types";
 
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 
-import Collapse from '@material-ui/core/Collapse';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 
-import gql from "graphql-tag";
 import { useHistory, NavLink } from "react-router-dom";
 
 import { UserContext } from "../userContext";
@@ -19,51 +14,34 @@ import { UserContext } from "../userContext";
 
 import Spinner from "src/Atoms/Spinner";
 
-import SettingsPanel from "../Molecules/play/SettingsPanel";
-import JoinSend from "../Molecules/play/JoinSend";
+import SettingsPanel2 from "src/Molecules/play/SettingsPanel2";
 
-import PlayPageGallery from "../Molecules/play/PlayPageGallery";
-import PlayPageList from "../Molecules/play/PlayPageList";
-import PlayPageMap from "../Molecules/play/PlayPageMap";
-import NoLocationBck from "../Molecules/play/NoLocationBck";
-import TimeDistanceChips from "../Molecules/play/TimeDistanceChips";
+import PlayPageGallery from "src/Molecules/play/PlayPageGallery";
+import PlayPageList from "src/Molecules/play/PlayPageList";
+import PlayPageMap from "src/Molecules/play/PlayPageMap";
+import NoLocationBck from "src/Molecules/play/NoLocationBck";
 import LoginFirstBoard from "src/Atoms/LoginFirstBoard";
 import NoEventsBoard from "src/Atoms/NoEventsBoard";
+import EventButtons from "src/Molecules/event/EventButtons";
+
 import { PLAY_EVENTS } from "src/Services/GQL/PLAY_EVENTS";
+import { PLAY_EVENTS_QUERY } from "src/Services/GQL/PLAY_EVENTS_QUERY";
 
 function Play() {
   const classes = useStyles();
   let history = useHistory();
   const { context, setContext } = useContext(UserContext);
-  const [discovered, setDiscovered] = useState(0);
   const [loadingPlay, setLoadingPlay] = useState(false);
 
-  const [getPlayEventsMutation, { loading, error, data, refetch }] = useMutation(PLAY_EVENTS);
-
-  useEffect(() => {
-    console.log("GRAPHQL:  wndw.firstPrint: ", window.firstPrintPlay);
-    if(context.geolocationObj && context.days !== null && context.radius && context.name && !context.firstPrint){
-      getPlayEventsMutation({
-        variables:{
-          plusDays: context.filterOn ? context.days : 10000,
-          lng: context.geolocationObj ? context.geolocationObj.lng : null,
-          lat: context.geolocationObj ? context.geolocationObj.lat : null,
-          radius: context.filterOn ? context.radius : 9999999, // playFilter.radius,
-          shownEvents: context.shownEvents
-    }})
-
+  const { loading, error, data, refetch } = useQuery(PLAY_EVENTS_QUERY, {
+    variables: {
+      plusDays: context.filterOn ? context.days : 10000,
+      lng: context.geolocationObj ? context.geolocationObj.lng : null,
+      lat: context.geolocationObj ? context.geolocationObj.lat : null,
+      radius: context.filterOn ? context.radius : 9999999,
+      shownEvents: context.shownEvents
     }
-    return () => {
-    } 
-  }, [
-      context.geolocationObj && context.geolocationObj.lng, 
-      context.geolocationObj && context.geolocationObj.lat, 
-      context.radius, 
-      context.days,
-      context.shownEvents,
-      context.name,
-      context.filterOn
-  ]);
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -75,55 +53,36 @@ function Play() {
     //     setContext(prev => {return {...prev, geolocationObj: {lat: position.coords.latitude, lng: position.coords.longitude}}});
     // });
     }
+    return function cleanup() {
+      setContext(prev => {return {...prev, shownEvents: []}});
+    };
   }, []);
 
 
 
-if (data) {
-  console.log("Data normatXX")
-    var { getPlayEvents } = data;
-  }
-  // else if(oneEventData.data){
-  //   console.log("Data from ONEEvent: ", oneEventData.data.getOneEvent)
-  //   var getPlayEvents = [oneEventData.data.getOneEvent];
-  // }
 
-  console.log("getPlayEvents: RESULT ", getPlayEvents);
 
   useEffect(() => {
-    console.log("getPlayEvents: ", getPlayEvents, context.playEventsCount);
-    if(getPlayEvents){
+    if(data && data.getJoinEvents){
       if(context.shownEvents.length === 0){ // context.playEventsCount === null
         console.log("Pass if null")
-        setContext(prev => {return {...prev, playEventsCount: getPlayEvents.length}});
+        setContext(prev => {return {...prev, playEventsCount: data.getJoinEvents.length}});
       }
     }
-  }, [getPlayEvents]);
-
-  // useEffect(() => {
-  //   console.log("NEW FILTER", getPlayEvents)
-  //   if(getPlayEvents){
-  
-  //       setContext(prev => {return {...prev, playEventsCount: getPlayEvents.length}});
-
-  //   }
-
-  // }, [context.radius, context.days, getPlayEvents]);
+  }, [data]);
 
 
   useEffect(() => {
-    console.log("REPLACE URL history: ", history.location.pathname);
-    if(getPlayEvents){history.replace(`/play/${getPlayEvents[0]._id}`)} 
+    if(data && data.getJoinEvents[0]){history.replace(`/play/${data.getJoinEvents[0]._id}`)} 
     window.scrollTo(0, 0);
-  }, [getPlayEvents && getPlayEvents[0]]);
-
+  }, [data, data && data.getJoinEvents[0]]);
 
   function discoverPlay(){
     setLoadingPlay(true)
     setTimeout(() => {
       // setDiscovered(discovered + 1)
       setContext(prev => {
-        return {...prev, shownEvents: [...prev.shownEvents, getPlayEvents[0]._id]}});
+        return {...prev, shownEvents: [...prev.shownEvents, data.getJoinEvents[0]._id]}});
       window.scrollTo(0,0);
       setLoadingPlay(false)
     }, 500)
@@ -133,21 +92,21 @@ if (data) {
   return (
     <div
       className={classes.playWrap}
-      style={{ position: context.freezScroll ? "fixed" : "absolute" }}
+      style={{ position: context.freezScroll ? "fixed" : "absolute", color: "white" }}
     >
+    <Container maxWidth="xs">
+
+      <SettingsPanel2  //getPlayEventsMutation={getPlayEventsMutation} 
+        loading={loading}
+          />
+    </Container>
+
     <Container
       maxWidth="xs"
       className={classes.playContainer}
     >
-      <Paper className={classes.paper}>
         {context.name && !context.geolocationObj &&
         <NoLocationBck />}
-
-          <SettingsPanel  getPlayEventsMutation={getPlayEventsMutation} 
-                          // setPlayFilter={setPlayFilter}
-                          // playFilter={playFilter}
-                          loading={loading}
-                          />
 
             {loading && (
               <Grid container justify="center" alignItems='center' className={classes.loadingGridCont}>
@@ -164,14 +123,14 @@ if (data) {
               </Grid>
             )}
 
-            {getPlayEvents && getPlayEvents.length === 0 && (
+            {data && data.getJoinEvents && data.getJoinEvents.length === 0 && (
               <Grid container justify="center" alignItems='center' className={classes.loadingGridCont}>
                 <Grid item>
                 <NoEventsBoard />
                 </Grid>
               </Grid>
             )}
-            
+            {data && data.getJoinEvents && data.getJoinEvents.length != 0 && (
             <Grid
               container
               justify="center"
@@ -180,81 +139,47 @@ if (data) {
               alignContent="center"
               style={{ width: "100%" }}
             >
-            {getPlayEvents && getPlayEvents.map((event, index) => {
+              <div style={{width: "100%", display: "block", marginTop: 80}}>
 
-
-              return (
-               <div style={{ width: "100%", color: (index % 2 === 0) ? "lightgrey" : "black", }} >
-              {index != 0 && index <= discovered + 1 && 
-              <Grid container
-                    className={classes.nextEventBox}
-                    justify="center" 
-                    onClick={discoverPlay}
-                    style={{display: (index === discovered + 1) ? "flex" : "flex"}}>
-                   <Grid item xs={12} style={{ margin: "30px"}}>
-                      <Grid container justify="center">
-                          {!loadingPlay && index === discovered + 1 && <Grid item><ArrowDownwardIcon color="secondary" style={{ fontSize: 100 }} /></Grid>}
-                          {!loadingPlay && index <= discovered && <Grid item><Typography variant="h4">{index + 1}/{getPlayEvents ? getPlayEvents.length : 0}</Typography></Grid>}
-                          {loadingPlay && <Grid item><Spinner height={100} width={100} /></Grid>}
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={12} style={{display: index === discovered + 1 ? "block" : "none", padding: "4px"}}>
-                      <Grid container justify="center" alignItems='center' className={classes.mainHeaderFake}>
-                      <Grid item>
-                        {loadingPlay && <Spinner height={30} width={30} />}
-                      </Grid>
-                      </Grid>
-                      <Grid container justify="center" alignItems='center' className={classes.mainGalleryFake}>
-                      <Grid item>
-                        {loadingPlay && <Spinner height={40} width={40} />}
-                      </Grid>
-                      </Grid>
-                    </Grid>
-              </Grid>}
-              <Collapse in={index <= discovered }>
-              <div style={{display: index <= discovered ? "block" : "none", marginTop: index === 0 && 80}}>
-              
-                {/* <Grid container justify='center'>
-                  <Grid item style={{ marginTop: index === 0 && 40}}>
-                      <Typography variant="h4" className={classes.mainHeader}>
-                        {event.name}
-                        <p className={classes.thisLine}></p>
-                      </Typography>
-                  </Grid>
-                  <TimeDistanceChips event={event} />
-                </Grid> */}
-                  <PlayPageGallery event={event} />
+                  <PlayPageGallery event={data.getJoinEvents[0]} />
                   <PlayPageList
-                    event={event}
-                    bookings={event.bookings}
-                    showBookings={event.bookings} //showBookings
+                    event={data.getJoinEvents[0]}
+                    bookings={data.getJoinEvents[0].bookings}
+                    showBookings={data.getJoinEvents[0].bookings} //showBookings
                     // bookingStates={bookingStates}
                   />
                   <PlayPageMap
-                    event={event}
-                    showBookings={getPlayEvents.bookings} //showBookings
+                    event={data.getJoinEvents[0]}
+                    showBookings={data.getJoinEvents.bookings} //showBookings
                   /> 
                    
-                      <Grid container
-                            className={classes.nextEventBox}
-                            alignItems="center">
-                        <Grid item xs={12}>
-                          
-
-                            <JoinSend event={event} getPlayEventsMutation={getPlayEventsMutation} getPlayEvents={getPlayEvents} />
-
+                  <Grid container
+                        className={classes.nextEventBox}
+                        alignItems="center">
+                    <Grid item xs={12}>
+                        {/* <JoinSend event={getJoinEvents[0]} getPlayEventsMutation={getPlayEventsMutation} /> */}
+                        <EventButtons event={data.getJoinEvents[0]} />
+                    </Grid>
+                  </Grid>
+                  <Grid container
+                    className={classes.nextEventBox}
+                    justify="center">
+                      <Grid item xs={12} style={{ margin: "30px"}}>
+                          <Grid container justify="center">
+                              {!loadingPlay && data.getJoinEvents.length >= 0 &&
+                                  <Grid item onClick={discoverPlay}>
+                                    <ArrowDownwardIcon color="secondary" style={{ fontSize: 100 }} />
+                                  </Grid>
+                              }
+                              {loadingPlay && <Grid item><Spinner height={100} width={100} /></Grid>}
+                          </Grid>
                         </Grid>
-                      </Grid>
-                  </div>
-               
-              </Collapse> 
+                  </Grid>
               </div>
-             ) 
-            }
-             )}
             </Grid>
 
-      </Paper>
+            )}
+  
     </Container>
     </div>
   );
@@ -288,14 +213,6 @@ const useStyles = makeStyles(theme => ({
   mainHeader:{
     marginTop: '30px',
     marginBottom: '10px'
-  },
-  mainHeaderFake: {
-    backgroundColor: "#6F6F6F",
-    height: "40px",
-    width: "80%",
-    marginLeft: "10%",
-    marginRight: "10%",
-    marginBottom: 30
   },
   mainGalleryFake: {
     backgroundColor: "#2F2F2F",

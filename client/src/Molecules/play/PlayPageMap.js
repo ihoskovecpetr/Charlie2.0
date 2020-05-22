@@ -2,9 +2,11 @@ import React from "react"
 import Grid from "@material-ui/core/Grid";
 import Gallery from "react-grid-gallery";
 import Typography from "@material-ui/core/Typography";
+import RoomIcon from '@material-ui/icons/Room';
 
 import { makeStyles } from "@material-ui/core/styles";
 import { useMutation, useQuery } from "@apollo/react-hooks";
+import { NavLink } from "react-router-dom";
 
 import gql from "graphql-tag";
 
@@ -37,6 +39,12 @@ const PlayPageMap = ({event, paddingSides}) => {
         <Grid container 
             style={{padding: paddingSides ? paddingSides : '20px'}}
               className={classes.mapContainer}>
+        <a  className={classes.gmapsLink} 
+            target="blank"
+            href={`https://www.google.com/maps?q=${event.geometry.coordinates[1]},${event.geometry.coordinates[0]}&ll=${event.geometry.coordinates[1]},${event.geometry.coordinates[0]}&z=17`}>
+              {event.address}
+              <RoomIcon />
+        </a>
         <PlayMap event={event} />
         <Grid
           container
@@ -46,33 +54,6 @@ const PlayPageMap = ({event, paddingSides}) => {
           direction="row"
           className={classes.ratingAuthorContainer}
         >
-          {/* <Grid item xs={12}>
-            <Grid
-              container
-              justify="center"
-              className={classes.authorContainer}
-            >
-              <Grid item xs={12} style={{color: "lightGrey"}}>
-                <UserCardPlay author={event.author} />
-              </Grid>
-            </Grid>
-          </Grid>
-          <p className={classes.thisLine}></p> */}
-
-          {/* <Grid item xs={3}>
-            <Typography component="div" className={classes.standardHeading}>
-              RATING
-            </Typography>
-          </Grid>
-
-          <Grid item xs={3}>
-            {ratings.data &&
-              ratings.data.showRatings.map((rating, index) => (
-                <Grid item key={index}>
-                  <RatingCard rating={rating} />
-                </Grid>
-              ))}
-          </Grid> */}
         </Grid>
 
       </Grid>  
@@ -86,6 +67,10 @@ const useStyles = makeStyles(theme => ({
     paddingTop: '10px',
     paddingBottom: '10px',
     borderRadius: 20
+  },
+  gmapsLink:{
+    textDecoration: "underline",
+    color: "aqua"
   },
   ratingAuthorContainer: {
       padding: '0px',

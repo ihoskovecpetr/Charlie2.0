@@ -27,7 +27,7 @@ import { useMutation } from "@apollo/react-hooks";
 import { useXsSize } from "./Hooks/useXsSize";
 
 import UpperStripe from "./Atoms/UpperStripe";
-import DrawerContent from "./Atoms/DrawerContent";
+import DrawerContent from "./Atoms/UpperStripeAndDrawer/DrawerContent";
 import WindowEventSnackbar from "./Atoms/WindowEventSnackbar";
 
 import { UserContext } from "./userContext";
@@ -41,7 +41,7 @@ import SignIn from "./Pages/SignIn";
 import SignUp from "./Pages/SignUp";
 import SignOut from "./Pages/SignOut";
 import Create from "./Pages/Create";
-import MapPage from "./Pages/MapPage";
+import MapWrap from "./Pages/MapWrap";
 import Event from "./Pages/Event";
 import Profile from "./Pages/Profile";
 import About from "./Pages/About";
@@ -49,19 +49,29 @@ import UserModal from "./Pages/UserModal";
 import Play from "./Pages/Play";
 import PlayOutside from "./Pages/PlayOutside";
 import AcceptPage from "./Pages/AcceptPage"
+import Search from "./Pages/SearchPage"
+import Privacy from "./Pages/PrivacyPage"
 import FloatingBtnWrap from "./Molecules/FloatingBtnWrap";
 
 
 const drawerWidth = 240;
 let prevLocation;
-let firstLocation
+// let firstLocation;
 
-
-function App(props) {
-  //  const windowSize = useWindowSize()
+function App({location, container}) {
   let history = useHistory();
   const { md_size_memo } = useXsSize();
+  console.log("App loaction, conteiner: ", location, container)
+  const { latitude, longitude, err } = usePosition();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [finishedAnimation, setFinishedAnimation] = useState(false);
+  const [routerState, setRouterState] = useState({ 
+    firstPrint: false,
+    Modal: false,
+    justGoBack: false
+  });
 
+  //Overriding default styles in Material UI
   const theme = createMuiTheme({
     overrides: {
       MuiTab: {
@@ -112,7 +122,7 @@ function App(props) {
     content: {
       height: "100vh",
       // height: `${1*windowSize.height}px`,
-      position: props.location.pathname.split("/")[1] === "map" ? "fixed" : null,
+      position: location.pathname.split("/")[1] === "map" ? "fixed" : null,
       width: "100%",
       backgroundColor: "#F8F8F8",
       // overflow: "scroll"
@@ -120,21 +130,12 @@ function App(props) {
   }));
 
   const classes = useStyles();
-  const { latitude, longitude, err } = usePosition();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [finishedAnimation, setFinishedAnimation] = useState(false);
 
-  const [getLoggedInUser, { loading, error, data }] = useMutation(
-    LOGIN,
-    {
-      variables: { user_id: "FAKE" }
-    }
-  );
+  const [getLoggedInUser, { loading, error, data }] = useMutation(LOGIN);
 
   console.log("Rerendering whole App");
 
-  const { container } = props;
-  const [user, setUser] = useState({
+  const [contx, setContx] = useState({
     success: false,
     name: false,
     _id: null,
@@ -145,8 +146,10 @@ function App(props) {
     countUnseenBookings: 0,
     countUnseenRatings: 0,
     getLoggedInUser: () => getLoggedInUser(),
+    setUserToContext: () => setUserToContext(),
     deleteToken: () => window.localStorage.setItem("token", "_deleted_"),
 
+    openDrawer: true,
     freezScroll: false,
     expanded_id: null,
     filterOn: true,
@@ -154,8 +157,25 @@ function App(props) {
     playEventsCount: null,
     radius: 20,
     days: 2,
-    // firstPrint: props.location.pathname.split("/")[1] === "play" ? true : false
+    // firstPrint: location.pathname.split("/")[1] === "play" ? true : false
   });
+
+  const setUserToContext = (userObj) => {
+console.log("setUserToContext: ", userObj)
+if(userObj){
+      setContx(prev => {return {
+      ...prev,
+      _id: userObj._id,
+      success: userObj.success,
+      name: userObj.name,
+      email: userObj.email,
+      picture: userObj.picture,
+      description: userObj.description,
+    }}
+    );
+}
+
+  }
 
   const [workingPosition, setWorkingPosition] = useState({
     date: new Date().toISOString().split("T")[0],
@@ -164,19 +184,19 @@ function App(props) {
 
   useEffect(() => {
     // getLoggedInUser();
-    if(props.location.pathname.split("/")[1] === "play" && !window.firstPrintPlay){
+    if(location.pathname.split("/")[1] === "play" && !window.firstPrintPlay){
       window.firstPrintPlay = "play"
     }else{
       window.firstPrintPlay = "else"
     }
-  }, [props.location.pathname]);
+  }, [location.pathname]);
 
   useEffect(() => {
 
     getLoggedInUser();
-    prevLocation = props.location;
-    firstLocation = props.location.pathname.split("/")[1];
-    // if(props.location.pathname.split("/")[1] === "play"){
+    prevLocation = location;
+    // firstLocation = location.pathname.split("/")[1];
+    // if(location.pathname.split("/")[1] === "play"){
     //   console.log("Setting FPnt: true")
     //   setUser(prev => {
     //   return { ...prev, firstPrint: true };
@@ -189,31 +209,33 @@ function App(props) {
     useEffect(() => {
       if (data && data.getLoggedInUser) {
 
-        setUser(prev => {return {
-          ...prev,
-          _id: data.getLoggedInUser._id,
-          success: data.getLoggedInUser.success,
-          name: data.getLoggedInUser.name,
-          email: data.getLoggedInUser.email,
-          picture: data.getLoggedInUser.picture,
-          description: data.getLoggedInUser.description,
-        }});
+        // setContx(prev => {return {
+        //   ...prev,
+        //   _id: data.getLoggedInUser._id,
+        //   success: data.getLoggedInUser.success,
+        //   name: data.getLoggedInUser.name,
+        //   email: data.getLoggedInUser.email,
+        //   picture: data.getLoggedInUser.picture,
+        //   description: data.getLoggedInUser.description,
+        // }});
+        console.log("Calling setUserToContext from App")
+        setUserToContext(data.getLoggedInUser)
       }
     }, [data]);
 
   // }
 
-  if (latitude && longitude && !user.geolocationObj) {
-    setUser(prev => {
+  if (latitude && longitude && !contx.geolocationObj) {
+    setContx(prev => {
       return { ...prev, geolocationObj: { lat: latitude, lng: longitude }};
     });
   }
 
   const providerValue = useMemo(() => {
-    let context = user
-    let setContext = setUser
+    let context = contx
+    let setContext = setContx
     return { context, setContext };
-  }, [user, setUser]);
+  }, [contx, setContx]);
 
   const handleDrawerToggle = () => {
     if(!window.eventId){
@@ -221,15 +243,15 @@ function App(props) {
     } 
   };
 
-  const ListOfUrls = user.success
-    ? ["", "play", "create", "map", "about", "signout", "user", "profile", "accept"]
-    : ["", "play", "create", "map", "about", "signin", "user", "signup", "accept"];
+  const ListOfUrls = contx.success
+    ? ["", "play", "create", "map", "about", "search", "privacy-policy", "signout", "user", "profile", "accept"]
+    : ["", "play", "create", "map", "about", "search", "privacy-policy", "signin", "user", "signup", "accept"];
 
-    // Just for DRAWER and NavigationHeader (UpperStripe) 
-  const ListOfNames = user.success
+    // Just for DRAWER and NavigationHeader (UpperStripe)
+  const ListOfNames = contx.success
     ? ["Charlie", "Play", "Create", "Map", "About", "Sign Out"]
     : ["Charlie", "Play", "Create", "Map", "About", "Sign In"];
-  const ListOfComponents = user.success
+  const ListOfComponents = contx.success
     ? [
         <Menu
           ListOfNames={ListOfNames}
@@ -239,14 +261,16 @@ function App(props) {
         />,
         <Play />,
         <Create />, //create
-        <MapPage
+        <MapWrap
           workingPosition={workingPosition}
           setWorkingPosition={setWorkingPosition}
         />, //Map
         <About />,
-        <SignOut LOGIN={LOGIN} />,
+        <Search />,
+        <Privacy />,
+        <SignOut />,
         <UserModal />,
-        <Profile />
+        <Profile />,
       ]
     : [
         <Menu
@@ -257,35 +281,45 @@ function App(props) {
         />,
         <Play />,
         <Create />,
-        <MapPage
+        <MapWrap
           workingPosition={workingPosition}
           setWorkingPosition={setWorkingPosition}
         />,
         <About />,
+        <Search />,
+        <Privacy />,
         <SignIn />,
         <UserModal />,
         <SignUp />
       ];
    
   const returnComponent = index => {
-
-
     return <>
             <CssBaseline />
             {ListOfComponents[index]}
           </>;
   };
 
-  var pathSet = props.location.pathname.split("/");
+
   // if (pathSet[1] == "event") {
   // } else if (pathSet[1] == "signin") {
   // } else if (pathSet[1] == "signout") {
   // } else {
-  //   prevLocation = props.location;
+  //   prevLocation = location;
   // }
 
   let firstPrint = false;
   let Modal = false;
+  let justGoBack = false;
+
+useEffect(() => {
+
+  console.log("App Location props rerendered: ", location)
+
+  firstPrint = false;
+  Modal = false;
+  justGoBack = false;
+  var pathSet = location.pathname.split("/");
 
   if (
     pathSet[1] == "event" ||
@@ -296,24 +330,33 @@ function App(props) {
     Modal = true;
   }
 
-
   if (!Modal) {
-    prevLocation = props.location;
+    prevLocation = location;
   }
 
-  if (prevLocation == props.location) {
+  if (prevLocation == location) {
     firstPrint = true;
   }
 
-  var justGoBack = false;
   if (
-    props.location &&
-    props.location.state &&
-    props.location.state.justGoBack == true
+    location &&
+    location.state &&
+    location.state.justGoBack == true
   ) {
     justGoBack = true;
   }
 
+  console.log("Modal, justGoBack, firstPrint ", Modal, justGoBack, firstPrint)
+  console.log(" PrevLocation, location ", prevLocation, location)
+
+  setRouterState({
+    Modal: Modal,
+    justGoBack: justGoBack,
+    firstPrint: firstPrint 
+  })
+
+}, [location])
+ 
   return (
       <ThemeProvider theme={theme}>
         <UserContext.Provider value={providerValue}>
@@ -345,7 +388,7 @@ function App(props) {
           <WindowEventSnackbar />
 
           </nav>
-          {firstPrint && Modal && (
+          {routerState.firstPrint && routerState.Modal && (
             <>
               <Route
                 exact
@@ -433,7 +476,7 @@ function App(props) {
               />
             </>
           )}
-          {!firstPrint && Modal && (
+          {!routerState.firstPrint && routerState.Modal && (
             <>
               <Route
                 exact
@@ -484,7 +527,7 @@ function App(props) {
                       <>
                       {text != "play" && <UpperStripe
                           loading={loading}
-                          userApp={user}
+                          userApp={contx}
                           ListOfNames={ListOfNames}
                           ListOfUrls={ListOfUrls}
                           handleDrawerToggle={handleDrawerToggle}
@@ -507,7 +550,7 @@ function App(props) {
                     <>
                     <UpperStripe
                         loading={loading}
-                        userApp={user}
+                        userApp={contx}
                         ListOfNames={ListOfNames}
                         ListOfUrls={ListOfUrls}
                         handleDrawerToggle={handleDrawerToggle}
@@ -527,7 +570,7 @@ function App(props) {
               </Switch>
             </>
           )}
-          {!Modal && window.firstPrintPlay != "play" && (
+          {!routerState.Modal && window.firstPrintPlay != "play" && (
             <>
               <Switch location={prevLocation}>
               <Route
@@ -578,7 +621,7 @@ function App(props) {
                   <>
                   <UpperStripe
                           loading={loading}
-                          userApp={user}
+                          userApp={contx}
                           ListOfNames={ListOfNames}
                           ListOfUrls={ListOfUrls}
                           handleDrawerToggle={handleDrawerToggle}
@@ -600,7 +643,7 @@ function App(props) {
                       <>
                         <UpperStripe
                           loading={loading}
-                          userApp={user}
+                          userApp={contx}
                           ListOfNames={ListOfNames}
                           ListOfUrls={ListOfUrls}
                           handleDrawerToggle={handleDrawerToggle}
@@ -621,7 +664,7 @@ function App(props) {
                     <>
                       <UpperStripe
                         loading={loading}
-                        userApp={user}
+                        userApp={contx}
                         ListOfNames={ListOfNames}
                         ListOfUrls={ListOfUrls}
                         handleDrawerToggle={handleDrawerToggle}
@@ -642,7 +685,7 @@ function App(props) {
               <FloatingBtnWrap />
             </>
           )}
-          {!Modal && window.firstPrintPlay === "play" && (
+          {!routerState.Modal && window.firstPrintPlay === "play" && (
             <>
             <Route
                 exact

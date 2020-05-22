@@ -91,7 +91,6 @@ const getQR = async () => {
     console.log("Empty ones: ", empty);
 
   if (empty.length == 0) {
-      console.log("SUBMIT: ", load);
       updateUser({
         variables: load,
         refetchQueries: () => [

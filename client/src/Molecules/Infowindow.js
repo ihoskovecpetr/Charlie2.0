@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -11,27 +11,29 @@ import countdown from "countdown";
 import { displayDate } from "src/Services/transform-services";
 
 function Infowindow(props) {
+  const [openBackdrop, setOpenBackdrop] = useState(false);
+  const classes = useStyles();
+
+
   let Pic = props.location.imagesArr[0];
   let Author = props.location.author;
 
+
   console.log("Pic: ", Pic)
 
-  const classes = useStyles();
 
   const openModalEvent = () => {
 
-    var youOwnerVar = false;
-
-    if (props.location.creatorEmail == props.email) {
-      youOwnerVar = true;
-    } else {
-    }
+    setOpenBackdrop(true)
     var string = "/event/" + props.location._id;
-
     window.AppHistory.push(string, {
-      //tady: napsatStateKdyžtak
+      //tady: napsatStateKdyžtak 
     });
   };
+
+  const handleClose = () => {
+    setOpenBackdrop(true)
+  }
 
   return (
     <>

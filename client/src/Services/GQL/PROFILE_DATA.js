@@ -8,15 +8,17 @@ export const PROFILE_DATA = gql`
       updatedAt
       success
       name
-      price
-      capacityMax
-      currency
       dateStart
       dateEnd
-      happeningNow
+      price
+      BYO
+      capacityMax
       address
+      currency
       description
+      happeningNow
       areYouAuthor
+      hide
       author {
         _id
         name
@@ -51,11 +53,21 @@ export const PROFILE_DATA = gql`
       }
       event {
         _id
+        createdAt
+        updatedAt
+        success
         name
-        address
         dateStart
+        dateEnd
         price
+        BYO
+        capacityMax
+        address
         currency
+        description
+        happeningNow
+        areYouAuthor
+        hide
         geometry {
           coordinates
         }
@@ -76,6 +88,7 @@ export const PROFILE_DATA = gql`
       host {
         _id
         name
+        picture
       }
       user {
         _id
@@ -84,16 +97,21 @@ export const PROFILE_DATA = gql`
       }
       event {
         _id
+        createdAt
+        updatedAt
+        success
         name
-        description
         dateStart
         dateEnd
-        happeningNow
         price
-        currency
+        BYO
         capacityMax
         address
+        currency
+        description
+        happeningNow
         areYouAuthor
+        hide
         geometry {
           coordinates
         }
@@ -130,6 +148,7 @@ export const PROFILE_DATA = gql`
       host {
         _id
         name
+        picture
       }
       user {
         _id
@@ -138,14 +157,21 @@ export const PROFILE_DATA = gql`
       }
       event {
         _id
+        createdAt
+        updatedAt
+        success
         name
-        description
         dateStart
         dateEnd
-        happeningNow
-        address
         price
+        BYO
+        capacityMax
+        address
         currency
+        description
+        happeningNow
+        areYouAuthor
+        hide
         geometry {
           coordinates
         }

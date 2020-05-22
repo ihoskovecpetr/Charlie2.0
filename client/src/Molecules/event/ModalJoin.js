@@ -12,7 +12,7 @@ import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 
 
-import {GET_ONE_EVENT} from "src/Services/GQL/GQL_GET_ONE_EVENT";
+import {GET_ONE_EVENT} from "src/Services/GQL/GET_ONE_EVENT";
 import { UserContext } from "../../userContext";
 
 import Spinner from "../../Atoms/Spinner";
@@ -67,7 +67,7 @@ function ModalJoin({event}) {
       refetchQueries: () => [
         {
           query: GET_ONE_EVENT,
-          variables: { id: history.location.pathname.split("/")[2] }
+          variables: { event_id: history.location.pathname.split("/")[2] }
         }
       ]
     });

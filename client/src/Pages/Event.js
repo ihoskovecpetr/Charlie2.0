@@ -12,7 +12,6 @@ import Avatar from "@material-ui/core/Avatar";
 import { withRouter, useHistory, NavLink } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import Gallery from "react-grid-gallery";
-import gql from "graphql-tag";
 import { displayDate } from "../Services/transform-services";
 
 import { UserContext } from "../userContext";
@@ -21,76 +20,27 @@ import PlayPageList from "../Molecules/play/PlayPageList";
 import PlayPageGallery from "../Molecules/play/PlayPageGallery";
 import PlayPageMap from "../Molecules/play/PlayPageMap";
 
-import {GET_ONE_EVENT} from "src/Services/GQL/GQL_GET_ONE_EVENT";
-
+import {GET_ONE_EVENT} from "src/Services/GQL/GET_ONE_EVENT";
+import { EVENT_RATINGS } from "src/Services/GQL/EVENT_RATINGS";
 import ModalLayout from "../Layouts/ModalLayout";
 import EventButtons from "../Molecules/event/EventButtons";
 import RatingCard from "../Molecules/rating-card";
 import Spinner from "../Atoms/Spinner";
-import PendingGuest from "../Molecules/event/PendingGuest";
 
 
-const EVENT_RATINGS = gql`
-  query showRatings($event_id: ID!) {
-    showRatings(event_id: $event_id) {
-      guest {
-        picture
-        name
-      }
-      message
-      ratingValue
-      createdAt
-    }
-  }
-`;
-
-const BOOKING = gql`
-  mutation bookEvent($user_id: String!, $event_id: String!) {
-    bookEvent(user_id: $user_id, event_id: $event_id) {
-      success
-    }
-  }
-`;
-
-const CANCELLING = gql`
-  mutation cancelBooking($user_id: String!, $event_id: String!) {
-    cancelBooking(user_id: $user_id, event_id: $event_id) {
-      _id
-      success
-    }
-  }
-`;
-const DELETE = gql`
-  mutation deleteOneEvent($delete_id: ID!) {
-    deleteOneEvent(delete_id: $delete_id) {
-      success
-    }
-  }
-`;
 let dataMock;
 
 function Event(props) {
   const classes = useStyles();
-  const theme = useTheme();
-  let history = useHistory();
-
   const [windowHeight, setWindowHeight] = useState(0);
-
-  const [createBooking, bookingStates] = useMutation(BOOKING);
-  //const [createReqBooking, bookingReqStates] = useMutation(BOOKING_REQ);
-  const [cancelBooking, cancelledState] = useMutation(CANCELLING);
-  const [deleteOneEvent, deleteState] = useMutation(DELETE);
   const { loading, error, data, refetch } = useQuery(GET_ONE_EVENT, {
-    variables: { id: props.match.params.id }
-    //skip: !id,
-    //pollInterval: 500
+    variables: { event_id: props.match.params.id }
   });
   const ratings = useQuery(EVENT_RATINGS, {
     variables: { event_id: props.match.params.id }
-    //skip: !id,
-    //pollInterval: 500
   });
 
+  console.log("Event modal print")
   useEffect(() => {
     window.scrollTo(0, 0);
     setWindowHeight(window.innerHeight)
@@ -103,17 +53,8 @@ function Event(props) {
         .addEventListener("scroll", () => {
           console.log("Parent scroll");
         });
-      // document
-      //   .getElementById("paper_scrollable")
-      //   .addEventListener("click", () => {
-      //     console.log("Parent click");
-      //   });
     }
   });
-
-  if (deleteState.data && deleteState.data.deleteOneEvent.success == true) {
-    history.push("/map");
-  }
 
   let dataDB;
 
@@ -126,13 +67,6 @@ function Event(props) {
           </Paper>;
   };
 
-  // if (bookingStates.loading) {
-  //   return <>Creating Booking</>;
-  // }
-
-  // if (bookingStates.data) {
-  //   refetch();
-  // }
 
   if (dataMock) {
     dataDB = dataMock;
@@ -140,26 +74,6 @@ function Event(props) {
     dataDB = data;
   }
 
-  if (bookingStates.loading) {
-    return (
-      <ModalLayout>
-        <PaperEvent>
-        <Grid container justify="center" alignItems="center" style={{width: "100%", height: 300}}>
-            <Grid item>
-              <Spinner height={100} width={100} />
-            </Grid>
-          </Grid>
-        </PaperEvent>
-      </ModalLayout>
-    );
-  }
-  // if (error) {
-  //   return (
-  //     <BaseAndPaper>
-  //       <p>Error...</p>
-  //     </BaseAndPaper>
-  //   );
-  // }
 
   if (dataDB && dataDB.getOneEvent.success) {
     return (
@@ -181,24 +95,13 @@ function Event(props) {
                   CANCELLED
                 </Typography>}
               </Grid>
-              {/* <Grid item className={classes.galleryGrid}>
-                <Gallery
-                  images={dataDB.getOneEvent.imagesArr}
-                  rowHeight={100}
-                  display={true}
-                  backdropClosesModal={true}
-                />
-              </Grid> */}
               <PlayPageGallery event={dataDB.getOneEvent} />
-
-              
               <PlayPageList
                     event={dataDB.getOneEvent}
                     bookings={dataDB.getOneEvent.bookings}
                     GQL_refetch={GET_ONE_EVENT}
                     refetchVariables={{ id: props.match.params.id }}
                   />
-
               <PlayPageMap
                     event={dataDB.getOneEvent}
                     showBookings={dataDB.getOneEvent.bookings} //showBookings
@@ -220,14 +123,8 @@ function Event(props) {
                   ))}
               </Grid>
               <EventButtons
-            event={dataDB && dataDB.getOneEvent}
-            bookings={dataDB && dataDB.getOneEvent.bookings}
-            createBooking={createBooking}
-            cancelBooking={cancelBooking}
-            deleteOneEvent={deleteOneEvent}
-            EVENT_RATINGS={EVENT_RATINGS}
-            className={classes.eventButtons}
-          />
+                event={dataDB && dataDB.getOneEvent}
+              />
             </Grid>
           </PaperEvent>
         </div>
@@ -332,10 +229,6 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 4,
     padding: theme.spacing(3, 2)
   },
-  containerPending:{
-    paddingLeft: 20,
-    paddingRight: 20
-  },
   listRow:{
     width: '100%',
     marginTop: 2,
@@ -365,10 +258,6 @@ const useStyles = makeStyles(theme => ({
     width: "100%",
     overflow: "scroll"
   },
-  eventButtons: {
-    position: "absolute",
-    bottom: 0
-  }
 }));
 
 export default withRouter(Event);

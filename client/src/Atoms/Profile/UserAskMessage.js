@@ -18,7 +18,6 @@ export default function UserAskMessage({ user, message, reverse }) {
   const [value, setValue] = React.useState(2);
   const swingIn = useSpring({transform: "translateX(0px)", opacity: 1, from: {opacity: 0, transform: "translateX(-100px)"}})
 
-
   return (
     <animated.div style={swingIn}>
     <Grid container 

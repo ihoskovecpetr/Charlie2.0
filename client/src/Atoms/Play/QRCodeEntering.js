@@ -33,25 +33,6 @@ const QRCodeEntering = ({bookings}) => {
             <Grid item xs={12}>
                     <Typography component="div" className={classes.standardContent}>
                         <Grid container>
-                            <Grid item direction="row">
-                              {bookings && bookings.map(booking => {
-                                if (booking.confirmed && !booking.cancelled && booking.entered) {
-                                  return (
-                                    <Grid item>
-                                      ENTERED GUEST: {booking.user.name} 
-                                    </Grid>
-                                  );
-                                }
-                                return null;
-                              })}
-                            </Grid>
-                            {/* {bookingStates.loading && (
-                            <Grid container justify="center" alignItems="center" style={{width: "100%", height: 300}}>
-                              <Grid item>
-                                <Spinner height={100} width={100} />
-                              </Grid>
-                            </Grid>
-                            )} */}
                             <Grid item xs={12}>
                               <Dropzone_QR setQrCodeData={setQrCodeData} />
                             </Grid>

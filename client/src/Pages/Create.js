@@ -42,9 +42,9 @@ import { findEmpty } from "../Services/functions";
 import { UserContext } from "../userContext";
 
 import Copyright from "../Atoms/copyright";
-import Dropzone from "../Molecules/dropzone";
+import Dropzone from "../Molecules/Dropzone";
 import Spinner from "../Atoms/Spinner";
-import MapCreate from "../Molecules/map-create";
+import MapCreate from "../Molecules/MapCreate";
 import LoginFirstButton from "../Atoms/LoginFirstButton";
 
 import {useLogicPlusMinusValue} from "./Logic/Create/useLogicPlusMinusValue";
@@ -195,6 +195,14 @@ function Create(props) {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    if (dataOut) {
+      setTimeout(() => {
+        history.push(`/event/${dataOut._id}`);
+      }, 500);
+    }
+  }, [dataOut]);
+
   const inputName = useRef(null);
   const inputTime = useRef(null);
   const inputBYO = useRef(null);
@@ -227,7 +235,6 @@ function Create(props) {
     
 
     if (empty.length == 0) {
-      console.log("SUBMIT: ", load);
       createEvent({
         variables: load
       });
@@ -254,11 +261,6 @@ function Create(props) {
     });
   }
 
-  if (dataOut) {
-    setTimeout(() => {
-      history.push(`/event/${dataOut._id}`);
-    }, 500);
-  }
 
   return (
     <div

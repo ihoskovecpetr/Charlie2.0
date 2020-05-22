@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useContext} from "react";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -8,12 +8,17 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-
-import gql from "graphql-tag";
+import GradeIcon from '@material-ui/icons/Grade';
+import Chip from '@material-ui/core/Chip';
 import StarRatingComponent from "react-star-rating-component";
-import { withRouter } from "react-router-dom";
 
-import Spinner from "../../Atoms/Spinner";
+import { withRouter } from "react-router-dom";
+import gql from "graphql-tag";
+
+import { EVENT_RATINGS } from "src/Services/GQL/EVENT_RATINGS";
+import { UserContext } from "src/userContext";
+
+import Spinner from "src/Atoms/Spinner";
 
 const RATE_EVENT = gql`
   mutation rateEvent(
@@ -37,14 +42,34 @@ const RATE_EVENT = gql`
   }
 `;
 
-function ModalRate(props) {
+const MY_RATINGS_OF_EVENT = gql`
+  query showMyRatingOfEvent(
+    $event_id: ID!
+    $guest_id: ID!
+  ) {
+    showMyRatingOfEvent(
+      event_id: $event_id
+      guest_id: $guest_id
+    ) {
+      success
+      ratingValue
+      message
+    }
+  }
+`;
+
+function ModalRate({event, match}) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [message, setMessage] = React.useState("You rock!");
-  const [stars, setStars] = React.useState(1);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("You rock!");
+  const [stars, setStars] = useState(3);
+  const { context } = useContext(UserContext);
 
   const [rateEvent, rateEventState] = useMutation(RATE_EVENT);
-
+  const { loading, error, data, refetch } = useQuery(MY_RATINGS_OF_EVENT, {
+    variables: { event_id: event._id,
+                  guest_id: context._id}
+  });
   const handleOpen = () => {
     setOpen(true);
   };
@@ -57,6 +82,29 @@ function ModalRate(props) {
   //   setStars(nextValue);
   // };
 
+  const handleRateEvent = () => {
+    rateEvent({
+      variables: {
+        event_id: event._id,
+        host_id: event.author._id,
+        guest_id: context._id,
+        ratingValue: stars,
+        message: message
+      },
+      refetchQueries: () => [
+        {
+          query: EVENT_RATINGS,
+          variables: { event_id: match.params.id }
+        },
+        {
+          query: MY_RATINGS_OF_EVENT,
+          variables: {  event_id: event.id,
+                        guest_id: context._id}
+        }
+      ]
+    });
+  }
+
 
   if (rateEventState.data && rateEventState.data.rateEvent.success) {
     setTimeout(() => {
@@ -65,18 +113,22 @@ function ModalRate(props) {
   }
 
   return (
-    <div>
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.trueBtn}
-        onClick={e => {
-          e.preventDefault();
-          handleOpen();
-        }}
-      >
-        RATE
-      </Button>
+    <Grid xs={12}>
+      {data && data.showMyRatingOfEvent.length === 0 && <Chip 
+        label={`RATE this event`} 
+        icon={<GradeIcon />}
+        color="secondary" 
+        className={classes.chipOne} 
+        onClick={handleOpen}
+          />}
+      {data && data.showMyRatingOfEvent.length != 0 && <Chip 
+        label={`You already rated this event`} 
+        icon={<GradeIcon />}
+        color="primary" 
+        disabled={true}
+        className={classes.chipOne} 
+        onClick={handleOpen}
+          />}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -151,47 +203,40 @@ function ModalRate(props) {
                     </form>
                   </Grid>
                 </Grid>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={e => {
-                    e.preventDefault();
-
-                    rateEvent({
-                      variables: {
-                        event_id: props.event._id,
-                        host_id: props.event.author._id,
-                        guest_id: props.user._id,
-                        ratingValue: stars,
-                        message: message
-                      },
-                      refetchQueries: () => [
-                        {
-                          query: props.EVENT_RATINGS,
-                          variables: { event_id: props.match.params.id }
-                        }
-                      ]
-                    });
-                  }}
-                >
-                  SEND RATING
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={e => {
-                    e.preventDefault();
-                    handleClose();
-                  }}
-                >
-                  CLOSE
-                </Button>
+                <Grid item>
+                  <Grid container spacing={2}>
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={e => {
+                          e.preventDefault();
+                          handleClose();
+                        }}
+                      >
+                        CLOSE
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={e => {
+                          e.preventDefault();
+                          handleRateEvent()
+                        }}
+                        >
+                          SEND RATING
+                        </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
               </>
             )}
           </div>
         </Fade>
       </Modal>
-    </div>
+    </Grid>
   );
 }
 
@@ -220,7 +265,14 @@ const useStyles = makeStyles(theme => ({
     width: "100%",
     height: 60,
     borderRadius: 0
-  }
+  },
+  chipOne: {
+    width: "90%", 
+    fontWeight: 500, 
+    fontSize: 25, 
+    padding: 20, 
+    margin: "5%"
+  },
 }));
 
 export default withRouter(ModalRate);

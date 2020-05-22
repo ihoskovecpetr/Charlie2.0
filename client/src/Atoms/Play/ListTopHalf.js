@@ -59,7 +59,7 @@ const ListTopHalf = ({event, transparent}) => {
             <Grid container 
                   alignItems="center">
               <Grid item xs={6} className={classes.addressGreyWrap}>
-                <Typography variant="p" className={classes.addressGrey}>
+                <Typography variant="subtitle1" className={classes.addressGrey}>
                 {event.address}
                 </Typography>
               </Grid>
@@ -71,7 +71,7 @@ const ListTopHalf = ({event, transparent}) => {
                 </Grid>
               </Grid>
               <Grid item xs={4} className={classes.timeDistanceWrap}>
-                <Typography variant="p" className={classes.timeDistance}>
+                <Typography variant="subtitle1" className={classes.timeDistance}>
                 <b>{`${Math.floor(distance * 10)/10} Km`}</b> away
                 </Typography>
               </Grid>
@@ -81,7 +81,7 @@ const ListTopHalf = ({event, transparent}) => {
                   alignItems="center"
                   justify="center">
               <Grid item xs={6} className={classes.addressGreyWrap}>
-                <Typography variant="p" className={classes.addressGrey}>
+                <Typography variant="subtitle1" className={classes.addressGrey}>
                   {event.dateStart && displayDate(event.dateStart)}
                 </Typography>
               </Grid>
@@ -93,7 +93,7 @@ const ListTopHalf = ({event, transparent}) => {
                 </Grid>
               </Grid>
               <Grid item xs={4} className={classes.timeDistanceWrap}>
-                <Typography variant="p" className={classes.timeDistance}>
+                <Typography variant="subtitle1" className={classes.timeDistance}>
                 {counteddownDate}
                 </Typography>
               </Grid>

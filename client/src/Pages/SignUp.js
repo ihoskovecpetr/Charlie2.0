@@ -26,38 +26,7 @@ import ModalLayout from "../Layouts/ModalLayout";
 import Copyright from "../Atoms/copyright";
 import Spinner from "../Atoms/Spinner";
 import DropzoneSignup from "../Molecules/DropzoneSignup";
-
-const NEW_USER = gql`
-  mutation newUser(
-    $name: String!
-    $email: String!
-    $password: String!
-    $description: String!
-    $picture: String
-  ) {
-    newUser(
-      name: $name
-      email: $email
-      password: $password
-      description: $description
-      picture: $picture
-    ) {
-      dataOut{
-      success
-      name
-      _id
-      token
-      password
-      email
-      }
-      errorOut{
-        name
-        message
-      }
-
-    }
-  }
-`;
+import { NEW_USER } from 'src/Services/GQL/NEW_USER'
 
 // function tryLogin() {
 //   console.log("Mutation data: ", data);

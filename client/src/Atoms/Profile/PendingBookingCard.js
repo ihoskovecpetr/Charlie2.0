@@ -21,50 +21,54 @@ import { UserContext } from "../../userContext";
 import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
 import { SEEN_BOOKING } from "src/Services/GQL/SEEN_BOOKING";
 
-import UserAskMessage from "./UserAskMessage";
-import EventInfoLines from "./EventInfoLines";
+import PartyOn from "src/Atoms/PartyOn";
+import BookingMessages from "src/Atoms/BookingMessages";
 import ListTopHalf from "src/Atoms/Play/ListTopHalf";
+import EventButtons from "src/Molecules/event/EventButtons";
 
-export default function PendingBokingCard({ event }) {
+
+export default function PendingBokingCard({ booking }) {
   const classes = useStyles();
   const { xs_size_memo, md_size_memo } = useXsSize();
   const { context, setContext } = useContext(UserContext);
-  const [expanded, setExpanded] = useState(context.expanded_id === event._id);
+  const [expanded, setExpanded] = useState(false);
   const [markBookingSeen, seenStates] = useMutation(SEEN_BOOKING);
 
-  console.log("Exp sts: ", expanded)
+  console.log("Rerender PendingBokingCard: ", booking.event.name)
 
 useEffect(() => {
-  if(context.expanded_id === event._id){
-    setExpanded(true)
-  }else{
-    setExpanded(false)
-  }
-}, [context.expanded_id])
+  // if(context.expanded_id === booking._id){
+  //   setExpanded(true)
+  // }else{
+  //   setExpanded(false)
+  // }
+}, [])
 
 
   const handleExpandClick = () => {
 
-    if(context.expanded_id === event._id){
-      setContext(prev => {
-        return { ...prev, 
-          expanded_id: null
-        };
-        })
+    if(expanded){
+      setExpanded(false)
+      // setContext(prev => {
+      //   return { ...prev, 
+      //     expanded_id: null
+      //   };
+      //   })
     } else{
-          setContext(prev => {
-            return { ...prev, 
-              expanded_id: event._id
-            };
-        })
+        setExpanded(true)
+      //   setContext(prev => {
+      //     return { ...prev, 
+      //       expanded_id: booking._id
+      //     };
+      // })
     }
-    seenUserHandle()
+    // seenUserHandle()
   };
 
   const seenUserHandle = () => {
     markBookingSeen({
       variables: {
-        booking_id: event._id,
+        booking_id: booking._id,
         user: true,
       },
       refetchQueries: () => [
@@ -77,9 +81,7 @@ useEffect(() => {
   };
 
   let color = "transparent"
-  if(event.event.happeningNow){
-    color = "rgba(232,4,93,0.67)"
-  }else if(expanded){
+  if(expanded){
     if(md_size_memo){
       color = "rgba(0,0,0,0.1)"
     } else {
@@ -87,19 +89,19 @@ useEffect(() => {
     }
   }else{
     if(md_size_memo){
-      if(event.seenUser === false){
+      if(booking.seenUser === false){
         color = "rgba(0,0,0,0.1)"
       }
     }else{
-          if(event.seenUser === false){
+          if(booking.seenUser === false){
       color = "white"
     }
     }
   }
 
 let badgeContent 
-if(event.decided){
-    if(event.confirmed){
+if(booking.decided){
+    if(booking.confirmed){
       badgeContent =  <DoneIcon fontSize="small" />
     } else {
       badgeContent =  <CloseIcon fontSize="small" /> //"rgba(0,0,0,0.05)"
@@ -126,8 +128,6 @@ if(event.decided){
         alignItems="center"
         className={classes.mainSolidLine}
       >
-
-
         <Grid item xs={xs_size_memo ? 9 : 8}>
           <Typography
             variant="body2"
@@ -135,21 +135,28 @@ if(event.decided){
             className={classes.mainHeader}
           >
             <b>Your</b> request to join{" "}
-            <b>{event.event.name}</b> is {!event.decided ? "PENDING" : event.confirmed ? "CONFIRMED" : "DECLINED"}
+            <b>{booking.event.name}</b> is {!booking.decided ? "PENDING" : booking.confirmed ? "CONFIRMED" : "DECLINED"}
           </Typography>
-          <Typography
-            variant="body2"
-            align="left"
-            className={classes.countdown}
-          >
-            updated <b>{countdown(
-              new Date(event.updatedAt),
-              new Date(),
-              "X",
-              1
-            ).toString()}{" "}
-            ago</b>
-          </Typography>
+          <Grid container >
+            <Grid item xs={6}>
+              <Typography
+                variant="body2"
+                align="left"
+                className={classes.countdown}
+              >
+                created <b>{countdown(
+                  new Date(booking.createdAt),
+                  new Date(),
+                  "X",
+                  1
+                ).toString()}{" "}
+                ago</b>
+              </Typography>
+            </Grid>
+            <Grid item xs={6} className={classes.partyOnGrid}>
+              {booking.event.happeningNow && <PartyOn />}
+            </Grid>
+          </Grid>
         </Grid>
         
         <Grid item xs={xs_size_memo ? 3 : 2}>
@@ -158,11 +165,11 @@ if(event.decided){
               <IconButton aria-label="settings">
                 <Badge badgeContent={badgeContent} 
                         className={classes.badge} 
-                        color={event.decided ? "primary" : "secondary"}
-                        // style={{ backgroundColor: event.decided ? "grey" : "red"}}
+                        color={booking.decided ? "primary" : "secondary"}
+                        // style={{ backgroundColor: booking.decided ? "grey" : "red"}}
                         >
                   <img
-                    src={event.event.imagesArr[0].thumbnail}
+                    src={booking.event.imagesArr[0].thumbnail}
                     className={classes.mainAvatar}
                   />
                 </Badge>
@@ -190,31 +197,17 @@ if(event.decided){
         )}
       </Grid>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <Grid container className={classes.middleBody}>
-          <ListTopHalf event={event.event} transparent={true}/>
-        </Grid>
-        <Grid item sm={12} xs={12} className={classes.leftMiddleItem}>
-        <Grid container className={classes.messageWrap}>
-          <Grid item xs={12}>
-            <Grid container justify="center">
+          <Grid container justify="center" className={classes.messageWrap}>
             <Grid item>
               <Grid container className={classes.messageContainer}>
-                  <Grid item xs={12}>
-                    <UserAskMessage user={event.user} message={event.message} />
-                    {event.response && (
-                      <UserAskMessage
-                        reverse={true}
-                        user={event.event.author}
-                        message={event.response}
-                      />
-                    )}
-                  </Grid>
+                <BookingMessages booking={booking} />
               </Grid>
+            </Grid>
           </Grid>
-          </Grid>
-          </Grid>
-          </Grid>
-          </Grid>
+        <Grid container className={classes.middleBody}>
+          <ListTopHalf event={booking.event} transparent={true}/>
+        </Grid>
+        <EventButtons event={booking.event} />
       </Collapse>
     </Grid>
   );
@@ -255,6 +248,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: red[500],
     height: 80,
     width: 80
+  },
+  partyOnGrid: {
+    marginTop: 10
   },
   textField: {},
   textFieldCont: {

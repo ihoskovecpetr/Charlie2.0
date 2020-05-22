@@ -20,12 +20,9 @@ import { UserContext } from "../userContext";
 
 import mapSetup from "../Services/map-settings";
 import { ALL_EVENTS } from "../Services/GQL";
-import Map from "../Atoms/Hook-map";
+import Map from "../Atoms/MapAtom";
 import InfoWindow from "../Molecules/Infowindow";
 import MapSettingsPanel from "../Molecules/map-settings-panel";
-
-import BasicMarker from "../Images/basic-marker.png";
-import CharlieMarker from "../Images/charlie-marker.png";
 
 let infoBubble;
 let InfoBevent = false;
@@ -88,8 +85,8 @@ function MapPage(props) {
   let dataMock;
 
   const dataMemo = useMemo(() => data, [data]);
-
-  // dataMock = [
+{
+   // dataMock = [
   //   {
   //     _id: "2sdf2sdfs2sfdsdfs2",
   //     success: true,
@@ -167,7 +164,8 @@ function MapPage(props) {
   //     confirmed: true,
   //     hide: false
   //   }
-  // ];
+  // ]; 
+}
 
   const onMapMount = useCallback(map => {
     let uniqueArrayOfId = [];
@@ -196,6 +194,7 @@ function MapPage(props) {
     }
 
     map.addListener("idle", function() {
+      console.log("Mapa Idle")
       var bounds = map.getBounds();
       var center = map.getCenter();
 
@@ -224,17 +223,18 @@ function MapPage(props) {
       // SumPoly = polygon.union(...SumPolyWork , POLY_A);
       // console.log("SumPoly", SumPoly)
       //console.log("Setting current: ");
-      // props.setWorkingPosition({
-      //   geometry: { lat: center.lat(), lng: center.lng() },
+
+      // props.setWorkingPosition(prev => {return({
+      //   ...prev,
+      //   geolocation: { lat: center.lat(), lng: center.lng() },
       //   zoom: map.getZoom()
-      // });
+      // })});
+
       //here.fetchBoundariesSingle(ne,sw)
       //console.log("Fetch points BoarDERS?");
     });
 
     map.addListener("click", function(event) {
-      //console.log("Listener from MAP CLICK");
-      //console.log("previousMarker:", previousMarker);
 
       //here.setState({confirmedPressed: false})
 
@@ -288,14 +288,14 @@ function MapPage(props) {
           location.bookings &&
             location.bookings.map((guest, index) => {
               //console.log("User indexOf: ", guest.user._id, user._id);
-              if (guest.user._id == context._id) {
-                //console.log("Yes, GUEST");
-                {
-                  !guest.cancelled && guest.confirmed && (url = urlAttend);
-                }
-              } else {
-                //console.log("No, GUEST");
-              }
+              // if (guest.user._id == context._id) {
+              //   //console.log("Yes, GUEST");
+              //   {
+              //     !guest.cancelled && guest.confirmed && (url = urlAttend);
+              //   }
+              // } else {
+              //   //console.log("No, GUEST");
+              // }
               // if (here.props.email.indexOf(guest.guest_email) !== -1 && guest.guest_confirmed == true) {
               //   url = urlAttend
               // }
@@ -320,12 +320,13 @@ function MapPage(props) {
           });
 
           marker.addListener("click", function() {
+            // setContext(prev => {return({...prev, openDrawer: true})})
             window.activeLocation_id = location._id;
 
-            // if (previousMarker) {
-            //       infoBubble.close()
-            //       previousMarker = undefined
-            // } else{
+            if (previousMarker) {
+                  infoBubble.close()
+                  previousMarker = undefined
+            } else{
             infoBubble.addListener("domready", e => {
               setTimeout(() => {
                 ReactDOM.render(
@@ -344,7 +345,7 @@ function MapPage(props) {
             });
             infoBubble.open(map, marker);
             previousMarker = location;
-            // }
+            }
           });
 
           return marker;
@@ -353,10 +354,15 @@ function MapPage(props) {
     }
   });
 
+  useEffect(() => {
+    console.log("Context Map Geo rewrite")
+    if (context.geolocationObj) {
+      LngLatCenter = context.geolocationObj;
+    }
+  }, [context.geolocationObj])
+
   if (props.workingPosition.geometry) {
     LngLatCenter = props.workingPosition.geometry;
-  } else if (context.geolocationObj) {
-    LngLatCenter = context.geolocationObj;
   }
   // let LngLatCenter = { lat: latitude, lng: longitude };
   // if (!latitude) {
@@ -404,6 +410,8 @@ function MapPage(props) {
     [onMapMount, MapOptions]
   );
 
+  console.log("RERENDER MAP PAGE")
+
   return (
     <div component="main" className={classes.container}>
       <CssBaseline />
@@ -441,7 +449,11 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
-  }
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 }));
 
 export default MapPage;

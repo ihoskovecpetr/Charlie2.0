@@ -39,6 +39,6 @@ const EventSchema = new Schema({
 { timestamps: true }
 );
 
-EventSchema.index({ "geometry": "2dsphere", "name": "text", "address": "text", "description": "text" },{weights: {email: 1,address: 2, description: 2}});
+EventSchema.index({ "geometry": "2dsphere", "name": "text", "address": "text", "description": "text"  },{ weights: {name: 2, address: 1, description: 1 }}); //"description": "text"
 
 module.exports = mongoose.models.Event || mongoose.model("Event", EventSchema);

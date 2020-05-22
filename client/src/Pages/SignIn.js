@@ -15,11 +15,11 @@ import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import Badge from "@material-ui/core/Badge";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { useMutation, useQuery, useApolloClient } from "@apollo/react-hooks";
-import { Animated } from "react-animated-css";
 
 import gql from "graphql-tag";
 import { useHistory, NavLink } from "react-router-dom";
+import { useMutation, useQuery, useApolloClient } from "@apollo/react-hooks";
+import { Animated } from "react-animated-css";
 
 import { UserContext } from "../userContext";
 import { useScrollDisable } from "../Hooks/useScrollDisable";
@@ -28,6 +28,7 @@ import { useWindowSize } from "../Hooks/useWindowSize";
 import ModalLayout from "../Layouts/ModalLayout";
 import Spinner from "../Atoms/Spinner";
 import Copyright from "../Atoms/copyright";
+import FacebookLogin from "../Atoms/SignIn/FacebookLogin";
 
 const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
@@ -59,14 +60,11 @@ function SignIn(props) {
 
   const [login, { loading, error, data }] = useMutation(LOGIN);
   
-  //useScrollDisable();
-
   const { dataOut } = data ? data.login : { dataOut: undefined };
   const { errorOut } = data ? data.login : { errorOut: undefined };
 
   if (context.success) {
     setTimeout(() => {
-      console.log("SignIn: EVENT", window.eventId)
       if(window.eventId){
         history.push(`/event/${window.eventId}`);
       }else{
@@ -300,6 +298,7 @@ function SignIn(props) {
           >
             Sign In
           </Button>
+          <FacebookLogin />
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">

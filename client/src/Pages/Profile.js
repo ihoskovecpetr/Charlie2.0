@@ -14,7 +14,6 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import SwipeableViews from "react-swipeable-views";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { useHistory, NavLink } from "react-router-dom";
 
 import { UserContext } from "../userContext";
 import { sortByDate } from "../Services/functions";
@@ -25,9 +24,8 @@ import Copyright from "../Atoms/copyright";
 import Spinner from "../Atoms/Spinner";
 import RatingCardNew from "../Atoms/Profile/RatingCardNew";
 import ProfileTopBox from "../Molecules/profile/ProfileTopBox";
-import NotificationPrinter from "../Molecules/profile/NotificationPrinter";
-import UserEventsProfile from "../Molecules/profile/UserEventsProfile";
-
+import ProfileBookingsPrinter from "src/Molecules/profile/ProfileBookingsPrinter"
+import ProfileEventsPrinter from "src/Molecules/profile/ProfileEventsPrinter";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -62,10 +60,9 @@ function a11yProps(index) {
 function Profile() {
   const classes = useStyles();
   const theme = useTheme();
-  const history = useHistory();
   const { context, setContext } = useContext(UserContext);
   const [value, setValue] = useState(0);
-  const [feedArray, setFeedArray] = useState([]);
+  const [bookingsArray, setBookingsArray] = useState([]);
   const [countUnseenBookings, setCountUnseenBookings] = useState(0);
   const { xs_size_memo, md_size_memo } = useXsSize();
   const { loading, error, data } = useQuery(PROFILE_DATA, {
@@ -92,21 +89,18 @@ function Profile() {
 
     if (data) {
       let {
-        userEvents,
-        showRatings,
         showUserBookings,
         showHostBookings
       } = data;
 
-      const transformedArr = [
-        ...trsfmFeed(showRatings, "iGotRating"),
+      const transformedBookingsArr = [
         ...trsfmFeed(showUserBookings, "yourBooking"),
         ...trsfmFeed(showHostBookings, "askForJoin")
       ];
 
-      const sortedFeed = sortByDate(transformedArr, "createdAt", "DESC");
+      const sortedFeed = sortByDate(transformedBookingsArr, "createdAt", "DESC");
 
-      setFeedArray(sortedFeed);
+      setBookingsArray(sortedFeed);
 
     }
   }, [data]);
@@ -217,7 +211,7 @@ function Profile() {
                         </Grid>
                       </Grid>
                     )}
-                  {feedArray && feedArray.map((event, index) => (
+                  {bookingsArray && bookingsArray.map((booking, index) => (
                     <Grid
                       container
                       justify="center"
@@ -225,10 +219,8 @@ function Profile() {
                       alignContent="center"
                       style={{ width: "100%", padding: 0 }}>
                           <Grid item xs={12} key={index}>
-                            <NotificationPrinter
-                              event={event}
-                              PROFILE_DATA={PROFILE_DATA}
-                              refetchVariables={{ host_id: context._id }}
+                            <ProfileBookingsPrinter
+                              booking={booking}
                             />
                           </Grid>
                       </Grid>
@@ -241,7 +233,7 @@ function Profile() {
                   dir={theme.direction}
                   className={classes.tabPanel}>
                     {loading && <Spinner />}
-                    {data && <UserEventsProfile 
+                    {data && <ProfileEventsPrinter 
                                   showUserBookings={data.showUserBookings} 
                                   userEvents={data.userEvents} />}
               </TabPanel>

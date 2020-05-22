@@ -5,6 +5,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import DoneIcon from '@material-ui/icons/Done';
+import CloseIcon from '@material-ui/icons/Close';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
 import SendIcon from '@material-ui/icons/Send';
@@ -16,9 +17,11 @@ import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 import { Animated } from "react-animated-css";
 
-import { UserContext } from "../../userContext";
+import { UserContext } from "src/userContext";
 import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
-import {GET_ONE_EVENT} from "src/Services/GQL/GQL_GET_ONE_EVENT";
+import { GET_ONE_EVENT } from "src/Services/GQL/GET_ONE_EVENT";
+import { EVENT_BOOKINGS } from "src/Services/GQL/EVENT_BOOKINGS";
+import { PLAY_EVENTS_QUERY } from "src/Services/GQL/PLAY_EVENTS_QUERY";
 
 import Spinner from "../../Atoms/Spinner";
 
@@ -43,12 +46,13 @@ const BOOKING_REQ = gql`
   }
 `;
 
-export default function JoinSend({event, getPlayEventsMutation}) {
+export default function JoinSend({event}) {
     const classes = useStyles();
     let history = useHistory();
     const { context, setContext } = useContext(UserContext);
     const [checked, setChecked] = useState(false);
-    const [refetched, setRefetched] = useState(false);
+    const [sending, setSending] = useState(false);
+    // const [refetched, setRefetched] = useState(false);
 
     const [localState, setLocalState] = useState({
       message: "JOIN",
@@ -60,15 +64,12 @@ export default function JoinSend({event, getPlayEventsMutation}) {
 
     const inputDescription = useRef(null);
 
-    console.log("JoinSend event: ", event)
-
+    console.log("JOIN SEND RERENDER")
     useEffect(() => {
 
       event && event.bookings && event.bookings.map(item => {
-        console.log("Iterace", item)
         if( item.user._id === context._id) {
-            if(item.confirmed){
-              console.log("change sts Attending")
+            if(item.decided && item.confirmed){
                 // attending = true
                 // icon = [<DoneIcon fontSize="large" />]
                 setLocalState(prev => {
@@ -81,42 +82,34 @@ export default function JoinSend({event, getPlayEventsMutation}) {
                    };
                   }
                 })
-            } else{
-              console.log("change sts Pending")
-                // pending = true
-                // icon = [<HourglassEmptyIcon fontSize="large" />]
-                // setMessage("Pending")
-                setLocalState(prev => {
-                  {
-                    return { 
-                      ...prev, 
-                      message: "Pending",
-                      pending: true,
-                    icon: [<HourglassEmptyIcon fontSize="large" />]
-                   };
-                  }
-                })
             }
         }
     })
-
-    console.log("USEEEFFF JOINSEND RES: ", localState.pending, localState.attending, localState.message)
 
     }, [event, event.bookings, context._id])
 
     function openJoin(){
       if(!localState.attending && !localState.pending){
         setChecked(true)
-        setTimeout(() => { window.scrollBy({
+        setTimeout(() => { 
+          window.scrollBy({
           top: 200,
           left: 0,
           behavior: 'smooth'
-        }); }, 400);
-
+        }); }, 100);
+        setTimeout(() => { 
+          document.getElementById("bottomAnchor").scrollIntoView();
+        }, 400);
       }
     }
 
     function sendBooking(params) {
+      setLocalState(prev => ({ 
+            ...prev, 
+            message: "Sending",
+            attending: true,
+            icon: [<HourglassEmptyIcon fontSize="large" />]
+      }))
         createReqBooking({
             variables: {
               guest_id: context._id,
@@ -133,25 +126,40 @@ export default function JoinSend({event, getPlayEventsMutation}) {
               },
               {
                 query: GET_ONE_EVENT,
-                variables: { id: history.location.pathname.split("/")[2] }
+                variables: { event_id: history.location.pathname.split("/")[2]}
               },
+              {
+                query: EVENT_BOOKINGS,
+                variables: { event_id: event._id }
+              },
+              {
+                query: PLAY_EVENTS_QUERY,
+                variables: {
+                  plusDays: context.filterOn ? context.days : 10000,
+                  lng: context.geolocationObj ? context.geolocationObj.lng : null,
+                  lat: context.geolocationObj ? context.geolocationObj.lat : null,
+                  radius: context.filterOn ? context.radius : 9999999,
+                  shownEvents: context.shownEvents
+                }
+              }
             ]
           })
+          setChecked(false)
     }
     // Just for PLAY Page
-    if(data && data.requestBookEvent.success && !refetched && getPlayEventsMutation){
-      setRefetched(true)
-      setChecked(false)
-      setTimeout(() => {getPlayEventsMutation({variables:{
-            plusDays: context.days,
-            lng: context.geolocationObj ? context.geolocationObj.lng : null,
-            lat: context.geolocationObj ? context.geolocationObj.lat : null,
-            radius: context.radius, // playFilter.radius,
-            shownEvents: context.shownEvents
-      }})      }
+    // if(data && data.requestBookEvent.success && !refetched && getPlayEventsMutation){
+    //   setRefetched(true)
+    //   setChecked(false)
+    //   setTimeout(() => {getPlayEventsMutation({variables:{
+    //         plusDays: context.days,
+    //         lng: context.geolocationObj ? context.geolocationObj.lng : null,
+    //         lat: context.geolocationObj ? context.geolocationObj.lat : null,
+    //         radius: context.radius, // playFilter.radius,
+    //         shownEvents: context.shownEvents
+    //   }})}
 
-      , 1000)
-    }
+    //   , 1000)
+    // }
 
     if(event.areYouAuthor) return <p className={classes.textAuthor}> You are author of this event </p>
 
@@ -204,6 +212,7 @@ export default function JoinSend({event, getPlayEventsMutation}) {
                         onClick={sendBooking}
                         />
                 </Animated>
+                <div id="bottomAnchor"></div>
             </Grid>
             )}
             {loading && (

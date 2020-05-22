@@ -24,6 +24,10 @@ userSchema = new Schema({
     type: String,
     required: true
   },
+  type: {
+    type: String,
+    required: false
+  },
   createdEvents: [
     {
       type: Schema.Types.ObjectId,
@@ -35,6 +39,8 @@ userSchema = new Schema({
     required: false
   }
 });
+
+userSchema.index({ "name": "text", "description": "text", "email": "text" },{ weights: {name: 1, description: 1, email: 1 }}); //"description": "text"
 
 module.exports = mongoose.models.users || mongoose.model("users", userSchema);
 //'VoteHook' is name of new Schema/Model/Collection in DB

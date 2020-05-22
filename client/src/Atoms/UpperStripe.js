@@ -8,26 +8,31 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import Input from "@material-ui/core/Input";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import Button from "@material-ui/core/Button";
 import Avatar from "@material-ui/core/Avatar";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 import Badge from "@material-ui/core/Badge";
 
 import { useScrollY } from "../Hooks/useScrollY";
 
 import { withRouter, useHistory } from "react-router-dom";
+import clsx from "clsx"
 
 import { UserContext } from "src/userContext";
 import { useCountUnseenBookingsRatings } from "src/Hooks/useCountUnseenBookingsRatings";
 
 import Spinner from "./Spinner";
-import CharlieLogo from "../Images/charlie-logo.png"
+import CharlieLogo from "src/Images/charlie-logo.png"
+import SearchInput from "src/Atoms/UpperStripeAndDrawer/SearchInput"
 
 
-function UpperStripe(props) {
+function UpperStripe({drawerWidth, location, handleDrawerToggle, ListOfNames, ListOfUrls, userApp, loading}) {
   const { context } = useContext(UserContext);
   let history = useHistory(); 
-  const {displayPlay_memo} = useScrollY({y: 100})
+  const {displayPlay_memo} = useScrollY({y: 10})
   useCountUnseenBookingsRatings()
 
   const useStyles = makeStyles(theme => ({
@@ -47,16 +52,28 @@ function UpperStripe(props) {
         display: "none"
       }
     },
+    hideSmall:{
+      display: "block",
+      [theme.breakpoints.down("sm")]: {
+        display: "none"
+      }
+    },
+    showSmall:{
+      display: "none",
+      [theme.breakpoints.down("sm")]: {
+        display: "block"
+      }
+    },
     appBar: {
       position: "fixed",
       // width: "100%",
       // zIndex: 100,
-      // marginLeft: props.drawerWidth,
+      // marginLeft: drawerWidth,
       color: "black",
     },
     buttonToBeHidden: {
       [theme.breakpoints.down("xs")]: {
-        width: `calc(100% - ${props.drawerWidth}px)`,
+        width: `calc(100% - ${drawerWidth}px)`,
         display: "none",
         fontWeight: "400 !important"
       },
@@ -87,9 +104,8 @@ function UpperStripe(props) {
   }));
   const classes = useStyles();
 
-  const pathSet = props.location.pathname.split("/");
+  const pathSet = location.pathname.split("/");
   const disabledFromOut = window.eventId ? true : false
-
 
   return (
     <>
@@ -97,7 +113,7 @@ function UpperStripe(props) {
       <AppBar 
               className={classes.appBar} 
               style={{
-                backgroundColor: pathSet[1] === 'map' || displayPlay_memo ? "rgba(255,255,255,0.6)" : "transparent" ,
+                backgroundColor: pathSet[1] === 'map' || pathSet[1] === 'profile' || displayPlay_memo ? "rgba(255,255,255,0.6)" : "transparent" ,
                 boxShadow: !displayPlay_memo && "none"
                 }}>
         <Container maxWidth="xl" className={classes.containerMain}>
@@ -106,41 +122,54 @@ function UpperStripe(props) {
             justify="space-between" // Add it here :)
             alignItems="center"
             container
-            spacing={0}
           >
             <Grid item>
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
-                onClick={props.handleDrawerToggle}
+                onClick={handleDrawerToggle}
                 className={classes.menuButton}
               >
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h5">
-                {props.ListOfNames.map((text, index) => (
-                  <Button
-                    color="inherit"
-                    className={classes.buttonToBeHidden}
-                    disabled={disabledFromOut}
-                    onClick={() => {history.push(`/${props.ListOfUrls[index]}`)}}
-                  >
-                       {text == "Charlie" ? (
-                        <Avatar
-                          className={classes.avatarCharlie}
-                          alt="Remy Sharp"
-                          src={CharlieLogo}
-                        />
-                      ) : (
-                        text
-                      )}
+              <Grid container alignItems="center">
+                {ListOfNames.map((text, index) => (
+                  <Grid item>
+                    <Button
+                      color="inherit"
+                      className={classes.buttonToBeHidden}
+                      disabled={disabledFromOut}
+                      onClick={() => {history.push(`/${ListOfUrls[index]}`)}}
+                    >
+                      {text != "Charlie" && <>{text}</> }
+                      {text == "Charlie" && <Avatar className={classes.avatarCharlie}
+                                                    alt="Remy Sharp"
+                                                    src={CharlieLogo}
+                                                  />}
                     </Button>
-                ))}
-              </Typography>
+                  </Grid>
+                    ))}
+                  <Grid item>
+                    <Button
+                      color="inherit"
+                      className={clsx(classes.buttonToBeHidden , classes.showSmall)}
+                      disabled={disabledFromOut}
+                      onClick={() => {history.push(`/search`)}}
+                    >
+                      SEARCH
+                    </Button>
+                  </Grid>
+                  <Grid item className={classes.hideSmall}>
+                    <div className={classes.buttonToBeHidden}>
+                      <SearchInput />
+                    </div>
+                  </Grid>
+              </Grid>
+                            
             </Grid>
             <Grid item>
-              {!props.userApp && context && context.name && (
+              {!userApp && context && context.name && (
                     <Button color="inherit" 
                             className={classes.buttonNavi} 
                             disabled={disabledFromOut}
@@ -156,7 +185,7 @@ function UpperStripe(props) {
                     </Button>
               )}
 
-              {!props.userApp.success && !context.name && (
+              {!userApp.success && !context.name && (
                 <Badge
                   color="primary"
                   badgeContent={
@@ -175,25 +204,25 @@ function UpperStripe(props) {
                       disabled={disabledFromOut}
                       onClick={() => {history.push("/signin")}}>
                       SIGN IN
-                      {props.loading ? (
+                      {loading ? (
                           <div className={classes.ButtonAvatar}>
                             <Spinner height={30} width={30} />
                           </div>
                         ) : (
                           <div className={classes.ButtonAvatar}>
-                            <AccountCircleIcon color="disabled" fontSize="large" />
+                            <AccountCircle color="disabled" fontSize="large" />
                           </div>
                         )}
                   </Button>
                 </Badge>
               )}
-              {props.userApp.success && (
+              {userApp.success && (
                   <Button color="inherit" 
                           className={classes.buttonNavi}
                           disabled={disabledFromOut}
                           onClick={() => {history.push("/profile")}}>
                     
-                    <p className={classes.ellipsName}>{props.userApp.name}</p>
+                    <p className={classes.ellipsName}>{userApp.name}</p>
                     <Badge
                         badgeContent={context.countUnseenBookings + context.countUnseenRatings} 
                         // className={classes.badge} 
@@ -202,7 +231,7 @@ function UpperStripe(props) {
                         >
                     <Avatar
                       alt="Remy Sharping"
-                      src={props.userApp.picture}
+                      src={userApp.picture}
                       className={classes.ButtonAvatar}
                     >
                       x
