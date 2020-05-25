@@ -12,8 +12,10 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import CloseIcon from '@material-ui/icons/Close';
 import Badge from "@material-ui/core/Badge";
 import Typography from "@material-ui/core/Typography";
+import Divider from '@material-ui/core/Divider';
 import { makeStyles } from "@material-ui/core/styles";
 
 import gql from "graphql-tag";
@@ -28,7 +30,7 @@ import { useWindowSize } from "../Hooks/useWindowSize";
 import ModalLayout from "../Layouts/ModalLayout";
 import Spinner from "../Atoms/Spinner";
 import Copyright from "../Atoms/copyright";
-import FacebookLogin from "../Atoms/SignIn/FacebookLogin";
+import SocialLogins from "../Atoms/SignIn/SocialLogins";
 
 const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
@@ -105,59 +107,20 @@ function SignIn(props) {
     [e.currentTarget.name]: e.currentTarget.value
   })
 
-  // const Email = ({ cy, disabled }) => {
-  //   // let Err = false
-  //   // if(dataOut) Err = !dataOut.success
-  //   // console.log("Pass data: ", dataOut);
-  //   // console.log("Pass Err: ", Err);
-  //   return (
-  //     <TextField
-  //       margin="normal"
-  //       required
-  //       // disabled={disabled}
-  //       // defaultValue="test@gmail.com"
-  //       value={email}
-  //       fullWidth
-  //       // data-cy={cy}
-  //       onChange={handleUsernameChange}
-  //       label="Email Address"
-  //       name="email"
-  //       id="email"
-  //       // autoComplete="email"
-  //       //autoFocus
-  //       error={errorOut}
-  //       // error={data ? data && !data.success : false}
-  //     />
-  //   );
-  // };
-
-  const Pass = ({ disabled }) => {
-
-    return (
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        disabled={disabled}
-        // defaultValue="heslo"
-        name="password"
-        label="Password"
-        type="password"
-        id="password"
-        // autoComplete="current-password"
-        error={errorOut}
-      />
-    );
-  };
-
   return (
     <ModalLayout>
       <Paper 
         className={classes.paper}
         style={{
-          marginTop: 0.12 * windowSize.height,
-          maxHeight: 0.86 * windowSize.height
+          marginTop: 0.10 * windowSize.height,
+          maxHeight: 0.88 * windowSize.height,
+          overflow: 'scroll'
         }}>
+          <Grid container justify='flex-end'>
+            <Grid item>
+              <CloseIcon onClick={() => {history.goBack()}} />
+            </Grid>
+          </Grid>
         {dataOut && dataOut.success && (
           <Avatar className={classes.avatarSuccess}>
             <CheckCircleOutlineIcon />
@@ -173,9 +136,39 @@ function SignIn(props) {
             <Spinner height={40} width={40} />
           </div>
         )}
-        <Typography component="h1" variant="h5">
-          {loading ? "Loading.." : "Sign in"}
+        {loading ? <Typography component="h1" variant="h5">
+          Loading...
         </Typography>
+        : <>
+        <Typography component="h1" variant="h5" className={classes.signInLine} >
+          Sign in
+        </Typography> 
+        <Typography className={classes.signInText}>
+          with your social network
+        </Typography>
+        </>}
+
+        <Grid container alignItems='center' justify='center'>
+          <Grid item xs={12}>
+            <SocialLogins />
+          </Grid>
+        </Grid>
+
+        <Grid container alignItems='center' justify='center'>
+          <Grid item xs={5}>
+            <div className={classes.greyLine} ></div>
+          </Grid>
+          <Grid item xs={1}>
+            <Grid container justify='center'>
+              <Grid item>
+                or
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={5}>
+            <div className={classes.greyLine} ></div>
+          </Grid>
+          </Grid>
 
         <form className={classes.form} noValidate>
           {errorOut &&
@@ -298,10 +291,9 @@ function SignIn(props) {
           >
             Sign In
           </Button>
-          <FacebookLogin />
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              <Link variant="body2">
                 Forgot password?
               </Link>
             </Grid>
@@ -319,7 +311,7 @@ function SignIn(props) {
                 }}
               >
                 <Link href="/signup" className={classes.linkClass}>
-                  Sign Up here! OR FB
+                  Sign Up here!
                 </Link>
               </Badge>
             </Grid>
@@ -345,7 +337,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    color: "white",
+    // color: "white",
     //overflowY: "scroll",
     //backgroundColor: theme.palette.darkGrey
   },
@@ -360,12 +352,26 @@ const useStyles = makeStyles(theme => ({
   spinner: {
     margin: theme.spacing(1)
   },
+  signInLine:{
+    margin: 5
+  },
+  signInText: {
+    margin: 5,
+    fontSize: '0.8rem',
+    fontWeight: 500,
+    color: 'grey'
+  },
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1)
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  greyLine: {
+    height: 2,
+    width: '100%',
+    backgroundColor: "lightGrey"
   },
   blueUnderline: {
     margin: 20,

@@ -73,7 +73,7 @@ function Play() {
 
 
   useEffect(() => {
-    if(data && data.getJoinEvents[0]){history.replace(`/play/${data.getJoinEvents[0]._id}`)} 
+    if(data && data.getJoinEvents[0]){history.push(`/play/${data.getJoinEvents[0]._id}`)} 
     window.scrollTo(0, 0);
   }, [data, data && data.getJoinEvents[0]]);
 

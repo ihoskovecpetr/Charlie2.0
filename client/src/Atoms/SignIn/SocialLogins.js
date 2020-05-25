@@ -36,7 +36,7 @@ mutation loginExternal(
       }
 `;
 
-export default function FacebookButton(){
+export default function SocialLogins(){
     const classes = useStyles();
     const [extUser, setExtUser] = useState()
     const { context, setContext } = useContext(UserContext);
@@ -152,7 +152,7 @@ export default function FacebookButton(){
 
     let fbContent;
 
-        fbContent = (<Grid container>
+        fbContent = (<Grid container className={classes.mainContainer}>
           <Grid item xs={12} className={classes.itemFacebook}>
             <Grid container justify="center">
               <Grid item>
@@ -171,7 +171,7 @@ export default function FacebookButton(){
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} className={classes.itemGoogle}>
             {/* <Grid container justify="center">
               <Grid item> */}
               <GoogleLogin
@@ -210,16 +210,24 @@ export default function FacebookButton(){
 }
 
 const useStyles = makeStyles(theme => ({
+  mainContainer: {
+    width: '100%'
+  },
   iconGoogle: {
     height: 20,
     width: 20,
-    marginLeft: 10
+    marginRight: 10
   },
   googleBtn:{
     width: '100%'
   },
   itemFacebook: {
-    backgroundColor: '#4c69ba'
+    backgroundColor: '#4c69ba',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  itemGoogle: {
+    marginBottom: 10
   },
   buttonFacebook: {
     width: '100%'

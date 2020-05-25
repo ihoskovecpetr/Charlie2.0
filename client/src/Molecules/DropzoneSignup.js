@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-
+import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
@@ -132,7 +132,7 @@ function MyDropzone({formValue, setFormValue}) {
 
   return (
     <>
-      <div {...getRootProps()} style={{ padding: "5px", outline: "dashed", cursor: "pointer"}}>
+      <div {...getRootProps()} style={{ padding: "5px", border: "2px dashed grey", cursor: "pointer"}}>
         <input {...getInputProps()} />
         {urlTumb && !isUploading ? (
           // <Avatar style={{ background: "green" }}>
@@ -145,14 +145,16 @@ function MyDropzone({formValue, setFormValue}) {
           ></Avatar>
         ) : null}
         {!urlTumb && !isUploading ? (
-          <Avatar style={{ background: "lightgrey", height: 100, width: 100 }}>
-           {formValue.picture ? <Avatar
-            alt="Remy Sharp"
-            src={formValue.picture}
-            style={{ height: 100, width: 100 }}
-          ></Avatar>
-          : <CropFreeIcon fontSize="large" />} 
-          </Avatar>
+          <Grid container justify='center' alignItems='center' style={{ background: "lightgrey", height: 100, width: 100, borderRadius: 5 }}>
+            <Grid item>
+              {formValue.picture ? <Avatar
+                alt="Remy Sharp"
+                src={formValue.picture}
+                style={{ height: 100, width: 100 }}
+              ></Avatar>
+              : <CropFreeIcon fontSize="large" />} 
+            </Grid>
+          </Grid>
         ) : null}
         {isUploading ? <Spinner height={100} width={100} /> : null}
       </div>

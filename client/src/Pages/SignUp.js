@@ -12,13 +12,14 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
+import CloseIcon from '@material-ui/icons/Close';
 
 import { makeStyles } from "@material-ui/core/styles";
 import { useMutation } from "@apollo/react-hooks";
 
 import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
-import { UserContext } from "../userContext";
+import { useWindowSize } from "../Hooks/useWindowSize";
 import { useScrollDisable } from "../Hooks/useScrollDisable";
 import { findEmpty } from "../Services/functions";
 
@@ -36,6 +37,7 @@ import { NEW_USER } from 'src/Services/GQL/NEW_USER'
 function SignUp() {
   const classes = useStyles();
   let history = useHistory();
+  const windowSize = useWindowSize();
 
   const [formValue, setFormValue] = useState({ picture: null });
   const [feErrors, setFEerrors] = useState([]);
@@ -83,12 +85,12 @@ function SignUp() {
 
 if (dataOut && dataOut.success) {
   setTimeout(() => {
-    history.goBack();
+    history.push('/');
   },200)
   return (
     <ModalLayout>
       <Paper className={classes.paper}>
-        <p>Sukces, redirecting</p>
+        <p>Succes redirecting to main page</p>
       </Paper>
     </ModalLayout>
   );
@@ -140,11 +142,21 @@ if (dataOut && dataOut.success) {
 
   return (
     <ModalLayout>
-      <Paper className={classes.paper}>
+      <Paper  className={classes.paper}
+              style={{
+                marginTop: 0.10 * windowSize.height,
+                maxHeight: 0.88 * windowSize.height,
+                overflow: 'scroll'
+              }}>
         <CssBaseline />
+      <Grid container justify='flex-end'>
+          <Grid item>
+            <CloseIcon onClick={() => {history.goBack()}} />
+          </Grid>
+        </Grid>
       <Grid container justify="center">
         <Grid item>
-          <Typography variant="h6" className={classes.mainHeading}>
+          <Typography component="h1" variant="h5" className={classes.mainHeading}>
             Sign UP
           </Typography>
         </Grid>
@@ -178,6 +190,7 @@ if (dataOut && dataOut.success) {
             id="name"
             label="User name"
             name="name"
+            variant='outlined'
             // autoFocus
             // autocomplete="off"
           />
@@ -188,10 +201,11 @@ if (dataOut && dataOut.success) {
             id="emailSignUp"
             label="Email Address"
             name="email"
+            variant='outlined'
             //autoComplete="email"
           />
           <TextField
-            variant="filled"
+            variant='outlined'
             margin="normal"
             required
             fullWidth
@@ -201,7 +215,7 @@ if (dataOut && dataOut.success) {
             id="password2"
           />
           <TextField
-            variant="filled"
+            variant='outlined'
             margin="normal"
             required
             fullWidth
@@ -260,9 +274,9 @@ if (dataOut && dataOut.success) {
                 
               </Link>
             </Grid>
-            <Grid item>
-              <Link href="/signin" variant="body2">
-                Have an account? Sign In
+            <Grid item onClick={() => {history.goBack()}}>
+              <Link variant="body2">
+                Already Signed up?
               </Link>
             </Grid>
           </Grid>
@@ -309,7 +323,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    height: "90vh",
+    height: "88vh",
     overflow: "scroll",
     paddingBottom: 40
   },
