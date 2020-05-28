@@ -61,7 +61,7 @@ let prevLocation;
 function App({location, container}) {
   let history = useHistory();
   const { md_size_memo } = useXsSize();
-  console.log("App loaction, conteiner: ", location, container)
+  console.log("App.js rErEnDeR, conteiner: ", location, container)
   const { latitude, longitude, err } = usePosition();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [finishedAnimation, setFinishedAnimation] = useState(false);
@@ -70,6 +70,11 @@ function App({location, container}) {
     Modal: false,
     justGoBack: false
   });
+  const [workingPosition, setWorkingPosition] = useState({
+    date: new Date().toISOString().split("T")[0],
+    geometry: null
+  });
+  const [getLoggedInUser, { loading, error, data }] = useMutation(LOGIN);
 
   //Overriding default styles in Material UI
   const theme = createMuiTheme({
@@ -131,9 +136,7 @@ function App({location, container}) {
 
   const classes = useStyles();
 
-  const [getLoggedInUser, { loading, error, data }] = useMutation(LOGIN);
-
-  console.log("Rerendering whole App");
+  console.log("Rerendering whole App workpos: ", workingPosition);
 
   const [contx, setContx] = useState({
     success: false,
@@ -177,11 +180,6 @@ if(userObj){
 
   }
 
-  const [workingPosition, setWorkingPosition] = useState({
-    date: new Date().toISOString().split("T")[0],
-    geolocation: null
-  });
-
   useEffect(() => {
     // getLoggedInUser();
     if(location.pathname.split("/")[1] === "play" && !window.firstPrintPlay){
@@ -224,12 +222,14 @@ if(userObj){
     }, [data]);
 
   // }
-
+  useEffect(() => {
   if (latitude && longitude && !contx.geolocationObj) {
+    console.log("Context. setting Geolocation Obj: ", latitude ,longitude)
     setContx(prev => {
       return { ...prev, geolocationObj: { lat: latitude, lng: longitude }};
     });
   }
+  }, [latitude, longitude])
 
   const providerValue = useMemo(() => {
     let context = contx
@@ -300,14 +300,6 @@ if(userObj){
           </>;
   };
 
-
-  // if (pathSet[1] == "event") {
-  // } else if (pathSet[1] == "signin") {
-  // } else if (pathSet[1] == "signout") {
-  // } else {
-  //   prevLocation = location;
-  // }
-
   let firstPrint = false;
   let Modal = false;
   let justGoBack = false;
@@ -360,7 +352,7 @@ useEffect(() => {
   return (
       <ThemeProvider theme={theme}>
         <UserContext.Provider value={providerValue}>
-          <nav className={classes.drawer} aria-label="mailbox folders">
+          <>
             {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
             <Hidden smUp implementation="css">
               <Drawer
@@ -387,7 +379,7 @@ useEffect(() => {
 
           <WindowEventSnackbar />
 
-          </nav>
+          </>
           {routerState.firstPrint && routerState.Modal && (
             <>
               <Route
@@ -573,6 +565,29 @@ useEffect(() => {
           {!routerState.Modal && window.firstPrintPlay != "play" && (
             <>
               <Switch location={prevLocation}>
+              <Route
+                    exact
+                    path={`/map`}
+                    render={() => (
+                      <>
+                      <UpperStripe
+                          loading={loading}
+                          userApp={contx}
+                          ListOfNames={ListOfNames}
+                          ListOfUrls={ListOfUrls}
+                          handleDrawerToggle={handleDrawerToggle}
+                          drawerWidth={drawerWidth}
+                        />
+                        <main className={classes.content}>
+                          <div className={classes.toolbar} />
+                          {contx.name ? <MapWrap
+                               workingPosition={workingPosition}
+                               setWorkingPosition={setWorkingPosition} /> 
+                               : <SignIn />}
+                        </main>
+                      </>
+                    )}
+                  />
               <Route
                     exact
                     path={`/play/:id`}

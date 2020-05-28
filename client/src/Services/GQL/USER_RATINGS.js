@@ -15,6 +15,7 @@ query showRatings($host_id: ID!) {
       name
       address
       dateStart
+      dateEnd
       price
       currency
       geometry {

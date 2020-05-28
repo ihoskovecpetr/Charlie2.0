@@ -8,6 +8,7 @@ export const GET_ONE_EVENT = gql`
       message
       name
       dateStart
+      dateEnd
       address
       capacityMax
       price

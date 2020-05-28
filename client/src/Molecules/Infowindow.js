@@ -1,39 +1,128 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
+import {
+  ApolloClient,
+  InMemoryCache,
+  HttpLink,
+  split,
+  gql
+} from "apollo-boost";
+import { BatchHttpLink } from "apollo-link-batch-http";
+import { ApolloProvider } from "@apollo/react-hooks";
+import { WebSocketLink } from "apollo-link-ws";
+import { setContext } from "apollo-link-context";
+import { getMainDefinition } from "apollo-utilities";
 
 import countdown from "countdown";
-
+import { useCountdown } from "src/Hooks/useCountdown";
+import { UserContext } from "src/userContext";
 import { displayDate } from "src/Services/transform-services";
+import DrawerWrap from 'src/Molecules/map/DrawerWrap';
+
+
+var GQL_ENDPOINT = `http://localhost:4005/graphql`;
+if (process.env.NODE_ENV == "production") {
+  GQL_ENDPOINT = `https://${window.location.host}/graphql`;
+}
+const httpLink = new BatchHttpLink({
+  uri: GQL_ENDPOINT,
+  headers: {
+    authorization: window.localStorage.getItem("token")
+  }
+});
+
+var WS_ENDPOINT = `ws://localhost:4005/subs`;
+if (process.env.NODE_ENV == "production") {
+  WS_ENDPOINT = `wss://${window.location.host}/subs`;
+}
+
+const wsLink = new WebSocketLink({
+  uri: WS_ENDPOINT,
+  options: {
+    reconnect: true
+  }
+});
+
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = window.localStorage.getItem("token");
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: `Bearer ${token}`
+    }
+  };
+});
+
+const link = split(
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query);
+    return kind === "OperationDefinition" && operation === "subscription";
+  },
+  wsLink,
+  authLink.concat(httpLink)
+);
+
+const client = new ApolloClient({
+  link,
+  cache: new InMemoryCache(),
+  defaultOptions: {
+    query: {
+      fetchPolicy: "network-only",
+      errorPolicy: "all"
+    }
+  }
+});
 
 function Infowindow(props) {
-  const [openBackdrop, setOpenBackdrop] = useState(false);
   const classes = useStyles();
-
-
+  const { counteddownDate } = useCountdown(props.location.dateStart, 1)
+  // const { context, setContext } = useContext(UserContext);
   let Pic = props.location.imagesArr[0];
   let Author = props.location.author;
 
+  useEffect(() => {
+    return(() => {
+      console.log("INfowindw unmounting")
+    })
+  },[])
 
-  console.log("Pic: ", Pic)
-
-
-  const openModalEvent = () => {
-
-    setOpenBackdrop(true)
-    var string = "/event/" + props.location._id;
-    window.AppHistory.push(string, {
-      //tady: napsatStateKdyžtak 
-    });
-  };
-
-  const handleClose = () => {
-    setOpenBackdrop(true)
+  const handleClickOpen = (e) => {
+      console.log("handleClickOpen EE")
+      e.preventDefault();
+      e.stopPropagation();
+      if (props.context.success) {
+        console.log("openModalEvent EE")
+        props.setOpenDrawer(true)
+      } else {
+        props.redirectLogin();
+      }
   }
+
+  // const openModalEvent = () => {
+  //   console.log("openModalEvent EE")
+  //   // return(
+  //   //               <ApolloProvider client={client}>
+  //   //                 <UserContext.Provider value={() => {}} >
+  //   //                   <Router>
+  //   //                     <DrawerWrap open={true} event={props.location} context={props.context} setContext={props.setContext} />
+  //   //                   </Router>
+  //   //                 </UserContext.Provider>
+  //   //               </ApolloProvider>
+  //   // ) 
+
+  //   // var string = "/event/" + props.location._id;
+  //   // window.AppHistory.push(string, {
+  //   //   //tady: napsatStateKdyžtak 
+  //   // });
+  // };
 
   return (
     <>
@@ -55,25 +144,25 @@ function Infowindow(props) {
 
       <Grid
         container
-        direction="row"
         justify="center"
         alignItems="flex-end"
         className={classes.infoWindBody}
       >
         <Grid item xs={12}>
-          <Typography variant="body1" className={classes.countdown}>
-            {countdown(
-              new Date(props.location.dateStart),
-              new Date(),
-              "X",
-              1
-            ).toString()}{" "}
-            ago
-          </Typography>
+            <Typography variant="body1" className={classes.countdown}>
+              {/* {countdown(
+                new Date(props.location.dateStart),
+                new Date(),
+                "X",
+                1
+              ).toString()}{" "}
+              ago */}
+              start {counteddownDate}
+            </Typography>
           </Grid>
       </Grid>
 
-      <Grid
+      {/* <Grid
         container
         direction="column"
         justify="center"
@@ -83,18 +172,11 @@ function Infowindow(props) {
         <Button
           variant="contained"
           className={classes.buttonOpen}
-          onClick={e => {
-            e.preventDefault();
-            if (props.user.success) {
-              openModalEvent();
-            } else {
-              props.redirectLogin();
-            }
-          }}
+          onClick={handleClickOpen}
         >
-          OPEN {!props.user.success && "(LOGIN)"}
+          OPEN {!props.context.success && "(LOGIN)"}
         </Button>
-      </Grid>
+      </Grid> */}
     </>
   );
 }
@@ -140,9 +222,7 @@ const useStyles = makeStyles(theme => ({
   },
   infoWindBody: {
     position: "relative",
-    padding: 5,
-    width: "100%",
-    height: 84,
+    height: 60,
   },
   countdown: {
     position: "relative",

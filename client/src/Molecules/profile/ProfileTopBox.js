@@ -24,29 +24,25 @@ import { LOGIN } from "src/Services/GQL/LOGIN";
 
 import { findEmpty } from "src/Services/functions";
 import { useXsSize } from "src/Hooks/useXsSize";
+import { useAverageRating } from "src/Hooks/useAverageRating";
 import { UserContext } from "src/userContext";
 
 import DropzoneSignup from "src/Molecules/DropzoneSignup";
 
-import QRCode from "qrcode";
-
-
-
-export default function ProfileTopBox({ errorQuery }) {
+export default function ProfileTopBox({ errorQuery, showRatings }) {
   const classes = useStyles();
   const history = useHistory();
   const { md_size_memo } = useXsSize();
   const { context } = useContext(UserContext);
   const [expanded, setExpanded] = useState(false)
-  const [qrImage, setQrImage] = useState("")
   const [formValue, setFormValue] = useState({ picture: context.picture });
-  
   const [updateUser, { loading, error, data }] = useMutation(UPDATE_USER);
 
   const inputName = useRef(null);
   const inputEmail = useRef(null);
   const inputDescription = useRef(null);
 
+  const { averageRating } = useAverageRating(showRatings)
 
   const { dataOut } = data ? data.updateUser : { dataOut: undefined };
   const { errorOut } = data ? data.updateUser : { errorOut: undefined };
@@ -58,21 +54,6 @@ export default function ProfileTopBox({ errorQuery }) {
     }
   }, [dataOut])
 
-  useEffect(() => {
-
-const getQR = async () => {
-    try{
-          const QRulr = await QRCode.toDataURL('I am a pony!')
-          console.log("QRulr: ", QRulr);
-          setQrImage(QRulr)
-    }catch{
-      console.log("error QRkode")
-    }
-  }
-
-  getQR()
-
-  }, [])
 
 
   const onSubmitHandler = (e) => {
@@ -165,7 +146,7 @@ const getQR = async () => {
           </Grid>
           <Grid item xs={12}>
             <Typography variant="body1" className={classes.centerText}>
-              <Rating name="simple-controlled" readOnly value={4} />
+              <Rating name="simple-controlled" readOnly value={averageRating} />
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -322,10 +303,6 @@ const useStyles = makeStyles(theme => ({
   descWrap: {
     width: "100%",
     padding: 5,
-  },
-  qr_code:{
-    height: 100,
-    width: 100
   },
   textFieldDesc: {
     margin: 5,

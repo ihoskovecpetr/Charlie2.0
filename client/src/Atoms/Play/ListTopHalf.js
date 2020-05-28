@@ -14,9 +14,9 @@ import { useXsSize } from "src/Hooks/useXsSize";
 import { useCountdown } from "src/Hooks/useCountdown";
 
 
-const ListTopHalf = ({event, transparent}) => {
+const ListTopHalf = ({event, context, transparent}) => {
+  console.log("ListTopHalf: cotnext: ", context)
     const classes = useStyles();
-    const { context, setContext } = useContext(UserContext);
     const { counteddownDate } = useCountdown(event.dateStart, 1)
     const { xs_size_memo, md_size_memo } = useXsSize();
     const distance = useCountDistance(event.geometry.coordinates[1], event.geometry.coordinates[0], context.geolocationObj && context.geolocationObj.lat, context.geolocationObj && context.geolocationObj.lng, "K")

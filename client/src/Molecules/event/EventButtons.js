@@ -30,7 +30,7 @@ const CANCEL_EVENT = gql`
 `;
 
 
-function EventButtons({event}) {
+function EventButtons({event, propContext}) {
   const classes = useStyles();
   let history = useHistory();
   const { context } = useContext(UserContext);
@@ -39,6 +39,7 @@ function EventButtons({event}) {
   });
   const [deleteBooking, deleteBookingStates] = useMutation(DELETE_BOOKING);
   const [cancelEvent, cancelEventState] = useMutation(CANCEL_EVENT);
+  const [localContext, setLocalContext] = useState({});
 
   const [printComponents, setPrintComponents] = useState([])
 
@@ -50,7 +51,15 @@ function EventButtons({event}) {
     userIsAuthor: null,
   })
 
-  console.log("RERENDER EVENTBTNS")
+  console.log("RERENDER EVENTBTNS: ", propContext)
+
+  useEffect(() => {
+    if(propContext){
+      setLocalContext(propContext)
+    }else{
+      setLocalContext(context)
+    }
+  },[context, propContext])
 
 
   useEffect(() => {
@@ -61,14 +70,14 @@ function EventButtons({event}) {
       let eventIsPast = false
       let userIsAuthor = false
 
-    if (event.author._id === context._id) {
+    if (event.author._id === localContext._id) {
       console.log("UserIsAuthor")
       userIsAuthor = true
     }
 
-    if (event.dateStart) {
+    if (event.dateEnd) {
       const todayDate = new Date();
-      const eventDate = new Date(event.dateStart);
+      const eventDate = new Date(event.dateEnd);
 
       if (todayDate < eventDate) {
         console.log("EventIsFuture")
@@ -82,7 +91,7 @@ function EventButtons({event}) {
     if (data && data.showBookings && !userIsAuthor) {
       
       // First filter only booking of current user
-      const filteredUserBooking = data.showBookings.filter(booking => booking.user._id === context._id)
+      const filteredUserBooking = data.showBookings.filter(booking => booking.user._id === localContext._id)
       console.log("FILTERED BOOKING: ", filteredUserBooking)
       // First filter only booking of current user
        filteredUserBooking.map(booking => {
@@ -116,14 +125,14 @@ function EventButtons({event}) {
       userIsAuthor: userIsAuthor
     })
 
-  }, [event, event._id, data, context, data && data.showBookings]);
+  }, [event, event._id, data, localContext, data && data.showBookings]);
 
   const alertCancelBooking = () => {
     var r = window.confirm("Are you sure you want to cancel this booking request?");
     if (r == true) {
       deleteBooking({
       variables: {
-        user_id: context._id,
+        user_id: localContext._id,
         event_id: event._id
       },
       refetchQueries: () => [
@@ -145,16 +154,16 @@ function EventButtons({event}) {
         },
         {
           query: PROFILE_DATA,
-          variables: { host_id: context._id }
+          variables: { host_id: localContext._id }
         },
         {
           query: PLAY_EVENTS_QUERY,
           variables: {
-            plusDays: context.filterOn ? context.days : 10000,
-            lng: context.geolocationObj ? context.geolocationObj.lng : null,
-            lat: context.geolocationObj ? context.geolocationObj.lat : null,
-            radius: context.filterOn ? context.radius : 9999999,
-            shownEvents: context.shownEvents
+            plusDays: localContext.filterOn ? localContext.days : 10000,
+            lng: localContext.geolocationObj ? localContext.geolocationObj.lng : null,
+            lat: localContext.geolocationObj ? localContext.geolocationObj.lat : null,
+            radius: localContext.filterOn ? localContext.radius : 9999999,
+            shownEvents: localContext.shownEvents
           }
         }
       ]
@@ -196,16 +205,16 @@ useEffect(() => {
 
 const ArrOfComponents = []
   // ACTIVE EVENT
-  if(event && !event.hide && event.author._id != context._id 
-    && context._id && !stateOfMyBooking.eventIsPast && !stateOfMyBooking.userIsDecl  
+  if(event && !event.hide && event.author._id != localContext._id 
+    && localContext._id && !stateOfMyBooking.eventIsPast && !stateOfMyBooking.userIsDecl  
     && !stateOfMyBooking.userIsPend && !stateOfMyBooking.userIsDeclined){
     ArrOfComponents.push(
-     <JoinSend event={event}/>
+     <JoinSend event={event} localContext={localContext}/>
      )
 }
 
   // NO LOGED IN
-  if (!context.name){
+  if (!localContext.name){
     ArrOfComponents.push(
       <Chip 
       label={`LOGIN first`} 
@@ -258,7 +267,7 @@ const ArrOfComponents = []
     }
 
     // USER is Pending
-    if(context._id && stateOfMyBooking.userIsPend ){
+    if(localContext._id && stateOfMyBooking.userIsPend ){
     ArrOfComponents.push(
         <Chip 
         label={`Pendining request`} 
@@ -271,7 +280,7 @@ const ArrOfComponents = []
     }
 
         // USER is Declined
-        if(context._id && stateOfMyBooking.userIsDecl ){
+        if(localContext._id && stateOfMyBooking.userIsDecl ){
           ArrOfComponents.push(
               <Chip 
               label={`Declined request`} 
@@ -284,7 +293,7 @@ const ArrOfComponents = []
           }
 
 // PAST EVENT RATE OR RATED
-  if (context._id && stateOfMyBooking.eventIsPast && stateOfMyBooking.userIsAtt) {
+  if (localContext._id && stateOfMyBooking.eventIsPast && stateOfMyBooking.userIsAtt) {
     ArrOfComponents.push( 
       <ModalRate
         event={event}
@@ -292,7 +301,7 @@ const ArrOfComponents = []
             )
     }
 
-    if(context._id && (stateOfMyBooking.userIsAtt || stateOfMyBooking.userIsPend) && !stateOfMyBooking.eventIsPast){
+    if(localContext._id && (stateOfMyBooking.userIsAtt || stateOfMyBooking.userIsPend) && !stateOfMyBooking.eventIsPast){
       ArrOfComponents.push(
       <Chip 
         label={`CANCEL your ${stateOfMyBooking.userIsAtt ? 'attendance' : 'request'}`} 
@@ -349,4 +358,4 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default withRouter(EventButtons);
+export default EventButtons;

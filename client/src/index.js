@@ -9,7 +9,6 @@ import {
   gql
 } from "apollo-boost";
 import { BatchHttpLink } from "apollo-link-batch-http";
-
 import { ApolloProvider } from "@apollo/react-hooks";
 import { WebSocketLink } from "apollo-link-ws";
 import { setContext } from "apollo-link-context";

@@ -70,10 +70,6 @@ export default function AboutScreen2() {
 }
 
 const useStyles = makeStyles(theme => ({
-  XXX: {
-    height: "100vh",
-    color: "black",
-    paddingTop: "12vh"
-  },
+
 
 }));

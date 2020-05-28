@@ -7,9 +7,9 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import clsx from 'clsx'
 
-import { UserContext } from "src/userContext";
 import { displayDate } from "../../Services/transform-services";
 import { useXsSize } from "src/Hooks/useXsSize";
+import { UserContext } from "src/userContext";
 
 import ListTopHalf from "src/Atoms/Play/ListTopHalf";
 import QRCodeEntering from "src/Atoms/Play/QRCodeEntering";
@@ -20,12 +20,10 @@ import EnteredGuests from "src/Atoms/Play/EnteredGuests";
 import BookingMessages from "src/Atoms/BookingMessages";
 import BookingAcceptInput from "src/Atoms/BookingAcceptInput";
 
-
-const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBooking, cancelledState, paddingSides}) => {
+const PlayPageList = ({propContext, propSetContext, event, bookings, GQL_refetch, refetchVariables, cancelBooking, cancelledState, paddingSides}) => {
     const classes = useStyles();
-    const { context, setContext } = useContext(UserContext);
     const { xs_size_memo, md_size_memo } = useXsSize();
-
+    const {context, setContext} = useContext(UserContext)
     //Count confirmed 
     var confBookings = 0
     if(bookings){
@@ -56,12 +54,12 @@ const PlayPageList = ({event, bookings, GQL_refetch, refetchVariables, cancelBoo
                 paddingRight: paddingSides ? paddingSides : '20px'}}
       >
 
-        <ListTopHalf event={event} />
+        <ListTopHalf event={event} context={propContext ? propContext : context}/>  {/* in case of rendering on map is Context passed as a prop to components */}
 
         <Grid item xs={12}>
             <Grid container alignItems="center" justify="center">
               <Grid item className={classes.separatorLineItem}>
-            </Grid>
+              </Grid>
             </Grid>
         </Grid>
 

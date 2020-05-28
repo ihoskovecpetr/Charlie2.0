@@ -44,9 +44,6 @@ export default function AcceptEntered({event, transparent}){
 
 const useStyles = makeStyles(theme => ({
 
-  iconBtn:{
-    backgroundColor: "rgba(255,255,255,0.2)"
-  },
   btnAvatar:{
     height: 50,
     width: 50

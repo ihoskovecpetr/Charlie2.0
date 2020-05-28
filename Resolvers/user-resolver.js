@@ -10,6 +10,10 @@ import {
   server_Error
 } from "./Utils/errorPile";
 
+const nodemailer = require("nodemailer");
+const path = require('path');
+const { google } = require("googleapis");
+
 export const typeDef = `
   extend type Query {
     getOneUser(user_id: ID, limit: Int): User
@@ -22,6 +26,7 @@ export const typeDef = `
     login(email: String! password: String!): ResponseUser
     loginExternal(email: String! id: String! type: String): ResponseUser
     getLoggedInUser: User
+    custommerEnquiry(email: String! desc: String!): SucsResp
   }
 
   type User {
@@ -41,7 +46,40 @@ export const typeDef = `
     dataOut: User
     errorOut:[Error]
   }
+  type SucsResp {
+    success: Boolean
+  }
+
 `;
+
+
+const OAuth2 = google.auth.OAuth2;
+
+const oauth2Client = new OAuth2(
+  "119981354324-qlg4hf4dlb1k8dd7r32jkouoaoni0gt7.apps.googleusercontent.com", // ClientID
+  "rJKG6kbFTkk80WCAaB1dKgAF", // Client Secret
+  "https://developers.google.com/oauthplayground" // Redirect URL
+);
+
+oauth2Client.setCredentials({
+  refresh_token: "1/51zxtNU8LnjfKH-7McNaqtWK6OCSK0X0vogDTcAhc0U"
+});
+const accessToken = oauth2Client.getAccessToken();
+
+const smtpTransport = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    type: "OAuth2",
+    user: "hoskovectest@gmail.com",
+    clientId:
+      "119981354324-qlg4hf4dlb1k8dd7r32jkouoaoni0gt7.apps.googleusercontent.com",
+    clientSecret: "rJKG6kbFTkk80WCAaB1dKgAF",
+    refreshToken: "1/51zxtNU8LnjfKH-7McNaqtWK6OCSK0X0vogDTcAhc0U",
+    accessToken: accessToken
+  }
+});
+
+
 export const resolvers = {
   Mutation: {
     newUser: async (_, _args, __) => {
@@ -157,6 +195,44 @@ export const resolvers = {
         return { success: false };
       } catch (err) {
         throw err;
+      }
+    },
+    custommerEnquiry: async (_, _args, __) => {
+      try {
+
+        console.log("Hitting custommerEnquiry: email, desc: ", _args.email, _args.desc)
+
+        var mailOptions1 = {
+          from: "Charlie House Party",
+          to: 'ihoskovecpetr@gmail.com', //req.body.user_email,
+          subject: "User Enquiry",
+          text: `${_args.email} ENQUIRY: ${_args.desc}`
+          // template: "granted",
+          // context: {
+          //   eventURL: eventURL,
+          //   event_QRCode: QRKod,
+          //   event_name: event[0].name,
+          //   event_dateStart: dateString[0] + " " + timeString[0] + ":" + timeString[1],
+          //   message: _args.response,
+          //   decision: _args.decision ? "CONFIRMED" : "DECLINED"
+          // },
+
+        };
+
+        const resMail = await smtpTransport.sendMail(mailOptions1);
+
+        if (resMail.rejected.length !== 0) {
+          return {
+            success: false
+          };
+        } else {
+          smtpTransport.close();
+          return { success: true, message: "Email has been sent" };
+        }
+
+      } catch (err) {
+        console.log(err);
+        return server_Error;
       }
     },
   },

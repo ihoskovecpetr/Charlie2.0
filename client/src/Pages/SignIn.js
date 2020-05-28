@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
@@ -52,11 +52,12 @@ const LOGIN = gql`
   }
 `;
 
-function SignIn(props) {
+function SignIn({propContext}) {
   const classes = useStyles();
   let history = useHistory();
 
   const { context, setContext } = useContext(UserContext);
+  const [localContext, setLocalContext] = useState({});
   const [input, setInput] = useState({email: "ihoskovecpetr@gmail.com", password: "heslo"});
   const windowSize = useWindowSize();
 
@@ -65,17 +66,27 @@ function SignIn(props) {
   const { dataOut } = data ? data.login : { dataOut: undefined };
   const { errorOut } = data ? data.login : { errorOut: undefined };
 
-  if (context.success) {
+  if (localContext.success) {
     setTimeout(() => {
       if(window.eventId){
+        console.log("After Sign In goEvent")
         history.push(`/event/${window.eventId}`);
       }else{
+        console.log("After Sign In Goback")
         history.goBack();
       }
     }, 100);
   }
 
-  if (dataOut && dataOut.success && !context.name) {
+  useEffect(() => {
+    if(propContext){
+      setLocalContext(propContext)
+    }else{
+      setLocalContext(context)
+    }
+  },[context, propContext])
+
+  if (dataOut && dataOut.success && !localContext.name) {
     window.localStorage.setItem("token", dataOut.token);
     setContext(prev => { return {
       ...prev,
@@ -148,11 +159,7 @@ function SignIn(props) {
         </Typography>
         </>}
 
-        <Grid container alignItems='center' justify='center'>
-          <Grid item xs={12}>
-            <SocialLogins />
-          </Grid>
-        </Grid>
+        <SocialLogins />
 
         <Grid container alignItems='center' justify='center'>
           <Grid item xs={5}>
@@ -307,7 +314,7 @@ function SignIn(props) {
                 }
                 anchorOrigin={{
                   vertical: "bottom",
-                  horizontal: "right"
+                  horizontal: "left"
                 }}
               >
                 <Link href="/signup" className={classes.linkClass}>
@@ -332,25 +339,20 @@ const useStyles = makeStyles(theme => ({
     }
   },
   paper: {
-    marginTop: theme.spacing(10),
+    // marginTop: theme.spacing(10),
     padding: theme.spacing(3, 2),
+    width: '100%',
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    // color: "white",
-    //overflowY: "scroll",
-    //backgroundColor: theme.palette.darkGrey
   },
   avatar: {
-    margin: theme.spacing(1),
     backgroundColor: theme.palette.charliePink
   },
   avatarSuccess: {
-    margin: theme.spacing(1),
     backgroundColor: "green"
   },
   spinner: {
-    margin: theme.spacing(1)
   },
   signInLine:{
     margin: 5

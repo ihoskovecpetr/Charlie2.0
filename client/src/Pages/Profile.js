@@ -132,7 +132,7 @@ function Profile() {
       >
         <Grid container justify="center" spacing={2}>
           <Grid item md={4} xs={12}>
-            <ProfileTopBox errorQuery={error} />
+            <ProfileTopBox errorQuery={error} showRatings={data && data.showRatings} />
           </Grid>
           <Grid item md={8} xs={12}>
             <AppBar

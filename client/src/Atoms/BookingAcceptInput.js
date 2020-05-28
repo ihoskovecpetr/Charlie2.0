@@ -45,7 +45,7 @@ export default function BookingAcceptInput({ booking }) {
 
   const inputDescription = useRef(null);
 
-  const ConfirmHandle = (decision) => {
+  const handleConfirmRequest = (decision) => {
     confirmBooking({
       variables: {
         user_id: booking.user._id,
@@ -73,7 +73,7 @@ export default function BookingAcceptInput({ booking }) {
                 <IconButton aria-label="settings" 
                             className={classes.iconBtn} 
                             disabled={confirmStates.loading ? true : false}
-                            onClick={() => {ConfirmHandle(false)}}>
+                            onClick={() => {handleConfirmRequest(false)}}>
                               {confirmStates.loading 
                               ? <Spinner height={20} width={20} /> 
                               : <Avatar src={ClosePNG} className={classes.btnAvatar} />}
@@ -98,7 +98,7 @@ export default function BookingAcceptInput({ booking }) {
                 <IconButton aria-label="settings" 
                             className={classes.iconBtn} 
                             disabled={confirmStates.loading ? true : false}
-                            onClick={() => {ConfirmHandle(true)}}>
+                            onClick={() => {handleConfirmRequest(true)}}>
                   {confirmStates.loading 
                               ? <Spinner height={20} width={20} /> 
                               : <Avatar src={ConfirmPNG} className={classes.btnAvatar} />}

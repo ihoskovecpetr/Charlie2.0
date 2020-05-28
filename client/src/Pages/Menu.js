@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import ReactFullpage from "@fullpage/react-fullpage";
 
-import "./Menu.css";
+// import "./Menu.css";
 
 // import { useMutation, useQuery } from "@apollo/react-hooks";
 // import gql from "graphql-tag";

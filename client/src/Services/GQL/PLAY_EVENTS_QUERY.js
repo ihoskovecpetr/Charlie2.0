@@ -21,6 +21,7 @@ export const PLAY_EVENTS_QUERY = gql`
       success
       name
       dateStart
+      dateEnd
       happeningNow
       address
       capacityMax

@@ -168,7 +168,7 @@ let badgeContent
                 date={rating.event.dateStart}
               />           */}
             <Grid container className={classes.middleBody}>
-                <ListTopHalf event={rating.event} transparent={true}/>
+                <ListTopHalf event={rating.event} transparent={true} context={context}/>
             </Grid>
 
             <Grid container alignItems="center" direction="column" className={classes.starsBody}>

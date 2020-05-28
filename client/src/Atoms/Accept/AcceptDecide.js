@@ -49,7 +49,8 @@ export default function AcceptDecide({markEnteredStates, markEnteredHandler}){
 const useStyles = makeStyles(theme => ({
    
   iconBtn:{
-    backgroundColor: "rgba(255,255,255,0.2)"
+    backgroundColor: "rgba(255,255,255,0.8)",
+    margin: 20
   },
   btnAvatar:{
     height: 50,

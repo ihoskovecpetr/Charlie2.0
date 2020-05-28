@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useContext} from "react"
 import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
 
 import FacebookLogin from "react-facebook-login"
 import GoogleLogin from 'react-google-login';
@@ -115,9 +116,7 @@ export default function SocialLogins(){
       } 
     }
 
-
   }, [newUserStates && newUserStates.data])
-
 
     const responseExternal = (response, type) => {
         console.log("FB GG response ", type, response)
@@ -177,20 +176,20 @@ export default function SocialLogins(){
               <GoogleLogin
                     clientId="119981354324-7sj8o5l3dk03s56paf6d4fd0fbr9vuu6.apps.googleusercontent.com"
                     render={renderProps => (
-                      <button className={classes.googleBtn} onClick={renderProps.onClick} disabled={renderProps.disabled}>
+                      <Button variant="contained" className={classes.googleBtn} onClick={renderProps.onClick} disabled={renderProps.disabled}>
                         <Grid container alignItems="center" justify="center">
                           <Grid item>
-                          <Grid container alignItems="center" justify="center">
-                          <Grid item>
-                            <img className={classes.iconGoogle} src={GoogleV} />
-                          </Grid>
-                          <Grid item>
-                            <p>Login with GOOGLE</p>
-                          </Grid>
+                          <Grid container alignItems="center" alignContent="center" justify="center">
+                            <Grid item>
+                              <img className={classes.iconGoogle} src={GoogleV} />
+                            </Grid>
+                            <Grid item>
+                              <p className={classes.googleBtnText}>Login with GOOGLE</p>
+                            </Grid>
                           </Grid>
                           </Grid>
                         </Grid>
-                      </button>
+                      </Button>
                     )}
                     buttonText="Login"
                     onSuccess={(e) => responseExternal(e, "gg")}
@@ -211,7 +210,8 @@ export default function SocialLogins(){
 
 const useStyles = makeStyles(theme => ({
   mainContainer: {
-    width: '100%'
+    width: '100%',
+    minHeight: 100,
   },
   iconGoogle: {
     height: 20,
@@ -219,7 +219,11 @@ const useStyles = makeStyles(theme => ({
     marginRight: 10
   },
   googleBtn:{
-    width: '100%'
+    width: '100%',
+  },
+  googleBtnText:{
+    marginTop: 3,
+    marginBottom: 3
   },
   itemFacebook: {
     backgroundColor: '#4c69ba',

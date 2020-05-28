@@ -13,6 +13,7 @@ import SubjectIcon from "@material-ui/icons/Subject";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import HomeIcon from '@material-ui/icons/Home';
+import SearchIcon from '@material-ui/icons/Search';
 
 import { makeStyles } from "@material-ui/core/styles";
 import { NavLink } from "react-router-dom";
@@ -20,7 +21,6 @@ import { NavLink } from "react-router-dom";
 import CharlieLogo from "src/Images/charlie-logo.png"
 import DrawerProfileBox from "./DrawerProfileBox"
 import SearchInput from "src/Atoms/UpperStripeAndDrawer/SearchInput"
-
 
 function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth}) {
 
@@ -114,6 +114,21 @@ function DrawerContent({ListOfNames, ListOfUrls, handleDrawerToggle, drawerWidth
             </ListItem>
         </NavLink>
              ))}
+        <NavLink
+            to={`/${"search"}`}
+            onClick={() => {
+                handleDrawerToggle();
+            }}
+            >
+            <ListItem button>
+                <ListItemIcon>
+                     <Avatar className={classes.avatar}>
+                        <SearchIcon fontSize="large"  />
+                    </Avatar>
+                </ListItemIcon>
+                <ListItemText primary={"Search"} className={classes.itemText} />
+                </ListItem>
+            </NavLink>
         </List>
         <Divider />
     </div>

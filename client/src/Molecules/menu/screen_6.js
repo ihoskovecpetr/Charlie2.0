@@ -1,42 +1,66 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useState, useRef} from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
-import CardMedia from "@material-ui/core/CardMedia";
 import { NavLink } from "react-router-dom";
 import { Animated } from "react-animated-css";
 
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 
-import "../../Pages/Menu.css";
-import BluredCity from "../../Images/bluredCity.png";
+import gql from "graphql-tag";
+import { useMutation } from "@apollo/react-hooks";
 
-import Copyright from "../../Atoms/copyright";
-import SocialLine from "../../Atoms/social-line";
+import BluredCity from "src/Images/bluredCity.png";
 
-export default function Screen1() {
+import Copyright from "src/Atoms/copyright";
+import SocialLine from "src/Atoms/social-line";
+
+const ENQUIRY = gql`
+mutation custommerEnquiry(
+  $email: String!
+  $desc: String!
+){
+  custommerEnquiry(
+    email: $email
+    desc: $desc
+  ) {
+    success
+  }
+}
+`;
+
+export default function Screen6() {
   const classes = useStyles();
   const [formValue, setFormValue] = useState({
-    message: "Your message",
-    email: "your@email.com",
+    message: "",
+    email: "",
   });
+  const [sendEnquiry, { loading, error, data }] = useMutation(ENQUIRY);
+
+  const emailRef = useRef();
+  const descRef = useRef();
 
 
   const handleValueChange = (e) => {
     const name = e.currentTarget.name
     const value = e.currentTarget.value
     setFormValue(prev => {
-    return { ...prev, [name]: value };
-  });
+      return { ...prev, [name]: value };
+    });
   }
 
   const onSubmit = (e) => {
-    alert(`This is not implementer yet: ${formValue.email} , ${formValue.message} `)
+    e.preventDefault()
+    console.log("emailRef: ", emailRef, emailRef.current.value)
+    sendEnquiry({
+      variables: {
+        email:  emailRef.current.value,
+        desc: descRef.current.value,
+      }
+    })
   }
 
 
@@ -51,49 +75,46 @@ export default function Screen1() {
         <Grid container>
           <form className={classes.form} noValidate>
             <TextField
-              variant="outlined"
+              variant="filled"
               margin="normal"
               required
               fullWidth
-              style={{backgroundColor: "white", borderRadius: 5}}
+              inputRef={emailRef}
+              className={classes.inputStyle}
               label="Your Email"
-              value={formValue.email}
-              onChange={e => {
-                    handleValueChange(e);
-                  }}
+              disabled={data ? true : false}
+              placeholder="your@email"
+              // value={formValue.email}
+              // onChange={handleValueChange}
               name="email"
-              autoComplete="email"
             />
             <TextField
-              variant="outlined"
+              variant="filled"
               margin="normal"
               required
               fullWidth
+              inputRef={descRef}
+              className={classes.inputStyle}
               multiline
               rows="4"
-              style={{backgroundColor: "white", borderRadius: 5}}
+              className={classes.inputStyle}
               id="question"
               label="Your Question"
-              value={formValue.message}
-              onChange={e => {
-                    handleValueChange(e);
-                  }}
+              disabled={data ? true : false}
+              placeholder="Hi, I want to cheer you up with my message, give you some feedback or whatever I want."
+              // onChange={handleValueChange}
               name="message"
-              autoComplete="text"
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
+              disabled={(loading || data) ? true : false}
               className={classes.submit}
-              onClick={e =>{
-                  e.preventDefault()
-                  onSubmit(e)
-                }
-              }
+              onClick={onSubmit}
             >
-              Send
+              {data ? "Email has been sent" : "Send"} {loading ? "sending..." : ''}
             </Button>
           </form>
         </Grid>
@@ -195,5 +216,9 @@ const useStyles = makeStyles(theme => ({
     background: "rgba(0,0,0,0.4)",
     color: "white",
     textAlign: "center"
+  },
+  inputStyle: {
+    backgroundColor: "white", 
+    borderRadius: 5
   }
 }));

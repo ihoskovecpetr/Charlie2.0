@@ -205,7 +205,7 @@ if(booking.decided){
             </Grid>
           </Grid>
         <Grid container className={classes.middleBody}>
-          <ListTopHalf event={booking.event} transparent={true}/>
+          <ListTopHalf event={booking.event} transparent={true} context={context}/>
         </Grid>
         <EventButtons event={booking.event} />
       </Collapse>

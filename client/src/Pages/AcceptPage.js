@@ -117,6 +117,7 @@ function AcceptPage(props) {
               <Container maxWidth="sm" className={classes.mainContainer}>
                 {context._id ? 
               <div className={classes.contentWrap}>
+              {loading && "LOADING.."}
               {dataOut && <Grid container justify="center" className={classes.mainGrid}>
                       <Grid item>
                       <Grid container direction="column" alignItems="center">
@@ -132,16 +133,18 @@ function AcceptPage(props) {
                               
                       </Grid>
                       </Grid>
-                              <Grid item xs={12}>
-                                <Grid container justify="center">
-                                  <Grid item>
-                                  {!markEnteredStates.data && !dataOut.entered && <AcceptDecide markEnteredStates={markEnteredStates} 
-                                                                            markEnteredHandler={markEnteredHandler}/>}
-                                  {dataOut.entered && <AcceptEntered />}
-                                  </Grid>
-                                </Grid>
+                          <Grid item xs={12}>
+                            <Grid container justify="center">
+                              <Grid item>
+                              {loading && "LOADING.."}
+                              {!markEnteredStates.data && !dataOut.entered && <AcceptDecide markEnteredStates={markEnteredStates} 
+                                                                        markEnteredHandler={markEnteredHandler}/>}
+                              {dataOut.entered && <AcceptEntered />}
                               </Grid>
-                          </Grid> 
+                            </Grid>
+                            {dataOut.entered && <Button fullWidth variant="contained" color="secondary" onClick={() => history.push('/')}>MAIN MENU</Button>}
+                          </Grid>
+                      </Grid> 
               }
               <Grid container justify="center" direction="column" className={classes.mainGrid}>
                               {!dataOut && !errorOut && <Spinner height={50} width={50} />}
@@ -179,7 +182,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 20
   },
   contentWrap: {
-    backgroundColor: "rgba(0,0,0,0.05)",
+    backgroundColor: "rgba(0,0,0,0.15)",
     paddingTop: 10,
     borderRadius: 10,
     padding: 10

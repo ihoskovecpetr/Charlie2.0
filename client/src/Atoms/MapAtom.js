@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 let scriptAdded = false;
 function Map({ options, onMount, className, styling }) {
   const ref = useRef();
+  console.log("Map Atom rerender")
 
   useEffect(() => {
     const onLoad = () => {

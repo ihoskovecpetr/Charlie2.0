@@ -1,40 +1,241 @@
-import React, {useState, useContext} from "react";
-import ReactDOM from "react-dom";
+// import React, {useState, useEffect} from "react";
+// import ReactDOM from "react-dom";
 
+// import Container from "@material-ui/core/Container";
+// import Grid from "@material-ui/core/Grid";
+// import Paper from "@material-ui/core/Paper";
+// import Typography from "@material-ui/core/Typography";
+// import Drawer from '@material-ui/core/Drawer';
+
+// import { makeStyles } from "@material-ui/core/styles";
+// import { UserContext } from "src/userContext";
+
+// const DrawerWrap = ({open, event}) => {
+//   const classes = useStyles();
+//   const [openState, setOpenState] = useState(false)
+
+//   useEffect(() => {
+//     if(open){
+//       setOpenState(true)
+//     }else{
+//       setOpenState(false)
+//     }
+//   }, [open])
+
+
+
+//   return(
+//     <>
+//       <Drawer anchor={"left"} open={openState} onClose={() => setOpenState(!openState)}>
+//       Event Info
+//     </Drawer>
+//     </>
+//   )
+// };
+
+
+import React, { useState, useContext, useEffect } from "react";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import Drawer from '@material-ui/core/Drawer';
+import Typography from "@material-ui/core/Typography";
 
-import { makeStyles } from "@material-ui/core/styles";
+import { withRouter, useHistory, NavLink } from "react-router-dom";
+import { useMutation, useQuery } from "@apollo/react-hooks";
+import Gallery from "react-grid-gallery";
+import { displayDate } from "src/Services/transform-services";
 
 import { UserContext } from "src/userContext";
 
-const DrawerWrap = (props) => {
-  const classes = useStyles();
-  const { context, setContext } = useContext(UserContext);
-  const [open, setOpen] = useState(true);
+import PlayPageList from "src/Molecules/play/PlayPageList";
+import PlayPageGallery from "src/Molecules/play/PlayPageGallery";
+import PlayPageMap from "src/Molecules/play/PlayPageMap";
 
-  const toggleDrawer = (event) => {
-    if (context.openDrawer) {
-      setContext(prev => {return({...prev, openDrawer: false})})
+import {GET_ONE_EVENT} from "src/Services/GQL/GET_ONE_EVENT";
+import { EVENT_RATINGS } from "src/Services/GQL/EVENT_RATINGS";
+import EventButtons from "src/Molecules/event/EventButtons";
+import RatingCard from "src/Molecules/rating-card";
+import Spinner from "src/Atoms/Spinner";
+
+
+let dataMock;
+
+function DrawerWrap(props) {
+
+  console.log("DrawerWrap props: ", props)
+  const classes = useStyles();
+  // let history = useHistory();
+  const [windowHeight, setWindowHeight] = useState(0);
+  const [openState, setOpenState] = useState(false)
+  const { loading, error, data, refetch } = useQuery(GET_ONE_EVENT, {
+    variables: { event_id: props.event._id }
+  });
+  const ratings = useQuery(EVENT_RATINGS, {
+    variables: { event_id: props.event._id }
+  });
+
+  useEffect(() => {
+    if(props.open){
+      setOpenState(true)
     }else{
-      setOpen(true)
+      setOpenState(false)
     }
+  }, [props.open])
+
+
+  console.log("DrawerWrap print context:", props.context)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    setWindowHeight(window.innerHeight)
+  }, []);
+
+  let dataDB;
+
+  const PaperEvent = props => {
+    return <Paper 
+                  className={classes.paper}
+                  style={{height: 1 * windowHeight, width: 400, maxWidth: '86vw'}}
+                  >
+              {props.children}
+          </Paper>;
   };
 
-  return(
-    <>
-      <Drawer anchor={"left"} open={context.openDrawer} onClose={toggleDrawer}>
-      Papp
-    </Drawer>
-    </>
-  )
-};
 
-export default DrawerWrap;
+  if (dataMock) {
+    dataDB = dataMock;
+  } else if (data) {
+    dataDB = data;
+  }
+
+
+  if (dataDB && dataDB.getOneEvent.success) {
+    return (
+      <Drawer anchor={"left"} open={openState} onClose={() => setOpenState(!openState)}>
+        <div id="paper_scrollable">
+          <PaperEvent>
+            <Grid
+              container
+              justify="center"
+            >
+              <Grid item className={classes.nameGrid}>
+                {dataDB.getOneEvent.hide && <Typography component="h3" variant="h3" className={classes.name}>
+                  CANCELLED
+                </Typography>}
+              </Grid>
+              <PlayPageGallery event={dataDB.getOneEvent} />
+              <PlayPageList
+                    event={dataDB.getOneEvent}
+                    propContext={props.context}
+                    bookings={dataDB.getOneEvent.bookings}
+                    GQL_refetch={GET_ONE_EVENT}
+                    refetchVariables={{ id: props.event._id }}
+                  />
+              {/* <PlayPageMap
+                    event={dataDB.getOneEvent}
+                    showBookings={dataDB.getOneEvent.bookings} //showBookings
+                  />  */}
+
+              <Grid
+                container
+                justify="center"
+                alignItems="center"
+                alignContent="center"
+                direction="column"
+                className={classes.ratingContainer}
+              >
+                {ratings.data &&
+                  ratings.data.showRatings.map((rating, index) => (
+                    <Grid item>
+                      <RatingCard rating={rating} key={index} />
+                    </Grid>
+                  ))}
+              </Grid>
+              <EventButtons
+                event={dataDB && dataDB.getOneEvent}
+                propContext={props.context}
+              />
+            </Grid>
+          </PaperEvent>
+        </div>
+        </Drawer>
+    );
+  }
+  if (dataDB && dataDB.getOneEvent.success == false) {
+    return (
+      <Drawer anchor={"left"} open={openState} onClose={() => setOpenState(!openState)}>
+
+        <PaperEvent>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              // history.goBack();
+            }}
+          >
+            Back
+          </Button>
+          <Paper>
+            <Typography component="div">
+              {dataDB.getOneEvent.message}
+            </Typography>
+          </Paper>
+        </PaperEvent>
+        </ Drawer>
+    );
+  }
+  return(
+    <Drawer anchor={"left"} open={openState} onClose={() => setOpenState(!openState)}>
+
+      <PaperEvent>
+          <Grid container justify="center" alignItems="center" style={{width: "100%", height: 300}}>
+            <Grid item>
+              <Spinner height={100} width={100} />
+            </Grid>
+          </Grid>
+      </PaperEvent>
+    </ Drawer>
+  );;
+}
 
 const useStyles = makeStyles(theme => ({
-
+  paper: {
+    background: "#242323",
+    color: "white",
+    overflow: "scroll",
+    borderRadius: 0,
+    // borderBottomRightRadius: 0,
+    // borderBottomLeftRadius: 0
+  },
+  gridButtons: {
+    background: "black",
+    color: "white",
+    marginTop: "0 !important",
+    //padding: theme.spacing(3, 2),
+    display: "flex",
+    //width: 300,
+    overflow: "scroll",
+    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 5,
+    boxShadow: "0px -2px 5px 0px rgba(200,200,200,0.3)"
+  },
+  closeButton: {
+    background: theme.palette.violetova,
+    color: "white"
+  },
+  nameGrid: {
+    margin: 15
+  },
+  name: {
+    textAlign: "center"
+  },
+  ratingContainer: {
+    width: "100%",
+    overflow: "scroll"
+  },
 }));
+
+export default DrawerWrap;

@@ -1,3 +1,4 @@
+import ReactDOM from "react-dom";
 import React, {
   useContext,
   useState,
@@ -6,241 +7,233 @@ import React, {
   useMemo,
   useCallback
 } from "react";
-import ReactDOM from "react-dom";
+import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
+import {
+  ApolloClient,
+  InMemoryCache,
+  HttpLink,
+  split,
+  gql
+} from "apollo-boost";
+import { BatchHttpLink } from "apollo-link-batch-http";
+import { ApolloProvider } from "@apollo/react-hooks";
+import { WebSocketLink } from "apollo-link-ws";
+import { setContext } from "apollo-link-context";
+import { getMainDefinition } from "apollo-utilities";
+
 import CssBaseline from "@material-ui/core/CssBaseline";
-
 import { makeStyles } from "@material-ui/core/styles";
-import "date-fns";
 
+import "date-fns";
 import { useQuery } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 
-import { UserContext } from "../userContext";
+import { UserContext } from "src/userContext";
 // import { useWindowSize } from "../Hooks/useWindowSize";
-
 import mapSetup from "../Services/map-settings";
 import { ALL_EVENTS } from "../Services/GQL";
 import Map from "../Atoms/MapAtom";
 import InfoWindow from "../Molecules/Infowindow";
 import MapSettingsPanel from "../Molecules/map-settings-panel";
+import DrawerWrap from 'src/Molecules/map/DrawerWrap';
 
 let infoBubble;
-let InfoBevent = false;
 let previousMarker;
 let AllMarkersArr;
 let MapObject;
-let LngLatCenter = { lat: 50.068645, lng: 14.457364 }; //Default position
+
+var GQL_ENDPOINT = `http://localhost:4005/graphql`;
+if (process.env.NODE_ENV == "production") {
+  GQL_ENDPOINT = `https://${window.location.host}/graphql`;
+}
+const httpLink = new BatchHttpLink({
+  uri: GQL_ENDPOINT,
+  headers: {
+    authorization: window.localStorage.getItem("token")
+  }
+});
+
+var WS_ENDPOINT = `ws://localhost:4005/subs`;
+if (process.env.NODE_ENV == "production") {
+  WS_ENDPOINT = `wss://${window.location.host}/subs`;
+}
+
+const wsLink = new WebSocketLink({
+  uri: WS_ENDPOINT,
+  options: {
+    reconnect: true
+  }
+});
+
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = window.localStorage.getItem("token");
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: `Bearer ${token}`
+    }
+  };
+});
+
+const link = split(
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query);
+    return kind === "OperationDefinition" && operation === "subscription";
+  },
+  wsLink,
+  authLink.concat(httpLink)
+);
+
+const client = new ApolloClient({
+  link,
+  cache: new InMemoryCache(),
+  defaultOptions: {
+    query: {
+      fetchPolicy: "network-only",
+      errorPolicy: "all"
+    }
+  }
+});
 
 function MapPage(props) {
   const classes = useStyles();
   let history = useHistory();
   // const windowSize = useWindowSize()
   const [windowHeight, setWindowHeight] = useState(0);
+  const [mapOptions, setMapOptions] = useState({
+                                          center: props.workingPosition && props.workingPosition.geometry ? props.workingPosition.geometry : { lat: 50.068645, lng: 14.457364 },// ,
+                                          zoom: 10,
+                                          disableDefaultUI: true,
+                                          zoomControl: true,
+                                          //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+                                          clickableIcons: false,
+                                          gestureHandling: "cooperative",
+                                          backgroundColor: "#242323",
+                                          styles: mapSetup
+                                        });
+  const [openDrawer, setOpenDrawer] = useState(false)
   const { context, setContext } = useContext(UserContext);
   const { loading, error, data, fetchMore } = useQuery(ALL_EVENTS, {
-    variables: { date: props.workingPosition.date, 
+    variables: {  date: props.workingPosition && props.workingPosition.date ? props.workingPosition.date : new Date().toISOString().split("T")[0], 
                   offset: 1,
                   limit: 1 
               },
       fetchPolicy: "cache-and-network"
   });
 
+  console.log("RERENDER MAP PAGE: openDrawer", openDrawer)
+
+
   useEffect(() => {
-    if (!window.AppHistory) {
-      window.AppHistory = history;
-    }
+    // if (!window.AppHistory) {
+    //   window.AppHistory = history;
+    // }
+    console.log("Map.js rerendering")
+    setWindowHeight(window.innerHeight)
   }, []);
 
-  useEffect(() => {
-    setWindowHeight(window.innerHeight)
-}, []);
-  // console.log("dat", data);
-  // console.log("load", loading);
-  // console.log("err", error);
 
   const clearMarkers = () => {
-    // console.log("Creal Markers: AllMarkersArr", AllMarkersArr);
-    // console.log("dataEvents", data);
-    // console.log("loadingEvents", loading);
     for (let i = 0; i < AllMarkersArr.length; i++) {
       AllMarkersArr[i].setMap(null);
     }
   };
 
-  if (error) {
-    alert("Unable to load Events...");
-  }
   const redirectLogin = () => {
     history.push("/signin");
   };
 
+  if (error) {
+    alert("Unable to load Events...");
+  }
+
   const handleScrollLocTime = isoDate => {
     let center = MapObject.getCenter();
-    props.setWorkingPosition({
+    console.log("Setting Working Position from hndleScroll", center.lng())
+    props.setWorkingPosition(prev => {return({
+      ...prev,
       geometry: { lng: center.lng(), lat: center.lat() },
       date: isoDate
-    });
+    })});
   };
-
-  let dataMock;
-
-  const dataMemo = useMemo(() => data, [data]);
-{
-   // dataMock = [
-  //   {
-  //     _id: "2sdf2sdfs2sfdsdfs2",
-  //     success: true,
-  //     author: {
-  //       name: "Petr H.",
-  //       picture:
-  //         "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
-  //     },
-  //     name: "Event 111",
-  //     geometry: { coordinates: [50.040112099, 14.428] },
-  //     lng: 14.45,
-  //     lat: 50,
-  //     addressGoogle: "addressGoogle",
-  //     addressCustom: "addressCustom",
-  //     address: "address",
-  //     eventType: 1,
-  //     dateStart: "2019-10-10",
-  //     price: 12,
-  //     capacityMax: 20,
-  //     BYO: true,
-  //     imagesArr: [
-  //       {
-  //         caption: "No more pictures for this Event",
-  //         src:
-  //           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-  //         thumbnail:
-  //           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-  //         thumbnailHeight: 10,
-  //         thumbnailWidth: 10,
-  //         scaletwidth: 100,
-  //         marginLeft: 0,
-  //         vwidth: 100,
-  //         isSelected: false
-  //       }
-  //     ],
-  //     description: "Desc",
-  //     confirmed: true,
-  //     hide: false
-  //   },
-  //   {
-  //     _id: "2sdf2sdfs2sfdsdfsdf2",
-  //     success: true,
-  //     author: {
-  //       name: "Petr H.",
-  //       picture:
-  //         "https://scontent-prg1-1.xx.fbcdn.net/v/t1.0-9/61950201_2397914480420841_8357957627317059584_n.jpg?_nc_cat=108&_nc_oc=AQnV7_8s9Q3H0-hAymHvaGXLt-97aDdy46ODFVxEtKOsUJ_LaKdLA7KV-8HQqKodG40&_nc_ht=scontent-prg1-1.xx&oh=43eb25b5ccd547e3e0ebc377dd31adb0&oe=5E87BF91"
-  //     },
-  //     name: "Event 222",
-  //     geometry: { coordinates: [50.050312099, 14.458] },
-  //     lng: 14.45,
-  //     lat: 50,
-  //     addressGoogle: "addressGoogle",
-  //     addressCustom: "addressCustom",
-  //     address: "address",
-  //     eventType: 1,
-  //     dateStart: "2019-10-10",
-  //     price: 12,
-  //     capacityMax: 20,
-  //     BYO: true,
-  //     imagesArr: [
-  //       {
-  //         caption: "No more pictures for this Event",
-  //         src:
-  //           "https://s1.at.atcdn.net/wp-content/uploads/2019/03/icebergs-800x584.jpg",
-  //         thumbnail:
-  //           "https://res.cloudinary.com/party-images-app/image/upload/v1551339472/m...",
-  //         thumbnailHeight: 10,
-  //         thumbnailWidth: 10,
-  //         scaletwidth: 100,
-  //         marginLeft: 0,
-  //         vwidth: 100
-  //       }
-  //     ],
-  //     description: "Desc",
-  //     confirmed: true,
-  //     hide: false
-  //   }
-  // ]; 
-}
 
   const onMapMount = useCallback(map => {
     let uniqueArrayOfId = [];
     let UniqArr = [];
-    let dataDB;
-    //console.log("Map Mounted:: ");
+    // let dataDB;
+    console.log("Map Mounted:: ", map);
 
     MapObject = map;
 
-    if (dataMock) {
-      dataDB = dataMock;
-    } else if (dataMemo) {
-      dataDB = dataMemo.eventGeoDay;
-    }
-
-    if (dataDB) {
-      for (var i = 0; i < dataDB.length; i++) {
+    if (data && data.eventGeoDay) {
+      console.log("Data DB: ", data)
+      for (var i = 0; i < data.eventGeoDay.length; i++) {
         if (
-          uniqueArrayOfId.indexOf(dataDB[i]._id) == -1 &&
-          dataDB[i].confirmed == true
+          uniqueArrayOfId.indexOf(data.eventGeoDay[i]._id) == -1 &&
+          data.eventGeoDay[i].confirmed == true
         ) {
-          uniqueArrayOfId.push(dataDB[i]._id);
-          UniqArr.push(dataDB[i]);
+          uniqueArrayOfId.push(data.eventGeoDay[i]._id);
+          UniqArr.push(data.eventGeoDay[i]);
         }
       }
     }
 
     map.addListener("idle", function() {
-      console.log("Mapa Idle")
+      console.log("Mapa Idle map: ", map)
       var bounds = map.getBounds();
       var center = map.getCenter();
 
-      //console.log("ZOOOM1: ", bounds);
-      //console.log("ZOOOM2: ", bounds.getNorthEast());
-      //var ne = bounds.getNorthEast();
-      //var sw = bounds.getSouthWest();
-      //console.log("ne, ", ne);
-      // console.log(sw)
-      // console.log(JSON.stringify(ne.lng()), JSON.stringify(ne.lat()), JSON.stringify(sw.lng()) , JSON.stringify(sw.lat()))
-      //  var ne1 = new Number(JSON.stringify(ne.lng()))
-      //  var ne2 = new Number(JSON.stringify(ne.lat()))
-      //  var sw1 = new Number(JSON.stringify(sw.lng()))
-      //  var sw2 = new Number(JSON.stringify(sw.lat()))
+    //   //console.log("ZOOOM1: ", bounds);
+    //   //console.log("ZOOOM2: ", bounds.getNorthEast());
+    //   //var ne = bounds.getNorthEast();
+    //   //var sw = bounds.getSouthWest();
+    //   //console.log("ne, ", ne);
+    //   // console.log(sw)
+    //   // console.log(JSON.stringify(ne.lng()), JSON.stringify(ne.lat()), JSON.stringify(sw.lng()) , JSON.stringify(sw.lat()))
+    //   //  var ne1 = new Number(JSON.stringify(ne.lng()))
+    //   //  var ne2 = new Number(JSON.stringify(ne.lat()))
+    //   //  var sw1 = new Number(JSON.stringify(sw.lng()))
+    //   //  var sw2 = new Number(JSON.stringify(sw.lat()))
 
-      // var newPoly0 = [[sw1, sw2], [ne1, sw2], [ne1, ne2], [sw1, ne2]]
-      // var newPoly = [[sw1, sw2], [ne1, sw2], [ne1, ne2], [sw1, -33.8]]
-      // var newPoly2 = [[sw1, sw2], [ne1, sw2], [ne1, ne2], [sw1, -33.9]]
-      // console.log("newPoly", newPoly)
+    //   // var newPoly0 = [[sw1, sw2], [ne1, sw2], [ne1, ne2], [sw1, ne2]]
+    //   // var newPoly = [[sw1, sw2], [ne1, sw2], [ne1, ne2], [sw1, -33.8]]
+    //   // var newPoly2 = [[sw1, sw2], [ne1, sw2], [ne1, ne2], [sw1, -33.9]]
+    //   // console.log("newPoly", newPoly)
 
-      // var SumPolyWork = SumPoly
+    //   // var SumPolyWork = SumPoly
 
-      // console.log("...SumPolyWork")
-      // console.log(...SumPolyWork)
+    //   // console.log("...SumPolyWork")
+    //   // console.log(...SumPolyWork)
 
-      // SumPoly = polygon.union(...SumPolyWork , POLY_A);
-      // console.log("SumPoly", SumPoly)
-      //console.log("Setting current: ");
+    //   // SumPoly = polygon.union(...SumPolyWork , POLY_A);
+    //   // console.log("SumPoly", SumPoly)
+    //   //console.log("Setting current: ");
 
-      // props.setWorkingPosition(prev => {return({
-      //   ...prev,
-      //   geolocation: { lat: center.lat(), lng: center.lng() },
-      //   zoom: map.getZoom()
-      // })});
+    //   //   if(props.workingPosition.zoom != map.getZoom() || props.workingPosition.geolocation.lat != center.lat()){
+         console.log("Set new Idle zoom: ", center.lat(), center.lng())
+        //  if(center){
+        //     props.setWorkingPosition(prev => {return({
+        //       ...prev,
+        //       geolocation: { lat: center.lat(), lng: center.lng() },
+        //       zoom: map.getZoom()
+        //     })});
+        //  }
 
-      //here.fetchBoundariesSingle(ne,sw)
-      //console.log("Fetch points BoarDERS?");
+    //   //   }
+
+
+
+
+    //   //here.fetchBoundariesSingle(ne,sw)
+    //   //console.log("Fetch points BoarDERS?");
     });
 
     map.addListener("click", function(event) {
 
-      //here.setState({confirmedPressed: false})
-
-      if (previousMarker && !InfoBevent) {
-        //close the last new location marker and window on click on map
-        //console.log("EVENT from Map previousMarker && !InfoBevent");
+      // here.setState({confirmedPressed: false})
+      if (previousMarker) {
         infoBubble.close();
         setTimeout(() => {
           if (document.getElementById("infoWindow")) {
@@ -250,11 +243,6 @@ function MapPage(props) {
           }
         }, 10);
         //infoBubble.setMap(null);
-        previousMarker = undefined;
-      }
-      if (previousMarker) {
-        //console.log("EVENT from Map outside Infobubble");
-        infoBubble.close();
         previousMarker = undefined;
       }
     });
@@ -275,11 +263,10 @@ function MapPage(props) {
       enableEventPropagation: false,
       arrowStyle: 0,
       minWidth: 200,
-      minHeight: 220
+      minHeight: 160
     });
     {
       if (!loading) {
-        //console.log("Rendering MARKERS ", UniqArr);
         AllMarkersArr = UniqArr.map((location, i) => {
           var urlNA = "https://res.cloudinary.com/party-images-app/image/upload/v1583692669/ijy8dorejsarudzkauma.png" // {BasicMarker}
           var urlAttend = "https://res.cloudinary.com/party-images-app/image/upload/v1583692624/nwvqlicffptzqpwha5no.png" // {CharlieMarker} 
@@ -315,37 +302,82 @@ function MapPage(props) {
             },
             map: map,
             icon: image,
-            animation: window.google.maps.Animation.DROP,
+            // animation: window.google.maps.Animation.DROP,
             title: location.name
           });
 
           marker.addListener("click", function() {
-            // setContext(prev => {return({...prev, openDrawer: true})})
-            window.activeLocation_id = location._id;
+            console.log("Marker Click", infoBubble)
 
             if (previousMarker) {
-                  infoBubble.close()
-                  previousMarker = undefined
+              infoBubble.close()
+              previousMarker = undefined
             } else{
             infoBubble.addListener("domready", e => {
-              setTimeout(() => {
+                setTimeout(() => {
                 ReactDOM.render(
-                  //<p>Infowindow</p>
+                  <>
+                  <ApolloProvider client={client}>
+                    <UserContext.Provider value={() => {}} >
+                      <Router>
+                        <DrawerWrap open={true} event={location} context={context} setContext={setContext} />
+                      </Router>
+                    </UserContext.Provider>
+                  </ApolloProvider>
                   <InfoWindow
-                    lat={location.geometry.coordinates[0]}
-                    lng={location.geometry.coordinates[1]}
-                    id={location._id}
-                    location={location}
-                    user={context}
-                    redirectLogin={redirectLogin}
-                  />,
+                      lat={location.geometry.coordinates[0]}
+                      lng={location.geometry.coordinates[1]}
+                      id={location._id}
+                      location={location}
+                      context={context}
+                      setContext={setContext}
+                      setOpenDrawer={setOpenDrawer}
+                      openDrawer={openDrawer}
+                      redirectLogin={redirectLogin} />
+                  </>
+                  //   <ApolloProvider client={client}>
+                  //   <UserContext.Provider value={() => {}} >
+                  //     <Router>
+                  //       <Switch>
+                  //       <Route
+                  //           exact
+                  //           path={`/signin`}
+                  //           render={() => (
+                  //             <>
+                  //                <SignIn propContext={context} propSetContext={setContext}/>
+                  //             </>
+                  //           )}
+                  //         />
+                  //       <Route
+                  //           path={`/`}
+                  //           render={() => (
+                  //             <>
+                  //                {/* <SignIn /> */}
+                  //                <DrawerWrap open={true} event={location} context={context} setContext={setContext} />
+                  //             </>
+                  //           )}
+                  //         />
+                  //      </Switch>
+                  //     </Router>
+                  //   </UserContext.Provider>
+                  // </ApolloProvider>
+                  ,
                   document.getElementById("infoWindow")
                 );
               }, 100);
             });
             infoBubble.open(map, marker);
-            previousMarker = location;
-            }
+            previousMarker = location
+          }
+          //   var center = map.getCenter();
+          //   if(center){
+          //     props.setWorkingPosition(prev => {return({
+          //       ...prev,
+          //       geolocation: { lat: center.lat(), lng: center.lng() },
+          //       zoom: map.getZoom()
+          //     })});
+          //  }
+          //   setOpen(true)
           });
 
           return marker;
@@ -356,34 +388,33 @@ function MapPage(props) {
 
   useEffect(() => {
     console.log("Context Map Geo rewrite")
-    if (context.geolocationObj) {
-      LngLatCenter = context.geolocationObj;
+    if (context.geolocationObj && !props.workingPosition) {
+      console.log("Settig LngLat CONTEXT  ", context.geolocationObj)
+
+      setMapOptions(prev => {
+        return({
+          ...prev,
+          center: context.geolocationObj
+        })
+      })
     }
   }, [context.geolocationObj])
 
-  if (props.workingPosition.geometry) {
-    LngLatCenter = props.workingPosition.geometry;
-  }
-  // let LngLatCenter = { lat: latitude, lng: longitude };
-  // if (!latitude) {
-  //   LngLatCenter = { lat: 50.068645, lng: 15.457364 };
-  // }
+  useEffect(() => {
+    console.log("props.workingPosition: ", props.workingPosition)
+    if (props.workingPosition && props.workingPosition.geometry) {
+      console.log("Settig lngLat prop.workingLoc ", props.workingPosition)
 
-  console.log("MapPage: workingPosition ", props.workingPosition);
+      setMapOptions(prev => {
+        return({
+          ...prev,
+          center: props.workingPosition.geometry
+        })
+      })
+    }
+  }, [props.workingPosition])
 
-  const MapOptions = useCallback(() => {
-    return {
-      center: LngLatCenter,
-      zoom: 10,
-      disableDefaultUI: true,
-      zoomControl: true,
-      //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
-      clickableIcons: false,
-      gestureHandling: "cooperative",
-      backgroundColor: "#242323",
-      styles: mapSetup
-    };
-  });
+
 
   const MapAtom = useMemo(
     () => (
@@ -396,7 +427,7 @@ function MapPage(props) {
             }}>
       <Map
         onMount={onMapMount}
-        options={MapOptions()}
+        options={mapOptions}
         className="main-map"
         styling={{
           width: "100%", 
@@ -407,18 +438,17 @@ function MapPage(props) {
       />
       </div>
     ),
-    [onMapMount, MapOptions]
+    [onMapMount, mapOptions]
   );
 
-  console.log("RERENDER MAP PAGE")
 
   return (
     <div component="main" className={classes.container}>
       <CssBaseline />
       <MapSettingsPanel
         //dateState={workDate}
-        dateState={props.workingPosition.date}
-        positionState={props.workingPosition.geometry}
+        dateState={props.workingPosition && props.workingPosition.date ? props.workingPosition.date : 0}
+        positionState={props.workingPosition && props.workingPosition.geometry}
         setWorkDate={props.setWorkingPosition}
         handleScrollLocTime={handleScrollLocTime}
         clearMarkers={clearMarkers}
