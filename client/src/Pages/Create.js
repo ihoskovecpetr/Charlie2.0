@@ -46,6 +46,7 @@ import Dropzone from "../Molecules/Dropzone";
 import Spinner from "../Atoms/Spinner";
 import MapCreate from "../Molecules/MapCreate";
 import LoginFirstButton from "../Atoms/LoginFirstButton";
+import CreateView from "./CreateView"
 
 import {useLogicPlusMinusValue} from "./Logic/Create/useLogicPlusMinusValue";
 
@@ -116,21 +117,22 @@ function Create(props) {
   let history = useHistory();
 
   const { context } = useContext(UserContext);
-  const [customMapParam, setCustomMapParam] = useState();
+  const [customMapParam, setCustomMapParam] = useState(null);
+  const [countOfFiles, setCountOfFiles] = useState(0);
   const Price = useLogicPlusMinusValue("plus_btn", "minus_btn", 50)
   const Capacity = useLogicPlusMinusValue("plus_btn_capacity", "minus_btn_capacity", 15)
   const Duration = useLogicPlusMinusValue("plus_btn_duration", "minus_btn_duration", 3)
   const [formValue, setFormValue] = useState({
     startDate: new Date(),
     currency: "CZK",
-    BYO: true
+    BYO: true,
+    ImagesArr: []
   });
 
   const price = Price.value
   const plusClickPrice = Price.plusClickValue
   const minusClickPrice = Price.minusClickValue
   const setNewValuePrice = Price.setNewValue
-
 
   const capacity = Capacity.value
   const plusClickCapacity = Capacity.plusClickValue
@@ -154,8 +156,6 @@ function Create(props) {
   const { errorOut } = data ? data.createEvent : { errorOut: undefined };
 
   let den = new Date(formValue.startDate);
-
-
 
 
   //Day +- one day
@@ -213,7 +213,7 @@ function Create(props) {
     e.preventDefault();
 
     let load = {
-      name: inputName.current.value ? inputName.current.value : null,
+      name: inputName.current && inputName.current.value ? inputName.current.value : null,
       lng: customMapParam.lng,
       lat: customMapParam.lat,
       address: customMapParam.address,
@@ -233,7 +233,6 @@ function Create(props) {
 
     const empty = findEmpty(load);
     
-
     if (empty.length == 0) {
       createEvent({
         variables: load
@@ -261,415 +260,454 @@ function Create(props) {
     });
   }
 
+  return(
+      <CreateView 
+      formValue={formValue}
+      setFormValue={setFormValue}
 
-  return (
-    <div
-      component="main"
-      id="mainCreate"
-      className={classes.profileWrap}
-      style={{ position: context.freezScroll ? "fixed" : "absolute" }} // fixed is freezed, absolute is scrollable
-    >
-      <CssBaseline />
-      <Container maxWidth="sm" className={classes.paper1}>
-        <Grid
-          container
-          justify="center"
-          alignItems="center"
-          direction="column"
-          className={classes.pinkBack}
-        >
+      handleChangeBYO={handleChangeBYO}
+      handleChangeCurrency={handleChangeCurrency}
+      handleDateChange={handleDateChange}
+      onSubmit={onSubmit}
+      minusHour={minusHour}
+      plusHour={plusHour}
+      minusDay={minusDay}
+      plusDay={plusDay}
+
+      inputName={inputName}
+      inputTime={inputTime}
+      inputBYO={inputBYO}
+      inputDescription={inputDescription}
+      inputMarker={inputMarker}
+
+      dataOut={dataOut}
+      errorOut={errorOut}
+      customMapParam={customMapParam}
+      setCustomMapParam={setCustomMapParam}
+      plusClickCapacity={plusClickCapacity}
+      setNewValueCapacity={setNewValueCapacity}
+      minusClickDuration={minusClickDuration}
+      setNewValueDuration={setNewValueDuration}
+      plusClickDuration={plusClickDuration}
+      minusClickPrice={minusClickPrice}
+      setNewValuePrice={setNewValuePrice}
+      plusClickPrice={plusClickPrice}
+      minusClickCapacity={minusClickCapacity}
+
+      countOfFiles={countOfFiles}  
+      loading={loading}
+      FeErrors={FeErrors}
+      capacity={capacity}
+      duration={duration}
+      price={price}
+      setCountOfFiles={setCountOfFiles}
+      />
+    )
+
+  // return (
+  //   <div
+  //     component="main"
+  //     id="mainCreate"
+  //     className={classes.profileWrap}
+  //     style={{ position: context.freezScroll ? "fixed" : "absolute" }} // fixed is freezed, absolute is scrollable
+  //   >
+  //     <CssBaseline />
+  //     <Container maxWidth="sm" className={classes.paper1}>
+  //       <Grid
+  //         container
+  //         justify="center"
+  //         alignItems="center"
+  //         direction="column"
+  //         className={classes.pinkBack}
+  //       >
           
-          {/* <Avatar className={classes.avatar}>
-            <AddCircleOutlineIcon />
-          </Avatar> */}
-          <Grid item>
-            <Typography variant="h5" className={classes.justDoIt}>
-              JUST DO IT
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="h5" className={classes.now}>
-              <b>NOW</b>
-            </Typography>
-          </Grid>
+  //         {/* <Avatar className={classes.avatar}>
+  //           <AddCircleOutlineIcon />
+  //         </Avatar> */}
+  //         <Grid item>
+  //           <Typography variant="h5" className={classes.justDoIt}>
+  //             JUST DO IT
+  //           </Typography>
+  //         </Grid>
+  //         <Grid item>
+  //           <Typography variant="h5" className={classes.now}>
+  //             <b>NOW</b>
+  //           </Typography>
+  //         </Grid>
 
-          <Grid container className={clsx(classes.formRow)}>
-            <Grid item style={{ width: "100%" }}>
-              {context.success ? (
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="name"
-                  inputRef={inputName}
-                  label="My First Party"
-                  name="name"
-                  autoComplete="name"
-                  //autoFocus
-                  style={{
-                    background: "rgba(255,255,255,0.9)",
-                    borderRadius: 5,
-                    boxShadow: "5px 5px 5px 0px rgba(0,0,0,0.75)"
-                  }}
-                />
-              ) : (
-                <LoginFirstButton />
-              )}
-            </Grid>
-          </Grid>
-        </Grid>
-      </Container>
-      <Container maxWidth="sm" className={classes.paper}>
-        <form className={classes.form} noValidate>
-          <InputLabel htmlFor="standard-adornment-amount">ADDRESS</InputLabel>
-          <MapCreate
-            customMapParam={customMapParam}
-            setCustomMapParam={setCustomMapParam}
-            inputMarker={inputMarker}
-          />
+  //         <Grid container className={clsx(classes.formRow)}>
+  //           <Grid item style={{ width: "100%" }}>
+  //             {context.success ? (
+  //               <TextField
+  //                 variant="outlined"
+  //                 margin="normal"
+  //                 required
+  //                 fullWidth
+  //                 id="name"
+  //                 inputRef={inputName}
+  //                 label="My First Party"
+  //                 name="name"
+  //                 autoFocus
+  //                 className={classes.inputName}
+  //               />
+  //             ) : (
+  //               <LoginFirstButton />
+  //             )}
+  //           </Grid>
+  //         </Grid>
+  //       </Grid>
+  //     </Container>
+  //     <Container maxWidth="sm" className={classes.paper}>
+  //       <form className={classes.form} noValidate>
+  //         <InputLabel htmlFor="standard-adornment-amount">ADDRESS</InputLabel>
+  //         <MapCreate
+  //           customMapParam={customMapParam}
+  //           setCustomMapParam={setCustomMapParam}
+  //           inputMarker={inputMarker}
+  //         />
 
-          <InputLabel htmlFor="standard-adornment-amount">DATE</InputLabel>
-          <Grid
-            container
-            alignItems="center"
-            alignContent="flex-start"
-            justify="flex-start"
-            className={clsx(classes.settingsPanel, classes.formRow)}
-          >
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={() => {
-                  minusDay();
-                }}
-              >
-                <ArrowBackIosIcon color="primary" />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  margin="normal"
-                  id="date-picker-dialog"
-                  format="dd/MM/yyyy"
-                  value={formValue.startDate}
-                  onChange={e => {
-                    handleDateChange(e);
-                  }}
-                  KeyboardButtonProps={{
-                    "aria-label": "change date"
-                  }}
-                />
-              </MuiPickersUtilsProvider>
-            </Grid>
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={() => {
-                  plusDay();
-                }}
-              >
-                <ArrowForwardIosIcon
-                  //fontSize="large"
-                  color="primary"
-                />
-              </IconButton>
-            </Grid>
-          </Grid>
+  //         <InputLabel htmlFor="standard-adornment-amount">DATE</InputLabel>
+  //         <Grid
+  //           container
+  //           alignItems="center"
+  //           alignContent="flex-start"
+  //           justify="flex-start"
+  //           className={clsx(classes.settingsPanel, classes.formRow)}
+  //         >
+  //           <Grid item>
+  //             <IconButton
+  //               color="inherit"
+  //               aria-label="open drawer"
+  //               edge="start"
+  //               onClick={() => {
+  //                 minusDay();
+  //               }}
+  //             >
+  //               <ArrowBackIosIcon color="primary" />
+  //             </IconButton>
+  //           </Grid>
+  //           <Grid item>
+  //             <MuiPickersUtilsProvider utils={DateFnsUtils}>
+  //               <KeyboardDatePicker
+  //                 margin="normal"
+  //                 id="date-picker-dialog"
+  //                 format="dd/MM/yyyy"
+  //                 value={formValue.startDate}
+  //                 onChange={e => {
+  //                   handleDateChange(e);
+  //                 }}
+  //                 KeyboardButtonProps={{
+  //                   "aria-label": "change date"
+  //                 }}
+  //               />
+  //             </MuiPickersUtilsProvider>
+  //           </Grid>
+  //           <Grid item>
+  //             <IconButton
+  //               color="inherit"
+  //               aria-label="open drawer"
+  //               edge="start"
+  //               onClick={() => {
+  //                 plusDay();
+  //               }}
+  //             >
+  //               <ArrowForwardIosIcon
+  //                 //fontSize="large"
+  //                 color="primary"
+  //               />
+  //             </IconButton>
+  //           </Grid>
+  //         </Grid>
 
-          {/*  +- Hours */}
+  //         {/*  +- Hours */}
 
-          <InputLabel htmlFor="standard-adornment-amount">TIME</InputLabel>
-          <Grid
-            container
-            alignItems="center"
-            alignContent="flex-start"
-            justify="flex-start"
-            className={clsx(classes.settingsPanel, classes.formRow)}
-          >
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={() => {
-                  minusHour();
-                }}
-              >
-                <ArrowBackIosIcon
-                  //fontSize="large"
-                  color="primary"
-                />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardTimePicker margin="normal" id="time-picker" inputRef={inputTime}
-                  //label="Time picker"
-                  value={formValue.startDate}
-                  onChange={e => {
-                    handleDateChange(e);
-                  }}
-                  KeyboardButtonProps={{
-                    "aria-label": "change time"
-                  }}
-                />
-              </MuiPickersUtilsProvider>
-            </Grid>
-            <Grid item>
-              <IconButton color="inherit" aria-label="open drawer" edge="start"
-                onClick={() => {
-                  plusHour();
-                }}
-              >
-                <ArrowForwardIosIcon
-                  //fontSize="large"
-                  color="primary"
-                />
-              </IconButton>
-            </Grid>
-          </Grid>
+  //         <InputLabel htmlFor="standard-adornment-amount">TIME</InputLabel>
+  //         <Grid
+  //           container
+  //           alignItems="center"
+  //           alignContent="flex-start"
+  //           justify="flex-start"
+  //           className={clsx(classes.settingsPanel, classes.formRow)}
+  //         >
+  //           <Grid item>
+  //             <IconButton
+  //               color="inherit"
+  //               aria-label="open drawer"
+  //               edge="start"
+  //               onClick={() => {
+  //                 minusHour();
+  //               }}
+  //             >
+  //               <ArrowBackIosIcon
+  //                 //fontSize="large"
+  //                 color="primary"
+  //               />
+  //             </IconButton>
+  //           </Grid>
+  //           <Grid item>
+  //             <MuiPickersUtilsProvider utils={DateFnsUtils}>
+  //               <KeyboardTimePicker margin="normal" id="time-picker" inputRef={inputTime}
+  //                 //label="Time picker"
+  //                 value={formValue.startDate}
+  //                 onChange={e => {
+  //                   handleDateChange(e);
+  //                 }}
+  //                 KeyboardButtonProps={{
+  //                   "aria-label": "change time"
+  //                 }}
+  //               />
+  //             </MuiPickersUtilsProvider>
+  //           </Grid>
+  //           <Grid item>
+  //             <IconButton color="inherit" aria-label="open drawer" edge="start"
+  //               onClick={() => {
+  //                 plusHour();
+  //               }}
+  //             >
+  //               <ArrowForwardIosIcon
+  //                 //fontSize="large"
+  //                 color="primary"
+  //               />
+  //             </IconButton>
+  //           </Grid>
+  //         </Grid>
 
-          <InputLabel htmlFor="standard-adornment-amount">DURATION</InputLabel>
-          <Grid
-            container
-            className={clsx(classes.settingsPanel, classes.formRow)}
-          >
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                id="minus_btn_duration"
-                onClick={() => minusClickDuration}
-              >
-                <ArrowBackIosIcon color="primary" />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <Input
-                type="number"
-                value={duration}
-                //onChange={handleChange("amount")}
-                onChange={(value) => {setNewValueDuration(value.target.value)}}
-                endAdornment={
-                  <InputAdornment position="start">
-                    hours  
-                  </InputAdornment>
-                }
-              />
-            </Grid>
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                id="plus_btn_duration"
-                onClick={() => plusClickDuration}
-              >
-                <ArrowForwardIosIcon color="primary" />
-              </IconButton>
-            </Grid>
-          </Grid>
+  //         <InputLabel htmlFor="standard-adornment-amount">DURATION</InputLabel>
+  //         <Grid
+  //           container
+  //           className={clsx(classes.settingsPanel, classes.formRow)}
+  //         >
+  //           <Grid item>
+  //             <IconButton
+  //               color="inherit"
+  //               aria-label="open drawer"
+  //               edge="start"
+  //               id="minus_btn_duration"
+  //               onClick={() => minusClickDuration}
+  //             >
+  //               <ArrowBackIosIcon color="primary" />
+  //             </IconButton>
+  //           </Grid>
+  //           <Grid item>
+  //             <Input
+  //               type="number"
+  //               value={duration}
+  //               //onChange={handleChange("amount")}
+  //               onChange={(value) => {setNewValueDuration(value.target.value)}}
+  //               endAdornment={
+  //                 <InputAdornment position="start">
+  //                   hours  
+  //                 </InputAdornment>
+  //               }
+  //             />
+  //           </Grid>
+  //           <Grid item>
+  //             <IconButton
+  //               color="inherit"
+  //               aria-label="open drawer"
+  //               edge="start"
+  //               id="plus_btn_duration"
+  //               onClick={() => plusClickDuration}
+  //             >
+  //               <ArrowForwardIosIcon color="primary" />
+  //             </IconButton>
+  //           </Grid>
+  //         </Grid>
 
 
-          <InputLabel htmlFor="standard-adornment-amount">PRICE</InputLabel>
-          <Grid
-            container
-            className={clsx(classes.settingsPanel, classes.formRow)}
-          >
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                id="minus_btn"
-                onClick={() => minusClickPrice}
-              >
-                <ArrowBackIosIcon color="primary" />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <Input
-                type="number"
-                value={price}
-                //onChange={handleChange("amount")}
-                onChange={(value) => {
-                  console.log("CHange Price: ", value)
-                  setNewValuePrice(value.target.value)
-                }}
-                startAdornment={
-                  <InputAdornment position="start">
-                    {formValue.currency}
-                  </InputAdornment>
-                }
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                id="outlined-select-currency"
-                select
-                //label="Select"
-                value={formValue.currency}
-                onChange={handleChangeCurrency}
-                //helperText="Please select your currency"
-                //variant="outlined"
-              >
-                {currencies.map(option => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
+  //         <InputLabel htmlFor="standard-adornment-amount">PRICE</InputLabel>
+  //         <Grid
+  //           container
+  //           className={clsx(classes.settingsPanel, classes.formRow)}
+  //         >
+  //           <Grid item>
+  //             <IconButton
+  //               color="inherit"
+  //               aria-label="open drawer"
+  //               edge="start"
+  //               id="minus_btn"
+  //               onClick={() => minusClickPrice}
+  //             >
+  //               <ArrowBackIosIcon color="primary" />
+  //             </IconButton>
+  //           </Grid>
+  //           <Grid item>
+  //             <Input
+  //               type="number"
+  //               value={price}
+  //               //onChange={handleChange("amount")}
+  //               onChange={(value) => {
+  //                 console.log("CHange Price: ", value)
+  //                 setNewValuePrice(value.target.value)
+  //               }}
+  //               startAdornment={
+  //                 <InputAdornment position="start">
+  //                   {formValue.currency}
+  //                 </InputAdornment>
+  //               }
+  //             />
+  //           </Grid>
+  //           <Grid item>
+  //             <TextField
+  //               id="outlined-select-currency"
+  //               select
+  //               //label="Select"
+  //               value={formValue.currency}
+  //               onChange={handleChangeCurrency}
+  //               //helperText="Please select your currency"
+  //               //variant="outlined"
+  //             >
+  //               {currencies.map(option => (
+  //                 <MenuItem key={option.value} value={option.value}>
+  //                   {option.label}
+  //                 </MenuItem>
+  //               ))}
+  //             </TextField>
+  //           </Grid>
 
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                id="plus_btn"
-                onClick={() => plusClickPrice}
-              >
-                <ArrowForwardIosIcon color="primary" />
-              </IconButton>
-            </Grid>
-          </Grid>
+  //           <Grid item>
+  //             <IconButton
+  //               color="inherit"
+  //               aria-label="open drawer"
+  //               edge="start"
+  //               id="plus_btn"
+  //               onClick={() => plusClickPrice}
+  //             >
+  //               <ArrowForwardIosIcon color="primary" />
+  //             </IconButton>
+  //           </Grid>
+  //         </Grid>
 
-          <InputLabel htmlFor="standard-adornment-amount">CAPACITY</InputLabel>
-          <Grid container className={classes.formRow}>
-            <Grid item>
-              <IconButton
-                color="inherit"
-                edge="start"
-                id="minus_btn_capacity"
-                onClick={() => minusClickCapacity}
-              >
-                <ArrowBackIosIcon color="primary" />
-              </IconButton>
-            </Grid>
-            <Grid>
-              <TextField
-                value={capacity}
-                type="number"
-                onChange={(value) => {
-                  setNewValueCapacity(value.target.value)
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AccountCircle />
-                    </InputAdornment>
-                  )
-                }}
-              />
-            </Grid>
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                id="plus_btn_capacity"
-                onClick={() => plusClickCapacity}
-              >
-                <ArrowForwardIosIcon color="primary" />
-              </IconButton>
-            </Grid>
-          </Grid>
+  //         <InputLabel htmlFor="standard-adornment-amount">CAPACITY</InputLabel>
+  //         <Grid container className={classes.formRow}>
+  //           <Grid item>
+  //             <IconButton
+  //               color="inherit"
+  //               edge="start"
+  //               id="minus_btn_capacity"
+  //               onClick={() => minusClickCapacity}
+  //             >
+  //               <ArrowBackIosIcon color="primary" />
+  //             </IconButton>
+  //           </Grid>
+  //           <Grid>
+  //             <TextField
+  //               value={capacity}
+  //               type="number"
+  //               onChange={(value) => {
+  //                 setNewValueCapacity(value.target.value)
+  //               }}
+  //               InputProps={{
+  //                 startAdornment: (
+  //                   <InputAdornment position="start">
+  //                     <AccountCircle />
+  //                   </InputAdornment>
+  //                 )
+  //               }}
+  //             />
+  //           </Grid>
+  //           <Grid item>
+  //             <IconButton
+  //               color="inherit"
+  //               aria-label="open drawer"
+  //               edge="start"
+  //               id="plus_btn_capacity"
+  //               onClick={() => plusClickCapacity}
+  //             >
+  //               <ArrowForwardIosIcon color="primary" />
+  //             </IconButton>
+  //           </Grid>
+  //         </Grid>
           
-          <InputLabel htmlFor="standard-adornment-amount">BYO Event (guest can bring his own dring/snack)</InputLabel>
-          <FormControlLabel
-            className={classes.switchBYO}
-            control={
-              <Switch
-                //checked={formValue.checkedA}
-                onChange={handleChangeBYO}
-                checked={formValue.BYO}
-                inputRef={inputBYO}
-              />
-            }
-          />
-          <InputLabel htmlFor="standard-adornment-amount">
-            DESCRIPTION
-          </InputLabel>
-          <Grid
-            container
-            className={clsx(classes.formRow, classes.descriptionContainer)}
-          >
-            <Grid item className={classes.descriptionItem}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="decsription"
-                placeholder="Example: Upon arrival, you will get welcome drink and some snacks will be ready on the balcony. Grill be ready too."
-                multiline
-                rows="4"
-                inputRef={inputDescription}
-                //label="Description"
-                name="decsription"
-                autoComplete="false" //improvisation, should be "off", or random "string"
-              />
-            </Grid>
-          </Grid>
-          <InputLabel htmlFor="standard-adornment-amount">IMAGES</InputLabel>
-          <Grid
-            container
-            justify="center"
-            alignContent="center"
-            className={classes.formRow}
-          >
-            <Grid
-              item
-              className={clsx(classes.dropItem, classes.dropContainer)}
-            >
-              <Dropzone setFormValue={setFormValue} />
-            </Grid>
-          </Grid>
+  //         <InputLabel htmlFor="standard-adornment-amount">BYO Event (guest can bring his own dring/snack)</InputLabel>
+  //         <FormControlLabel
+  //           className={classes.switchBYO}
+  //           control={
+  //             <Switch
+  //               //checked={formValue.checkedA}
+  //               onChange={handleChangeBYO}
+  //               checked={formValue.BYO}
+  //               inputRef={inputBYO}
+  //             />
+  //           }
+  //         />
+  //         <InputLabel htmlFor="standard-adornment-amount">
+  //           DESCRIPTION
+  //         </InputLabel>
+  //         <Grid
+  //           container
+  //           className={clsx(classes.formRow, classes.descriptionContainer)}
+  //         >
+  //           <Grid item className={classes.descriptionItem}>
+  //             <TextField
+  //               variant="outlined"
+  //               margin="normal"
+  //               required
+  //               fullWidth
+  //               id="decsription"
+  //               placeholder="Example: Upon arrival, you will get welcome drink and some snacks will be ready on the balcony. Grill be ready too."
+  //               multiline
+  //               rows="4"
+  //               inputRef={inputDescription}
+  //               //label="Description"
+  //               name="decsription"
+  //               autoComplete="false" //improvisation, should be "off", or random "string"
+  //             />
+  //           </Grid>
+  //         </Grid>
+  //         <InputLabel htmlFor="standard-adornment-amount">IMAGES</InputLabel>
+  //         <Grid
+  //           container
+  //           justify="center"
+  //           alignContent="center"
+  //           className={classes.formRow}
+  //         >
+  //           <Grid
+  //             item
+  //             className={clsx(classes.dropItem, classes.dropContainer)}
+  //           >
+  //            <p>{countOfFiles - formValue.ImagesArr.length}</p>
+  //             <Dropzone setFormValue={setFormValue} setCountOfFiles={setCountOfFiles}/>
+  //           </Grid>
+  //         </Grid>
 
-          {errorOut &&
-            errorOut.map(item => (
-              <Alert severity="error" key={item.message}>
-                {item.message}
-              </Alert>
-            ))}
+  //         {errorOut &&
+  //           errorOut.map(item => (
+  //             <Alert severity="error" key={item.message}>
+  //               {item.message}
+  //             </Alert>
+  //           ))}
 
-          {FeErrors &&
-            FeErrors.map(item => (
-              <Alert severity="error" key={item}>
-                {item} is empty
-              </Alert>
-            ))}
+  //         {FeErrors &&
+  //           FeErrors.map(item => (
+  //             <Alert severity="error" key={item}>
+  //               {item} is empty
+  //             </Alert>
+  //           ))}
 
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={e => onSubmit(e)}
-            // disabled={
-            //   formValue.ImagesArr && formValue.ImagesArr.length ? false : true
-            // }
-            disabled={loading}
-          >
-            {dataOut && <CloudDoneIcon />}
-            {loading && <Spinner hieght={20} width={20} />}
-            Create Party
-          </Button>
-        </form>
-      </Container>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </div>
-  );
+  //         <Button
+  //           type="submit"
+  //           fullWidth
+  //           variant="contained"
+  //           color="primary"
+  //           className={classes.submit}
+  //           onClick={e => onSubmit(e)}
+  //           // disabled={
+  //           //   formValue.ImagesArr && formValue.ImagesArr.length ? false : true
+  //           // }
+  //           disabled={loading}
+  //         >
+  //           {dataOut && <CloudDoneIcon />}
+  //           {loading && <Spinner hieght={20} width={20} />}
+  //           Create Party
+  //         </Button>
+  //       </form>
+  //     </Container>
+  //     <Box mt={8}>
+  //       <Copyright />
+  //     </Box>
+  //   </div>
+  // );
 }
 
 const useStyles = makeStyles(theme => ({
@@ -716,6 +754,11 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 700,
     fontSize: 38,
     letterSpacing: 3
+  },
+  inputName:{
+    background: "rgba(255,255,255,0.9)",
+    borderRadius: 5,
+    boxShadow: "5px 5px 5px 0px rgba(0,0,0,0.75)"
   },
   avatar: {
     margin: theme.spacing(1),

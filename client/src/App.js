@@ -56,13 +56,12 @@ import FloatingBtnWrap from "./Molecules/FloatingBtnWrap";
 
 const drawerWidth = 240;
 let prevLocation;
-// let firstLocation;
 
 function App({location, container}) {
   let history = useHistory();
   const { md_size_memo } = useXsSize();
   console.log("App.js rErEnDeR, conteiner: ", location, container)
-  const { latitude, longitude, err } = usePosition();
+  const { latitude, longitude, address, err } = usePosition();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [finishedAnimation, setFinishedAnimation] = useState(false);
   const [routerState, setRouterState] = useState({ 
@@ -72,7 +71,8 @@ function App({location, container}) {
   });
   const [workingPosition, setWorkingPosition] = useState({
     date: new Date().toISOString().split("T")[0],
-    geometry: null
+    geometry: null,
+    zoom: 10,
   });
   const [getLoggedInUser, { loading, error, data }] = useMutation(LOGIN);
 
@@ -146,6 +146,7 @@ function App({location, container}) {
     picture: null,
     description: null,
     geolocationObj: null,
+    curPositionAddress: null,
     countUnseenBookings: 0,
     countUnseenRatings: 0,
     getLoggedInUser: () => getLoggedInUser(),
@@ -154,12 +155,20 @@ function App({location, container}) {
 
     openDrawer: true,
     freezScroll: false,
+    rememberSignIn: false,
     expanded_id: null,
-    filterOn: true,
-    shownEvents: [],
-    playEventsCount: null,
-    radius: 20,
-    days: 2,
+    playFilterObj: {
+      filterOn: true,
+      geolocationPlay: null,
+      playEventsCount: null,
+      radius: 20,
+      plusDays: 2,
+      shownEvents: [],
+    },  
+    // playEventsCount: null,
+    // shownEvents: [],
+    // radius: 20,
+    // plusDays: 2,
     // firstPrint: location.pathname.split("/")[1] === "play" ? true : false
   });
 
@@ -179,6 +188,14 @@ if(userObj){
 }
 
   }
+
+  // useEffect(() => {
+  //   // getLoggedInUser();
+  //   navigator.geolocation.getCurrentPosition(function(position) {
+  //     console.log("Found lokaci: ", position.coords.latitude)
+  //     setContext(prev => {return {...prev, geolocationObj: {lat: position.coords.latitude, lng: position.coords.longitude}}});
+  // });
+  // });
 
   useEffect(() => {
     // getLoggedInUser();
@@ -203,6 +220,33 @@ if(userObj){
 
   }, []);
 
+  useEffect(() => {
+
+    window.React = {};
+
+      window.addEventListener("beforeunload", (ev) => 
+    {  
+      console.log("BEFORE UNLOAD: ", contx.rememberSignIn)
+      ev.preventDefault();
+      if(!contx.rememberSignIn){
+        window.localStorage.setItem("token", `_deleted_COZ_notrembr${contx.rememberSignIn}`)
+      }
+    });
+
+    // window.localStorage.setItem("token", contx.token)
+
+    // return(() => {
+    //   console.log("NIKDY GOING OUT APP")
+    //   if(!contx.rememberSignIn){
+    //     window.localStorage.setItem("token", "_deleted_COZ_notrembr")
+    //   }
+    // })
+    // return(function cleanup() {
+    //   window.localStorage.setItem("token", "cleanedUped")
+    // };)
+
+  },[]);
+
   // if (data) {
     useEffect(() => {
       if (data && data.getLoggedInUser) {
@@ -226,10 +270,26 @@ if(userObj){
   if (latitude && longitude && !contx.geolocationObj) {
     console.log("Context. setting Geolocation Obj: ", latitude ,longitude)
     setContx(prev => {
-      return { ...prev, geolocationObj: { lat: latitude, lng: longitude }};
+      return { 
+        ...prev, 
+        geolocationObj: { lat: latitude, lng: longitude },
+        playFilterObj: {
+          ...prev.playFilterObj,
+          geolocationPlay: { lat: latitude, lng: longitude },
+        }, 
+      };
     });
   }
   }, [latitude, longitude])
+
+  useEffect(() => {
+    if (!contx.curPositionAddress) {
+      console.log("Context. setting ADDRESS: ", address)
+      setContx(prev => {
+        return { ...prev, curPositionAddress: address };
+      });
+      }
+    }, [address])
 
   const providerValue = useMemo(() => {
     let context = contx

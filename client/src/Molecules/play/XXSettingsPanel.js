@@ -21,12 +21,13 @@ import { withRouter, useHistory } from "react-router-dom";
 
 import { UserContext } from "../../userContext";
 
+import SliderCustom from "../../Atoms/SliderCustom";
 
 const SettingsPanel = ({loading}) => {
   const classes = useStyles();
   let history = useHistory();
   const { context, setContext } = useContext(UserContext);
-  const [workingValue, setWorkingValue] = useState({radius: context.radius, days: context.days});
+  const [workingValue, setWorkingValue] = useState({radius: context.radius, days: context.plusDays});
   const [close, setClose] = useState(false);
   const [checked, setChecked] = useState(false);
 
@@ -236,7 +237,6 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     height: "0px", 
     top: 0,
-    left: 0,
     zIndex: 100,
     touchAction: "none"
   },

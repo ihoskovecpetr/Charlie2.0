@@ -14,7 +14,7 @@ import { UserContext } from "../userContext";
 
 import Spinner from "src/Atoms/Spinner";
 
-import SettingsPanel2 from "src/Molecules/play/SettingsPanel2";
+import SettingsPanel2 from "src/Molecules/play/SettingsPanel";
 
 import PlayPageGallery from "src/Molecules/play/PlayPageGallery";
 import PlayPageList from "src/Molecules/play/PlayPageList";
@@ -35,45 +35,53 @@ function Play() {
 
   const { loading, error, data, refetch } = useQuery(PLAY_EVENTS_QUERY, {
     variables: {
-      plusDays: context.filterOn ? context.days : 10000,
-      lng: context.geolocationObj ? context.geolocationObj.lng : null,
-      lat: context.geolocationObj ? context.geolocationObj.lat : null,
-      radius: context.filterOn ? context.radius : 9999999,
-      shownEvents: context.shownEvents
+      plusDays: context.playFilterObj.filterOn ? context.playFilterObj.plusDays : 10000,
+      lng: context.playFilterObj.geolocationPlay ? context.playFilterObj.geolocationPlay.lng : null,
+      lat: context.playFilterObj.geolocationPlay ? context.playFilterObj.geolocationPlay.lat : null,
+      radius: context.playFilterObj.filterOn ? context.playFilterObj.radius : 9999999,
+      shownEvents: context.playFilterObj.shownEvents
     }
   });
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [context]);
+  }, [context.playFilterObj]);
+
 
   useEffect(() => {
-    if(!context.geolocationObj){
-    //   navigator.geolocation.getCurrentPosition(function(position) {
-    //     setContext(prev => {return {...prev, geolocationObj: {lat: position.coords.latitude, lng: position.coords.longitude}}});
-    // });
-    }
-    return function cleanup() {
-      setContext(prev => {return {...prev, shownEvents: []}});
-    };
-  }, []);
 
+    return (() => {
+      console.log("Going out of Play")
+        setContext(prev => {return {
+          ...prev, 
+          playFilterObj: {
+            ...prev.playFilterObj,
+            shownEvents: []
+          }
+        }});
+    })
+  },[])
 
 
 
 
   useEffect(() => {
     if(data && data.getJoinEvents){
-      if(context.shownEvents.length === 0){ // context.playEventsCount === null
+      if(context.playFilterObj.shownEvents.length === 0){ // context.playEventsCount === null
         console.log("Pass if null")
-        setContext(prev => {return {...prev, playEventsCount: data.getJoinEvents.length}});
+        setContext(prev => {return {
+          ...prev, 
+          playFilterObj: {
+            ...prev.playFilterObj,
+            playEventsCount: data.getJoinEvents.length
+          }
+          }});
       }
     }
   }, [data]);
 
-
   useEffect(() => {
-    if(data && data.getJoinEvents[0]){history.push(`/play/${data.getJoinEvents[0]._id}`)} 
+    if(data && data.getJoinEvents[0]){history.replace(`/play/${data.getJoinEvents[0]._id}`)} 
     window.scrollTo(0, 0);
   }, [data, data && data.getJoinEvents[0]]);
 
@@ -82,7 +90,13 @@ function Play() {
     setTimeout(() => {
       // setDiscovered(discovered + 1)
       setContext(prev => {
-        return {...prev, shownEvents: [...prev.shownEvents, data.getJoinEvents[0]._id]}});
+        return {
+          ...prev, 
+          playFilterObj: {
+            ...prev.playFilterObj,
+          shownEvents: [...prev.playFilterObj.shownEvents, data.getJoinEvents[0]._id]
+        }
+      }});
       window.scrollTo(0,0);
       setLoadingPlay(false)
     }, 500)
@@ -105,7 +119,7 @@ function Play() {
       maxWidth="xs"
       className={classes.playContainer}
     >
-        {context.name && !context.geolocationObj &&
+        {context.name && !context.playFilterObj.geolocationPlay &&
         <NoLocationBck />}
 
             {loading && (

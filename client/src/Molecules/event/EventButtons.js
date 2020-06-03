@@ -159,11 +159,11 @@ function EventButtons({event, propContext}) {
         {
           query: PLAY_EVENTS_QUERY,
           variables: {
-            plusDays: localContext.filterOn ? localContext.days : 10000,
-            lng: localContext.geolocationObj ? localContext.geolocationObj.lng : null,
-            lat: localContext.geolocationObj ? localContext.geolocationObj.lat : null,
-            radius: localContext.filterOn ? localContext.radius : 9999999,
-            shownEvents: localContext.shownEvents
+            plusDays: localContext.playFilterObj.filterOn ? localContext.playFilterObj.plusDays : 10000,
+            lng: localContext.playFilterObj.geolocationPlay ? localContext.playFilterObj.geolocationPlay.lng : null,
+            lat: localContext.playFilterObj.geolocationPlay ? localContext.playFilterObj.geolocationPlay.lat : null,
+            radius: localContext.playFilterObj.filterOn ? localContext.playFilterObj.radius : 9999999,
+            shownEvents: localContext.playFilterObj.shownEvents
           }
         }
       ]

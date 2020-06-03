@@ -137,7 +137,7 @@ function Infowindow(props) {
       <Grid container justify="center" className={classes.authorGrid}>
         <Avatar
           alt="Author picture"
-          src={Author.picture}
+          src={Author && Author.picture}
           className={classes.avatar}
         />
       </Grid>

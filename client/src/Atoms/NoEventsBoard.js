@@ -1,16 +1,18 @@
-import React from "react";
+import React, {useContext} from "react";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { makeStyles } from "@material-ui/core/styles";
 import { Animated } from "react-animated-css";
+import { UserContext } from "src/userContext";
 
 import { useHistory } from "react-router-dom";
 
 function NoEventsBoard(props) {
   let history = useHistory();
   const classes = useStyles();
+  const { context, setContext } = useContext(UserContext);
 
   return (
     <Grid
@@ -25,14 +27,12 @@ function NoEventsBoard(props) {
       <Grid item xs={12} className={classes.loginTransparent}>
         <Grid
           container
-          direction="row"
           justify="center"
           alignItems="center"
-          className={classes.loginFirstContainer}
         >
           <Grid item>
-            <p>
-              NO EVENTS
+            <p className={classes.loginFirstContainer}>
+              There are no more events <b>within {context.radius} km</b> from <b>{context.curPositionAddress}</b> in <b>{context.plusDays}</b> days from today
             </p>
           </Grid>
         </Grid>
@@ -86,15 +86,16 @@ const useStyles = makeStyles(theme => ({
   },
 
   loginTransparent: {
-    height: 70
+    height: 120
   },
   loginFirstContainer: {
-    height: "100%",
-    fontSize: 22,
-    fontWeight: 600,
+    // height: "100%",
+    fontSize: 16,
+    fontWeight: 400,
+    textAlign: 'center'
   },
   fingerItem: {
-    height: 80
+    height: 60
   },
   backToApp:{
     padding: 10,

@@ -16,10 +16,10 @@ const EnteredGuests = ({bookings}) => {
     const history = useHistory();
     const { context, setContext } = useContext(UserContext);
 
-    console.log("ENTr GSTS:", bookings);
+    console.log("ENTr GSTS:", bookings, bookings.length);
 
     return(
-            <Grid item xs={12}>
+            <Grid item xs={12} className={classes.wrapIt}>
                    {bookings && bookings.map(booking => {
                      if(booking.entered){
                        console.log("ENTERREEEEEEEEE")
@@ -33,12 +33,15 @@ const EnteredGuests = ({bookings}) => {
                      </Avatar>
                      }
                    })}
+                   {bookings.length === 0 && "No Entered guests yet"}
               </Grid>
     )
 }
 
 const useStyles = makeStyles(theme => ({
-   
+  wrapIt: {
+    padding: 10
+  }
   }));
 
 export default EnteredGuests

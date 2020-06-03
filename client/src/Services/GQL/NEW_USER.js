@@ -24,6 +24,8 @@ export const NEW_USER = gql`
       token
       password
       email
+      picture
+      description
       type
       }
       errorOut{

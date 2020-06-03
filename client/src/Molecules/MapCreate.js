@@ -2,6 +2,8 @@ import React, { useContext, useState, useMemo, useCallback } from "react";
 //import GeolocationMarker from 'geolocation-marker'
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+// import { GeolocationMarker } from 'geolocation-marker'
+import GeolocationMarker from 'geolocation-marker'
 
 import { UserContext } from "../userContext";
 
@@ -41,6 +43,8 @@ function MapCreate(props) {
       map: map,
       anchorPoint: new window.google.maps.Point(0, -29)
     });
+
+    var GeoMarker = new window.GeolocationMarker(map);
 
     var input = document.getElementById("input-location");
     var autocomplete = new window.google.maps.places.Autocomplete(input);

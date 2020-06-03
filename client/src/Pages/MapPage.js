@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import ReactDOM from "react-dom";
 import React, {
   useContext,
@@ -20,6 +21,7 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import { WebSocketLink } from "apollo-link-ws";
 import { setContext } from "apollo-link-context";
 import { getMainDefinition } from "apollo-utilities";
+import { GeolocationMarker } from 'geolocation-marker'
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
@@ -29,18 +31,19 @@ import { useQuery } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 
 import { UserContext } from "src/userContext";
-// import { useWindowSize } from "../Hooks/useWindowSize";
 import mapSetup from "../Services/map-settings";
 import { ALL_EVENTS } from "../Services/GQL";
+
 import Map from "../Atoms/MapAtom";
 import InfoWindow from "../Molecules/Infowindow";
-import MapSettingsPanel from "../Molecules/map-settings-panel";
+import MapSettingsPanel from "../Molecules/MapSettingsPanel";
 import DrawerWrap from 'src/Molecules/map/DrawerWrap';
 
 let infoBubble;
 let previousMarker;
 let AllMarkersArr;
 let MapObject;
+
 
 var GQL_ENDPOINT = `http://localhost:4005/graphql`;
 if (process.env.NODE_ENV == "production") {
@@ -104,7 +107,7 @@ function MapPage(props) {
   const [windowHeight, setWindowHeight] = useState(0);
   const [mapOptions, setMapOptions] = useState({
                                           center: props.workingPosition && props.workingPosition.geometry ? props.workingPosition.geometry : { lat: 50.068645, lng: 14.457364 },// ,
-                                          zoom: 10,
+                                          zoom: props.workingPosition && props.workingPosition.zoom ? props.workingPosition.zoom : 10,
                                           disableDefaultUI: true,
                                           zoomControl: true,
                                           //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
@@ -155,20 +158,23 @@ function MapPage(props) {
     props.setWorkingPosition(prev => {return({
       ...prev,
       geometry: { lng: center.lng(), lat: center.lat() },
+      zoom: MapObject.getZoom(),
       date: isoDate
-    })});
+      })
+    });
   };
 
   const onMapMount = useCallback(map => {
     let uniqueArrayOfId = [];
     let UniqArr = [];
     // let dataDB;
-    console.log("Map Mounted:: ", map);
-
+    console.log("Map Mounted:: ", google);
+    // declare var google;
     MapObject = map;
 
+    var GeoMarker = new window.GeolocationMarker(map);
+
     if (data && data.eventGeoDay) {
-      console.log("Data DB: ", data)
       for (var i = 0; i < data.eventGeoDay.length; i++) {
         if (
           uniqueArrayOfId.indexOf(data.eventGeoDay[i]._id) == -1 &&
@@ -335,32 +341,6 @@ function MapPage(props) {
                       openDrawer={openDrawer}
                       redirectLogin={redirectLogin} />
                   </>
-                  //   <ApolloProvider client={client}>
-                  //   <UserContext.Provider value={() => {}} >
-                  //     <Router>
-                  //       <Switch>
-                  //       <Route
-                  //           exact
-                  //           path={`/signin`}
-                  //           render={() => (
-                  //             <>
-                  //                <SignIn propContext={context} propSetContext={setContext}/>
-                  //             </>
-                  //           )}
-                  //         />
-                  //       <Route
-                  //           path={`/`}
-                  //           render={() => (
-                  //             <>
-                  //                {/* <SignIn /> */}
-                  //                <DrawerWrap open={true} event={location} context={context} setContext={setContext} />
-                  //             </>
-                  //           )}
-                  //         />
-                  //      </Switch>
-                  //     </Router>
-                  //   </UserContext.Provider>
-                  // </ApolloProvider>
                   ,
                   document.getElementById("infoWindow")
                 );
@@ -369,15 +349,6 @@ function MapPage(props) {
             infoBubble.open(map, marker);
             previousMarker = location
           }
-          //   var center = map.getCenter();
-          //   if(center){
-          //     props.setWorkingPosition(prev => {return({
-          //       ...prev,
-          //       geolocation: { lat: center.lat(), lng: center.lng() },
-          //       zoom: map.getZoom()
-          //     })});
-          //  }
-          //   setOpen(true)
           });
 
           return marker;
@@ -387,9 +358,10 @@ function MapPage(props) {
   });
 
   useEffect(() => {
-    console.log("Context Map Geo rewrite")
-    if (context.geolocationObj && !props.workingPosition) {
-      console.log("Settig LngLat CONTEXT  ", context.geolocationObj)
+    
+    console.log("Context Map Geo rewrite from actual!!")
+    if (context.geolocationObj && !props.workingPosition.geolocation) {
+      console.log("Settig LngLat from CONTEXT  ", context.geolocationObj)
 
       setMapOptions(prev => {
         return({

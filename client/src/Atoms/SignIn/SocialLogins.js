@@ -4,7 +4,6 @@ import Button from "@material-ui/core/Button";
 
 import FacebookLogin from "react-facebook-login"
 import GoogleLogin from 'react-google-login';
-
 import { useHistory } from "react-router-dom";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
@@ -12,6 +11,8 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { UserContext } from "src/userContext";
 import { NEW_USER } from "src/Services/GQL/NEW_USER"
+
+import Spinner from "src/Atoms/Spinner";
 
 export const LOGINEXTERNAL = gql`
 mutation loginExternal(
@@ -56,7 +57,6 @@ export default function SocialLogins(){
           }
         });
       }
-
   }, [extUser])
 
   //After fbc aproval, login or make new user
@@ -70,12 +70,13 @@ export default function SocialLogins(){
               password: extUser.id,
               description: `Hi, I am ${extUser.name}`,
               picture: extUser.picture,
-              type: "facebook account"
+              type: "social account"
             }
           })
           }
           if(data.loginExternal.dataOut.success){
             window.localStorage.setItem("token", data.loginExternal.dataOut.token);
+            console.log("Setting context in SOcialLogins")
             setContext(prev => {
               return({
                 ...prev,
@@ -90,17 +91,16 @@ export default function SocialLogins(){
             })
             // context.setUserToContext(data.loginExternal.dataOut)
           }
-          
-            console.log("DATA LoginExt: create new user!! ", data.loginExternal.dataOut.success)
-            history.push("/")
+
         }
     }, [data && data.loginExternal])
 
   //Login after creating new user
   useEffect(() => {
-
+    console.log("NSW finished new user: ", newUserStates)
     if(newUserStates && newUserStates.data && newUserStates.data.newUser && newUserStates.data.newUser.dataOut){
       if(newUserStates.data.newUser.dataOut.success){
+        console.log("Setting new user automaticaly when sign in for first tine from fcb/google")
         setContext(prev => {
           return({
             ...prev,
@@ -116,7 +116,13 @@ export default function SocialLogins(){
       } 
     }
 
-  }, [newUserStates && newUserStates.data])
+  }, [newUserStates])
+
+  useEffect(() => {
+    if(context._id){
+      history.push("/")
+    }
+  }, [context._id])
 
     const responseExternal = (response, type) => {
         console.log("FB GG response ", type, response)
@@ -133,7 +139,6 @@ export default function SocialLogins(){
             }
             break;
           case "gg":
-            console.log("Google response: ", response.profileObj)
             if(response.profileObj && response.profileObj.googleId){
               setExtUser({
                 email: response.profileObj.email,
@@ -152,6 +157,25 @@ export default function SocialLogins(){
     let fbContent;
 
         fbContent = (<Grid container className={classes.mainContainer}>
+
+          <Grid item xs={12} className={classes.spinnerWrapGrid}>
+          {newUserStates && newUserStates.loading ?
+            <Grid container justify="center" className={classes.spinnerWrapGridBackdrop}> 
+              <Grid item>
+                <Spinner height={80} width={80} />
+              </Grid>
+            </Grid> 
+            : ''}
+            {loading ? 
+            <Grid container justify="center" className={classes.spinnerWrapGridBackdrop}> 
+              <Grid item >
+                <Spinner height={80} width={80} />
+              </Grid>
+            </Grid>
+            : ""}
+
+          </Grid>
+
           <Grid item xs={12} className={classes.itemFacebook}>
             <Grid container justify="center">
               <Grid item>
@@ -212,6 +236,15 @@ const useStyles = makeStyles(theme => ({
   mainContainer: {
     width: '100%',
     minHeight: 100,
+  },
+  spinnerWrapGrid: {
+    height: 0,
+    zIndex: 100
+  },
+  spinnerWrapGridBackdrop: {
+    height: 128,
+    width: '100%',
+    backgroundColor: 'rgba(255,255,255,0.4)'
   },
   iconGoogle: {
     height: 20,

@@ -15,11 +15,10 @@ import gql from "graphql-tag";
 import { useHistory, NavLink } from "react-router-dom";
 
 import { UserContext } from "../userContext";
-// import { useWindowSize } from "../Hooks/useWindowSize";
 
 import Spinner from "src/Atoms/Spinner";
 
-import SettingsPanel from "../Molecules/play/SettingsPanel";
+import SettingsPanel from "../Molecules/play/XXSettingsPanel";
 import JoinSend from "../Molecules/play/JoinSend";
 
 import PlayPageGallery from "src/Molecules/play/PlayPageGallery";

@@ -5,7 +5,7 @@ import request from "superagent";
 import WallpaperIcon from "@material-ui/icons/Wallpaper";
 import { makeStyles } from "@material-ui/core/styles";
 
-import Spinner from "src/Atoms/Spinner";
+// import Spinner from "src/Atoms/Spinner";
 
 // const CLOUDINARY_UPLOAD_PRESET = "simple-preset-1";
 const CLOUDINARY_UPLOAD_PRESET = "simpl_pst"; 
@@ -15,7 +15,7 @@ const CLOUDINARY_UPLOAD_URL =
   "https://api.cloudinary.com/v1_1/dkyt8girl/upload"; 
 let smallfile;
 
-function MyDropzone(props) {
+function MyDropzone({setFormValue, setCountOfFiles}) {
   const classes = useStyles();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -24,10 +24,13 @@ function MyDropzone(props) {
     // Do something with the files
 
     setIsUploading(true);
-
+  
+    let count = 0 
     acceptedFiles.map(file => {
       handleImageUpload(file);
+      count = count + 1
     });
+    setCountOfFiles(count)
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -105,7 +108,7 @@ function MyDropzone(props) {
           setUploadedFiles([...uplArr]);
           setIsUploading(false);
           setDisplay(true);
-          props.setFormValue(prevValues => {
+          setFormValue(prevValues => {
             return { ...prevValues, ImagesArr: uplArr };
           });
         }
@@ -135,7 +138,7 @@ function MyDropzone(props) {
         )}
         {/* <p>Place HERE your pictures</p> */}
 
-        {isUploading ? <Spinner height={100} width={100} /> : null}
+        {/* {isUploading ? <Spinner height={100} width={100} /> : null} */}
         {display ? (
           <Gallery
             images={uploadedFiles}

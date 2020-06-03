@@ -97,15 +97,15 @@ if (dataOut && dataOut.success) {
 }
 
   
-  if (loading) {
-    return (
-      <ModalLayout>
-        <Paper className={classes.paper}>
-        <Spinner height={40} width={40} />
-        </Paper>
-      </ModalLayout>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <ModalLayout>
+  //       <Paper className={classes.paper}>
+  //       <Spinner height={40} width={40} />
+  //       </Paper>
+  //     </ModalLayout>
+  //   );
+  // }
 
   if (error) {
     return (
@@ -157,7 +157,7 @@ if (dataOut && dataOut.success) {
       <Grid container justify="center">
         <Grid item>
           <Typography component="h1" variant="h5" className={classes.mainHeading}>
-            Sign UP
+           {loading ? "Loading" : "Sign UP"}
           </Typography>
         </Grid>
       </Grid>
@@ -175,8 +175,6 @@ if (dataOut && dataOut.success) {
               <DropzoneSignup setFormValue={setFormValue} formValue={formValue} />
             </Grid>
           </Grid>
-          <form className={classes.form} noValidate>
-
           {errorOut &&
             errorOut.map(item => (
               <Alert severity="error" key={item.message}>
@@ -262,9 +260,7 @@ if (dataOut && dataOut.success) {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={e => {
-              onSubmitHandler(e)
-            }}
+            onClick={onSubmitHandler}
           >
             Sign Up
           </Button>
@@ -280,7 +276,6 @@ if (dataOut && dataOut.success) {
               </Link>
             </Grid>
           </Grid>
-        </form>
         <Box mt={8}>
           <Copyright />
         </Box>
@@ -332,10 +327,6 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.secondary.main,
     height: 100,
     width: 100
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
   },
   submit: {
     margin: theme.spacing(3, 0, 2)

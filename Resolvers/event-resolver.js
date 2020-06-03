@@ -75,7 +75,9 @@ export const resolvers = {
     },
     getJoinEvents: async (_, _args, context) => {
       try {
+        console.log("getJoinEvents: ")
         if (context.reqO.req.isAuth) {
+          console.log("getJoinEvents: 2")
           let nowD = new Date(); // end of duration
           let nextD = new Date().toISOString().split("T")[0];
           nextD = new Date(nextD)

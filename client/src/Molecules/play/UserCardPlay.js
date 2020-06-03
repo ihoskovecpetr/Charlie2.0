@@ -54,8 +54,8 @@ export default function UserCardPlay(props) {
   };
 
   return (<>
-    <Grid container onClick={() => {history.push(`/user/${props.author._id}`)}}>
-      <Grid item xs={4}>
+    <Grid container>
+      <Grid item xs={4} className={classes.clickableProfile} onClick={() => {history.push(`/user/${props.author._id}`)}}>
       <Grid container>
         <Grid item xs={12}>
           <Grid container justify="center">
@@ -135,10 +135,14 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: red[500],
     // color: "lightgrey",
     width: 70,
-    height: 70
+    height: 70,
+    boxShadow: '2px 2px 5px rgba(149, 165, 166, 0.5)'
   },
   text: {
     marginTop: 10,
     marginBottom: 10,
+  },
+  clickableProfile: {
+    cursor: 'pointer'
   }
 }));

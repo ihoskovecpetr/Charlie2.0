@@ -73,7 +73,7 @@ function SignIn({propContext}) {
         history.push(`/event/${window.eventId}`);
       }else{
         console.log("After Sign In Goback")
-        history.goBack();
+        // history.goBack();
       }
     }, 100);
   }
@@ -88,6 +88,7 @@ function SignIn({propContext}) {
 
   if (dataOut && dataOut.success && !localContext.name) {
     window.localStorage.setItem("token", dataOut.token);
+    console.log("document.getElementById(rememberMe).checked: ", document.getElementById("rememberMe").checked)
     setContext(prev => { return {
       ...prev,
       _id: dataOut._id,
@@ -96,7 +97,8 @@ function SignIn({propContext}) {
       email: dataOut.email,
       picture: dataOut.picture,
       description: dataOut.description,
-      token: dataOut.token
+      token: dataOut.token,
+      rememberSignIn: document.getElementById("rememberMe").checked,
     }});
   }
 
@@ -104,7 +106,6 @@ function SignIn({propContext}) {
     e.preventDefault();
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
-    console.log("pass + email: ", password, email);
     login({
       variables: {
         email: email,
@@ -154,10 +155,10 @@ function SignIn({propContext}) {
         <Typography component="h1" variant="h5" className={classes.signInLine} >
           Sign in
         </Typography> 
+        </>}
         <Typography className={classes.signInText}>
           with your social network
         </Typography>
-        </>}
 
         <SocialLogins />
 
@@ -282,7 +283,7 @@ function SignIn({propContext}) {
           )}
 
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={<Checkbox id="rememberMe" color="primary" />}
             label="Remember me"
           />
           <Button

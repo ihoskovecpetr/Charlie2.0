@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { GeolocationMarker } from 'geolocation-marker'
 
 let scriptAdded = false;
 function Map({ options, onMount, className, styling }) {
@@ -14,6 +15,8 @@ function Map({ options, onMount, className, styling }) {
           ref.current,
           options
         );
+        console.log("Looking or geolocmarker")
+
         onMount(map);
       }
     };

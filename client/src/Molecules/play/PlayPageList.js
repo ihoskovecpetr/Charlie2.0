@@ -1,11 +1,17 @@
-import React, {useContext} from "react"
+import React, {useContext, useState} from "react"
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles } from "@material-ui/core/styles";
+import FacebookIcon from '@material-ui/icons/Facebook';
+import LinkIcon from '@material-ui/icons/Link';
 
 import clsx from 'clsx'
+import { useHistory } from "react-router-dom";
 
 import { displayDate } from "../../Services/transform-services";
 import { useXsSize } from "src/Hooks/useXsSize";
@@ -24,6 +30,8 @@ const PlayPageList = ({propContext, propSetContext, event, bookings, GQL_refetch
     const classes = useStyles();
     const { xs_size_memo, md_size_memo } = useXsSize();
     const {context, setContext} = useContext(UserContext)
+    const [openTooltip, setOpenTooltip] = useState(false);
+    let history = useHistory();
     //Count confirmed 
     var confBookings = 0
     if(bookings){
@@ -40,6 +48,18 @@ const PlayPageList = ({propContext, propSetContext, event, bookings, GQL_refetch
       bgColor = "rgba(0,0,0,0.1)"
     } else {
       bgColor = "rgba(0,0,0,0.1)"
+    }
+
+    const handleTooltipClose = () => {
+      setOpenTooltip(false);
+    };
+
+    const handleCopyLink = () => {
+      var copyText = document.getElementById("myInput");
+      copyText.select();
+      copyText.setSelectionRange(0, 99999)
+      document.execCommand("copy");
+      setOpenTooltip(true);
     }
 
     return(
@@ -78,7 +98,7 @@ const PlayPageList = ({propContext, propSetContext, event, bookings, GQL_refetch
                   justify="flex-end">
               <Grid item xs={12}>
                 <Typography variant="subtitle1" className={classes.lineHeader}>
-                  ATTENDEES ({confBookings.length}/{event.capacityMax})
+                  ATTENDEES ({confBookings && confBookings.length}/{event.capacityMax})
                 </Typography>
               </Grid>
               <Grid item xs={10} className={classes.attendeesWrap}>
@@ -136,6 +156,7 @@ const PlayPageList = ({propContext, propSetContext, event, bookings, GQL_refetch
                                 }
                                 return null;
                               })}
+                              {bookings && bookings.length === 0 && <p>No pending guests</p>}
                             {/* {bookingStates.loading && (
                             <Grid container justify="center" alignItems="center" style={{width: "100%", height: 300}}>
                               <Grid item>
@@ -154,13 +175,55 @@ const PlayPageList = ({propContext, propSetContext, event, bookings, GQL_refetch
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <QRCodeEntering bookings={bookings} />
-                </Grid>
-                <Grid item xs={12}>
                   <EnteredGuests bookings={bookings} />
                 </Grid>
+                {event.areYouAuthor &&
+                <Grid item xs={12} className={classes.quoteAccGuest}>
+                  <p>
+                  "Scan QR code from guests email and accept them opening link in QR code."
+                  </p>
+                  <p>More info 
+                    <span className={classes.linkToAbout}
+                      onClick={() => {history.push('/about')}}>
+                      HERE
+                    </span>
+                  </p>
+                  {/* <QRCodeEntering bookings={bookings} /> */}
+                </Grid>
+                }
               </>
               }
+              <Grid item xs={12}>
+                <p className={classes.thisLine}></p>
+                <Typography component="div" className={classes.lineHeader}> 
+                  SHARE                  
+                </Typography>
+              </Grid>
+                <Grid item xs={9}>
+                  <Grid container justify="flex-end">
+                    <TextField id="myInput" className={classes.copyLink} fullWidth variant="outlined" value={`https://www.charliehouseparty.club/play/${event._id}`} />
+                  </Grid>
+                </Grid>
+
+                <Grid item xs={3}>
+                  <Grid container justify="center">
+                    <Tooltip 
+                        title="link copied" 
+                        PopperProps={{
+                          disablePortal: true,
+                        }}
+                        onClose={handleTooltipClose}
+                        open={openTooltip}
+                        disableFocusListener
+                        disableHoverListener
+                        disableTouchListener
+                        placement="top">
+                      <Button variand="outlined" color="primary" onClick={handleCopyLink}><LinkIcon /> copy Link </ Button>
+                    </Tooltip>
+                  </Grid>
+                </Grid>
+                
+
             </Grid>
         </Grid>
       </Grid>
@@ -201,7 +264,26 @@ const useStyles = makeStyles(theme => ({
         minHeight: 60,
  
       },
-
+      linkToAbout: {
+        textDecoration: 'underline',
+        fontWeight: 500
+      },
+      copyLink: {
+        color: 'white',
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        borderRadius: 5,
+        cursor: 'copy'
+      },
+      quoteAccGuest:{
+        padding: 10
+      },
+      copyLinkSpan: {
+        color: 'primary',
+        width: '100%',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+      },
       listRow:{
         width: '100%',
         marginTop: 2,
