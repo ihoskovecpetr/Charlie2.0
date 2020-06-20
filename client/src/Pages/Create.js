@@ -196,10 +196,6 @@ function Create(props) {
     };
 
     const empty = findEmpty(load);
-    console.log("formValue.ImagesArr: empty: ", formValue.ImagesArr, empty);
-    if (formValue.ImagesArr.length === 0) {
-      empty.push("Images Array");
-    }
     if (empty.length == 0) {
       createEvent({
         variables: load,

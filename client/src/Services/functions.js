@@ -5,6 +5,10 @@ export const findEmpty = (obj) => {
     if (!value && value != false) {
       empty.push(key);
     }
+
+    if (value && Array.isArray(value) && value.length === 0) {
+      empty.push("Images Array");
+    }
   }
 
   return empty;
