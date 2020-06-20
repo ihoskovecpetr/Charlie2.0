@@ -3,22 +3,26 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import RoomIcon from '@material-ui/icons/Room';
 import EventIcon from '@material-ui/icons/Event';
+import ReplyIcon from '@material-ui/icons/Reply';
 import { makeStyles } from "@material-ui/core/styles";
 
 import countdown from "countdown";
+import { useHistory } from "react-router-dom";
 
-import { UserContext } from "src/userContext";
 import { displayDate } from "src/Services/transform-services";
 import { useCountDistance } from "src/Hooks/useCountDistance";
 import { useXsSize } from "src/Hooks/useXsSize";
 import { useCountdown } from "src/Hooks/useCountdown";
 
+import PartyOn from "src/Atoms/PartyOn";
+
 
 const ListTopHalf = ({event, context, transparent}) => {
-  console.log("ListTopHalf: cotnext: ", context)
+  console.log("ListTopHalf: event: ", event)
     const classes = useStyles();
     const { counteddownDate } = useCountdown(event.dateStart, 1)
     const { xs_size_memo, md_size_memo } = useXsSize();
+    let history = useHistory();
     const distance = useCountDistance(event.geometry.coordinates[1], event.geometry.coordinates[0], context.geolocationObj && context.geolocationObj.lat, context.geolocationObj && context.geolocationObj.lng, "K")
 
     let bgColor = "transparent"
@@ -41,9 +45,15 @@ const ListTopHalf = ({event, context, transparent}) => {
                   justify="center"
                   className={classes.nameAndPrice} 
                   >
+              {event.happeningNow && 
+              <Grid item xs={12} className={classes.partyOnGrid}>
+                <PartyOn />
+              </Grid>
+              }
               <Grid item xs={8}>
-                <Typography variant="h4" className={classes.mainHeader}>
-                {event.name}
+                <Typography variant="h4" className={classes.mainHeader} onClick={() => {history.push(`/event/${event._id}`)}}>
+                  <span className={classes.mainHdrBut} >{event.name} <ReplyIcon /></span>
+                  
                 </Typography>
               </Grid>
               <Grid item xs={4}>
@@ -131,6 +141,15 @@ const useStyles = makeStyles(theme => ({
         fontSize: 30,
         fontWeight: 600,
         padding: 10,
+        // border: '1px solid grey',
+        // borderRadius: 5
+      },
+      mainHdrBut: {
+        // border: '1px solid grey',
+        borderRadius: 5,
+        padding: 5,
+        backgroundColor: 'rgba(0,0,0,0.1)',
+        cursor: 'pointer'
       },
       headerPrice:{
         fontSize: 20,
@@ -157,6 +176,9 @@ const useStyles = makeStyles(theme => ({
       },
       descWrap:{
         padding: 20
+      },
+      partyOnGrid: {
+        marginTop: 10
       },
   }));
 

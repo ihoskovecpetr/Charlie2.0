@@ -1,9 +1,9 @@
 import React, { useEffect, useContext, useState } from "react";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import CloseIcon from '@material-ui/icons/Close';
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
-import Chip from '@material-ui/core/Chip';
+import CloseIcon from "@material-ui/icons/Close";
+import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
+import Chip from "@material-ui/core/Chip";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { withRouter, NavLink, useHistory } from "react-router-dom";
@@ -29,19 +29,18 @@ const CANCEL_EVENT = gql`
   }
 `;
 
-
-function EventButtons({event, propContext}) {
+function EventButtons({ event, propContext }) {
   const classes = useStyles();
   let history = useHistory();
   const { context } = useContext(UserContext);
-  const {loading, data, error} = useQuery(EVENT_BOOKINGS, {
-    variables: { event_id: event._id }
+  const { loading, data, error } = useQuery(EVENT_BOOKINGS, {
+    variables: { event_id: event._id },
   });
   const [deleteBooking, deleteBookingStates] = useMutation(DELETE_BOOKING);
   const [cancelEvent, cancelEventState] = useMutation(CANCEL_EVENT);
   const [localContext, setLocalContext] = useState({});
 
-  const [printComponents, setPrintComponents] = useState([])
+  const [printComponents, setPrintComponents] = useState([]);
 
   const [stateOfMyBooking, setStateOfMyBooking] = useState({
     userIsAtt: null,
@@ -49,30 +48,28 @@ function EventButtons({event, propContext}) {
     userIsDecl: null,
     eventIsPast: null,
     userIsAuthor: null,
-  })
+  });
 
-  console.log("RERENDER EVENTBTNS: ", propContext)
+  console.log("RERENDER EVENTBTNS: ", propContext);
 
   useEffect(() => {
-    if(propContext){
-      setLocalContext(propContext)
-    }else{
-      setLocalContext(context)
+    if (propContext) {
+      setLocalContext(propContext);
+    } else {
+      setLocalContext(context);
     }
-  },[context, propContext])
-
+  }, [context, propContext]);
 
   useEffect(() => {
-
-      let userIsAtt = false
-      let userIsPend = false
-      let userIsDecl = false
-      let eventIsPast = false
-      let userIsAuthor = false
+    let userIsAtt = false;
+    let userIsPend = false;
+    let userIsDecl = false;
+    let eventIsPast = false;
+    let userIsAuthor = false;
 
     if (event.author._id === localContext._id) {
-      console.log("UserIsAuthor")
-      userIsAuthor = true
+      console.log("UserIsAuthor");
+      userIsAuthor = true;
     }
 
     if (event.dateEnd) {
@@ -80,282 +77,322 @@ function EventButtons({event, propContext}) {
       const eventDate = new Date(event.dateEnd);
 
       if (todayDate < eventDate) {
-        console.log("EventIsFuture")
-        eventIsPast = false
+        console.log("EventIsFuture");
+        eventIsPast = false;
       } else {
-        console.log("EventIsPast")
-        eventIsPast = true
+        console.log("EventIsPast");
+        eventIsPast = true;
       }
     }
-    
+
     if (data && data.showBookings && !userIsAuthor) {
-      
       // First filter only booking of current user
-      const filteredUserBooking = data.showBookings.filter(booking => booking.user._id === localContext._id)
-      console.log("FILTERED BOOKING: ", filteredUserBooking)
+      const filteredUserBooking = data.showBookings.filter(
+        (booking) => booking.user._id === localContext._id
+      );
+      console.log("FILTERED BOOKING: ", filteredUserBooking);
       // First filter only booking of current user
-       filteredUserBooking.map(booking => {
+      filteredUserBooking.map((booking) => {
+        console.log("JUDGEING THIS BOOKING: ", booking);
 
-          console.log("JUDGEING THIS BOOKING: ", booking)
+        if (!booking.confirmed && !booking.cancelled && !booking.decided) {
+          console.log("UserIsPending");
+          userIsPend = true;
+        }
 
-          if (!booking.confirmed && !booking.cancelled && !booking.decided) {
-            console.log("UserIsPending")
-            userIsPend = true
-          }
+        if (booking.confirmed && !booking.cancelled && booking.decided) {
+          console.log("UserIsAtt");
+          userIsAtt = true;
+        }
 
-          if (booking.confirmed && !booking.cancelled && booking.decided) {
-            console.log("UserIsAtt")
-            userIsAtt = true
-          }
-
-          if (!booking.confirmed && !booking.cancelled && booking.decided) {
-            console.log("UserIsDeclined")
-            userIsDecl = true
-          }
+        if (!booking.confirmed && !booking.cancelled && booking.decided) {
+          console.log("UserIsDeclined");
+          userIsDecl = true;
+        }
       });
     }
 
-    console.log("StateOfMyBooking: Att, Pend, Decl, Past, Author ", userIsAtt, userIsPend, userIsDecl, eventIsPast, userIsAuthor)
+    console.log(
+      "StateOfMyBooking: Att, Pend, Decl, Past, Author ",
+      userIsAtt,
+      userIsPend,
+      userIsDecl,
+      eventIsPast,
+      userIsAuthor
+    );
 
     setStateOfMyBooking({
       userIsAtt: userIsAtt,
       userIsPend: userIsPend,
       userIsDecl: userIsDecl,
       eventIsPast: eventIsPast,
-      userIsAuthor: userIsAuthor
-    })
-
+      userIsAuthor: userIsAuthor,
+    });
   }, [event, event._id, data, localContext, data && data.showBookings]);
 
   const alertCancelBooking = () => {
-    var r = window.confirm("Are you sure you want to cancel this booking request?");
+    var r = window.confirm(
+      "Are you sure you want to cancel this booking request?"
+    );
     if (r == true) {
       deleteBooking({
-      variables: {
-        user_id: localContext._id,
-        event_id: event._id
-      },
-      refetchQueries: () => [
-        {
-          query: GET_ONE_EVENT,
-          variables: { event_id: event._id }
+        variables: {
+          user_id: localContext._id,
+          event_id: event._id,
         },
-        {
-          query: EVENT_BOOKINGS,
-          variables: { event_id: event._id }
-        },
-        {
-          query: ALL_EVENTS,
-          variables: {
-            date: new Date(event.dateStart)
-              .toISOString()
-              .split("T")[0]
-          }
-        },
-        {
-          query: PROFILE_DATA,
-          variables: { host_id: localContext._id }
-        },
-        {
-          query: PLAY_EVENTS_QUERY,
-          variables: {
-            plusDays: localContext.playFilterObj.filterOn ? localContext.playFilterObj.plusDays : 10000,
-            lng: localContext.playFilterObj.geolocationPlay ? localContext.playFilterObj.geolocationPlay.lng : null,
-            lat: localContext.playFilterObj.geolocationPlay ? localContext.playFilterObj.geolocationPlay.lat : null,
-            radius: localContext.playFilterObj.filterOn ? localContext.playFilterObj.radius : 9999999,
-            shownEvents: localContext.playFilterObj.shownEvents
-          }
-        }
-      ]
-    });
+        refetchQueries: () => [
+          {
+            query: GET_ONE_EVENT,
+            variables: { event_id: event._id },
+          },
+          {
+            query: EVENT_BOOKINGS,
+            variables: { event_id: event._id },
+          },
+          {
+            query: ALL_EVENTS,
+            variables: {
+              date: new Date(event.dateStart).toISOString().split("T")[0],
+            },
+          },
+          {
+            query: PROFILE_DATA,
+            variables: { host_id: localContext._id },
+          },
+          {
+            query: PLAY_EVENTS_QUERY,
+            variables: {
+              plusDays: localContext.playFilterObj.filterOn
+                ? localContext.playFilterObj.plusDays
+                : 10000,
+              lng: localContext.playFilterObj.geolocationPlay
+                ? localContext.playFilterObj.geolocationPlay.lng
+                : null,
+              lat: localContext.playFilterObj.geolocationPlay
+                ? localContext.playFilterObj.geolocationPlay.lat
+                : null,
+              radius: localContext.playFilterObj.filterOn
+                ? localContext.playFilterObj.radius
+                : 9999999,
+              shownEvents: localContext.playFilterObj.shownEvents,
+            },
+          },
+        ],
+      });
     } else {
-      return
+      return;
     }
-  }
+  };
 
   const cancelEventHandle = () => {
     var r = window.confirm("Are you sure you want to calcel this event?");
     if (r == true) {
-    cancelEvent({
-      variables: {
-        event_id: event._id
-      },
-      refetchQueries: () => [
-        {
-          query: ALL_EVENTS,
-          variables: { date: new Date().toISOString() } //TODO..
+      cancelEvent({
+        variables: {
+          event_id: event._id,
         },
-        {
-          query: GET_ONE_EVENT,
-          variables: { event_id: event._id }
-        },
-        {
-          query: EVENT_BOOKINGS,
-          variables: { event_id: event._id }
-        },
-      ]
-    });
-  }else{
-    return
-  }
-  }
+        refetchQueries: () => [
+          {
+            query: ALL_EVENTS,
+            variables: { date: new Date().toISOString() }, //TODO..
+          },
+          {
+            query: GET_ONE_EVENT,
+            variables: { event_id: event._id },
+          },
+          {
+            query: EVENT_BOOKINGS,
+            variables: { event_id: event._id },
+          },
+        ],
+      });
+    } else {
+      return;
+    }
+  };
 
-
-useEffect(() => {
-
-const ArrOfComponents = []
-  // ACTIVE EVENT
-  if(event && !event.hide && event.author._id != localContext._id 
-    && localContext._id && !stateOfMyBooking.eventIsPast && !stateOfMyBooking.userIsDecl  
-    && !stateOfMyBooking.userIsPend && !stateOfMyBooking.userIsDeclined){
-    ArrOfComponents.push(
-     <JoinSend event={event} localContext={localContext}/>
-     )
-}
-
-  // NO LOGED IN
-  if (!localContext.name){
-    ArrOfComponents.push(
-      <Chip 
-      label={`LOGIN first`} 
-      icon={<CloseIcon />}
-      color="secondary" 
-      className={classes.chipOne} 
-      onClick={() => { history.push("/signin")}}
-      />
-    )
-
-  }
-  // CANCELLED EVENT
-  if (event && event.hide){
-    ArrOfComponents.push(
-        <Chip 
-        label={`CANCELLED by author`} 
-        icon={<CloseIcon />}
-        color="primary" 
-        disabled={true}
-        className={classes.chipOne} 
-        />
-    )
-  }
-
-    // USER DECLINED BY AUTHOR
-    if (stateOfMyBooking.userIsDecl){
+  useEffect(() => {
+    const ArrOfComponents = [];
+    // ACTIVE EVENT
+    if (
+      event &&
+      !event.hide &&
+      event.author._id != localContext._id &&
+      localContext._id &&
+      !stateOfMyBooking.eventIsPast &&
+      !stateOfMyBooking.userIsDecl &&
+      !stateOfMyBooking.userIsPend &&
+      !stateOfMyBooking.userIsDeclined
+    ) {
       ArrOfComponents.push(
-          <Chip 
-          label={`You got DECLINED`} 
-          icon={<CloseIcon />}
-          color="primary" 
-          disabled={true}
-          className={classes.chipOne} 
-          />
-      )
+        <JoinSend event={event} localContext={localContext} />
+      );
     }
 
-  
-  // PAST EVENT
-  if (stateOfMyBooking.eventIsPast) {
-    ArrOfComponents.push(
-        <Chip 
-        label={`PAST EVENT`} 
-        icon={<CloseIcon />}
-        color="primary" 
-        disabled={true}
-        className={classes.chipOne} 
-      />
-      )
+    // NO LOGED IN
+    if (!localContext.name) {
+      ArrOfComponents.push(
+        <Button
+          startIcon={<CloseIcon />}
+          color="secondary"
+          variant="contained"
+          fullWidth
+          className={classes.chipOne}
+          onClick={() => {
+            history.push("/signin");
+          }}
+        >
+          LOGIN first
+        </Button>
+      );
+    }
+    // CANCELLED EVENT
+    if (event && event.hide) {
+      ArrOfComponents.push(
+        <Button
+          label={``}
+          icon={<CloseIcon />}
+          color="primary"
+          variant="contained"
+          fullWidth
+          disabled={true}
+          className={classes.chipOne}
+        >
+          CANCELLED by author
+        </Button>
+      );
+    }
+
+    // PAST EVENT
+    if (stateOfMyBooking.eventIsPast) {
+      ArrOfComponents.push(
+        <Button
+          startIcon={<CloseIcon />}
+          color="primary"
+          variant="contained"
+          disabled={true}
+          fullWidth
+          className={classes.chipOne}
+        >
+          PAST EVENT
+        </Button>
+      );
     }
 
     // USER is Pending
-    if(localContext._id && stateOfMyBooking.userIsPend ){
-    ArrOfComponents.push(
-        <Chip 
-        label={`Pendining request`} 
-        icon={<HourglassEmptyIcon />}
-        color="primary" 
-        disabled={true}
-        className={classes.chipOne} 
-      />
-      )
-    }
-
-        // USER is Declined
-        if(localContext._id && stateOfMyBooking.userIsDecl ){
-          ArrOfComponents.push(
-              <Chip 
-              label={`Declined request`} 
-              icon={<CloseIcon />}
-              color="primary" 
-              disabled={true}
-              className={classes.chipOne} 
-            />
-            )
-          }
-
-// PAST EVENT RATE OR RATED
-  if (localContext._id && stateOfMyBooking.eventIsPast && stateOfMyBooking.userIsAtt) {
-    ArrOfComponents.push( 
-      <ModalRate
-        event={event}
-      />
-            )
-    }
-
-    if(localContext._id && (stateOfMyBooking.userIsAtt || stateOfMyBooking.userIsPend) && !stateOfMyBooking.eventIsPast){
+    if (localContext._id && stateOfMyBooking.userIsPend) {
       ArrOfComponents.push(
-      <Chip 
-        label={`CANCEL your ${stateOfMyBooking.userIsAtt ? 'attendance' : 'request'}`} 
-        icon={<CloseIcon />}
-        color="secondary" 
-        className={classes.chipOne} 
-        onClick={alertCancelBooking}
-        />
-  )}
+        <Button
+          startIcon={<HourglassEmptyIcon />}
+          color="primary"
+          variant="contained"
+          // disabled={true}
+          fullWidth
+          className={classes.chipOne}
+        >
+          Pending request
+        </Button>
+      );
+    }
 
-  // OWNER of active event
+    // USER is Declined
+    if (localContext._id && stateOfMyBooking.userIsDecl) {
+      ArrOfComponents.push(
+        <Button
+          icon={<CloseIcon />}
+          color="primary"
+          variant="contained"
+          disabled={true}
+          fullWidth
+          className={classes.chipOne}
+        >
+          Declined request
+        </Button>
+      );
+    }
 
-  if(!stateOfMyBooking.eventIsPast && stateOfMyBooking.userIsAuthor && !event.hide){
-    ArrOfComponents.push(
-      <Chip 
-        label={`CANCEL this event`} 
-        icon={<CloseIcon />}
-        color="secondary" 
-        className={classes.chipOne} 
-        onClick={cancelEventHandle}
-        />
-     )
+    // PAST EVENT RATE OR RATED
+    if (
+      localContext._id &&
+      stateOfMyBooking.eventIsPast &&
+      stateOfMyBooking.userIsAtt
+    ) {
+      ArrOfComponents.push(<ModalRate event={event} />);
+    }
+
+    if (
+      localContext._id &&
+      (stateOfMyBooking.userIsAtt || stateOfMyBooking.userIsPend) &&
+      !stateOfMyBooking.eventIsPast
+    ) {
+      ArrOfComponents.push(
+        <Button
+          startIcon={<CloseIcon />}
+          color="secondary"
+          variant="contained"
+          fullWidth
+          className={classes.chipOne}
+          onClick={alertCancelBooking}
+        >
+          {`CANCEL your ${
+            stateOfMyBooking.userIsAtt ? "attendance" : "request"
+          }`}
+        </Button>
+      );
+    }
+
+    // OWNER of active event
+
+    if (
+      !stateOfMyBooking.eventIsPast &&
+      stateOfMyBooking.userIsAuthor &&
+      !event.hide
+    ) {
+      ArrOfComponents.push(
+        <Button
+          icon={<CloseIcon />}
+          color="secondary"
+          variant="contained"
+          fullWidth
+          className={classes.chipOne}
+          onClick={cancelEventHandle}
+        >
+          CANCEL this event
+        </Button>
+      );
+    }
+    setPrintComponents(ArrOfComponents);
+  }, [event, stateOfMyBooking]);
+
+  console.log(
+    `EventButtons stateOfMyBooking for event: ${event.name} is:`,
+    stateOfMyBooking
+  );
+  return printComponents.map((item) => {
+    return item;
+  });
 }
-setPrintComponents(ArrOfComponents)
 
-},[event, stateOfMyBooking ])
-
-
-console.log(`EventButtons stateOfMyBooking for event: ${event.name} is:`, stateOfMyBooking )
-  return printComponents.map(item => {
-    return item
-  })
-}
-
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   buttonCls: {
     margin: 10,
-    width: "50%"
+    width: "50%",
   },
   disabledBtn: {
-    background: "white !important"
+    background: "white !important",
   },
   trueBtn: {
     width: "100%",
     height: 60,
-    borderRadius: 0
+    borderRadius: 0,
   },
   chipOne: {
-    width: "90%", 
-    fontWeight: 500, 
-    fontSize: 25, 
-    padding: 5, 
-    margin: "5%"
-    },
+    // width: "90%",
+    // fontWeight: 500,
+    fontSize: 22,
+    // padding: 5,
+    // margin: "5%"
+  },
 }));
 
 export default EventButtons;

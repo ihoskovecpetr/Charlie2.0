@@ -47,7 +47,6 @@ function Play() {
     window.scrollTo(0, 0);
   }, [context.playFilterObj]);
 
-
   useEffect(() => {
 
     return (() => {
@@ -116,11 +115,11 @@ function Play() {
     </Container>
 
     <Container
-      maxWidth="xs"
+      maxWidth="sm"
       className={classes.playContainer}
     >
-        {context.name && !context.playFilterObj.geolocationPlay &&
-        <NoLocationBck />}
+        {/* {context.name && !context.playFilterObj.geolocationPlay &&
+        <NoLocationBck />} */}
 
             {loading && (
               <Grid container justify="center" alignItems='center' className={classes.loadingGridCont}>
@@ -153,7 +152,7 @@ function Play() {
               alignContent="center"
               style={{ width: "100%" }}
             >
-              <div style={{width: "100%", display: "block", marginTop: 80}}>
+              <div style={{width: "100%", display: "block", marginTop: 110}}>
 
                   <PlayPageGallery event={data.getJoinEvents[0]} />
                   <PlayPageList

@@ -20,12 +20,32 @@ userSchema = new Schema({
     type: String,
     required: true
   },
+  telephone: {
+    type: String,
+    required: false
+  },
   password: {
     type: String,
     required: true
   },
-  type: {
+  confirmed: {
+    type: Boolean,
+    required: false
+  },  
+  socialId: {
     type: String,
+    required: false
+  },
+  typeSocial: {
+    type: Boolean,
+    required: false
+  },
+  typeDirect: {
+    type: Boolean,
+    required: false
+  },
+  rememberSignIn: {
+    type: Boolean,
     required: false
   },
   createdEvents: [

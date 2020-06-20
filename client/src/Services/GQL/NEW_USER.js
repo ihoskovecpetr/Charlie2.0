@@ -4,18 +4,22 @@ export const NEW_USER = gql`
   mutation newUser(
     $name: String!
     $email: String!
+    $telephone: String
     $password: String!
     $description: String!
     $picture: String
-    $type: String
+    $typeSocial: Boolean
+    $typeDirect: Boolean
   ) {
     newUser(
       name: $name
       email: $email
+      telephone: $telephone
       password: $password
       description: $description
       picture: $picture
-      type: $type
+      typeSocial: $typeSocial
+      typeDirect: $typeDirect
     ) {
       dataOut{
       success
@@ -24,9 +28,11 @@ export const NEW_USER = gql`
       token
       password
       email
+      telephone
       picture
       description
-      type
+      typeSocial
+      typeDirect
       }
       errorOut{
         name

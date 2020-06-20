@@ -53,6 +53,10 @@ app.get("/accept/:event_id/:user_id", (req, res, next) => {
   res.sendFile(path.join(__dirname, "build/index.html"));
 });
 
+app.get("/confirm/:user_id", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "build/index.html"));
+});
+
 app.get("/signup", (req, res, next) => {
   res.sendFile(path.join(__dirname, "build/index.html"));
 });

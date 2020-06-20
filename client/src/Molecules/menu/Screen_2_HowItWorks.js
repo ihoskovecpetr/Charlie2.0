@@ -1,4 +1,4 @@
-import React, { useState, useRef} from "react";
+import React, { useState, useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -33,30 +33,40 @@ export default function ScreenHowItWorks() {
           //MainScreenMemo
         }
         <Grid container className={classes.gridMainContainer}>
-        <Grid item xs={12}>
-          <Typography variant="h3" component="p" className={classes.headingMain}>
-            HOW DOES IT WORK?
-          </Typography>
+          <Grid item xs={12}>
+            <Typography
+              variant="h3"
+              component="p"
+              className={classes.headingMain}
+            >
+              HOW DOES IT WORK?
+            </Typography>
+          </Grid>
+          <HowItWorksItem
+            image={CreatePNG}
+            location={"create"}
+            subtitle={"CREATE"}
+            text={"Create event and wait for guests"}
+          />
+          <HowItWorksItem
+            image={ChoosePNG}
+            location={"create"}
+            subtitle={"CHOOSE"}
+            text={"choose guests who can attend your event"}
+          />
+          <HowItWorksItem
+            image={PartyPNG}
+            location={"create"}
+            subtitle={"PARTY"}
+            text={"Accept guests and collect your entry fee"}
+          />
         </Grid>
-            <HowItWorksItem 
-                image={CreatePNG} 
-                subtitle={"CREATE"} 
-                text={"Have You ever done something unforgetable"} />
-            <HowItWorksItem  
-                image={ChoosePNG} 
-                subtitle={"CHOOSE"} 
-                text={"Have You ever done something unforgetable"} />
-            <HowItWorksItem 
-                image={PartyPNG} 
-                subtitle={"PARTY"} 
-                text={"Have You ever done something unforgetable"} />
-       </Grid>
       </Container>
     </div>
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container_1: {
     // height: "100vh",
     color: "black",
@@ -68,10 +78,9 @@ const useStyles = makeStyles(theme => ({
     margin: 50,
     fontSize: 26,
     textAlign: "center",
-    letterSpacing: 3
+    letterSpacing: 3,
   },
-  gridMainContainer:{
-    paddingBottom: 20
+  gridMainContainer: {
+    paddingBottom: 20,
   },
-
 }));

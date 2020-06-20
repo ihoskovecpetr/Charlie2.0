@@ -97,14 +97,7 @@ const SettingsPanel = ({loading}) => {
     switch(value.target.value){
       case "Praha":
         console.log("Set location on Prague")
-          // setContext(prev => {
-          //   return { ...prev, 
-          //     playFilterObj: {
-          //       ...prev.playFilterObj,
-          //       geolocationPlay: {lng: 14.40076 , lat: 50.08804}
-          //   }};
-          // });
-          setContextPlayLocation({lng: 14.40076 , lat: 50.08804})
+        setContextPlayLocation({lng: 14.40076 , lat: 50.08804})
 
         break;
       case "Brno":
@@ -167,12 +160,11 @@ const SettingsPanel = ({loading}) => {
       </Backdrop>
 
       <Container
-          maxWidth="xs"
+          maxWidth="sm"
           className={classes.playContainer}
-          style={{padding: 0}}
           onClick={(e) => {e.preventDefault()}}
         >
-      <Grid container className={clsx(classes.eggContainerTop, checked && classes.solidColor)}>
+      <Grid container className={clsx(classes.eggContainerTop)}>
         <Grid item xs={10}>
             <Grid container onClick={handleChange}>
 
@@ -202,16 +194,32 @@ const SettingsPanel = ({loading}) => {
                 </Grid>            
                 <Grid item xs={2}>
                   <Grid container justify="center">
-                    <Grid item xs={12}>
-                        <Chip label={!loading ? `${context.playFilterObj.shownEvents.length + 1}/${context.playFilterObj.playEventsCount}` : null} 
-                              icon={loading && <CircularProgress style={{height: 20, width: 20, color: 'white', left: 6, position: "relative"}} />}
+                    <Grid item>
+                        {/* <Chip label={!loading ? `${context.playFilterObj.shownEvents.length + 1}/${context.playFilterObj.playEventsCount}` : null} 
+                              icon={loading && <CircularProgress style={{height: 20, width: 20, color: 'white', left: 0, position: "relative"}} />}
                               variant="default" 
                               color="secondary"
-                              className={classes.anyChip} />
+                              className={classes.anyChip} /> */}
+                              {loading ? <CircularProgress style={{height: 20, width: 20, color: 'white', left: 0, position: "relative"}} /> 
+                              : <Typography variant="h6">{`${context.playFilterObj.shownEvents.length + 1}/${context.playFilterObj.playEventsCount}`}</Typography>}
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={6} className={classes.turnOffItem}>
+                  <Grid container justify="center">
+                    <Grid item>
+                      <FormControlLabel control={<Switch  
+                                              checked={context.playFilterObj.filterOn} 
+                                              onChange={handleFilterOnOff}
+                                              onClick={(e) => {e.stopPropagation()}}
+                                              value="checkedA"
+                                              inputProps={{ 'aria-label': 'secondary checkbox' }}
+                                                />} 
+                            label={`filter ${context.playFilterObj.filterOn ? "ON" : "OFF"}`} />
+                      </Grid> 
+                    </Grid> 
+                  </Grid>  
+                <Grid item xs={6}>
                   <Select
                     labelId="demo-controlled-open-select-label"
                     id="demo-controlled-open-select"
@@ -221,12 +229,14 @@ const SettingsPanel = ({loading}) => {
                     defaultValue={"Current"}
                     classes={{
                       root: classes.select, // class name, e.g. `classes-nesting-root-x`
+                      select: !context.playFilterObj.filterOn && classes.selectText,
                       icon: classes.selectIcon, // class name, e.g. `classes-nesting-label-x`
                     }}
                     onChange={setCityLocation}
+                    // style={{color: context.playFilterObj.filterOn ? "#59F0EA" : '#D1D0D0'}}
                   >
                     <MenuItem value={"Current"}>
-                      <em>{context.curPositionAddress ? context.curPositionAddress : 'loading...'}</em>
+                      <em>{context.curPositionAddress ? context.curPositionAddress : 'Praha, loading...'}</em>
                     </MenuItem>
                     <MenuItem value={"Praha"}>Prague</MenuItem>
                     <MenuItem value={"Brno"}>Brno</MenuItem>
@@ -257,9 +267,6 @@ const SettingsPanel = ({loading}) => {
                               } 
                             }
                             style={{color: context.playFilterObj.filterOn ? '#E8045D' : '#D1D0D0'}}
-                              // valueLabelDisplay="auto"
-                              // aria-labelledby="range-slider"
-                              // getAriaValueText={valuetext}
                           /> 
                       </Grid>
                       <Grid item xs={2}>
@@ -283,10 +290,7 @@ const SettingsPanel = ({loading}) => {
                                   min={0}
                                   max={7}
                                   disabled={!context.playFilterObj.filterOn}
-                                  onChangeCommitted={(e_, value) => {
-                                    handleChangeDays(e_ , value)
-                                  } 
-                                }
+                                  onChangeCommitted={handleChangeDays}
                                   style={{color: context.playFilterObj.filterOn ? "#59F0EA" : '#D1D0D0'}}
                             /> 
                       </Grid>
@@ -295,18 +299,8 @@ const SettingsPanel = ({loading}) => {
                             + {context.playFilterObj.plusDays} days
                           </Typography>
                       </Grid>
-
                   </Grid>
                 </Collapse>  
-                <Grid item xs={12} className={classes.turnOffItem}>
-                      <FormControlLabel control={<Switch  checked={context.playFilterObj.filterOn} 
-                                              onChange={handleFilterOnOff}
-                                              onClick={(e) => {e.stopPropagation()}}
-                                              value="checkedA"
-                                              inputProps={{ 'aria-label': 'secondary checkbox' }}
-                                      />} 
-                            label={`filter ${context.playFilterObj.filterOn ? "ON" : "OFF"}`} />
-                      </Grid>   
                 
                 </Grid>
                 {/* <Grid item xs={2} className={classes.arrowGrid} style={{display: "none"}} >
@@ -337,9 +331,7 @@ const SettingsPanel = ({loading}) => {
                         shownEvents: []
                       }
                     }});
-                    setTimeout(() => {
                       history.goBack()
-                    }, 100)
                     }}
                     />
               </Grid>
@@ -362,6 +354,9 @@ const useStyles = makeStyles(theme => ({
     zIndex: 100,
     touchAction: "none"
   },
+  playContainer: {
+    padding: 0
+  },
   eggContainerTop: {
     // height: "36px", //"16"
     width: '100%',
@@ -369,16 +364,15 @@ const useStyles = makeStyles(theme => ({
     paddingTop: "12px",
     paddingBottom: "4px",
     paddingLeft: "5px",
-    //top: '30px',
     position: "relative",
-    backgroundColor: "rgba(0,0,0,1)",
+    backgroundColor: "rgba(0,0,0,0.7)",
   },
   backdropMain: {
     zIndex: 10
   },
-  solidColor:{
-    backgroundColor: "rgba(0,0,0,1)",
-  },
+  // solidColor:{
+  //   backgroundColor: "rgba(0,0,0,1)",
+  // },
   itm:{
     padding: 0,
     height: '100%', 
@@ -408,6 +402,9 @@ const useStyles = makeStyles(theme => ({
     borderColor: 'white',
     borderRadius: 5
     // backgroundColor: "white",
+  },
+  selectText: {
+    color: 'white'
   },
   selectIcon: {
     color: 'white'

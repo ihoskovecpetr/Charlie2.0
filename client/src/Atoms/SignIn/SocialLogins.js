@@ -11,39 +11,18 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { UserContext } from "src/userContext";
 import { NEW_USER } from "src/Services/GQL/NEW_USER"
+import { UPDATE_USER } from "src/Services/GQL/UPDATE_USER"
+import { LOGIN_EXTERNAL } from "src/Services/GQL/LOGIN_EXTERNAL";
 
 import Spinner from "src/Atoms/Spinner";
-
-export const LOGINEXTERNAL = gql`
-mutation loginExternal(
-        $email: String!,
-        $id: String!
-      ){
-        loginExternal(email: $email, id: $id) {
-            dataOut{
-                success
-                _id
-                name
-                email
-                description
-                picture
-                token
-                
-                }
-            errorOut{
-                  name
-                  message
-                }
-        }
-      }
-`;
 
 export default function SocialLogins(){
     const classes = useStyles();
     const [extUser, setExtUser] = useState()
     const { context, setContext } = useContext(UserContext);
-    const [loginExt, { loading, error, data }] = useMutation(LOGINEXTERNAL);
+    const [loginExt, { loading, error, data }] = useMutation(LOGIN_EXTERNAL);
     const [newUser, newUserStates] = useMutation(NEW_USER);
+    const [updateUser, updateUserStates] = useMutation(UPDATE_USER)
     let history = useHistory();
     var GoogleV = 'https://res.cloudinary.com/party-images-app/image/upload/v1557462915/vgvduspc6s8j368y1ras.png'
 
@@ -67,28 +46,61 @@ export default function SocialLogins(){
             variables: {
               name:  extUser.name,
               email:  extUser.email,
-              password: extUser.id,
+              password: "FAKE_FAKE",
+              socialId: extUser.id,
               description: `Hi, I am ${extUser.name}`,
               picture: extUser.picture,
-              type: "social account"
+              typeSocial: true,
+              typeDirect: false, 
             }
           })
           }
           if(data.loginExternal.dataOut.success){
-            window.localStorage.setItem("token", data.loginExternal.dataOut.token);
-            console.log("Setting context in SOcialLogins")
-            setContext(prev => {
-              return({
-                ...prev,
-                _id: data.loginExternal.dataOut._id,
-                success: data.loginExternal.dataOut.success,
-                name: data.loginExternal.dataOut.name,
-                email: data.loginExternal.dataOut.email,
-                picture: data.loginExternal.dataOut.picture,
-                description: data.loginExternal.dataOut.description,
-                token: data.loginExternal.dataOut.token
+            //user already existed, just find out if it was already social or not yes
+            if(data.loginExternal.dataOut.typeSocial){
+              window.localStorage.setItem("token", data.loginExternal.dataOut.token);
+              setContext(prev => {
+                return({
+                  ...prev,
+                  _id: data.loginExternal.dataOut._id,
+                  success: data.loginExternal.dataOut.success,
+                  name: data.loginExternal.dataOut.name,
+                  email: data.loginExternal.dataOut.email,
+                  telephone: data.loginExternal.dataOut.telephone,
+                  picture: data.loginExternal.dataOut.picture,
+                  description: data.loginExternal.dataOut.description,
+                  token: data.loginExternal.dataOut.token
+                })
               })
-            })
+            }else{
+              updateUser({
+                variables: {
+                  _id: data.loginExternal.dataOut._id,
+                  socialId: extUser.id,
+                  description: data.loginExternal.dataOut.description,
+                  name: data.loginExternal.dataOut.name,
+                  picture: data.loginExternal.dataOut.picture,
+                  typeSocial: true,
+                  typeDirect: data.loginExternal.dataOut.typeDirect
+                },
+              })
+              //set user info without doublechecking how update went (for now, TODO: later) 
+              window.localStorage.setItem("token", data.loginExternal.dataOut.token);
+              setContext(prev => {
+                return({
+                  ...prev,
+                  _id: data.loginExternal.dataOut._id,
+                  success: data.loginExternal.dataOut.success,
+                  name: data.loginExternal.dataOut.name,
+                  email: data.loginExternal.dataOut.email,
+                  picture: data.loginExternal.dataOut.picture,
+                  description: data.loginExternal.dataOut.description,
+                  token: data.loginExternal.dataOut.token
+                })
+              })
+
+            }
+
             // context.setUserToContext(data.loginExternal.dataOut)
           }
 
@@ -118,11 +130,11 @@ export default function SocialLogins(){
 
   }, [newUserStates])
 
-  useEffect(() => {
-    if(context._id){
-      history.push("/")
-    }
-  }, [context._id])
+  // useEffect(() => {
+  //   if(context._id){
+  //     history.goBack();
+  //   }
+  // }, [context._id])
 
     const responseExternal = (response, type) => {
         console.log("FB GG response ", type, response)

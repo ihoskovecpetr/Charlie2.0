@@ -380,7 +380,8 @@ function MapPage(props) {
       setMapOptions(prev => {
         return({
           ...prev,
-          center: props.workingPosition.geometry
+          center: props.workingPosition.geometry,
+          zoom: props.workingPosition.zoom
         })
       })
     }

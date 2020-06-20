@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext, useMemo } from "react";
-import Container from "@material-ui/core/Container";
-import Alert from '@material-ui/lab/Alert';
-
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from "@material-ui/core/styles";
 
-import ReactFullpage from "@fullpage/react-fullpage";
 
 // import "./Menu.css";
 
@@ -28,38 +27,11 @@ import BlogPost1 from "../Molecules/menu/blog/BlogPost1";
 import BlogPost2 from "../Molecules/menu/blog/BlogPost2";
 import BlogPost3 from "../Molecules/menu/blog/BlogPost3";
 
-// const USER_NEW_BOOKINGS = gql`
-//   mutation newestUserBookings($user_id: ID!) {
-//     newestUserBookings(user_id: $user_id) {
-//       event {
-//         _id
-//         name
-//         description
-//         dateStart
-//         imagesArr {
-//           caption
-//           src
-//           thumbnail
-//           thumbnailHeight
-//           thumbnailWidth
-//           scaletwidth
-//           marginLeft
-//           vwidth
-//         }
-//         author {
-//           _id
-//           name
-//           picture
-//         }
-//       }
-//     }
-//   }
-// `;
 
 export default function Menu(props) {
   const classes = useStyles();
 
-  // const { context } = useContext(UserContext);
+  const { context, setContext } = useContext(UserContext);
   const { xs_size_memo } = useXsSize();
   const [windowHeight, setWindowHeight] = useState(0);
 
@@ -75,6 +47,8 @@ export default function Menu(props) {
     window.scrollTo(0, 0);
   }, []);
 
+
+
   useEffect(() => {
     console.log(
       "UseEffect Find out if document has property onclick ",
@@ -85,6 +59,33 @@ export default function Menu(props) {
 
   }, []);
 
+  useEffect(() => {
+
+    function handleToken(ev){
+      console.log("BEFORE UNLOAD: ", context.rememberSignIn)
+      ev.preventDefault();
+      if(!context.rememberSignIn){
+        console.log("DELETING TOKEN: ")
+        window.localStorage.setItem("token", `_deleted_COZ_notrembr${context.rememberSignIn}`)
+      }
+    }
+
+    console.log("Setting beforeunload listener", context.rememberSignIn)
+    window.addEventListener("beforeunload", handleToken);
+
+    return(() => {
+      console.log("Removing beforeunload listener")
+      window.removeEventListener("beforeunload", handleToken);
+    })
+  },[context.rememberSignIn]);
+
+
+  const handleCloseAlert = () => {
+    setContext(prev => { return {
+      ...prev,
+      showAlertAdviseEmail: false,
+    }});
+  }
 
   // if (context.success) {
   //   {
@@ -98,106 +99,28 @@ export default function Menu(props) {
     callbacks: ["onLeave"],
     scrollOverflow: true
   };
-if( false){ //!xs_size_memo &&
-  //   return (
-  //   <ReactFullpage
-  //     {...props}
-  //     slidesNavigation={false}
-  //     navigation={!xs_size_memo}
-  //     //navigationTooltips={["firstSlide", "secondSlide"]}
-  //     onLeave={function(origin, destination, direction) {
-  //       switch (destination.index) {
-  //         case 1:
-  //           document.getElementById("s_2_id").style.display = "block";
-  //           break;
-  //         case 2:
-  //           document.getElementById("s_3_id").style.display = "block";
-  //           break;
-  //         case 3:
-  //           document.getElementById("s_4_id").style.display = "block";
-  //           break;
-  //         case 4:
-  //           if (document.getElementById("s_posts_id")) {
-  //             document.getElementById("s_posts_id").style.display = "block";
-  //           } else {
-  //             document.getElementById("s_post_1_id").style.display = "block";
-  //           }
-  //           break;
-  //         case 5:
-  //           if (document.getElementById("s_post_2_id")) {
-  //             document.getElementById("s_post_2_id").style.display = "block";
-  //           }
-  //           break;
-  //         case 6:
-  //           if (document.getElementById("s_post_3_id")) {
-  //             document.getElementById("s_post_3_id").style.display = "block";
-  //           }
-  //           break;
-  //       }
-  //     }}
-  //     render={({ state, fullpageApi }) => {
-  //       // if (fullpageApi) {
-  //       //   // fullpageApi.setAllowScrolling(user.freezScroll);
-  //       // }
 
-  //         return (
-  //           <div id="fullpage-wrapper" >
-  //             <Screen1 />
-  //             <Screen2 />
-  //             <Screen3 //loading={loading} data={data} 
-  //             />
-  //             <Screen4 props={props} />
-
-  //             {/* {xs_size_memo && (
-  //               <>
-  //               <div
-  //                 className="section s5"
-  //                 id="s_post_1_id"
-  //                 //style={{ display: "none" }}
-  //               >
-  //                 <Container maxWidth="md">
-  //                   <BlogPost1 />
-  //                 </Container>
-  //               </div>
-  //               <div
-  //                 className="section s6"
-  //                 id="s_post_2_id"
-  //                 //style={{ display: "none" }}
-  //               >
-  //                 <Container maxWidth="md">
-  //                   <BlogPost2 />
-  //                 </Container>
-  //               </div>
-  //               <div
-  //                 className="section s7"
-  //                 id="s_post_3_id"
-  //                 //style={{ display: "none" }}
-  //                 >
-  //                 <Container maxWidth="md">
-  //                   <BlogPost3 />
-  //                 </Container>
-  //               </div>
-  //               </>
-  //             )} */}
-
-  //             {/* {!xs_size_memo && ( */}
-  //               <div className="section s5">
-  //                 <Posts />
-  //               </div>
-  //             {/* )} */}
-
-  //             <Screen6 />
-  //           </div>
-  //       );
-  //     }}
-  //   />
-  // );
-} else {
-    // document.getElementById("s_2_id").style.display = "block";
-    // document.getElementById("s_3_id").style.display = "block";
-    // document.getElementById("s_4_id").style.display = "block";
   return (
       <div id="menu_wrap" className={classes.menuWrap} style={{position: "absolute", top: 0, overflow: "hidden"}}>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        severity="info"
+        open={context.showAlertAdviseEmail}
+        classes={{
+          root: classes.rootSnackbar
+        }}
+        // autoHideDuration={6000}
+        onClose={handleCloseAlert}
+        message="Successfully signed up! Go to email and cofirm your identity by clicking on link"
+        action={
+            <IconButton size="small" aria-label="close" color="inherit" onClick={handleCloseAlert}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
+        }
+      />
         {xs_size_memo ? <Screen1Mobile /> : <Screen1 />}
         <ScreenHowItWorks />
         <Screen2 />
@@ -210,7 +133,6 @@ if( false){ //!xs_size_memo &&
         <Screen6 />
       </div>
   )
-}
 
 }
 
@@ -252,6 +174,9 @@ const useStyles = makeStyles(theme => ({
   pinkContainer: {
     //ackground: theme.palette.charliePink,
     //color: "white",
+  },
+  rootSnackbar: {
+    backgroundColor: 'skyblue'
   },
   defaultHeader: {
     color: theme.palette.charliePink,

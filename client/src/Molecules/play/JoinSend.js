@@ -1,15 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Chip from '@material-ui/core/Chip';
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import DoneIcon from '@material-ui/icons/Done';
-import CloseIcon from '@material-ui/icons/Close';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
 import SendIcon from '@material-ui/icons/Send';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import clsx from "clsx";
 import { useMutation } from "@apollo/react-hooks";
@@ -49,7 +49,6 @@ export default function JoinSend({event, localContext}) {
     const classes = useStyles();
     let history = useHistory();
     const [checked, setChecked] = useState(false);
-    const [sending, setSending] = useState(false);
     // const [refetched, setRefetched] = useState(false);
 
     const [localState, setLocalState] = useState({
@@ -91,7 +90,7 @@ export default function JoinSend({event, localContext}) {
         setChecked(true)
         setTimeout(() => { 
           window.scrollBy({
-          top: 200,
+          top: 300,
           left: 0,
           behavior: 'smooth'
         }); }, 100);
@@ -106,7 +105,7 @@ export default function JoinSend({event, localContext}) {
             ...prev, 
             message: "Sending",
             attending: true,
-            icon: [<HourglassEmptyIcon fontSize="large" />]
+            icon: [<Spinner color="primary" height={30} width={30} />]
       }))
         createReqBooking({
             variables: {
@@ -149,16 +148,19 @@ export default function JoinSend({event, localContext}) {
 
     return (
         <>
-        <Chip 
-        label={`${localState.message}`} 
-        // icon={attending && <DoneIcon fontSize="large" />}
-        icon={localState.icon[0]}
-        //variant="outlined" 
-        color="secondary" 
-        className={classes.chipOne} 
-        onClick={openJoin}
-        disabled={checked || localState.attending || localState.pending}
-        />
+        <Button 
+          // label={} 
+          // icon={attending && <DoneIcon fontSize="large" />}
+          startIcon={localState.icon[0]}
+          //variant="outlined" 
+          color="secondary" 
+          variant="contained"
+          fullWidth
+          className={classes.chipOne} 
+          onClick={openJoin}
+          disabled={checked || localState.attending || localState.pending}>
+            {localState.message}
+        </Button>
         <Grid container
             className={clsx(classes.sendJoinContainer, checked && classes.openSend, )}
             alignItems="center">
@@ -180,7 +182,7 @@ export default function JoinSend({event, localContext}) {
                     margin="normal"
                     required
                     fullWidth
-                    defaultValue="Hi, let me please come and pay you money :)"
+                    defaultValue="Hi, let me please come and have a great experience :)"
                     multiline
                     rows="4"
                     color="primary"
@@ -189,12 +191,15 @@ export default function JoinSend({event, localContext}) {
                     autoComplete="false"
                     className={classes.textField}
                     />
-                    <Chip label={`SEND`} 
+                    <Button
                         color="secondary" 
+                        variant="contained"
+                        fullWidth
                         icon={<SendIcon fontSize="large" />}
                         className={classes.chipSend}
-                        onClick={sendBooking}
-                        />
+                        onClick={sendBooking}>
+                          SEND
+                          </Button>
                 </Animated>
                 <div id="bottomAnchor"></div>
             </Grid>
@@ -245,17 +250,20 @@ const useStyles = makeStyles(theme => ({
         display: "block",
       },
     chipOne: {
-      width: "90%", 
-      fontWeight: 500, 
-      fontSize: 25, 
-      padding: 20, 
-      margin: "5%"
+      // width: "90%", 
+      // fontWeight: 500, 
+      fontSize: 22, 
+      // padding: 20, 
+      // margin: "5%"
+      },
+    textField: {
+      marginBottom: 5
       },
     chipSend: {
       width: "90%", 
-      fontWeight: 500, 
-      fontSize: 25, 
-      padding: 20, 
+      // fontWeight: 500, 
+      fontSize: 22, 
+      // padding: 20, 
       margin: "5%" 
     }
   

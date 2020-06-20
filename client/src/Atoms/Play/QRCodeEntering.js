@@ -10,11 +10,7 @@ import { UserContext } from "src/userContext";
 //import QRCodePNG from "src/Images/QR.png"
 import Dropzone_QR from "./Dropzone_QR"
 
-import jsQR from "jsqr";
 
-import QrCode from 'qrcode-reader';
-
-// import qrCode from "jsqrcode"
 
 const QRCodeEntering = ({bookings}) => {
     const [qrCodeData, setQrCodeData] = useState();

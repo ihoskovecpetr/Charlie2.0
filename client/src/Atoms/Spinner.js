@@ -11,13 +11,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Spinner({height, width}) {
+export default function Spinner({height, width, color}) {
   const classes = useStyles();
 
   return (
     <div className={classes.spinnerWrap}>
       <CircularProgress
-        color="secondary"
+        color={color ? color : "secondary"}
         style={{ height: height, width: width }}
       />
     </div>

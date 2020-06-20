@@ -1,6 +1,7 @@
 import React from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -73,6 +74,17 @@ const FullpageWrapper = fullpageProps => {
                     how much you want to earn per each guest.. only guests
                     will decide :)
                   </Typography>
+                  <Typography variant="h6" component="h6" className={classes.defaultSubHeader}>
+                    How to accept guests?
+                  </Typography>
+                  <Typography component="p" className={classes.defaultParagraph}>
+                    Guest will arrive to your flat with Entry ticket in his phone. 
+                    (received in the attachment of confirmation email). 
+                    Scan this QR code with any QR code scanner (iPhone users just open their camera and point to QR code)
+                    Then open link included in the QR code.
+                    Accept guest.  
+                  </Typography>
+                  <Divider />
                   <div className={classes.formidableMentions}>
                     <p>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></p>
                     <p>Icons made by <a href="https://www.flaticon.com/authors/icongeek26" title="Icongeek26">Icongeek26</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></p>

@@ -18,7 +18,7 @@ import { useXsSize } from "src/Hooks/useXsSize";
 import { UserContext } from "src/userContext";
 
 import ListTopHalf from "src/Atoms/Play/ListTopHalf";
-import QRCodeEntering from "src/Atoms/Play/QRCodeEntering";
+// import QRCodeEntering from "src/Atoms/Play/QRCodeEntering";
 import PendingGuest from "../event/PendingGuest";
 import ConfirmedGuest from "../event/ConfirmedGuest";
 import UserCardPlay from "./UserCardPlay";

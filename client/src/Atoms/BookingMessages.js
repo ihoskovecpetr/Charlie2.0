@@ -10,12 +10,15 @@ export default function BookingMessages({ booking }) {
   return (
           <Grid item>
               <Grid container>
-                  <Grid item xs={12}>
+                  <Grid item xs={12} className={classes.messageContainer}>
                     {booking && <UserAskMessage 
                         user={booking.user} 
                         message={booking.message} />}
+                    </Grid>
+                    <Grid item xs={12} className={classes.messageContainer}>
                     {booking.response && <UserAskMessage
                         reverse={true}
+                        decided={booking.decided}
                         user={booking.event.author}
                         message={booking.response}
                         confirmed={booking.confirmed}
@@ -27,5 +30,10 @@ export default function BookingMessages({ booking }) {
 }
 
 const useStyles = makeStyles(theme => ({
-
+  
+  messageContainer: {
+    backgroundColor: "rgba(0,0,0,0.38)",
+    borderRadius: 10,
+    margin: 5
+  },
 }));

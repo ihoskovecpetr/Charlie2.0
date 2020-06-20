@@ -7,17 +7,15 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 
-import { useMutation, useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 import { withRouter, useHistory } from "react-router-dom";
 import {useSpring, animated} from 'react-spring'
 
-export default function UserAskMessage({ user, message, reverse }) {
+export default function UserAskMessage({ user, message, reverse, confirmed, decided}) {
   const classes = useStyles();
   let history = useHistory(); 
-  const [value, setValue] = React.useState(2);
   const swingIn = useSpring({transform: "translateX(0px)", opacity: 1, from: {opacity: 0, transform: "translateX(-100px)"}})
-
+  console.log("UserAskMessage: confirmed: ", confirmed)
+  
   return (
     <animated.div style={swingIn}>
     <Grid container 
@@ -51,9 +49,11 @@ export default function UserAskMessage({ user, message, reverse }) {
       </Grid>
       <Grid item xs={8}>
         <Grid container>
-          {/* <Grid item >
-          <SubHeader />
-        </Grid> */}
+          <Grid item xs={12}>
+            {decided && <Typography variant="subtitle2" className={classes.textConfirmed}>
+              {confirmed ? "GRANTED" : "DECLINED"}
+            </Typography>}
+          </Grid>
 
           <Grid item xs={12}>
             <Typography variant="subtitle2" className={classes.text}>
@@ -69,9 +69,9 @@ export default function UserAskMessage({ user, message, reverse }) {
 
 const useStyles = makeStyles(theme => ({
   containerMain: {
-    padding: 10,
-    paddingLeft: 30,
-    paddingRight: 30
+    padding: 5,
+    paddingLeft: 20,
+    paddingRight: 20
   },
   avatar: {
     backgroundColor: "red",
@@ -83,6 +83,10 @@ const useStyles = makeStyles(theme => ({
     marginTop: 10,
     marginBottom: 10,
     textAlign: "center",
+    fontWeight: 500,
+  },
+  textConfirmed: {
     fontWeight: 600,
+    textAlign: "center",
   }
 }));

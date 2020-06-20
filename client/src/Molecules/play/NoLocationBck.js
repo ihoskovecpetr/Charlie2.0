@@ -16,10 +16,24 @@ const NoLocationBck = ({event}) => {
     const { context, setContext } = useContext(UserContext);
 
     const setCityLocation = (value) => {
+      var geolocationOfCity = {}
+      switch(value) {
+        case 'Praha':
+          geolocationOfCity = {lng: 14.42076 , lat: 50.08804}
+          break;
+        case 'Brno':
+          geolocationOfCity = {lng: 14.42076 , lat: 50.08804}
+          break;
+        case 'Ostrava':
+          geolocationOfCity = {lng: 14.42076 , lat: 50.08804}
+          break;
+        default:
+          // code block
+      }
         setContext(prev => {
-            return { ...prev, geolocationObj: {lng: 14.42076 , lat: 50.08804}};
+            return { ...prev, geolocationObj: geolocationOfCity};
           });
-    }
+    }  
 
     return(
         <Backdrop
@@ -52,9 +66,9 @@ const NoLocationBck = ({event}) => {
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value={10}>Prague</MenuItem>
-                      <MenuItem value={20}>Sydney</MenuItem>
-                      <MenuItem value={30}>Gold Coast</MenuItem>
+                      <MenuItem value='Praha'>Praha</MenuItem>
+                      <MenuItem value='Brno'>Brno</MenuItem>
+                      <MenuItem value='Ostrava'>Ostrava</MenuItem>
                     </Select>
                     </FormControl>
                   </Grid>

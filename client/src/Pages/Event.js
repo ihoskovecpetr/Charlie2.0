@@ -61,7 +61,7 @@ function Event(props) {
   const PaperEvent = props => {
     return <Paper 
                   className={classes.paper}
-                  style={{marginTop: window.eventId ? "8vh" : "10vh", height: 0.85 * windowHeight}}
+                  style={{marginTop: window.eventId ? "10vh" : "10vh", height: 0.9 * windowHeight}}
                   >
               {props.children}
           </Paper>;

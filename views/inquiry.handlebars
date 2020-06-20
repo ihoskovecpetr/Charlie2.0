@@ -58,6 +58,7 @@ a {
 	width: 90%;
 	max-width: 610px;
 	margin: 0 auto;
+    margin-bottom: 5px;
 	background-color: #FFF;
 	border-radius: 6px;
 	margin-top: 5px;
@@ -67,6 +68,7 @@ a {
     text-align: center;
     font-size: 0;
     padding: 5px 0 10px 0;
+    margin-bottom: 5px;
 }
 .two-column .section {
     width: 100%;
@@ -166,8 +168,8 @@ p.center {
     background: #E8045D;
     color: #000;
     text-decoration: none;
-    padding: 9px 16px;
-    border-radius: 28px;
+    padding: 5px 8px;
+    border-radius: 14px;
     margin: 10px;
 }
 /*--- Start Two Column Image & Text Sections --*/
@@ -361,6 +363,7 @@ img.img-responsive {
 .line{
     width: 100%;
     text-align: center;
+    margin: 3px;
 }
 
 .creator{
@@ -399,14 +402,15 @@ console.log("EventId: ", {{eventURL}})
     				<td class="one-column ticket">
     					<table>
     						<tr>
-    							<td class="inner-td td-ticket">                           
+    							<td class="inner-td td-ticket">
+                                <div class="line dark"><p>Event</p></div>
+                                <div class="line"><p ><b>{{event_name}}</b></p></div>                           
                                 <div class="line dark"><p>Inquiry from:</p></div>
                                 <div class="line"><p ><b>{{guest_name}}</b></p></div>
                                 <div class="line dark"><p>inquiry message</p></div>
                                 <div class="line"><p><b>{{guest_inquiry}}</b></p></div>
-                                <div class="line break-up dark"><p>Open Event</p></div>
                                 <p class="button-holder-center">
-                                <a class="btn" href={{eventURL}} target="_blank">{{event_name}}</a>
+                                <a class="btn" href={{eventURL}} target="_blank">Open Profile</a>
                         </p>
     							</td>
     						</tr>

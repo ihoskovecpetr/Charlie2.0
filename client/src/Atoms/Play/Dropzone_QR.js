@@ -8,9 +8,8 @@ import QrCode from 'qrcode-reader';
 
 import Spinner from "src/Atoms/Spinner";
 
-var Instascan = require('instascan');
 
-function MyDropzone({setQrCodeData}) {
+function Dropzone_QR({setQrCodeData}) {
   const classes = useStyles();
   const [isUploading, setIsUploading] = useState(false);
   const [loadedImage, setLoadedImage] = useState(null);
@@ -79,29 +78,9 @@ function MyDropzone({setQrCodeData}) {
       }
 
       reader.readAsDataURL(file);
-
-      // var barcodeDetector = new BarcodeDetector();
-
-      // let id = devices.filter((device) => device.kind === "videoinput").slice(-1).pop().deviceId;
-      // let constrains = {video: {optional: [{sourceId: id }]}};
-
-      // navigator.mediaDevices.getUserMedia({}).then((stream) => {
-      //   console.log("stream: ", stream)
-      //   document.getElementById('preview').src = stream;
-      // })
     });
   }, []);
 
-  // var scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
-  // scanner.addListener('scan', function (content, image) {
-  //   console.log(content);
-  // });
-
-  // Instascan.Camera.getCameras().then(function (cameras) {
-  //   if (cameras.length > 0) {
-  //     scanner.start(cameras[0]);
-  //   }
-  // });
 
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });

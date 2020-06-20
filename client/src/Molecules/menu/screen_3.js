@@ -2,19 +2,17 @@ import React, { useState, useEffect, useContext, useMemo } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
 
 import { Animated } from "react-animated-css";
-
-import { makeStyles } from "@material-ui/core/styles";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-// import "../../Pages/Menu.css";
-import { UserContext } from "../../userContext";
+import { UserContext } from "src/userContext";
 
-import Spinner from "../../Atoms/Spinner";
+import Spinner from "src/Atoms/Spinner";
 import LoginFirstBoard from "src/Atoms/LoginFirstBoard";
-import EventCard from "../../Atoms/EventCard";
+import EventCard from "src/Atoms/EventCard";
 
 const USER_NEW_BOOKINGS = gql`
   mutation newestUserBookings($user_id: ID!) {
@@ -44,42 +42,30 @@ const USER_NEW_BOOKINGS = gql`
   }
 `;
 
+let Sorted = [];
 
 export default function Screen3(props) {
   const classes = useStyles();
   const { context } = useContext(UserContext);
   const [newBookingsArr, { loading, error, data }] = useMutation(
-    USER_NEW_BOOKINGS,
-    {
-      variables: { user_id: context._id }
-    }
+    USER_NEW_BOOKINGS
   );
 
-  let Sorted = [];
-
-  if (context.success) {
-    {
-      !loading && !data && newBookingsArr();
-    }
-  }
-
   useEffect(() => {
-    if (context.success && context._id) {
-        newBookingsArr()
+    if (context.success && context._id && !loading && !data) {
+      newBookingsArr({ variables: { user_id: context._id } });
     }
-
   }, [context]);
 
-  // if (props.idx === 3) {
-  //   console.log("Ano podminka");
-  // }
-  if (data) {
-    Sorted = data.newestUserBookings.filter(item => {
-      if(item.event)return true
-      return false})
+  useEffect(() => {
+    if (data) {
+      Sorted = data.newestUserBookings.filter((item) => {
+        if (item.event) return true;
+        return false;
+      });
 
-    if(Sorted.length >= 2){
-          Sorted = data.newestUserBookings.sort(function(a, b) {
+      if (Sorted.length >= 2) {
+        Sorted = data.newestUserBookings.sort(function(a, b) {
           let aDate = new Date(a.event.dateStart);
           let bDate = new Date(b.event.dateStart);
           if (aDate > bDate) {
@@ -89,14 +75,16 @@ export default function Screen3(props) {
             return -1;
           }
         });
+      }
     }
-
-  }
+  }, [data]);
 
   return (
     <div className="section s3">
       <Container maxWidth="sm" className={classes.container_2}>
-        <Grid item id="s_3_id" // style={{ display: "none" }}
+        <Grid
+          item
+          id="s_3_id" // style={{ display: "none" }}
         >
           <Animated
             animationIn="bounceInLeft"
@@ -113,7 +101,7 @@ export default function Screen3(props) {
 
         <Grid item xs={12}>
           <Grid justify="center" container>
-            <Grid item >
+            <Grid item>
               {!loading && !data && <LoginFirstBoard />}
               {loading && <Spinner height={100} width={100} />}
               {Sorted.map((event, index) => {
@@ -123,6 +111,9 @@ export default function Screen3(props) {
                   return <p>You have got no upconning event</p>;
                 }
               })}
+              {data && Sorted.length === 0 && (
+                <Typography> You dont have an upcomming event </Typography>
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -131,11 +122,11 @@ export default function Screen3(props) {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container_2: {
     color: "black",
     paddingTop: 80,
-    paddingBottom: 80
+    paddingBottom: 80,
   },
 
   defaultHeader: {
@@ -143,13 +134,13 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 300,
     paddingTop: 20,
     fontSize: 20,
-    margin: 10
+    margin: 10,
   },
   containerIframe: {
-    width: "100%"
+    width: "100%",
   },
   iFrame: {
     width: "100%",
-    height: 250
-  }
+    height: 250,
+  },
 }));

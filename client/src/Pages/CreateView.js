@@ -246,6 +246,7 @@ function CreateView({
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardTimePicker margin="normal" id="time-picker" inputRef={inputTime}
                   //label="Time picker"
+                  className={classes.dateField}
                   value={formValue.startDate}
                   onChange={e => {
                     handleDateChange(e);
@@ -429,6 +430,24 @@ function CreateView({
               />
             }
           />
+          <InputLabel htmlFor="standard-adornment-amount">IMAGES</InputLabel>
+          <Grid
+            container
+            justify="center"
+            alignContent="center"
+            className={clsx(classes.formRow, classes.dropContainer)}
+          >
+            <Grid item>
+              <Dropzone setFormValue={setFormValue} setCountOfFiles={setCountOfFiles}/>
+            </Grid>
+            <Grid 
+              item 
+              xs={12}>
+            {(countOfFiles > formValue.ImagesArr.length) ? <Spinner height={40} width={40} /> : <div className={classes.fourtyBox}></div>}
+             <LinearProgress variant="determinate" value={formValue.ImagesArr.length ? ((formValue.ImagesArr.length/countOfFiles)*100) : 0} />
+             </Grid>
+          </Grid>
+
           <InputLabel htmlFor="standard-adornment-amount">
             DESCRIPTION
           </InputLabel>
@@ -452,29 +471,6 @@ function CreateView({
                 autoComplete="false" //improvisation, should be "off", or random "string"
               />
             </Grid>
-          </Grid>
-          <InputLabel htmlFor="standard-adornment-amount">IMAGES</InputLabel>
-          <Grid
-            container
-            justify="center"
-            alignContent="center"
-            className={classes.formRow}
-          >
-            <Grid
-              item
-              xs={12}
-              className={classes.dropContainer}
-            >
-              <Dropzone setFormValue={setFormValue} setCountOfFiles={setCountOfFiles}/>
-             
-            </Grid>
-            <Grid 
-              item 
-              xs={12} 
-              className={classes.dropContainerBottom}>
-            {(countOfFiles > formValue.ImagesArr.length) ? <Spinner height={40} width={40} /> : <div className={classes.fourtyBox}></div>}
-             <LinearProgress variant="determinate" value={formValue.ImagesArr.length ? ((formValue.ImagesArr.length/countOfFiles)*100) : 0} />
-             </Grid>
           </Grid>
 
           {errorOut &&
@@ -547,7 +543,9 @@ const useStyles = makeStyles(theme => ({
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0
   },
-
+  dateField: {
+    wdith: 200
+  },
   justDoIt: {
     fontWeight: 200,
     fontSize: 25,
@@ -587,9 +585,6 @@ const useStyles = makeStyles(theme => ({
   fourtyBox:{
     height: 40,
     width: 40
-  },
-  textField: {
-    width: 200
   },
   formRow: {
     marginTop: 10,

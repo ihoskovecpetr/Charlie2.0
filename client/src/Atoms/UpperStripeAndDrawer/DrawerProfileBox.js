@@ -3,10 +3,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Chip from "@material-ui/core/Chip";
+import Button from "@material-ui/core/Button";
 import Badge from '@material-ui/core/Badge';
 import Typography from '@material-ui/core/Typography';
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import { useCountUnseenBookingsRatings } from "src/Hooks/useCountUnseenBookingsRatings";
 
 import { NavLink, useHistory } from "react-router-dom";
 
@@ -53,6 +55,7 @@ export default function DrawerProfileBox({handleDrawerToggle}) {
   const classes = useStyles();
   const { context, setContext } = useContext(UserContext);
   let history = useHistory();
+  const {countHostBookings, countUserBookings, countRatings} = useCountUnseenBookingsRatings()
 
   const Out = () => {
     context.deleteToken()
@@ -70,13 +73,16 @@ export default function DrawerProfileBox({handleDrawerToggle}) {
             <Grid item xs={12}>
                 <Grid container justify='center' alignItems="center" className={classes.middlePart}>
                     <Grid item onClick={handleDrawerToggle}>
-                        <NavLink
-                            to={`/profile`}
-                            >
-                            <Avatar className={classes.avatar} src={context.picture}>
-                                <AccountCircleIcon  fontSize="large" onClick={SignIn} />
-                            </Avatar>
-                        </NavLink>
+                        <Badge badgeContent={countHostBookings + countUserBookings + countRatings} 
+                        color="secondary">
+                            <NavLink
+                                to={`/profile`}
+                                >
+                                <Avatar className={classes.avatar} src={context.picture}>
+                                    <AccountCircleIcon  fontSize="large" onClick={SignIn} />
+                                </Avatar>
+                            </NavLink>
+                        </Badge>
                     </Grid>
                 </Grid>
             </Grid>
@@ -85,50 +91,36 @@ export default function DrawerProfileBox({handleDrawerToggle}) {
             <Grid container justify='center' alignItems="center" className={classes.bottomPart}>
             {context.name && <>
             <Grid item className={classes.actBtns} onClick={handleDrawerToggle}>
-            <Badge badgeContent={context.countUnseenBookings + context.countUnseenRatings} 
+            {/* <Badge badgeContent={countHostBookings + countUserBookings + countRatings} 
                     color="secondary">
                 <NavLink to={`/profile`}>
-                    {/* <Chip
-                    className={classes.chip}
-                    // avatar={
-                    //   <Avatar
-                    //     alt={booking.user.name}
-                    //     src={booking.user.picture}
-                    //   >
-                    //     M
-                    //   </Avatar>
-                    // }
-                    label="Actions"
-                    style={{ color: "white"}}
-                    /> */}
                         <Typography component="p">
-                            ACTIVITY
+                            PROFILE INFO
                         </Typography>
                 </NavLink>
-            </Badge>
+            </Badge> */}
             </Grid>
             <Grid item onClick={Out} >
-                <Chip
+                <Button
                     className={classes.chipOutline}
-                    // avatar={<Avatar style={{backgroundColor: "#696565"}}><ExitToAppIcon fontSize="small" style={{color: "white"}} /></Avatar>}
+                    startIcon={<ExitToAppIcon fontSize="small" style={{color: "white"}} />}
                     label="SIGN OUT"
                     // color="secondary"
                     style={{color: "white", borderColor: "white"}}
                     variant="outlined"
-                    />
+                    > SIGN OUT </Button>
             </Grid>
             </>}
             {!context.name &&             
             <Grid item onClick={SignIn} >
-                    <Chip
-                        className={classes.chipOutline}
-                        
-                        label="SIGN IN"
-                        // color="secondary"
-                        style={{color: "white", borderColor: "white"}}
-                        variant="outlined"
-                        
-                      />
+                <Button
+                    className={classes.chipOutline}
+                    startIcon={<ExitToAppIcon fontSize="small" style={{color: "white"}} />}
+                    
+                    // color="secondary"
+                    style={{color: "white", borderColor: "white"}}
+                    variant="outlined"
+                    > SIGN IN</Button>
             </Grid>
             }
             </Grid>

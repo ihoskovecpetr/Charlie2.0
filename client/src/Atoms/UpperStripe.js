@@ -33,7 +33,9 @@ function UpperStripe({drawerWidth, location, handleDrawerToggle, ListOfNames, Li
   const { context } = useContext(UserContext);
   let history = useHistory(); 
   const {displayPlay_memo} = useScrollY({y: 10})
-  useCountUnseenBookingsRatings()
+  const {countHostBookings, countUserBookings, countRatings} = useCountUnseenBookingsRatings()
+
+  console.log("Upper Stripe: countHostBookings, countUserBookings, countRatings ", countHostBookings, countUserBookings, countRatings)
 
   const useStyles = makeStyles(theme => ({
     upperWrap: {
@@ -196,8 +198,7 @@ function UpperStripe({drawerWidth, location, handleDrawerToggle, ListOfNames, Li
                   anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "left"
-                  }}
-                >
+                  }}>
                   <Button 
                       color="inherit" 
                       className={classes.buttonNavi}
@@ -224,7 +225,7 @@ function UpperStripe({drawerWidth, location, handleDrawerToggle, ListOfNames, Li
                     
                     <p className={classes.ellipsName}>{userApp.name}</p>
                     <Badge
-                        badgeContent={context.countUnseenBookings + context.countUnseenRatings} 
+                        badgeContent={countHostBookings + countUserBookings + countRatings} 
                         // className={classes.badge} 
                         color="secondary"
                         // style={{ backgroundColor: event.decided ? "grey" : "red"}}

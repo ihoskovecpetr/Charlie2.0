@@ -21,41 +21,48 @@ const path = require('path');
 const { google } = require("googleapis");
 const hbs = require("nodemailer-express-handlebars");
 
-// const transformBooking = async booking => {
-//   console.log("transformBooking: ", booking._doc);
-//   return {
-//     ...booking._doc,
-//     user: await userLookup(x._doc.user),
-//     event: await singleEvent(booking._doc.event),
-//     createdAt: new Date(booking._doc.createdAt).toISOString(),
-//     updatedAt: new Date(booking._doc.updatedAt).toISOString()
-//   };
-// };
-
-
 const OAuth2 = google.auth.OAuth2;
 
 const oauth2Client = new OAuth2(
-  "119981354324-qlg4hf4dlb1k8dd7r32jkouoaoni0gt7.apps.googleusercontent.com", // ClientID
-  "rJKG6kbFTkk80WCAaB1dKgAF", // Client Secret
+  "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com", // ClientID
+  "w6myevje4fX4ule3Lnr7_zBI", // Client Secret
   "https://developers.google.com/oauthplayground" // Redirect URL
 );
 
 oauth2Client.setCredentials({
-  refresh_token: "1/51zxtNU8LnjfKH-7McNaqtWK6OCSK0X0vogDTcAhc0U"
+  refresh_token: "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8"
 });
+
 const accessToken = oauth2Client.getAccessToken();
 
-const smtpTransport = nodemailer.createTransport({
+const smtpTransport0 = nodemailer.createTransport({
   service: "gmail",
   auth: {
     type: "OAuth2",
-    user: "hoskovectest@gmail.com",
+    user: "charliehouseparty@gmail.com",
     clientId:
-      "119981354324-qlg4hf4dlb1k8dd7r32jkouoaoni0gt7.apps.googleusercontent.com",
-    clientSecret: "rJKG6kbFTkk80WCAaB1dKgAF",
-    refreshToken: "1/51zxtNU8LnjfKH-7McNaqtWK6OCSK0X0vogDTcAhc0U",
+      "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com",
+    clientSecret: "w6myevje4fX4ule3Lnr7_zBI",
+    refreshToken: "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8",
     accessToken: accessToken
+  }
+});
+
+const smtpTransport1 = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    type: "OAuth2",
+    user: "charliehouseparty@gmail.com", 
+        // "hoskovectest@gmail.com",
+    clientId: "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com",
+        //"119981354324-qlg4hf4dlb1k8dd7r32jkouoaoni0gt7.apps.googleusercontent.com",
+    clientSecret: "w6myevje4fX4ule3Lnr7_zBI", 
+        //"rJKG6kbFTkk80WCAaB1dKgAF",
+    refreshToken: "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8",
+        //"1/51zxtNU8LnjfKH-7McNaqtWK6OCSK0X0vogDTcAhc0U",
+    accessToken: accessToken
+    // accessToken: "ya29.a0AfH6SMCegn8JH9GTLnDbjLoxkrLcs-YS02QiGLwSjJZj8ReenO_ucdznv8SP3R-vqHCFNl-wNqpDpfJg2Ebl53uC0hGnSXKKi55gI-b2XCeetc5aqQ1kmXg6kFy8Tfw3vA_00EeRG_GxbaV2_tR7BRkszbj4lTSVKbA"
+
   }
 });
 
@@ -140,7 +147,7 @@ export const resolvers = {
     },
   },
   Mutation: {
-    bookEvent: async (_, _args, __) => {
+    bookEvent: async (_, _args, __) => { //is this user at all??
       try {
         const existingBooking = await Booking.findOne({
           event: _args.event_id
@@ -150,7 +157,6 @@ export const resolvers = {
             { event: _args.event_id, user: _args.user_id },
             { $set: { cancelled: false, message: _args.message } }
           );
-
           if (result.ok) {
             return { success: true };
           } else return { success: false };
@@ -167,7 +173,7 @@ export const resolvers = {
             cancelled: false,
             decided: false,
             entered: false,
-            seenUser: false,
+            seenUser: true,
             seenHost: false,
           });
           const result = await booking.save();
@@ -208,6 +214,7 @@ export const resolvers = {
     },
     requestBookEvent: async (_, _args, __) => {
       try {
+        console.log("Hitting requestBookEvent")
         let event = await Event.findById(_args.event_id);
         let author = await User.findById(event.author);
         //poslat mail a udelat booking with confirmed false
@@ -238,13 +245,13 @@ export const resolvers = {
             cancelled: false,
             decided: false,
             entered: false,
-            seenUser: false,
+            seenUser: true,
             seenHost: false,
           });
           const result = await booking.save();
           if (result._id) {
-            console.log("SENDINGG MAIL")
-            smtpTransport.use(
+            console.log("Setting mail inquiry.handlebars")
+            smtpTransport0.use(
               "compile",
               hbs({
                 viewEngine: {
@@ -257,24 +264,24 @@ export const resolvers = {
               })
             );
 
-            var eventURL = "https://www.charlieparty.club/event/"; //+ req.body.event._id
+            var eventURL = `https://www.charliehouseparty.club/profile`
 
             console.log("mail/post ENDPOINT pOSt: eventURL ", eventURL);
 
-            var mailOptions1 = {
+            const mailOptions0 = {
               from: "Charlie Party App",
               to: author.email, //req.body.user_email,
-              subject: "You just created CHARLIE event",
-              template: "monkey",
+              subject: `Charlie house party - ${_args.guest_name} is asking for permission`,
+              template: "inquiry",
               context: {
                 eventURL: eventURL,
                 guest_name: _args.guest_name,
                 guest_inquiry: _args.message,
-                event_name: _args.event_name
+                event_name: event.name
               }
             };
 
-            const resMail = await smtpTransport.sendMail(mailOptions1);
+            const resMail = await smtpTransport0.sendMail(mailOptions0);
 
             if (resMail.rejected.length !== 0) {
               return {
@@ -282,7 +289,7 @@ export const resolvers = {
                 message: `Sending mail to ${author.email} has failed`
               };
             } else {
-              smtpTransport.close();
+              smtpTransport0.close();
               return { success: true, message: "Email has been sent" };
             }
           } else {
@@ -342,22 +349,23 @@ export const resolvers = {
         console.log("confirmBooking result: ", result)
 
         if (result.ok) {
-          smtpTransport.use(
+          console.log("Setting clasicGranted mail")
+          smtpTransport1.use(
             "compile",
             hbs({
               viewEngine: {
                 extName: ".handlebars",
                 partialsDir: "./views/",
                 layoutsDir: "./views/",
-                defaultLayout: "granted.handlebars"
+                defaultLayout: "clasicGranted.handlebars" //clasicGranted
               },
               viewPath: "views"
             })
           );
-          const QRKod = await QRCode.toDataURL(`https://serene-woodland-32668.herokuapp.com/accept/${event[0]._id}/${guest[0]._id}`)
+          const QRKod = await QRCode.toDataURL(`https://charliehouseparty.club/accept/${event[0]._id}/${guest[0]._id}`)
 
 
-          const eventURL = "https://www.charlieparty.club/event/"; //+ req.body.event._id
+          const eventURL = `https://www.charliehouseparty.club/event/${_args.event_id}`
           const dateString = new Date(event[0].dateStart).toISOString().split("T");
           const timeString = dateString[1].split(":");
 
@@ -373,12 +381,12 @@ export const resolvers = {
 
           const pdfResult = await pdf.createAsync(html, { format: 'A4', filename: `PDF/${guest[0].name} - ${event[0].name}.pdf` });
 
-          
-          var mailOptions1 = {
+      
+          const mailOptions1 = {
             from: "Charlie Party: " + event[0].name ,
             to: guest[0].email, //req.body.user_email,
-            subject: "You just got confirmed",
-            template: "monkey",
+            subject: `Your request got ${_args.decision ? "CONFIRMED" : "DECLINED"}`,
+            template: "clasicGranted",
             context: {
               eventURL: eventURL,
               event_QRCode: QRKod,
@@ -387,7 +395,7 @@ export const resolvers = {
               message: _args.response,
               decision: _args.decision ? "CONFIRMED" : "DECLINED"
             },
-            attachments: [
+            attachments: _args.decision ? [
               {
                   filename: `Event ${event[0].name}.pdf'`, // <= Here: made sure file name match
                   // path: path.join(__dirname, '../PDF/pozdrav.pdf'), // <= Here
@@ -395,19 +403,19 @@ export const resolvers = {
                   // content: pdfResult.filename,
                   contentType: 'application/pdf'
               }
-          ]
+          ] : []
           };
 
-          const resMail = await smtpTransport.sendMail(mailOptions1);
+          const resMail = await smtpTransport1.sendMail(mailOptions1);
 
 
-          if (pdfResult && resMail.rejected.length !== 0) {
+          if (pdfResult && resMail && resMail.rejected.length !== 0) {
             return {
               success: false,
               message: `Sending mail to ${author.email} has failed`
             };
           } else {
-            smtpTransport.close();
+            smtpTransport1.close();
             return { success: true, message: "Email has been sent" };
           }
 

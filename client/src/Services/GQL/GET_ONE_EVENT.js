@@ -17,6 +17,7 @@ export const GET_ONE_EVENT = gql`
       BYO
       freeSnack
       confirmed
+      happeningNow
       hide
       areYouAuthor
       author {

@@ -18,7 +18,7 @@ import gql from "graphql-tag";
 
 import { useXsSize } from "../../Hooks/useXsSize";
 import { UserContext } from "../../userContext";
-import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
+import { SHOW_HOST_NEWS } from "src/Services/GQL/SHOW_HOST_NEWS";
 import { SEEN_BOOKING } from "src/Services/GQL/SEEN_BOOKING";
 
 import PartyOn from "src/Atoms/PartyOn";
@@ -62,7 +62,9 @@ useEffect(() => {
       //     };
       // })
     }
-    // seenUserHandle()
+    if(!booking.seenUser){
+        seenUserHandle()
+    }
   };
 
   const seenUserHandle = () => {
@@ -71,9 +73,17 @@ useEffect(() => {
         booking_id: booking._id,
         user: true,
       },
+      optimisticResponse: {
+        __typename: "Query",
+        updateComment: {
+          id: booking._id,
+          __typename: "Booking",
+          seenUser: true
+        }
+      },
       refetchQueries: () => [
         {
-          query: PROFILE_DATA,
+          query: SHOW_HOST_NEWS,
           variables: { host_id: context._id }
         }
       ]
@@ -199,7 +209,7 @@ if(booking.decided){
       <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Grid container justify="center" className={classes.messageWrap}>
             <Grid item>
-              <Grid container className={classes.messageContainer}>
+              <Grid container>
                 <BookingMessages booking={booking} />
               </Grid>
             </Grid>
@@ -258,10 +268,6 @@ const useStyles = makeStyles(theme => ({
   },
   messageWrap: {
     padding: 10
-  },
-  messageContainer: {
-    backgroundColor: "rgba(0,0,0,0.38)",
-    borderRadius: 10
   },
   mainAvatar: {
     height: 80,

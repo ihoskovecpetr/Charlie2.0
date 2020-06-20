@@ -18,11 +18,12 @@ import gql from "graphql-tag";
 import { UserContext } from "../userContext";
 import { sortByDate } from "../Services/functions";
 import { useXsSize } from "../Hooks/useXsSize";
+import { useCountUnseenBookingsRatings } from "src/Hooks/useCountUnseenBookingsRatings";
 import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
 
 import Copyright from "../Atoms/copyright";
 import Spinner from "../Atoms/Spinner";
-import RatingCardNew from "../Atoms/Profile/RatingCardNew";
+import ReceivedRatingsCard from "src/Atoms/Profile/ReceivedRatingsCard";
 import ProfileTopBox from "../Molecules/profile/ProfileTopBox";
 import ProfileBookingsPrinter from "src/Molecules/profile/ProfileBookingsPrinter"
 import ProfileEventsPrinter from "src/Molecules/profile/ProfileEventsPrinter";
@@ -63,8 +64,8 @@ function Profile() {
   const { context, setContext } = useContext(UserContext);
   const [value, setValue] = useState(0);
   const [bookingsArray, setBookingsArray] = useState([]);
-  const [countUnseenBookings, setCountUnseenBookings] = useState(0);
-  const { xs_size_memo, md_size_memo } = useXsSize();
+  const {countHostBookings, countUserBookings, countRatings} = useCountUnseenBookingsRatings()
+  const { md_size_memo } = useXsSize();
   const { loading, error, data } = useQuery(PROFILE_DATA, {
     variables: { host_id: context._id },
     fetchPolicy: "network-only"
@@ -155,7 +156,7 @@ function Profile() {
                   label={
                     <Badge
                       color="secondary"
-                      badgeContent={context.countUnseenBookings}
+                      badgeContent={countHostBookings + countUserBookings}
                     >
                       BOOKINGS
                     </Badge>
@@ -182,7 +183,7 @@ function Profile() {
                   label={
                     <Badge
                       color="secondary"
-                      badgeContent={context.countUnseenRatings}
+                      badgeContent={countRatings}
                     >
                       RATINGS
                     </Badge>
@@ -250,7 +251,7 @@ function Profile() {
                   data.showRatings &&
                   data.showRatings.map((rating, index) => (
                     <>
-                      <RatingCardNew rating={rating} key={index} />
+                      <ReceivedRatingsCard rating={rating} key={index} />
                     </>
                   ))}
               </TabPanel>

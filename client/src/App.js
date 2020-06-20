@@ -13,16 +13,11 @@ import PropTypes from "prop-types";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Snackbar from '@material-ui/core/Snackbar';
-import CloseIcon from '@material-ui/icons/Close';
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/core/styles";
 
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import { useXsSize } from "./Hooks/useXsSize";
 
@@ -32,7 +27,7 @@ import WindowEventSnackbar from "./Atoms/WindowEventSnackbar";
 
 import { UserContext } from "./userContext";
 import { usePosition } from "./Hooks/useGeolocation";
-import { LOGIN } from "src/Services/GQL/LOGIN";
+import { GET_LOGGED_IN_USER } from "src/Services/GQL/GET_LOGGED_IN_USER";
 
 // import { useWindowSize } from "./Hooks/useWindowSize";
 
@@ -51,6 +46,7 @@ import PlayOutside from "./Pages/PlayOutside";
 import AcceptPage from "./Pages/AcceptPage"
 import Search from "./Pages/SearchPage"
 import Privacy from "./Pages/PrivacyPage"
+import ConfirmUserPage from "./Pages/ConfirmUserPage"
 import FloatingBtnWrap from "./Molecules/FloatingBtnWrap";
 
 
@@ -74,7 +70,7 @@ function App({location, container}) {
     geometry: null,
     zoom: 10,
   });
-  const [getLoggedInUser, { loading, error, data }] = useMutation(LOGIN);
+  const [getLoggedInUser, { loading, error, data }] = useMutation(GET_LOGGED_IN_USER);
 
   //Overriding default styles in Material UI
   const theme = createMuiTheme({
@@ -136,8 +132,6 @@ function App({location, container}) {
 
   const classes = useStyles();
 
-  console.log("Rerendering whole App workpos: ", workingPosition);
-
   const [contx, setContx] = useState({
     success: false,
     name: false,
@@ -155,50 +149,42 @@ function App({location, container}) {
 
     openDrawer: true,
     freezScroll: false,
+    showAlertAdviseEmail: false,
     rememberSignIn: false,
     expanded_id: null,
     playFilterObj: {
-      filterOn: true,
-      geolocationPlay: null,
+      filterOn: false,
+      geolocationPlay: { lng: 14.40076 , lat: 50.08804 },
       playEventsCount: null,
       radius: 20,
       plusDays: 2,
       shownEvents: [],
     },  
-    // playEventsCount: null,
-    // shownEvents: [],
-    // radius: 20,
-    // plusDays: 2,
-    // firstPrint: location.pathname.split("/")[1] === "play" ? true : false
   });
 
-  const setUserToContext = (userObj) => {
-console.log("setUserToContext: ", userObj)
-if(userObj){
-      setContx(prev => {return {
-      ...prev,
-      _id: userObj._id,
-      success: userObj.success,
-      name: userObj.name,
-      email: userObj.email,
-      picture: userObj.picture,
-      description: userObj.description,
-    }}
-    );
-}
+  console.log("Rerendering whole App cntx: ", contx);
 
+
+  const setUserToContext = (userObj) => {
+    console.log("setUserToContext: ", userObj)
+    if(userObj){
+          setContx(prev => {return {
+          ...prev,
+          _id: userObj._id,
+          success: userObj.success,
+          name: userObj.name,
+          email: userObj.email,
+          telephone: userObj.telephone,
+          picture: userObj.picture,
+          description: userObj.description,
+          rememberSignIn: true,
+        }}
+        );
+    }
   }
 
-  // useEffect(() => {
-  //   // getLoggedInUser();
-  //   navigator.geolocation.getCurrentPosition(function(position) {
-  //     console.log("Found lokaci: ", position.coords.latitude)
-  //     setContext(prev => {return {...prev, geolocationObj: {lat: position.coords.latitude, lng: position.coords.longitude}}});
-  // });
-  // });
-
   useEffect(() => {
-    // getLoggedInUser();
+
     if(location.pathname.split("/")[1] === "play" && !window.firstPrintPlay){
       window.firstPrintPlay = "play"
     }else{
@@ -210,62 +196,17 @@ if(userObj){
 
     getLoggedInUser();
     prevLocation = location;
-    // firstLocation = location.pathname.split("/")[1];
-    // if(location.pathname.split("/")[1] === "play"){
-    //   console.log("Setting FPnt: true")
-    //   setUser(prev => {
-    //   return { ...prev, firstPrint: true };
-    // });
-    // }
 
   }, []);
 
-  useEffect(() => {
 
-    window.React = {};
-
-      window.addEventListener("beforeunload", (ev) => 
-    {  
-      console.log("BEFORE UNLOAD: ", contx.rememberSignIn)
-      ev.preventDefault();
-      if(!contx.rememberSignIn){
-        window.localStorage.setItem("token", `_deleted_COZ_notrembr${contx.rememberSignIn}`)
-      }
-    });
-
-    // window.localStorage.setItem("token", contx.token)
-
-    // return(() => {
-    //   console.log("NIKDY GOING OUT APP")
-    //   if(!contx.rememberSignIn){
-    //     window.localStorage.setItem("token", "_deleted_COZ_notrembr")
-    //   }
-    // })
-    // return(function cleanup() {
-    //   window.localStorage.setItem("token", "cleanedUped")
-    // };)
-
-  },[]);
-
-  // if (data) {
     useEffect(() => {
       if (data && data.getLoggedInUser) {
-
-        // setContx(prev => {return {
-        //   ...prev,
-        //   _id: data.getLoggedInUser._id,
-        //   success: data.getLoggedInUser.success,
-        //   name: data.getLoggedInUser.name,
-        //   email: data.getLoggedInUser.email,
-        //   picture: data.getLoggedInUser.picture,
-        //   description: data.getLoggedInUser.description,
-        // }});
         console.log("Calling setUserToContext from App")
         setUserToContext(data.getLoggedInUser)
       }
     }, [data]);
 
-  // }
   useEffect(() => {
   if (latitude && longitude && !contx.geolocationObj) {
     console.log("Context. setting Geolocation Obj: ", latitude ,longitude)
@@ -275,6 +216,7 @@ if(userObj){
         geolocationObj: { lat: latitude, lng: longitude },
         playFilterObj: {
           ...prev.playFilterObj,
+          filterOn: true,
           geolocationPlay: { lat: latitude, lng: longitude },
         }, 
       };
@@ -304,8 +246,8 @@ if(userObj){
   };
 
   const ListOfUrls = contx.success
-    ? ["", "play", "create", "map", "about", "search", "privacy-policy", "signout", "user", "profile", "accept"]
-    : ["", "play", "create", "map", "about", "search", "privacy-policy", "signin", "user", "signup", "accept"];
+    ? ["", "play", "create", "map", "about", "search", "privacy-policy", "signout", "user", "profile", "accept", "confirm"]
+    : ["", "play", "create", "map", "about", "search", "privacy-policy", "signin", "user", "signup", "accept", "confirm"];
 
     // Just for DRAWER and NavigationHeader (UpperStripe)
   const ListOfNames = contx.success
@@ -648,6 +590,26 @@ useEffect(() => {
                       </>
                     )}
                   />
+                               <Route
+                    exact
+                    path={`/create`}
+                    render={() => (
+                      <>
+                      <UpperStripe
+                          loading={loading}
+                          userApp={contx}
+                          ListOfNames={ListOfNames}
+                          ListOfUrls={ListOfUrls}
+                          handleDrawerToggle={handleDrawerToggle}
+                          drawerWidth={drawerWidth}
+                        />
+                        <main className={classes.content}>
+                          <div className={classes.toolbar} />
+                          {contx.name ? <Create /> : <SignIn />}
+                        </main>
+                      </>
+                    )}
+                  />
               <Route
                     exact
                     path={`/play/:id`}
@@ -705,6 +667,26 @@ useEffect(() => {
                     <main className={classes.content}>
                       <div className={classes.toolbar} />
                       <AcceptPage />
+                    </main>
+                  </>
+                )}
+              />
+                          <Route
+                exact
+                path={`/confirm/:user_id`}
+                render={() => (
+                  <>
+                  <UpperStripe
+                          loading={loading}
+                          userApp={contx}
+                          ListOfNames={ListOfNames}
+                          ListOfUrls={ListOfUrls}
+                          handleDrawerToggle={handleDrawerToggle}
+                          drawerWidth={drawerWidth}
+                        />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <ConfirmUserPage />
                     </main>
                   </>
                 )}

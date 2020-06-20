@@ -7,6 +7,15 @@ export const duplicate_email_Error = {
   ]
 };
 
+export const email_not_confirmed_Error = {
+  errorOut: [
+    {
+      name: "Emain address not confirmed",
+      message: "This email address has not been confirmed yet"
+    }
+  ]
+};
+
 export const mismatch_login_Error = {
   errorOut: [
     {

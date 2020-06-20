@@ -23,7 +23,6 @@ import { useScrollDisable } from "../Hooks/useScrollDisable";
 import ModalLayout from "../Layouts/ModalLayout";
 import Spinner from "../Atoms/Spinner";
 import Copyright from "../Atoms/copyright";
-import { LOGIN } from "src/Services/GQL/LOGIN";
 
 
 function SignIn(props) {

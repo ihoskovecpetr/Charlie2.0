@@ -22,6 +22,7 @@ import { useHistory } from "react-router-dom";
 import { useWindowSize } from "../Hooks/useWindowSize";
 import { useScrollDisable } from "../Hooks/useScrollDisable";
 import { findEmpty } from "../Services/functions";
+import { UserContext } from "src/userContext";
 
 import ModalLayout from "../Layouts/ModalLayout";
 import Copyright from "../Atoms/copyright";
@@ -38,6 +39,7 @@ function SignUp() {
   const classes = useStyles();
   let history = useHistory();
   const windowSize = useWindowSize();
+  const { context, setContext } = useContext(UserContext);
 
   const [formValue, setFormValue] = useState({ picture: null });
   const [feErrors, setFEerrors] = useState([]);
@@ -59,12 +61,15 @@ function SignUp() {
     let load = {
       name: document.getElementById("name").value == "" ? null : document.getElementById("name").value,
       email: document.getElementById("emailSignUp").value == "" ? null : document.getElementById("emailSignUp").value,
+      telephone: document.getElementById("telephoneSignUp").value == "" ? null : document.getElementById("telephoneSignUp").value,
       password: document.getElementById("password").value == "" ? null : document.getElementById("password").value,
       password2: document.getElementById("password2").value == "" ? null : document.getElementById("password2").value,
       picture: formValue.picture,
       description: inputDescRef.current.value
           ? inputDescRef.current.value
           : null,
+      typeDirect: true,
+      typeSocial: false
       };
     let empty = findEmpty(load);
     empty = empty.map(item => `${item} is Empty`)
@@ -73,6 +78,7 @@ function SignUp() {
     console.log("Empty ones: ", empty);
 
   if (empty.length == 0) {
+      setFEerrors([]) // reset fe errors
       console.log("SUBMIT: ", load);
       newUser({
         variables: load
@@ -80,11 +86,19 @@ function SignUp() {
   } else {
       setFEerrors(empty);
     }
-    
+
 }
 
 if (dataOut && dataOut.success) {
+
+  console.log("Success signUp data: ", dataOut)
+  // window.localStorage.setItem("token", dataOut.token);
   setTimeout(() => {
+    // window.localStorage.setItem("token", dataOut.token);
+    setContext(prev => { return {
+      ...prev,
+      showAlertAdviseEmail: true,
+    }});
     history.push('/');
   },200)
   return (
@@ -175,12 +189,7 @@ if (dataOut && dataOut.success) {
               <DropzoneSignup setFormValue={setFormValue} formValue={formValue} />
             </Grid>
           </Grid>
-          {errorOut &&
-            errorOut.map(item => (
-              <Alert severity="error" key={item.message}>
-                {item.message}
-              </Alert>
-            ))}
+
           <TextField
             margin="normal"
             required
@@ -200,6 +209,16 @@ if (dataOut && dataOut.success) {
             label="Email Address"
             name="email"
             variant='outlined'
+            //autoComplete="email"
+          />
+          <TextField
+            margin="normal"
+            fullWidth
+            id="telephoneSignUp"
+            label="Telephone Nr."
+            name="telephone"
+            variant='outlined'
+            defaultValue={'+420'}
             //autoComplete="email"
           />
           <TextField
@@ -228,9 +247,8 @@ if (dataOut && dataOut.success) {
           <Grid
             container
             className={classes.descriptionContainer}
-            xs={12}
           >
-            <Grid item className={classes.descriptionItem}  xs={12}>
+            <Grid item className={classes.descriptionItem} xs={12}>
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -247,30 +265,38 @@ if (dataOut && dataOut.success) {
               />
             </Grid>
           </Grid>
-
+          <Grid container justify="center">
           {feErrors &&
             feErrors.map(item => (
               <Alert severity="error" key={item}>
                 {item}
               </Alert>
             ))}
+          {errorOut &&
+            errorOut.map(item => (
+              <Alert severity="error" key={item.message}>
+                {item.message}
+              </Alert>
+            ))}
+            </Grid>
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
+            disabled={loading || (data && data.newUser && data.newUser.success)}
             className={classes.submit}
             onClick={onSubmitHandler}
           >
-            Sign Up
+            {loading ? "sending..." : 'Sign Up'}
           </Button>
           <Grid container>
-            <Grid item xs>
+            <Grid item>
               <Link href="#" variant="body2">
                 
               </Link>
             </Grid>
-            <Grid item onClick={() => {history.goBack()}}>
+            <Grid item onClick={() => {history.push('/signin')}}>
               <Link variant="body2">
                 Already Signed up?
               </Link>

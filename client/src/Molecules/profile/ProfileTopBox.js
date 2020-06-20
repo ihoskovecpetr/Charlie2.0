@@ -20,7 +20,6 @@ import { useMutation } from "@apollo/react-hooks";
 
 import { UPDATE_USER } from "src/Services/GQL/UPDATE_USER";
 import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
-import { LOGIN } from "src/Services/GQL/LOGIN";
 
 import { findEmpty } from "src/Services/functions";
 import { useXsSize } from "src/Hooks/useXsSize";
@@ -40,6 +39,7 @@ export default function ProfileTopBox({ errorQuery, showRatings }) {
 
   const inputName = useRef(null);
   const inputEmail = useRef(null);
+  const inputTelephone = useRef(null);
   const inputDescription = useRef(null);
 
   const { averageRating } = useAverageRating(showRatings)
@@ -58,10 +58,11 @@ export default function ProfileTopBox({ errorQuery, showRatings }) {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    console.log("Updating: ", inputName.current.value, inputEmail.current.value, inputDescription.current.value)
     let load = {
+      _id: context._id,
       name: inputName.current.value,
       email: inputEmail.current.value,
+      telephone: inputTelephone.current.value,
       description: inputDescription.current.value,
       picture: formValue ? formValue.picture : context.picture,
       };
@@ -86,8 +87,6 @@ export default function ProfileTopBox({ errorQuery, showRatings }) {
       // setFEerrors(empty);
     }
 }
-
-
 
 
   return (
@@ -146,6 +145,11 @@ export default function ProfileTopBox({ errorQuery, showRatings }) {
           </Grid>
           <Grid item xs={12}>
             <Typography variant="body1" className={classes.centerText}>
+              {context.telephone}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body1" className={classes.centerText}>
               <Rating name="simple-controlled" readOnly value={averageRating} />
             </Typography>
           </Grid>
@@ -193,6 +197,16 @@ export default function ProfileTopBox({ errorQuery, showRatings }) {
                       disabled
                       defaultValue={context.email}
                       inputRef={inputEmail}
+                      className={classes.textFieldDesc}
+                      multiline
+                      rows="1"
+                    />
+          <TextField
+                      id="outlined-basic"
+                      label="Telephone Nr."
+                      variant="filled"
+                      defaultValue={context.telephone}
+                      inputRef={inputTelephone}
                       className={classes.textFieldDesc}
                       multiline
                       rows="1"

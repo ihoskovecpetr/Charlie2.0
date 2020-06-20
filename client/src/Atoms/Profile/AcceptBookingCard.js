@@ -52,7 +52,9 @@ export default function AcceptBookingCard({ booking }) {
     } else{
         setExpanded(true)
     }
-    // seenHostHandle()
+    if(!booking.seenHost){
+    seenHostHandle()
+    }
   };
 
   const seenHostHandle = () => {
@@ -60,6 +62,14 @@ export default function AcceptBookingCard({ booking }) {
       variables: {
         booking_id: booking._id,
         user: false,
+      },
+      optimisticResponse: {
+        __typename: "Query",
+        updateComment: {
+          id: booking._id,
+          __typename: "Booking",
+          seenHost: true
+        }
       },
       refetchQueries: () => [
         {
@@ -197,7 +207,7 @@ if(booking.decided){
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <Grid container justify="center" className={classes.messageWrap}>
           <Grid item>
-            <Grid container className={classes.messageContainer}>
+            <Grid container>
                 <BookingMessages booking={booking} />
                 <BookingAcceptInput booking={booking} />
            
@@ -261,11 +271,7 @@ const useStyles = makeStyles(theme => ({
   messageWrap: {
     padding: 10
   },
-  
-  messageContainer: {
-    backgroundColor: "rgba(0,0,0,0.38)",
-    borderRadius: 10
-  },
+
   mainAvatar: {
     height: 60,
     width: 60
