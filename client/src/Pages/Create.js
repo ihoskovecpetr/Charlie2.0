@@ -1,52 +1,12 @@
 import React, { useContext, useState, useRef, useEffect, useMemo } from "react";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
-import CssBaseline from "@material-ui/core/CssBaseline";
 
-import Alert from "@material-ui/lab/Alert";
-import Snackbar from "@material-ui/core/Snackbar";
-import CloseIcon from "@material-ui/icons/Close";
-
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import CloudDoneIcon from "@material-ui/icons/CloudDone";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import MenuItem from "@material-ui/core/MenuItem";
-
-import clsx from "clsx";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 
 import { findEmpty } from "../Services/functions";
 import { NEW_EVENT } from "../Services/GQL/NEW_EVENT";
 import { UserContext } from "../userContext";
 
-import Copyright from "src/Atoms/copyright";
-import Dropzone from "src/Molecules/Dropzone";
-import Spinner from "src/Atoms/Spinner";
-import MapCreate from "src/Molecules/MapCreate";
-import LoginFirstButton from "src/Atoms/LoginFirstButton";
 import CreateView from "./CreateView";
 
 import { useLogicPlusMinusValue } from "./Logic/Create/useLogicPlusMinusValue";
@@ -71,6 +31,7 @@ function Create(props) {
 
   const { context } = useContext(UserContext);
   const [customMapParam, setCustomMapParam] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [countOfFiles, setCountOfFiles] = useState(0);
   const Price = useLogicPlusMinusValue("plus_btn", "minus_btn", 50);
   const Capacity = useLogicPlusMinusValue(
@@ -158,9 +119,10 @@ function Create(props) {
 
   useEffect(() => {
     if (dataOut) {
-      setTimeout(() => {
-        history.push(`/event/${dataOut._id}`);
-      }, 500);
+      setDialogOpen(true);
+      // setTimeout(() => {
+      //   history.push(`/event/${dataOut._id}`);
+      // }, 200);
     }
   }, [dataOut]);
 
@@ -223,6 +185,10 @@ function Create(props) {
     });
   };
 
+  const handleDialogClose = () => {
+    setDialogOpen(!dialogOpen);
+  };
+
   return (
     <CreateView
       formValue={formValue}
@@ -260,6 +226,8 @@ function Create(props) {
       duration={duration}
       price={price}
       setCountOfFiles={setCountOfFiles}
+      dialogOpen={dialogOpen}
+      handleDialogClose={handleDialogClose}
     />
   );
 }

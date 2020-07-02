@@ -1,4 +1,4 @@
-import React, { useState, useRef} from "react";
+import React, { useState, useRef } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -19,17 +19,11 @@ import Copyright from "src/Atoms/copyright";
 import SocialLine from "src/Atoms/social-line";
 
 const ENQUIRY = gql`
-mutation custommerEnquiry(
-  $email: String!
-  $desc: String!
-){
-  custommerEnquiry(
-    email: $email
-    desc: $desc
-  ) {
-    success
+  mutation custommerEnquiry($email: String!, $desc: String!) {
+    custommerEnquiry(email: $email, desc: $desc) {
+      success
+    }
   }
-}
 `;
 
 export default function Screen6() {
@@ -43,27 +37,24 @@ export default function Screen6() {
   const emailRef = useRef();
   const descRef = useRef();
 
-
   const handleValueChange = (e) => {
-    const name = e.currentTarget.name
-    const value = e.currentTarget.value
-    setFormValue(prev => {
+    const name = e.currentTarget.name;
+    const value = e.currentTarget.value;
+    setFormValue((prev) => {
       return { ...prev, [name]: value };
     });
-  }
+  };
 
   const onSubmit = (e) => {
-    e.preventDefault()
-    console.log("emailRef: ", emailRef, emailRef.current.value)
+    e.preventDefault();
+    console.log("emailRef: ", emailRef, emailRef.current.value);
     sendEnquiry({
       variables: {
-        email:  emailRef.current.value,
+        email: emailRef.current.value,
         desc: descRef.current.value,
-      }
-    })
-  }
-
-
+      },
+    });
+  };
 
   return (
     <div className="section s8">
@@ -110,11 +101,12 @@ export default function Screen6() {
               fullWidth
               variant="contained"
               color="primary"
-              disabled={(loading || data) ? true : false}
+              disabled={loading || data ? true : false}
               className={classes.submit}
               onClick={onSubmit}
             >
-              {data ? "Email has been sent" : "Send"} {loading ? "sending..." : ''}
+              {data ? "Email has been sent" : "Send"}{" "}
+              {loading ? "sending..." : ""}
             </Button>
           </form>
         </Grid>
@@ -133,15 +125,21 @@ export default function Screen6() {
             </Grid>
 
             <Grid item xs={12}>
-              <Typography variant="body2">Sydney NSW, Australia</Typography>
+              <Typography variant="body2">Prague, Czechia</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="body2">charliepartyapp@gmail.com</Typography>
+              <Typography variant="body2">
+                <a href={`mailto:charliehouseparty@gmail.com`}>
+                  charliehouseparty@gmail.com
+                </a>
+              </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="body2">0435-388-698</Typography>
+              <Typography variant="body2">
+                <a href={`tel:+420704206828`}>+420704206828</a>
+              </Typography>
             </Grid>
-            
+
             <Grid item xs={12}>
               <SocialLine color="secondary" />
             </Grid>
@@ -183,23 +181,23 @@ export default function Screen6() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container_6: {
     color: "black",
     //background: "rgba(25,25,25,0.3)"
     paddingTop: 80,
-    paddingBottom: 80
+    paddingBottom: 80,
   },
 
   defaultHeader: {
     color: theme.palette.charliePink,
     fontWeight: 300,
     fontSize: 20,
-    height: "5vh"
+    height: "5vh",
   },
   defaultContent: {
     margin: 20,
-    fontWeight: 500
+    fontWeight: 500,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -215,10 +213,10 @@ const useStyles = makeStyles(theme => ({
   grid_foot_container: {
     background: "rgba(0,0,0,0.4)",
     color: "white",
-    textAlign: "center"
+    textAlign: "center",
   },
   inputStyle: {
-    backgroundColor: "white", 
-    borderRadius: 5
-  }
+    backgroundColor: "white",
+    borderRadius: 5,
+  },
 }));

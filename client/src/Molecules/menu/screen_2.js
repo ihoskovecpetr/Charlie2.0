@@ -10,17 +10,16 @@ import { Animated } from "react-animated-css";
 
 import { useWindowSize } from "../../Hooks/useWindowSize";
 
-
 export default function Screen2() {
   const classes = useStyles();
   const windowSize = useWindowSize();
 
   return (
-    <div 
-      className="section s2">
-        
+    <div className="section s2">
       <Container maxWidth="md" className={classes.container_2}>
-        <Grid container id="s_2_id" //style={{ display: "none" }}
+        <Grid
+          container
+          id="s_2_id" //style={{ display: "none" }}
         >
           <Grid item xs={12}>
             <Animated
@@ -47,8 +46,8 @@ export default function Screen2() {
                 variant="subtitle2"
                 className={classes.defaultContent}
               >
-                Charlie is here to connect owners or renters of miscelanous
-                places with guest for a joyfull evening
+                Charlie is here to connect independent event creators with guest
+                for a joyfull evening
               </Typography>
             </Animated>
           </Grid>
@@ -63,13 +62,13 @@ export default function Screen2() {
         <Grid container className={classes.containerIframe}>
           <Grid item xs={12}>
             <div className={classes.iframe_wrapper}>
-            <iframe
-              src="https://www.youtube.com/embed/PogfNxsugF0"
-              frameBorder="0"
-              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className={classes.iFrame}
-            ></iframe>
+              <iframe
+                src="https://www.youtube.com/embed/PogfNxsugF0"
+                frameBorder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className={classes.iFrame}
+              ></iframe>
             </div>
           </Grid>
         </Grid>
@@ -78,30 +77,30 @@ export default function Screen2() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container_2: {
     color: "white",
     paddingTop: 80,
-    paddingBottom: 80
+    paddingBottom: 80,
   },
   defaultHeader: {
     color: theme.palette.charliePink,
     fontWeight: 300,
     paddingTop: 20,
-    fontSize: 20
+    fontSize: 20,
   },
   defaultContent: {
     margin: 20,
     fontWeight: 500,
-    fontSize: "1rem"
+    fontSize: "1rem",
   },
   containerIframe: {
     width: "100%",
-    height: "auto"
+    height: "auto",
   },
   iframe_wrapper: {
     position: "relative",
-    paddingBottom: '56.25%', /* 16:9 */
+    paddingBottom: "56.25%" /* 16:9 */,
     height: 0,
   },
   iFrame: {
@@ -110,7 +109,7 @@ const useStyles = makeStyles(theme => ({
     position: "absolute",
     top: 0,
     left: 0,
-    width: '100%',
-    height: '100%',
-  }
+    width: "100%",
+    height: "100%",
+  },
 }));

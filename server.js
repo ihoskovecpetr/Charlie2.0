@@ -2,7 +2,7 @@
 import express from "express";
 const http = require("http");
 var path = require("path");
-var serveIndex = require('serve-index');
+var serveIndex = require("serve-index");
 const mongoose = require("mongoose");
 const { ApolloServer, gql } = require("apollo-server-express");
 const { PubSub } = require("apollo-server");
@@ -13,11 +13,11 @@ import { typeDefs, resolvers } from "./schema.js";
 const app = express();
 
 // Set coz of deprec warning when doing findAndModify
-mongoose.set('useFindAndModify', false);
+mongoose.set("useFindAndModify", false);
 
 app.use(express.static(path.join(__dirname, "build")));
 
-app.get("/", function(req, res, next) {
+app.get("/", function (req, res, next) {
   res.sendFile(path.join(__dirname, "build/index.html"));
 });
 
@@ -69,6 +69,10 @@ app.get("/profile", (req, res, next) => {
   res.sendFile(path.join(__dirname, "build/index.html"));
 });
 
+app.get("/privacy-policy", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "build/index.html"));
+});
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS");
@@ -80,23 +84,26 @@ app.use((req, res, next) => {
 });
 
 app.use(authMid);
-app.use('/.well-known', express.static('.well-known'), serveIndex('.well-known'));
-
+app.use(
+  "/.well-known",
+  express.static(".well-known"),
+  serveIndex(".well-known")
+);
 
 //const pubsub = new PubSub();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: req => ({ /* pubsub, */ reqO: req }),
+  context: (req) => ({ /* pubsub, */ reqO: req }),
   subscriptions: "/subs",
   playground: true,
   introspection: true,
   debug: true,
-  engine: false
+  engine: false,
 });
 
 server.applyMiddleware({
-  app
+  app,
 });
 
 const httpServer = http.createServer(app);
@@ -116,7 +123,7 @@ mongoose
       );
     });
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 

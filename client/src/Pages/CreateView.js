@@ -6,8 +6,10 @@ import Paper from "@material-ui/core/Paper";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import Alert from "@material-ui/lab/Alert";
-import Snackbar from '@material-ui/core/Snackbar';
-import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
 
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
@@ -21,10 +23,10 @@ import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
-  KeyboardDatePicker
+  KeyboardDatePicker,
 } from "@material-ui/pickers";
 
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from "@material-ui/core/LinearProgress";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import CloudDoneIcon from "@material-ui/icons/CloudDone";
@@ -48,22 +50,21 @@ import Spinner from "src/Atoms/Spinner";
 import MapCreate from "../Molecules/MapCreate";
 import LoginFirstButton from "../Atoms/LoginFirstButton";
 
-import {useLogicPlusMinusValue} from "./Logic/Create/useLogicPlusMinusValue";
-
+import { useLogicPlusMinusValue } from "./Logic/Create/useLogicPlusMinusValue";
 
 const currencies = [
   {
     value: "USD",
-    label: "$"
+    label: "$",
   },
   {
     value: "EUR",
-    label: "€"
+    label: "€",
   },
   {
     value: "CZK",
-    label: "Kč"
-  }
+    label: "Kč",
+  },
 ];
 
 function CreateView({
@@ -100,14 +101,14 @@ function CreateView({
   capacity,
   duration,
   price,
-  countOfFiles, 
+  countOfFiles,
   setCountOfFiles,
+  dialogOpen,
+  handleDialogClose,
 }) {
   const classes = useStyles();
   let history = useHistory();
   const { context } = useContext(UserContext);
-
-
 
   return (
     <div
@@ -117,6 +118,49 @@ function CreateView({
       style={{ position: context.freezScroll ? "fixed" : "absolute" }} // fixed is freezed, absolute is scrollable
     >
       <CssBaseline />
+      {dialogOpen && (
+        <Dialog
+          onClose={handleDialogClose}
+          aria-labelledby="simple-dialog-title"
+          open={true}
+        >
+          <DialogTitle id="simple-dialog-title">
+            Party "{dataOut ? dataOut.name : "_"}" created successfully
+          </DialogTitle>
+          <Grid container spacing={1} className={classes.btnsDialogGridCont}>
+            <Grid item xs={12}>
+              <Grid container justify="center">
+                <Grid item>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => {
+                      history.push(`/event/${dataOut._id}`);
+                    }}
+                  >
+                    OPEN "{dataOut ? dataOut.name : "_"}"
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container justify="center">
+                <Grid item>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                      history.push(`/`);
+                    }}
+                  >
+                    Go to main Page
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Dialog>
+      )}
       <Container maxWidth="sm" className={classes.paper1}>
         <Grid
           container
@@ -125,7 +169,6 @@ function CreateView({
           direction="column"
           className={classes.pinkBack}
         >
-          
           <Grid item>
             <Typography variant="h5" className={classes.justDoIt}>
               JUST DO IT
@@ -138,7 +181,7 @@ function CreateView({
           </Grid>
 
           <Grid container className={clsx(classes.formRow)}>
-            <Grid item style={{ width: "100%" }}>
+            <Grid item xs={12}>
               {context.success ? (
                 <TextField
                   variant="outlined"
@@ -176,44 +219,50 @@ function CreateView({
             justify="flex-start"
             className={clsx(classes.settingsPanel, classes.formRow)}
           >
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={minusDay}
-              >
-                <ArrowBackIosIcon color="primary" />
-              </IconButton>
+            <Grid item xs={2}>
+              <Grid container justify="flex-end">
+                <IconButton
+                  color="secondary"
+                  aria-label="open drawer"
+                  edge="start"
+                  onClick={minusDay}
+                >
+                  <ArrowBackIosIcon color="secondary" />
+                </IconButton>
+              </Grid>
             </Grid>
-            <Grid item>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  margin="normal"
-                  id="date-picker-dialog"
-                  format="dd/MM/yyyy"
-                  value={formValue.startDate}
-                  onChange={handleDateChange}
-                  KeyboardButtonProps={{
-                    "aria-label": "change date"
+            <Grid item xs={8}>
+              <Grid container justify="center">
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    margin="normal"
+                    id="date-picker-dialog"
+                    format="dd/MM/yyyy"
+                    value={formValue.startDate}
+                    onChange={handleDateChange}
+                    KeyboardButtonProps={{
+                      "aria-label": "change date",
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+            </Grid>
+            <Grid item xs={2}>
+              <Grid container justify="flex-start">
+                <IconButton
+                  color="secondary"
+                  aria-label="open drawer"
+                  edge="start"
+                  onClick={() => {
+                    plusDay();
                   }}
-                />
-              </MuiPickersUtilsProvider>
-            </Grid>
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={() => {
-                  plusDay();
-                }}
-              >
-                <ArrowForwardIosIcon
-                  //fontSize="large"
-                  color="primary"
-                />
-              </IconButton>
+                >
+                  <ArrowForwardIosIcon
+                    //fontSize="large"
+                    color="secondary"
+                  />
+                </IconButton>
+              </Grid>
             </Grid>
           </Grid>
 
@@ -227,47 +276,59 @@ function CreateView({
             justify="flex-start"
             className={clsx(classes.settingsPanel, classes.formRow)}
           >
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={() => {
-                  minusHour();
-                }}
-              >
-                <ArrowBackIosIcon
-                  //fontSize="large"
-                  color="primary"
-                />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardTimePicker margin="normal" id="time-picker" inputRef={inputTime}
-                  //label="Time picker"
-                  className={classes.dateField}
-                  value={formValue.startDate}
-                  onChange={e => {
-                    handleDateChange(e);
+            <Grid item xs={2}>
+              <Grid container justify="flex-end">
+                <IconButton
+                  color="secondary"
+                  aria-label="open drawer"
+                  edge="start"
+                  onClick={() => {
+                    minusHour();
                   }}
-                  KeyboardButtonProps={{
-                    "aria-label": "change time"
-                  }}
-                />
-              </MuiPickersUtilsProvider>
+                >
+                  <ArrowBackIosIcon
+                    //fontSize="large"
+                    color="secondary"
+                  />
+                </IconButton>
+              </Grid>
             </Grid>
-            <Grid item>
-              <IconButton color="inherit" aria-label="open drawer" edge="start"
-                onClick={() => {
-                  plusHour();
-                }}
-              >
-                <ArrowForwardIosIcon
-                  //fontSize="large"
-                  color="primary"
-                />
-              </IconButton>
+            <Grid item xs={8}>
+              <Grid container justify="center">
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardTimePicker
+                    margin="normal"
+                    id="time-picker"
+                    inputRef={inputTime}
+                    //label="Time picker"
+                    className={classes.dateField}
+                    value={formValue.startDate}
+                    onChange={(e) => {
+                      handleDateChange(e);
+                    }}
+                    KeyboardButtonProps={{
+                      "aria-label": "change time",
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+            </Grid>
+            <Grid item xs={2}>
+              <Grid container justify="flex-start">
+                <IconButton
+                  color="secondary"
+                  aria-label="open drawer"
+                  edge="start"
+                  onClick={() => {
+                    plusHour();
+                  }}
+                >
+                  <ArrowForwardIosIcon
+                    //fontSize="large"
+                    color="secondary"
+                  />
+                </IconButton>
+              </Grid>
             </Grid>
           </Grid>
 
@@ -276,149 +337,166 @@ function CreateView({
             container
             className={clsx(classes.settingsPanel, classes.formRow)}
           >
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                id="minus_btn_duration"
-                onClick={() => minusClickDuration}
-              >
-                <ArrowBackIosIcon color="primary" />
-              </IconButton>
+            <Grid item xs={2}>
+              <Grid container justify="flex-end">
+                <IconButton
+                  color="secondary"
+                  aria-label="open drawer"
+                  edge="start"
+                  id="minus_btn_duration"
+                  onClick={() => minusClickDuration}
+                >
+                  <ArrowBackIosIcon color="secondary" />
+                </IconButton>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Input
-                type="number"
-                value={duration}
-                //onChange={handleChange("amount")}
-                onChange={(value) => {setNewValueDuration(value.target.value)}}
-                endAdornment={
-                  <InputAdornment position="start">
-                    hours  
-                  </InputAdornment>
-                }
-              />
+            <Grid item xs={8}>
+              <Grid container justify="center">
+                <Input
+                  type="number"
+                  value={duration}
+                  //onChange={handleChange("amount")}
+
+                  onChange={(value) => {
+                    setNewValueDuration(value.target.value);
+                  }}
+                  endAdornment={
+                    <InputAdornment position="start">hours</InputAdornment>
+                  }
+                />
+              </Grid>
             </Grid>
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                id="plus_btn_duration"
-                onClick={() => plusClickDuration}
-              >
-                <ArrowForwardIosIcon color="primary" />
-              </IconButton>
+            <Grid item xs={2}>
+              <Grid container justify="flex-start">
+                <IconButton
+                  color="secondary"
+                  aria-label="open drawer"
+                  edge="start"
+                  id="plus_btn_duration"
+                  onClick={() => plusClickDuration}
+                >
+                  <ArrowForwardIosIcon color="secondary" />
+                </IconButton>
+              </Grid>
             </Grid>
           </Grid>
-
 
           <InputLabel htmlFor="standard-adornment-amount">PRICE</InputLabel>
           <Grid
             container
             className={clsx(classes.settingsPanel, classes.formRow)}
           >
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                id="minus_btn"
-                onClick={() => minusClickPrice}
-              >
-                <ArrowBackIosIcon color="primary" />
-              </IconButton>
+            <Grid item xs={2}>
+              <Grid container justify="flex-end">
+                <IconButton
+                  color="secondary"
+                  aria-label="open drawer"
+                  edge="start"
+                  id="minus_btn"
+                  onClick={() => minusClickPrice}
+                >
+                  <ArrowBackIosIcon color="secondary" />
+                </IconButton>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Input
-                type="number"
-                value={price}
-                //onChange={handleChange("amount")}
-                onChange={(value) => {
-                  console.log("CHange Price: ", value)
-                  setNewValuePrice(value.target.value)
-                }}
-                startAdornment={
-                  <InputAdornment position="start">
-                    {formValue.currency}
-                  </InputAdornment>
-                }
-              />
+            <Grid item xs={8}>
+              <Grid container justify="center">
+                <Input
+                  type="number"
+                  value={price}
+                  //onChange={handleChange("amount")}
+                  onChange={(value) => {
+                    console.log("CHange Price: ", value);
+                    setNewValuePrice(value.target.value);
+                  }}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      {formValue.currency}
+                    </InputAdornment>
+                  }
+                />
+                <TextField
+                  id="outlined-select-currency"
+                  select
+                  //label="Select"
+                  value={formValue.currency}
+                  onChange={handleChangeCurrency}
+                  //helperText="Please select your currency"
+                  //variant="outlined"
+                >
+                  {currencies.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
             </Grid>
-            <Grid item>
-              <TextField
-                id="outlined-select-currency"
-                select
-                //label="Select"
-                value={formValue.currency}
-                onChange={handleChangeCurrency}
-                //helperText="Please select your currency"
-                //variant="outlined"
-              >
-                {currencies.map(option => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                id="plus_btn"
-                onClick={() => plusClickPrice}
-              >
-                <ArrowForwardIosIcon color="primary" />
-              </IconButton>
+            <Grid item xs={2}>
+              <Grid container justify="flex-start">
+                <IconButton
+                  color="secondary"
+                  aria-label="open drawer"
+                  edge="start"
+                  id="plus_btn"
+                  onClick={() => plusClickPrice}
+                >
+                  <ArrowForwardIosIcon color="secondary" />
+                </IconButton>
+              </Grid>
             </Grid>
           </Grid>
 
           <InputLabel htmlFor="standard-adornment-amount">CAPACITY</InputLabel>
           <Grid container className={classes.formRow}>
-            <Grid item>
-              <IconButton
-                color="inherit"
-                edge="start"
-                id="minus_btn_capacity"
-                onClick={() => minusClickCapacity}
-              >
-                <ArrowBackIosIcon color="primary" />
-              </IconButton>
+            <Grid item xs={2}>
+              <Grid container justify="flex-end">
+                <IconButton
+                  color="secondary"
+                  edge="start"
+                  id="minus_btn_capacity"
+                  onClick={() => minusClickCapacity}
+                >
+                  <ArrowBackIosIcon color="secondary" />
+                </IconButton>
+              </Grid>
             </Grid>
-            <Grid>
-              <TextField
-                value={capacity}
-                type="number"
-                onChange={(value) => {
-                  setNewValueCapacity(value.target.value)
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <AccountCircle />
-                    </InputAdornment>
-                  )
-                }}
-              />
+            <Grid item xs={8}>
+              <Grid container justify="center">
+                <TextField
+                  value={capacity}
+                  type="number"
+                  onChange={(value) => {
+                    setNewValueCapacity(value.target.value);
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <AccountCircle />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
             </Grid>
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                id="plus_btn_capacity"
-                onClick={() => plusClickCapacity}
-              >
-                <ArrowForwardIosIcon color="primary" />
-              </IconButton>
+            <Grid item xs={2}>
+              <Grid container justify="flex-start">
+                <IconButton
+                  color="secondary"
+                  aria-label="open drawer"
+                  edge="start"
+                  id="plus_btn_capacity"
+                  onClick={() => plusClickCapacity}
+                >
+                  <ArrowForwardIosIcon color="secondary" />
+                </IconButton>
+              </Grid>
             </Grid>
           </Grid>
-          
-          <InputLabel htmlFor="standard-adornment-amount">BYO Event (guest can bring his own dring/snack)</InputLabel>
+
+          <InputLabel htmlFor="standard-adornment-amount">
+            BYO Event (guest can bring his own dring/snack)
+          </InputLabel>
           <FormControlLabel
             className={classes.switchBYO}
             control={
@@ -437,15 +515,27 @@ function CreateView({
             alignContent="center"
             className={clsx(classes.formRow, classes.dropContainer)}
           >
-            <Grid item>
-              <Dropzone setFormValue={setFormValue} setCountOfFiles={setCountOfFiles}/>
+            <Grid item xs={2}>
+              <Dropzone
+                setFormValue={setFormValue}
+                setCountOfFiles={setCountOfFiles}
+              />
             </Grid>
-            <Grid 
-              item 
-              xs={12}>
-            {(countOfFiles > formValue.ImagesArr.length) ? <Spinner height={40} width={40} /> : <div className={classes.fourtyBox}></div>}
-             <LinearProgress variant="determinate" value={formValue.ImagesArr.length ? ((formValue.ImagesArr.length/countOfFiles)*100) : 0} />
-             </Grid>
+            <Grid item xs={12}>
+              {countOfFiles > formValue.ImagesArr.length ? (
+                <Spinner height={40} width={40} />
+              ) : (
+                <div className={classes.fourtyBox}></div>
+              )}
+              <LinearProgress
+                variant="determinate"
+                value={
+                  formValue.ImagesArr.length
+                    ? (formValue.ImagesArr.length / countOfFiles) * 100
+                    : 0
+                }
+              />
+            </Grid>
           </Grid>
 
           <InputLabel htmlFor="standard-adornment-amount">
@@ -474,14 +564,14 @@ function CreateView({
           </Grid>
 
           {errorOut &&
-            errorOut.map(item => (
+            errorOut.map((item) => (
               <Alert severity="error" key={item.message}>
                 {item.message}
               </Alert>
             ))}
 
           {FeErrors &&
-            FeErrors.map(item => (
+            FeErrors.map((item) => (
               <Alert severity="error" key={item}>
                 {item} is empty
               </Alert>
@@ -493,7 +583,7 @@ function CreateView({
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={e => onSubmit(e)}
+            onClick={(e) => onSubmit(e)}
             // disabled={
             //   formValue.ImagesArr && formValue.ImagesArr.length ? false : true
             // }
@@ -512,7 +602,7 @@ function CreateView({
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   profileWrap: {
     top: 0,
     height: "100%",
@@ -526,13 +616,13 @@ const useStyles = makeStyles(theme => ({
     padding: 10,
     paddingTop: 50,
     paddingBottom: 0,
-    
+
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     background: "#E8045D",
     [theme.breakpoints.down("xs")]: {
-      marginTop: "56px !important"
-    }
+      marginTop: "56px !important",
+    },
   },
   paper: {
     padding: 10,
@@ -541,10 +631,10 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center",
     background: "rgba(255,255,255,0.7)",
     borderTopLeftRadius: 0,
-    borderTopRightRadius: 0
+    borderTopRightRadius: 0,
   },
   dateField: {
-    wdith: 200
+    wdith: 200,
   },
   justDoIt: {
     fontWeight: 200,
@@ -552,59 +642,64 @@ const useStyles = makeStyles(theme => ({
     letterSpacing: 12,
     position: "relative",
     top: 5,
-    marginBottom: 0
+    marginBottom: 0,
   },
   now: {
     fontWeight: 700,
     fontSize: 38,
-    letterSpacing: 3
+    letterSpacing: 3,
   },
-  inputName:{
+  inputName: {
     background: "rgba(255,255,255,0.9)",
     borderRadius: 5,
-    boxShadow: "5px 5px 5px 0px rgba(0,0,0,0.75)"
+    boxShadow: "5px 5px 5px 0px rgba(0,0,0,0.75)",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   pinkBack: {
-    width: "100%"
+    width: "100%",
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
+    margin: theme.spacing(3, 0, 2),
   },
 
   withoutLabel: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
-  fourtyBox:{
+  fourtyBox: {
     height: 40,
-    width: 40
+    width: 40,
   },
   formRow: {
     marginTop: 10,
-    marginBottom: 40
+    marginBottom: 40,
+    // color: "red",
+    // backgroundColor: "red",
   },
   switchBYO: {
     marginBottom: "20px",
-    marginLeft: "10px"
+    marginLeft: "10px",
   },
   descriptionContainer: {
-    width: "100%"
+    width: "100%",
   },
   descriptionItem: {
-    width: "100%"
+    width: "100%",
   },
   dropContainer: {
     background: "rgba(0,0,0,0.1)",
   },
   dropContainerBottom: {
     background: "rgba(0,0,0,0.1)",
+  },
+  btnsDialogGridCont: {
+    padding: 5,
   },
 }));
 

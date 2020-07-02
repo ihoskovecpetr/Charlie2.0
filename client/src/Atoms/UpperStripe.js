@@ -19,29 +19,45 @@ import Badge from "@material-ui/core/Badge";
 import { useScrollY } from "../Hooks/useScrollY";
 
 import { withRouter, useHistory } from "react-router-dom";
-import clsx from "clsx"
+import clsx from "clsx";
 
 import { UserContext } from "src/userContext";
 import { useCountUnseenBookingsRatings } from "src/Hooks/useCountUnseenBookingsRatings";
 
 import Spinner from "./Spinner";
-import CharlieLogo from "src/Images/charlie-logo.png"
-import SearchInput from "src/Atoms/UpperStripeAndDrawer/SearchInput"
+import CharlieLogo from "src/Images/charlie-logo.png";
+import SearchInput from "src/Atoms/UpperStripeAndDrawer/SearchInput";
 
-
-function UpperStripe({drawerWidth, location, handleDrawerToggle, ListOfNames, ListOfUrls, userApp, loading}) {
+function UpperStripe({
+  drawerWidth,
+  location,
+  handleDrawerToggle,
+  ListOfNames,
+  ListOfUrls,
+  userApp,
+  loading,
+}) {
   const { context } = useContext(UserContext);
-  let history = useHistory(); 
-  const {displayPlay_memo} = useScrollY({y: 10})
-  const {countHostBookings, countUserBookings, countRatings} = useCountUnseenBookingsRatings()
+  let history = useHistory();
+  const { displayPlay_memo } = useScrollY({ y: 10 });
+  const {
+    countHostBookings,
+    countUserBookings,
+    countRatings,
+  } = useCountUnseenBookingsRatings();
 
-  console.log("Upper Stripe: countHostBookings, countUserBookings, countRatings ", countHostBookings, countUserBookings, countRatings)
+  console.log(
+    "Upper Stripe: countHostBookings, countUserBookings, countRatings ",
+    countHostBookings,
+    countUserBookings,
+    countRatings
+  );
 
-  const useStyles = makeStyles(theme => ({
+  const useStyles = makeStyles((theme) => ({
     upperWrap: {
       position: "fixed",
       top: 0,
-      width: "100vw"
+      width: "100vw",
     },
     containerMain: {
       paddingLeft: 5,
@@ -51,20 +67,20 @@ function UpperStripe({drawerWidth, location, handleDrawerToggle, ListOfNames, Li
     menuButton: {
       marginRight: theme.spacing(2),
       [theme.breakpoints.up("sm")]: {
-        display: "none"
-      }
+        display: "none",
+      },
     },
-    hideSmall:{
+    hideSmall: {
       display: "block",
       [theme.breakpoints.down("sm")]: {
-        display: "none"
-      }
+        display: "none",
+      },
     },
-    showSmall:{
+    showSmall: {
       display: "none",
       [theme.breakpoints.down("sm")]: {
-        display: "block"
-      }
+        display: "block",
+      },
     },
     appBar: {
       position: "fixed",
@@ -77,13 +93,13 @@ function UpperStripe({drawerWidth, location, handleDrawerToggle, ListOfNames, Li
       [theme.breakpoints.down("xs")]: {
         width: `calc(100% - ${drawerWidth}px)`,
         display: "none",
-        fontWeight: "400 !important"
+        fontWeight: "400 !important",
       },
       fontWeight: "550 !important",
     },
     ButtonAvatar: {
       marginLeft: "10px",
-      marginRight: "10px"
+      marginRight: "10px",
     },
     buttonNavi: {
       fontWeight: "600 !important",
@@ -91,73 +107,87 @@ function UpperStripe({drawerWidth, location, handleDrawerToggle, ListOfNames, Li
     },
     ellipsName: {
       maxWidth: 100,
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
       textAlign: "center",
     },
     middle: {
-      position: 'absolute',
+      position: "absolute",
       zIndex: 1,
       left: 0,
       right: 0,
-      margin: '0 auto',
+      margin: "0 auto",
     },
   }));
   const classes = useStyles();
 
   const pathSet = location.pathname.split("/");
-  const disabledFromOut = window.eventId ? true : false
+  const disabledFromOut = window.eventId ? true : false;
 
   return (
     <>
-    <CssBaseline />
-      <AppBar 
-              className={classes.appBar} 
-              style={{
-                backgroundColor: pathSet[1] === 'map' || pathSet[1] === 'profile' || displayPlay_memo ? "rgba(255,255,255,0.6)" : "transparent" ,
-                boxShadow: !displayPlay_memo && "none"
-                }}>
+      <CssBaseline />
+      <AppBar
+        className={classes.appBar}
+        style={{
+          backgroundColor:
+            pathSet[1] === "map" || pathSet[1] === "profile" || displayPlay_memo
+              ? "rgba(255,255,255,0.6)"
+              : "transparent",
+          boxShadow: !displayPlay_memo && "none",
+        }}
+      >
         <Container maxWidth="xl" className={classes.containerMain}>
-        <Toolbar>
-          <Grid
-            justify="space-between" // Add it here :)
-            alignItems="center"
-            container
-          >
-            <Grid item>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                className={classes.menuButton}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Grid container alignItems="center">
-                {ListOfNames.map((text, index) => (
+          <Toolbar>
+            <Grid
+              justify="space-between" // Add it here :)
+              alignItems="center"
+              container
+            >
+              <Grid item>
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  edge="start"
+                  onClick={handleDrawerToggle}
+                  className={classes.menuButton}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Grid container alignItems="center">
+                  {ListOfNames.map((text, index) => (
+                    <Grid item>
+                      <Button
+                        color="inherit"
+                        className={classes.buttonToBeHidden}
+                        disabled={disabledFromOut}
+                        onClick={() => {
+                          history.push(`/${ListOfUrls[index]}`);
+                        }}
+                      >
+                        {text != "Charlie" && <>{text}</>}
+                        {text == "Charlie" && (
+                          <Avatar
+                            className={classes.avatarCharlie}
+                            alt="Remy Sharp"
+                            src={CharlieLogo}
+                          />
+                        )}
+                      </Button>
+                    </Grid>
+                  ))}
                   <Grid item>
                     <Button
                       color="inherit"
-                      className={classes.buttonToBeHidden}
+                      className={clsx(
+                        classes.buttonToBeHidden,
+                        classes.showSmall
+                      )}
                       disabled={disabledFromOut}
-                      onClick={() => {history.push(`/${ListOfUrls[index]}`)}}
-                    >
-                      {text != "Charlie" && <>{text}</> }
-                      {text == "Charlie" && <Avatar className={classes.avatarCharlie}
-                                                    alt="Remy Sharp"
-                                                    src={CharlieLogo}
-                                                  />}
-                    </Button>
-                  </Grid>
-                    ))}
-                  <Grid item>
-                    <Button
-                      color="inherit"
-                      className={clsx(classes.buttonToBeHidden , classes.showSmall)}
-                      disabled={disabledFromOut}
-                      onClick={() => {history.push(`/search`)}}
+                      onClick={() => {
+                        history.push(`/search`);
+                      }}
                     >
                       SEARCH
                     </Button>
@@ -167,85 +197,95 @@ function UpperStripe({drawerWidth, location, handleDrawerToggle, ListOfNames, Li
                       <SearchInput />
                     </div>
                   </Grid>
+                </Grid>
               </Grid>
-                            
-            </Grid>
-            <Grid item>
-              {!userApp && context && context.name && (
-                    <Button color="inherit" 
-                            className={classes.buttonNavi} 
-                            disabled={disabledFromOut}
-                            onClick={() => history.push(`/profile`)}>
-                      <p className={classes.ellipsName}>{context.name} X</p>
-                      <Avatar
-                        alt="Remy SharpXX"
-                        src={context.picture}
-                        className={classes.ButtonAvatar}
-                      >
-                        x
-                      </Avatar>
-                    </Button>
-              )}
-
-              {!userApp.success && !context.name && (
-                <Badge
-                  color="primary"
-                  badgeContent={
-                    <p style={{ margin: 0 }}>
-                      <b>START HERE</b>
-                    </p>
-                  }
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left"
-                  }}>
-                  <Button 
-                      color="inherit" 
-                      className={classes.buttonNavi}
-                      disabled={disabledFromOut}
-                      onClick={() => {history.push("/signin")}}>
-                      SIGN IN
-                      {loading ? (
-                          <div className={classes.ButtonAvatar}>
-                            <Spinner height={30} width={30} />
-                          </div>
-                        ) : (
-                          <div className={classes.ButtonAvatar}>
-                            <AccountCircle color="disabled" fontSize="large" />
-                          </div>
-                        )}
-                  </Button>
-                </Badge>
-              )}
-              {userApp.success && (
-                  <Button color="inherit" 
-                          className={classes.buttonNavi}
-                          disabled={disabledFromOut}
-                          onClick={() => {history.push("/profile")}}>
-                    
-                    <p className={classes.ellipsName}>{userApp.name}</p>
-                    <Badge
-                        badgeContent={countHostBookings + countUserBookings + countRatings} 
-                        // className={classes.badge} 
-                        color="secondary"
-                        // style={{ backgroundColor: event.decided ? "grey" : "red"}}
-                        >
+              <Grid item>
+                {!userApp && context && context.name && (
+                  <Button
+                    color="inherit"
+                    className={classes.buttonNavi}
+                    disabled={disabledFromOut}
+                    onClick={() => history.push(`/profile`)}
+                  >
+                    <p className={classes.ellipsName}>{context.name} X</p>
                     <Avatar
-                      alt="Remy Sharping"
-                      src={userApp.picture}
+                      alt="Remy SharpXX"
+                      src={context.picture}
                       className={classes.ButtonAvatar}
                     >
                       x
                     </Avatar>
-                    </ Badge>
                   </Button>
-              )}
+                )}
+
+                {!userApp.success && !context.name && (
+                  <Badge
+                    color="primary"
+                    badgeContent={
+                      <p style={{ margin: 0 }}>
+                        <b>START HERE</b>
+                      </p>
+                    }
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "left",
+                    }}
+                  >
+                    <Button
+                      color="inherit"
+                      className={classes.buttonNavi}
+                      disabled={disabledFromOut}
+                      onClick={() => {
+                        history.push("/signin");
+                      }}
+                    >
+                      SIGN IN
+                      {loading ? (
+                        <div className={classes.ButtonAvatar}>
+                          <Spinner height={30} width={30} />
+                        </div>
+                      ) : (
+                        <div className={classes.ButtonAvatar}>
+                          <AccountCircle color="disabled" fontSize="large" />
+                        </div>
+                      )}
+                    </Button>
+                  </Badge>
+                )}
+                {userApp.success && (
+                  <Button
+                    color="inherit"
+                    className={classes.buttonNavi}
+                    disabled={disabledFromOut}
+                    onClick={() => {
+                      history.push("/profile");
+                    }}
+                  >
+                    <p className={classes.ellipsName}>{userApp.name}</p>
+                    <Badge
+                      badgeContent={
+                        countHostBookings + countUserBookings + countRatings
+                      }
+                      // className={classes.badge}
+                      color="secondary"
+                      // style={{ backgroundColor: event.decided ? "grey" : "red"}}
+                    >
+                      <Avatar
+                        alt="Remy Sharping"
+                        src={userApp.picture}
+                        className={classes.ButtonAvatar}
+                      >
+                        x
+                      </Avatar>
+                    </Badge>
+                  </Button>
+                )}
+              </Grid>
             </Grid>
-          </Grid>
-        </Toolbar>
+          </Toolbar>
         </Container>
       </AppBar>
-      </>
+    </>
   );
 }
 

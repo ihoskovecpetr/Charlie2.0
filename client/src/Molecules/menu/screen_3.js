@@ -108,7 +108,7 @@ export default function Screen3(props) {
                 if (new Date(event.event.dateStart) >= new Date()) {
                   return <EventCard event={event.event} key={index} />;
                 } else {
-                  return <p>You have got no upconning event</p>;
+                  return <p>You dont have an upcomming event</p>;
                 }
               })}
               {data && Sorted.length === 0 && (

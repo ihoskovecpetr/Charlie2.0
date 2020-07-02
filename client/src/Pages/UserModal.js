@@ -9,6 +9,7 @@ import Avatar from "@material-ui/core/Avatar";
 import CloseIcon from "@material-ui/icons/Close";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Rating from "@material-ui/lab/Rating";
+import AlternateEmailIcon from "@material-ui/icons/AlternateEmail";
 
 import { withRouter, useHistory, useRouteMatch } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
@@ -98,9 +99,14 @@ function UserModal(props) {
     return (
       <ModalLayout>
         <PaperUser className={classes.paper}>
-          <Grid container justify="flex-start" className={classes.mainGrid}>
-            <Grid item xs={12}>
-              <Grid container justify="center">
+          <Grid
+            container
+            // justify="center"
+            // alignItems="center"
+            className={classes.mainGrid}
+          >
+            <Grid item xs={4}>
+              <Grid container justify="center" alignItems="stretch">
                 <Grid item>
                   <Avatar
                     className={classes.avatarMain}
@@ -111,29 +117,34 @@ function UserModal(props) {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Typography variant="h4" className={classes.nameHeader}>
+            <Grid item xs={8}>
+              <Typography
+                variant="h4"
+                align="left"
+                className={classes.nameHeader}
+              >
                 {dataDB.getOneUser.name}
               </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1" className={classes.email}>
+              <Typography
+                variant="subtitle1"
+                align="left"
+                className={classes.email}
+              >
+                <AlternateEmailIcon />
                 <a href={`mailto:${dataDB.getOneUser.email}`}>
                   {dataDB.getOneUser.email}
                 </a>
               </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container justify="center" alignItems="center">
-                <Grid item>
-                  <a href={`tel:${dataDB.getOneUser.telephone}`}>
-                    {dataDB.getOneUser.telephone}
-                  </a>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container justify="center" alignItems="center">
+              <Typography
+                variant="subtitle1"
+                align="left"
+                className={classes.email}
+              >
+                <a href={`tel:${dataDB.getOneUser.telephone}`}>
+                  {dataDB.getOneUser.telephone}
+                </a>
+              </Typography>
+              <Grid container justify="flex-start" alignItems="center">
                 <Grid item>
                   <Typography variant="subtitle1" className={classes.email}>
                     <AverageRatingStars userId={dataDB.getOneUser._id} />
@@ -141,13 +152,15 @@ function UserModal(props) {
                 </Grid>
               </Grid>
             </Grid>
+
             <Grid item xs={12}>
-              <Grid container justify="center">
+              <Grid
+                container
+                justify="center"
+                className={classes.descriptionCont}
+              >
                 <Grid item>
-                  <Typography
-                    variant="subtitle1"
-                    className={classes.description}
-                  >
+                  <Typography variant="subtitle1">
                     {dataDB.getOneUser.description}
                   </Typography>
                 </Grid>
@@ -228,23 +241,30 @@ const useStyles = makeStyles((theme) => ({
     borderBottomLeftRadius: 0,
   },
   avatarMain: {
-    height: 120,
-    width: 120,
+    // height: 120,
+    // width: 120,
+    width: "3rem",
+    height: "3rem",
     margin: 10,
     border: "2px solid white",
     boxShadow: "4px 3px 5px 0px rgba(0,0,0,0.5)",
     backgroundColor: theme.palette.secondary.main,
   },
   nameHeader: {
-    textAlign: "center",
+    // textAlign: "center",
   },
   email: {
-    textAlign: "center",
+    // textAlign: "center",
+    marginTop: 5,
+    marginBottom: 5,
   },
   ratingContainer: {
     width: "100%",
     maxHeight: 200,
     overflow: "scroll",
+  },
+  descriptionCont: {
+    backgroundColor: "rgba(0,0,0,0.2)",
   },
   eventButtons: {
     position: "absolute",

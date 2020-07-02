@@ -6,7 +6,7 @@ import {
   NavLink,
   Redirect,
   useHistory,
-  BrowserRouter as Router
+  BrowserRouter as Router,
 } from "react-router-dom";
 import PropTypes from "prop-types";
 
@@ -43,47 +43,48 @@ import About from "./Pages/About";
 import UserModal from "./Pages/UserModal";
 import Play from "./Pages/Play";
 import PlayOutside from "./Pages/PlayOutside";
-import AcceptPage from "./Pages/AcceptPage"
-import Search from "./Pages/SearchPage"
-import Privacy from "./Pages/PrivacyPage"
-import ConfirmUserPage from "./Pages/ConfirmUserPage"
+import AcceptPage from "./Pages/AcceptPage";
+import Search from "./Pages/SearchPage";
+import Privacy from "./Pages/PrivacyPage";
+import ConfirmUserPage from "./Pages/ConfirmUserPage";
 import FloatingBtnWrap from "./Molecules/FloatingBtnWrap";
-
 
 const drawerWidth = 240;
 let prevLocation;
 
-function App({location, container}) {
+function App({ location, container }) {
   let history = useHistory();
   const { md_size_memo } = useXsSize();
-  console.log("App.js rErEnDeR, conteiner: ", location, container)
+  console.log("App.js rErEnDeR, conteiner: ", location, container);
   const { latitude, longitude, address, err } = usePosition();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [finishedAnimation, setFinishedAnimation] = useState(false);
-  const [routerState, setRouterState] = useState({ 
+  const [routerState, setRouterState] = useState({
     firstPrint: false,
     Modal: false,
-    justGoBack: false
+    justGoBack: false,
   });
   const [workingPosition, setWorkingPosition] = useState({
     date: new Date().toISOString().split("T")[0],
     geometry: null,
     zoom: 10,
   });
-  const [getLoggedInUser, { loading, error, data }] = useMutation(GET_LOGGED_IN_USER);
+  const [getLoggedInUser, { loading, error, data }] = useMutation(
+    GET_LOGGED_IN_USER
+  );
 
   //Overriding default styles in Material UI
   const theme = createMuiTheme({
     overrides: {
       MuiTab: {
         root: {
-          color: md_size_memo ? 'white !important' : 'black !important',
-          fontWeight: 600
+          color: md_size_memo ? "white !important" : "black !important",
+          fontWeight: 600,
         },
       },
       PrivateTabIndicator: {
         root: {
-          backgroundColor: 'grey !important',
+          backgroundColor: "grey !important",
         },
       },
     },
@@ -97,28 +98,27 @@ function App({location, container}) {
       // E.g., shift from Red 500 to Red 300 or Red 700.
       tonalOffset: 0.2,
       success: {
-        main: "#E8045D"
+        main: "#E8045D",
       },
       info: {
-        main: "#600328"
+        main: "#600328",
       },
       warning: {
-        main: "#242323"
-      }
-    }
+        main: "#242323",
+      },
+    },
   });
 
-  const useStyles = makeStyles(theme => ({
-
+  const useStyles = makeStyles((theme) => ({
     drawer: {
       [theme.breakpoints.up("sm")]: {
         width: 0,
-        flexShrink: 0
-      }
+        flexShrink: 0,
+      },
     },
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
-      width: drawerWidth
+      width: drawerWidth,
     },
     content: {
       height: "100vh",
@@ -127,7 +127,7 @@ function App({location, container}) {
       width: "100%",
       backgroundColor: "#F8F8F8",
       // overflow: "scroll"
-    }
+    },
   }));
 
   const classes = useStyles();
@@ -154,21 +154,21 @@ function App({location, container}) {
     expanded_id: null,
     playFilterObj: {
       filterOn: false,
-      geolocationPlay: { lng: 14.40076 , lat: 50.08804 },
+      geolocationPlay: { lng: 14.40076, lat: 50.08804 },
       playEventsCount: null,
       radius: 20,
       plusDays: 2,
       shownEvents: [],
-    },  
+    },
   });
 
   console.log("Rerendering whole App cntx: ", contx);
 
-
   const setUserToContext = (userObj) => {
-    console.log("setUserToContext: ", userObj)
-    if(userObj){
-          setContx(prev => {return {
+    console.log("setUserToContext: ", userObj);
+    if (userObj) {
+      setContx((prev) => {
+        return {
           ...prev,
           _id: userObj._id,
           success: userObj.success,
@@ -178,81 +178,103 @@ function App({location, container}) {
           picture: userObj.picture,
           description: userObj.description,
           rememberSignIn: true,
-        }}
-        );
+        };
+      });
     }
-  }
+  };
 
   useEffect(() => {
-
-    if(location.pathname.split("/")[1] === "play" && !window.firstPrintPlay){
-      window.firstPrintPlay = "play"
-    }else{
-      window.firstPrintPlay = "else"
+    if (location.pathname.split("/")[1] === "play" && !window.firstPrintPlay) {
+      window.firstPrintPlay = "play";
+    } else {
+      window.firstPrintPlay = "else";
     }
   }, [location.pathname]);
 
   useEffect(() => {
-
     getLoggedInUser();
     prevLocation = location;
-
   }, []);
 
-
-    useEffect(() => {
-      if (data && data.getLoggedInUser) {
-        console.log("Calling setUserToContext from App")
-        setUserToContext(data.getLoggedInUser)
-      }
-    }, [data]);
+  useEffect(() => {
+    if (data && data.getLoggedInUser) {
+      console.log("Calling setUserToContext from App");
+      setUserToContext(data.getLoggedInUser);
+    }
+  }, [data]);
 
   useEffect(() => {
-  if (latitude && longitude && !contx.geolocationObj) {
-    console.log("Context. setting Geolocation Obj: ", latitude ,longitude)
-    setContx(prev => {
-      return { 
-        ...prev, 
-        geolocationObj: { lat: latitude, lng: longitude },
-        playFilterObj: {
-          ...prev.playFilterObj,
-          filterOn: true,
-          geolocationPlay: { lat: latitude, lng: longitude },
-        }, 
-      };
-    });
-  }
-  }, [latitude, longitude])
+    if (latitude && longitude && !contx.geolocationObj) {
+      console.log("Context. setting Geolocation Obj: ", latitude, longitude);
+      setContx((prev) => {
+        return {
+          ...prev,
+          geolocationObj: { lat: latitude, lng: longitude },
+          playFilterObj: {
+            ...prev.playFilterObj,
+            filterOn: true,
+            geolocationPlay: { lat: latitude, lng: longitude },
+          },
+        };
+      });
+    }
+  }, [latitude, longitude]);
 
   useEffect(() => {
     if (!contx.curPositionAddress) {
-      console.log("Context. setting ADDRESS: ", address)
-      setContx(prev => {
+      console.log("Context. setting ADDRESS: ", address);
+      setContx((prev) => {
         return { ...prev, curPositionAddress: address };
       });
-      }
-    }, [address])
+    }
+  }, [address]);
 
   const providerValue = useMemo(() => {
-    let context = contx
-    let setContext = setContx
+    let context = contx;
+    let setContext = setContx;
     return { context, setContext };
   }, [contx, setContx]);
 
   const handleDrawerToggle = () => {
-    if(!window.eventId){
+    if (!window.eventId) {
       setMobileOpen(!mobileOpen);
-    } 
+    }
   };
 
   const ListOfUrls = contx.success
-    ? ["", "play", "create", "map", "about", "search", "privacy-policy", "signout", "user", "profile", "accept", "confirm"]
-    : ["", "play", "create", "map", "about", "search", "privacy-policy", "signin", "user", "signup", "accept", "confirm"];
+    ? [
+        "",
+        "play",
+        "create",
+        "map",
+        "about",
+        "search",
+        "privacy-policy",
+        "signout",
+        "user",
+        "profile",
+        "accept",
+        "confirm",
+      ]
+    : [
+        "",
+        "play",
+        "create",
+        "map",
+        "about",
+        "search",
+        "privacy-policy",
+        "signin",
+        "user",
+        "signup",
+        "accept",
+        "confirm",
+      ];
 
-    // Just for DRAWER and NavigationHeader (UpperStripe)
+  // Just for DRAWER and NavigationHeader (UpperStripe)
   const ListOfNames = contx.success
-    ? ["Charlie", "Play", "Create", "Map", "About", "Sign Out"]
-    : ["Charlie", "Play", "Create", "Map", "About", "Sign In"];
+    ? ["Charlie", "Join", "Create", "Map", "About", "Sign Out"]
+    : ["Charlie", "Join", "Create", "Map", "About", "Sign In"];
   const ListOfComponents = contx.success
     ? [
         <Menu
@@ -292,412 +314,234 @@ function App({location, container}) {
         <Privacy />,
         <SignIn />,
         <UserModal />,
-        <SignUp />
+        <SignUp />,
       ];
-   
-  const returnComponent = index => {
-    return <>
-            <CssBaseline />
-            {ListOfComponents[index]}
-          </>;
+
+  const returnComponent = (index) => {
+    return (
+      <>
+        <CssBaseline />
+        {ListOfComponents[index]}
+      </>
+    );
   };
 
   let firstPrint = false;
   let Modal = false;
   let justGoBack = false;
 
-useEffect(() => {
+  useEffect(() => {
+    console.log("App Location props rerendered: ", location);
 
-  console.log("App Location props rerendered: ", location)
+    firstPrint = false;
+    Modal = false;
+    justGoBack = false;
+    var pathSet = location.pathname.split("/");
 
-  firstPrint = false;
-  Modal = false;
-  justGoBack = false;
-  var pathSet = location.pathname.split("/");
+    if (
+      pathSet[1] == "event" ||
+      pathSet[1] == "user" ||
+      pathSet[1] == "signin" ||
+      pathSet[1] == "signout"
+    ) {
+      Modal = true;
+    }
 
-  if (
-    pathSet[1] == "event" ||
-    pathSet[1] == "user" ||
-    pathSet[1] == "signin" ||
-    pathSet[1] == "signout"
-  ) {
-    Modal = true;
-  }
+    if (!Modal) {
+      prevLocation = location;
+    }
 
-  if (!Modal) {
-    prevLocation = location;
-  }
+    if (prevLocation == location) {
+      firstPrint = true;
+    }
 
-  if (prevLocation == location) {
-    firstPrint = true;
-  }
+    if (location && location.state && location.state.justGoBack == true) {
+      justGoBack = true;
+    }
 
-  if (
-    location &&
-    location.state &&
-    location.state.justGoBack == true
-  ) {
-    justGoBack = true;
-  }
+    console.log(
+      "Modal, justGoBack, firstPrint ",
+      Modal,
+      justGoBack,
+      firstPrint
+    );
+    console.log(" PrevLocation, location ", prevLocation, location);
 
-  console.log("Modal, justGoBack, firstPrint ", Modal, justGoBack, firstPrint)
-  console.log(" PrevLocation, location ", prevLocation, location)
+    setRouterState({
+      Modal: Modal,
+      justGoBack: justGoBack,
+      firstPrint: firstPrint,
+    });
+  }, [location]);
 
-  setRouterState({
-    Modal: Modal,
-    justGoBack: justGoBack,
-    firstPrint: firstPrint 
-  })
-
-}, [location])
- 
   return (
-      <ThemeProvider theme={theme}>
-        <UserContext.Provider value={providerValue}>
-          <>
-            {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-            <Hidden smUp implementation="css">
-              <Drawer
-                container={container}
-                variant="temporary"
-                anchor={theme.direction === "rtl" ? "right" : "left"}
-                open={mobileOpen}
-                onClose={handleDrawerToggle}
-                classes={{
-                  paper: classes.drawerPaper
-                }}
-                ModalProps={{
-                  keepMounted: true // Better open performance on mobile.
-                }}
-              >
-                  <DrawerContent
-                  ListOfNames={ListOfNames} 
-                  ListOfUrls={ListOfUrls} 
-                  handleDrawerToggle={handleDrawerToggle}
-                  drawerWidth={drawerWidth}
-                   />
-              </Drawer>
-            </Hidden>
+    <ThemeProvider theme={theme}>
+      <UserContext.Provider value={providerValue}>
+        <>
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Hidden smUp implementation="css">
+            <Drawer
+              container={container}
+              variant="temporary"
+              anchor={theme.direction === "rtl" ? "right" : "left"}
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
+            >
+              <DrawerContent
+                ListOfNames={ListOfNames}
+                ListOfUrls={ListOfUrls}
+                handleDrawerToggle={handleDrawerToggle}
+                drawerWidth={drawerWidth}
+              />
+            </Drawer>
+          </Hidden>
 
           <WindowEventSnackbar />
-
-          </>
-          {routerState.firstPrint && routerState.Modal && (
-            <>
-              <Route
-                exact
-                path={`/event/:id`}
-                render={() => (
-                  <>
-                    <UpperStripe
-                      //bringOwnUser?? true??
-                      loading={loading}
-                      userApp={false}
-                      ListOfNames={ListOfNames}
-                      ListOfUrls={ListOfUrls}
-                      handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
-                    />
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      <Event />
-                    </main>
-                  </>
-                )}
-              />
-              <Route
-                exact
-                path={`/user/:id`}
-                render={() => (
-                  <>
-                    <UpperStripe
-                      //bringOwnUser?? true??
-                      loading={loading}
-                      userApp={false}
-                      ListOfNames={ListOfNames}
-                      ListOfUrls={ListOfUrls}
-                      handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
-                    />
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      <UserModal />
-                    </main>
-                  </>
-                )}
-              />
-              <Route
-                exact
-                path={`/signin`}
-                render={() => (
-                  <>
-                    <UpperStripe
-                      //bringOwnUser?? true??
-                      loading={loading}
-                      userApp={false}
-                      ListOfNames={ListOfNames}
-                      ListOfUrls={ListOfUrls}
-                      handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
-                    />
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      <SignIn />
-                    </main>
-                  </>
-                )}
-              />
-              <Route
-                exact
-                path={`/signout`}
-                render={() => (
-                  <>
-                    <UpperStripe
-                      //bringOwnUser?? true??
-                      loading={loading}
-                      userApp={false}
-                      ListOfNames={ListOfNames}
-                      ListOfUrls={ListOfUrls}
-                      handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
-                    />
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      <SignOut />
-                    </main>
-                  </>
-                )}
-              />
-            </>
-          )}
-          {!routerState.firstPrint && routerState.Modal && (
-            <>
-              <Route
-                exact
-                path={`/event/:id`}
-                render={() => (
-                  <>
-                    <Event />
-                  </>
-                )}
-              />
-              <Route
-                exact
-                path={`/user/:id`}
-                render={() => (
-                  <>
-                    <UserModal />
-                  </>
-                )}
-              />
-              <Route
-                exact
-                path={`/signin`}
-                render={() => {
-                  return (
-                    <>
-                      <SignIn />
-                    </>
-                  );
-                }}
-              />
-              <Route
-                exact
-                path={`/signout`}
-                render={() => (
-                  <>
-                    <SignOut />
-                  </>
-                )}
-              />
-
-              <Switch location={prevLocation}>
-                {ListOfUrls.map((text, index) => (
-                  <Route
-                    exact
-                    path={`/${text}`}
-                    key={index}
-                    render={() => (
-                      <>
-                      {text != "play" && <UpperStripe
-                          loading={loading}
-                          userApp={contx}
-                          ListOfNames={ListOfNames}
-                          ListOfUrls={ListOfUrls}
-                          handleDrawerToggle={handleDrawerToggle}
-                          drawerWidth={drawerWidth}
-                        />
-                      }
-                        <main className={classes.content}>
-                          <div className={classes.toolbar} />
-                          {returnComponent(index)}
-                        </main>
-                      </>
-                    )}
+        </>
+        {routerState.firstPrint && routerState.Modal && (
+          <>
+            <Route
+              exact
+              path={`/event/:id`}
+              render={() => (
+                <>
+                  <UpperStripe
+                    //bringOwnUser?? true??
+                    loading={loading}
+                    userApp={false}
+                    ListOfNames={ListOfNames}
+                    ListOfUrls={ListOfUrls}
+                    handleDrawerToggle={handleDrawerToggle}
+                    drawerWidth={drawerWidth}
                   />
-                ))}
+                  <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    <Event />
+                  </main>
+                </>
+              )}
+            />
+            <Route
+              exact
+              path={`/user/:id`}
+              render={() => (
+                <>
+                  <UpperStripe
+                    //bringOwnUser?? true??
+                    loading={loading}
+                    userApp={false}
+                    ListOfNames={ListOfNames}
+                    ListOfUrls={ListOfUrls}
+                    handleDrawerToggle={handleDrawerToggle}
+                    drawerWidth={drawerWidth}
+                  />
+                  <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    <UserModal />
+                  </main>
+                </>
+              )}
+            />
+            <Route
+              exact
+              path={`/signin`}
+              render={() => (
+                <>
+                  <UpperStripe
+                    //bringOwnUser?? true??
+                    loading={loading}
+                    userApp={false}
+                    ListOfNames={ListOfNames}
+                    ListOfUrls={ListOfUrls}
+                    handleDrawerToggle={handleDrawerToggle}
+                    drawerWidth={drawerWidth}
+                  />
+                  <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    <SignIn />
+                  </main>
+                </>
+              )}
+            />
+            <Route
+              exact
+              path={`/signout`}
+              render={() => (
+                <>
+                  <UpperStripe
+                    //bringOwnUser?? true??
+                    loading={loading}
+                    userApp={false}
+                    ListOfNames={ListOfNames}
+                    ListOfUrls={ListOfUrls}
+                    handleDrawerToggle={handleDrawerToggle}
+                    drawerWidth={drawerWidth}
+                  />
+                  <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    <SignOut />
+                  </main>
+                </>
+              )}
+            />
+          </>
+        )}
+        {!routerState.firstPrint && routerState.Modal && (
+          <>
+            <Route
+              exact
+              path={`/event/:id`}
+              render={() => (
+                <>
+                  <Event />
+                </>
+              )}
+            />
+            <Route
+              exact
+              path={`/user/:id`}
+              render={() => (
+                <>
+                  <UserModal />
+                </>
+              )}
+            />
+            <Route
+              exact
+              path={`/signin`}
+              render={() => {
+                return (
+                  <>
+                    <SignIn />
+                  </>
+                );
+              }}
+            />
+            <Route
+              exact
+              path={`/signout`}
+              render={() => (
+                <>
+                  <SignOut />
+                </>
+              )}
+            />
 
+            <Switch location={prevLocation}>
+              {ListOfUrls.map((text, index) => (
                 <Route
-                  path={`/`}
-                  key={"xc"}
+                  exact
+                  path={`/${text}`}
+                  key={index}
                   render={() => (
                     <>
-                    <UpperStripe
-                        loading={loading}
-                        userApp={contx}
-                        ListOfNames={ListOfNames}
-                        ListOfUrls={ListOfUrls}
-                        handleDrawerToggle={handleDrawerToggle}
-                        drawerWidth={drawerWidth}
-                      />
-                      <main className={classes.content}>
-                        <div className={classes.toolbar} />
-                        <Menu
-                          ListOfNames={ListOfNames}
-                          ListOfUrls={ListOfUrls}
-                        />
-                        ,
-                      </main>
-                    </>
-                  )}
-                />
-              </Switch>
-            </>
-          )}
-          {!routerState.Modal && window.firstPrintPlay != "play" && (
-            <>
-              <Switch location={prevLocation}>
-              <Route
-                    exact
-                    path={`/map`}
-                    render={() => (
-                      <>
-                      <UpperStripe
-                          loading={loading}
-                          userApp={contx}
-                          ListOfNames={ListOfNames}
-                          ListOfUrls={ListOfUrls}
-                          handleDrawerToggle={handleDrawerToggle}
-                          drawerWidth={drawerWidth}
-                        />
-                        <main className={classes.content}>
-                          <div className={classes.toolbar} />
-                          {contx.name ? <MapWrap
-                               workingPosition={workingPosition}
-                               setWorkingPosition={setWorkingPosition} /> 
-                               : <SignIn />}
-                        </main>
-                      </>
-                    )}
-                  />
-                               <Route
-                    exact
-                    path={`/create`}
-                    render={() => (
-                      <>
-                      <UpperStripe
-                          loading={loading}
-                          userApp={contx}
-                          ListOfNames={ListOfNames}
-                          ListOfUrls={ListOfUrls}
-                          handleDrawerToggle={handleDrawerToggle}
-                          drawerWidth={drawerWidth}
-                        />
-                        <main className={classes.content}>
-                          <div className={classes.toolbar} />
-                          {contx.name ? <Create /> : <SignIn />}
-                        </main>
-                      </>
-                    )}
-                  />
-              <Route
-                    exact
-                    path={`/play/:id`}
-                    key={"index"}
-                    render={() => (
-                      <>
-                      {window.firstPrintPlay != "play" && (
-                        <main className={classes.content}>
-                          <div className={classes.toolbar} />
-                          {returnComponent(1)}
-                        </main>
-                      )}
-                      )
-                      </>
-                    )}
-                  />
-              <Route
-                    exact
-                    path={`/play`}
-                    key={"index"}
-                    render={() => (
-                      <>
-                        <main className={classes.content}>
-                          <div className={classes.toolbar} />
-                          {returnComponent(1)}
-                        </main>
-                      </>
-                    )}
-                  />
-              <Route
-                exact
-                path={`/event/:id`}
-                render={() => (
-                  <>
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      <Event />
-                    </main>
-                  </>
-                )}
-              />
-            <Route
-                exact
-                path={`/accept/:event_id/:user_id`}
-                render={() => (
-                  <>
-                  <UpperStripe
-                          loading={loading}
-                          userApp={contx}
-                          ListOfNames={ListOfNames}
-                          ListOfUrls={ListOfUrls}
-                          handleDrawerToggle={handleDrawerToggle}
-                          drawerWidth={drawerWidth}
-                        />
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      <AcceptPage />
-                    </main>
-                  </>
-                )}
-              />
-                          <Route
-                exact
-                path={`/confirm/:user_id`}
-                render={() => (
-                  <>
-                  <UpperStripe
-                          loading={loading}
-                          userApp={contx}
-                          ListOfNames={ListOfNames}
-                          ListOfUrls={ListOfUrls}
-                          handleDrawerToggle={handleDrawerToggle}
-                          drawerWidth={drawerWidth}
-                        />
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      <ConfirmUserPage />
-                    </main>
-                  </>
-                )}
-              />
-                {ListOfUrls.map((text, index) => (
-                  <Route
-                    exact
-                    path={`/${text}`}
-                    key={index}
-                    render={() => (
-                      <>
+                      {text != "play" && (
                         <UpperStripe
                           loading={loading}
                           userApp={contx}
@@ -706,17 +550,176 @@ useEffect(() => {
                           handleDrawerToggle={handleDrawerToggle}
                           drawerWidth={drawerWidth}
                         />
-                        <main className={classes.content}>
-                          <div className={classes.toolbar} />
-                          {returnComponent(index)}
-                        </main>
-                      </>
+                      )}
+                      <main className={classes.content}>
+                        <div className={classes.toolbar} />
+                        {returnComponent(index)}
+                      </main>
+                    </>
+                  )}
+                />
+              ))}
+
+              <Route
+                path={`/`}
+                key={"xc"}
+                render={() => (
+                  <>
+                    <UpperStripe
+                      loading={loading}
+                      userApp={contx}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />
+                      ,
+                    </main>
+                  </>
+                )}
+              />
+            </Switch>
+          </>
+        )}
+        {!routerState.Modal && window.firstPrintPlay != "play" && (
+          <>
+            <Switch location={prevLocation}>
+              <Route
+                exact
+                path={`/map`}
+                render={() => (
+                  <>
+                    <UpperStripe
+                      loading={loading}
+                      userApp={contx}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      {contx.name ? (
+                        <MapWrap
+                          workingPosition={workingPosition}
+                          setWorkingPosition={setWorkingPosition}
+                        />
+                      ) : (
+                        <SignIn />
+                      )}
+                    </main>
+                  </>
+                )}
+              />
+              <Route
+                exact
+                path={`/create`}
+                render={() => (
+                  <>
+                    <UpperStripe
+                      loading={loading}
+                      userApp={contx}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      {contx.name ? <Create /> : <SignIn />}
+                    </main>
+                  </>
+                )}
+              />
+              <Route
+                exact
+                path={`/play/:id`}
+                key={"index"}
+                render={() => (
+                  <>
+                    {window.firstPrintPlay != "play" && (
+                      <main className={classes.content}>
+                        <div className={classes.toolbar} />
+                        {returnComponent(1)}
+                      </main>
                     )}
-                  />
-                ))}
+                    )
+                  </>
+                )}
+              />
+              <Route
+                exact
+                path={`/play`}
+                key={"index"}
+                render={() => (
+                  <>
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      {returnComponent(1)}
+                    </main>
+                  </>
+                )}
+              />
+              <Route
+                exact
+                path={`/event/:id`}
+                render={() => (
+                  <>
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <Event />
+                    </main>
+                  </>
+                )}
+              />
+              <Route
+                exact
+                path={`/accept/:event_id/:user_id`}
+                render={() => (
+                  <>
+                    <UpperStripe
+                      loading={loading}
+                      userApp={contx}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <AcceptPage />
+                    </main>
+                  </>
+                )}
+              />
+              <Route
+                exact
+                path={`/confirm/:user_id`}
+                render={() => (
+                  <>
+                    <UpperStripe
+                      loading={loading}
+                      userApp={contx}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <ConfirmUserPage />
+                    </main>
+                  </>
+                )}
+              />
+              {ListOfUrls.map((text, index) => (
                 <Route
-                  path={`/`}
-                  key={"xc"}
+                  exact
+                  path={`/${text}`}
+                  key={index}
                   render={() => (
                     <>
                       <UpperStripe
@@ -729,48 +732,45 @@ useEffect(() => {
                       />
                       <main className={classes.content}>
                         <div className={classes.toolbar} />
-                        <Menu
-                          ListOfNames={ListOfNames}
-                          ListOfUrls={ListOfUrls}
-                        />
-                        ,
+                        {returnComponent(index)}
                       </main>
                     </>
                   )}
                 />
-              </Switch>
-              <FloatingBtnWrap />
-            </>
-          )}
-          {!routerState.Modal && window.firstPrintPlay === "play" && (
-            <>
-            <Route
-                exact
-                path={`/play/:id`}
-                render={() => (
-                  <>
-                    {/* <UpperStripe
-                      //bringOwnUser?? true??
-                      loading={loading}
-                      userApp={false}
-                      ListOfNames={ListOfNames}
-                      ListOfUrls={ListOfUrls}
-                      handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
-                    /> */}
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      <PlayOutside />
-                    </main>
-                  </>
-                )}
-            />
+              ))}
               <Route
-                exact
-                path={`/play`}
+                path={`/`}
+                key={"xc"}
                 render={() => (
                   <>
-                    {/* <UpperStripe
+                    <UpperStripe
+                      loading={loading}
+                      userApp={contx}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      <Menu ListOfNames={ListOfNames} ListOfUrls={ListOfUrls} />
+                      ,
+                    </main>
+                  </>
+                )}
+              />
+            </Switch>
+            <FloatingBtnWrap />
+          </>
+        )}
+        {!routerState.Modal && window.firstPrintPlay === "play" && (
+          <>
+            <Route
+              exact
+              path={`/play/:id`}
+              render={() => (
+                <>
+                  {/* <UpperStripe
                       //bringOwnUser?? true??
                       loading={loading}
                       userApp={false}
@@ -779,17 +779,38 @@ useEffect(() => {
                       handleDrawerToggle={handleDrawerToggle}
                       drawerWidth={drawerWidth}
                     /> */}
-                    <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      <Play />
-                    </main>
-                  </>
-                )}
+                  <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    <PlayOutside />
+                  </main>
+                </>
+              )}
             />
-            </>
-          )}
-        </UserContext.Provider>
-      </ThemeProvider>
+            <Route
+              exact
+              path={`/play`}
+              render={() => (
+                <>
+                  {/* <UpperStripe
+                      //bringOwnUser?? true??
+                      loading={loading}
+                      userApp={false}
+                      ListOfNames={ListOfNames}
+                      ListOfUrls={ListOfUrls}
+                      handleDrawerToggle={handleDrawerToggle}
+                      drawerWidth={drawerWidth}
+                    /> */}
+                  <main className={classes.content}>
+                    <div className={classes.toolbar} />
+                    <Play />
+                  </main>
+                </>
+              )}
+            />
+          </>
+        )}
+      </UserContext.Provider>
+    </ThemeProvider>
   );
 }
 
@@ -800,14 +821,13 @@ App.propTypes = {
    */
   container: PropTypes.instanceOf(
     typeof Element === "undefined" ? Object : Element
-  )
+  ),
 };
-
 
 function AppWrap() {
   return (
     <Router>
-      <Route component={props2 => <App {...props2} />} />
+      <Route component={(props2) => <App {...props2} />} />
     </Router>
   );
 }

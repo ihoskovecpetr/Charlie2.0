@@ -61,3 +61,17 @@ a {
   -webkit-filter: drop-shadow(5px 5px 5px #222);
   filter: drop-shadow(-5px 5px 10px #222);
 }
+
+/* hide scrollbars */
+.signInCont::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE and Edge */
+.signInCont {
+  -ms-overflow-style: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}

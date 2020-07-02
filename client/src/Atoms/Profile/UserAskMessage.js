@@ -8,76 +8,99 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 
 import { withRouter, useHistory } from "react-router-dom";
-import {useSpring, animated} from 'react-spring'
+import { useSpring, animated } from "react-spring";
 
-export default function UserAskMessage({ user, message, reverse, confirmed, decided}) {
+export default function UserAskMessage({
+  user,
+  message,
+  reverse,
+  confirmed,
+  decided,
+}) {
   const classes = useStyles();
-  let history = useHistory(); 
-  const swingIn = useSpring({transform: "translateX(0px)", opacity: 1, from: {opacity: 0, transform: "translateX(-100px)"}})
-  console.log("UserAskMessage: confirmed: ", confirmed)
-  
+  let history = useHistory();
+  const swingIn = useSpring({
+    transform: "translateX(0px)",
+    opacity: 1,
+    from: { opacity: 0, transform: "translateX(-100px)" },
+  });
+  console.log("UserAskMessage: confirmed: ", confirmed);
+
   return (
     <animated.div style={swingIn}>
-    <Grid container 
-          direction={reverse ? "row-reverse" : "row"} 
-          className={classes.containerMain}>
-      <Grid item xs={4}>
-        <Grid container>
-          <Grid item xs={12}>
-            <Grid container justify="center">
-              <Grid item>
-                <Avatar
-                  aria-label="recipe"
-                  className={classes.avatar}
-                  src={user.picture}
-                  onClick={() => {history.push(`/user/${user._id}`)}}
-                />
+      <Grid
+        container
+        direction={reverse ? "row-reverse" : "row"}
+        className={classes.containerMain}
+      >
+        <Grid item xs={4}>
+          <Grid container>
+            <Grid item xs={12}>
+              <Grid container justify="center">
+                <Grid item>
+                  <Avatar
+                    aria-label="recipe"
+                    className={classes.avatar}
+                    src={user.picture}
+                    onClick={() => {
+                      history.push(`/user/${user._id}`);
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Grid container justify="center">
+                <Grid item>
+                  <Typography variant="subtitle2" className={classes.text}>
+                    {user.name}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-
-          <Grid item xs={12}>
-            <Grid container justify="center">
-              <Grid item>
-                <Typography variant="subtitle2" className={classes.text}>
-                  {user.name}
+        </Grid>
+        <Grid item xs={8}>
+          <Grid container>
+            <Grid item xs={12}>
+              {decided && (
+                <Typography
+                  variant="subtitle2"
+                  className={classes.textConfirmed}
+                >
+                  {confirmed ? (
+                    <span className={classes.greenText}>GRANTED</span>
+                  ) : (
+                    <span className={classes.redText}>DECLINED</span>
+                  )}
                 </Typography>
-              </Grid>
+              )}
+            </Grid>
+
+            <Grid item xs={12}>
+              <Typography variant="subtitle2" className={classes.text}>
+                {message}
+              </Typography>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={8}>
-        <Grid container>
-          <Grid item xs={12}>
-            {decided && <Typography variant="subtitle2" className={classes.textConfirmed}>
-              {confirmed ? "GRANTED" : "DECLINED"}
-            </Typography>}
-          </Grid>
-
-          <Grid item xs={12}>
-            <Typography variant="subtitle2" className={classes.text}>
-              {message}
-            </Typography>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
     </animated.div>
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   containerMain: {
     padding: 5,
     paddingLeft: 20,
-    paddingRight: 20
+    paddingRight: 20,
   },
   avatar: {
     backgroundColor: "red",
     color: "lightgrey",
     width: 40,
-    height: 40
+    height: 40,
   },
   text: {
     marginTop: 10,
@@ -88,5 +111,11 @@ const useStyles = makeStyles(theme => ({
   textConfirmed: {
     fontWeight: 600,
     textAlign: "center",
-  }
+  },
+  greenText: {
+    color: "green",
+  },
+  redText: {
+    color: "red",
+  },
 }));

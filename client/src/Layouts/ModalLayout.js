@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -8,7 +8,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import CloseIcon from "@material-ui/icons/Close";
 
 import { withRouter, useHistory } from "react-router-dom";
-import {useSpring, animated} from 'react-spring'
+import { useSpring, animated } from "react-spring";
 
 import { useXsSize } from "src/Hooks/useXsSize";
 
@@ -16,79 +16,81 @@ function Layout(props) {
   const classes = useStyles();
   const { xs_size_memo } = useXsSize();
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  const swingIn = useSpring({transform: "scale(1)", opacity: 1, from: {opacity: 0, transform: "scale(0.8)"}})
+  const swingIn = useSpring({
+    transform: "scale(1)",
+    opacity: 1,
+    from: { opacity: 0, transform: "scale(0.8)" },
+  });
 
   useEffect(() => {
-
-    setWindowHeight(window.innerHeight)
-  }, [])
+    setWindowHeight(window.innerHeight);
+  }, []);
 
   useEffect(() => {
+    setWindowHeight(window.innerHeight);
+    if (document.getElementById("menu_wrap")) {
+      document.getElementById("menu_wrap").style.position = "fixed";
+    }
 
-    setWindowHeight(window.innerHeight)
-   if(document.getElementById("menu_wrap")){
-     document.getElementById("menu_wrap").style.position = "fixed"
-   } 
+    if (document.getElementById("profile_wrap")) {
+      document.getElementById("profile_wrap").style.position = "fixed";
+    }
 
-   if(document.getElementById("profile_wrap")){
-    document.getElementById("profile_wrap").style.position = "fixed"
-  } 
-
-  return () => {
-    if(document.getElementById("profile_wrap")){
-      document.getElementById("profile_wrap").style.position = "absolute"
-    } 
-    if(document.getElementById("menu_wrap")){
-      document.getElementById("menu_wrap").style.position = "absolute"
-    } 
-  };
-
-}, []);
+    return () => {
+      if (document.getElementById("profile_wrap")) {
+        document.getElementById("profile_wrap").style.position = "absolute";
+      }
+      if (document.getElementById("menu_wrap")) {
+        document.getElementById("menu_wrap").style.position = "absolute";
+      }
+    };
+  }, []);
 
   return (
-      <div
-        className={classes.modalBackdrop}
-        style={{ height: windowHeight}}
+    <div className={classes.modalBackdrop} style={{ height: windowHeight }}>
+      <CssBaseline />
+      <Grid
+        container
+        justify="flex-start"
+        alignItems="flex-start"
+        alignContent="flex-start"
+        direction="column"
+        spacing={2}
+        className={classes.gridClose}
       >
-        
-          <CssBaseline />
-          <Grid
-            container
-            justify="flex-start"
-            alignItems="flex-start"
-            alignContent="flex-start"
-            direction="column"
-            spacing={2}
-            className={classes.gridClose}
+        <Grid item>
+          <Button
+            variant="contained"
+            //color={theme.background}
+            size="small"
+            className={classes.closeButton}
+            onClick={() => {
+              if (window.eventId) {
+                window.eventId = null;
+                props.history.push("/");
+              } else {
+                props.history.goBack();
+              }
+            }}
           >
-            <Grid item>
-              <Button
-                variant="contained"
-                //color={theme.background}
-                size="small"
-                className={classes.closeButton}
-                onClick={() => {
-                  if(window.eventId){
-                    window.eventId = null
-                    props.history.push("/");
-                  }else{
-                    props.history.goBack();
-                  }
-                  
-                }}
-              >
-                <CloseIcon fontSize="large" />
-              </Button>
-            </Grid>
-          </Grid>
-          <animated.div className={classes.modalContentWrap} style={swingIn}>
-          <Container maxWidth="xs" className={classes.containerMain}>{props.children}</Container>
-        </animated.div>
-      </div>
+            <CloseIcon fontSize="large" />
+          </Button>
+        </Grid>
+      </Grid>
+      <animated.div className={classes.modalContentWrap} style={swingIn}>
+        <Container
+          maxWidth="xs"
+          id="signInCont"
+          className={classes.containerMain}
+        >
+          {props.children}
+        </Container>
+      </animated.div>
+    </div>
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   modalBackdrop: {
     // flexGrow: 1,
     background: "rgba(96,3,40,0.4)",
@@ -98,10 +100,10 @@ const useStyles = makeStyles(theme => ({
     top: 0,
   },
   modalContentWrap: {
-    padding: 0
+    padding: 0,
   },
-  containerMain:{
-    padding: 0
+  containerMain: {
+    padding: 0,
   },
   gridClose: {
     position: "absolute",
@@ -111,12 +113,12 @@ const useStyles = makeStyles(theme => ({
     margin: "0 !important",
     padding: 0,
     "z-index": 30,
-    width: "100%"
+    width: "100%",
   },
   closeButton: {
     background: theme.palette.violetova,
-    color: "white"
-  }
+    color: "white",
+  },
 }));
 
 export default withRouter(Layout);
