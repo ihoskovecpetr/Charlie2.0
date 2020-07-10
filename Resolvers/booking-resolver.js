@@ -7,17 +7,21 @@ import {
   singleEvent,
   // transformBooking,
   transformUser,
-  transformEvent
+  transformEvent,
 } from "./merge";
-import { not_author_Error, not_found_Error, server_Error} from "./Utils/errorPile";
+import {
+  not_author_Error,
+  not_found_Error,
+  server_Error,
+} from "./Utils/errorPile";
 
-import QRCode from 'qrcode'
+import QRCode from "qrcode";
 
-const Promise = require('bluebird');
-const pdf = Promise.promisifyAll(require('html-pdf'));
-var base64Img = require('base64-img');
+const Promise = require("bluebird");
+const pdf = Promise.promisifyAll(require("html-pdf"));
+var base64Img = require("base64-img");
 const nodemailer = require("nodemailer");
-const path = require('path');
+const path = require("path");
 const { google } = require("googleapis");
 const hbs = require("nodemailer-express-handlebars");
 
@@ -30,7 +34,8 @@ const oauth2Client = new OAuth2(
 );
 
 oauth2Client.setCredentials({
-  refresh_token: "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8"
+  refresh_token:
+    "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8",
 });
 
 const accessToken = oauth2Client.getAccessToken();
@@ -43,27 +48,29 @@ const smtpTransport0 = nodemailer.createTransport({
     clientId:
       "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com",
     clientSecret: "w6myevje4fX4ule3Lnr7_zBI",
-    refreshToken: "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8",
-    accessToken: accessToken
-  }
+    refreshToken:
+      "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8",
+    accessToken: accessToken,
+  },
 });
 
 const smtpTransport1 = nodemailer.createTransport({
   service: "gmail",
   auth: {
     type: "OAuth2",
-    user: "charliehouseparty@gmail.com", 
-        // "hoskovectest@gmail.com",
-    clientId: "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com",
-        //"119981354324-qlg4hf4dlb1k8dd7r32jkouoaoni0gt7.apps.googleusercontent.com",
-    clientSecret: "w6myevje4fX4ule3Lnr7_zBI", 
-        //"rJKG6kbFTkk80WCAaB1dKgAF",
-    refreshToken: "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8",
-        //"1/51zxtNU8LnjfKH-7McNaqtWK6OCSK0X0vogDTcAhc0U",
-    accessToken: accessToken
+    user: "charliehouseparty@gmail.com",
+    // "hoskovectest@gmail.com",
+    clientId:
+      "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com",
+    //"119981354324-qlg4hf4dlb1k8dd7r32jkouoaoni0gt7.apps.googleusercontent.com",
+    clientSecret: "w6myevje4fX4ule3Lnr7_zBI",
+    //"rJKG6kbFTkk80WCAaB1dKgAF",
+    refreshToken:
+      "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8",
+    //"1/51zxtNU8LnjfKH-7McNaqtWK6OCSK0X0vogDTcAhc0U",
+    accessToken: accessToken,
     // accessToken: "ya29.a0AfH6SMCegn8JH9GTLnDbjLoxkrLcs-YS02QiGLwSjJZj8ReenO_ucdznv8SP3R-vqHCFNl-wNqpDpfJg2Ebl53uC0hGnSXKKi55gI-b2XCeetc5aqQ1kmXg6kFy8Tfw3vA_00EeRG_GxbaV2_tR7BRkszbj4lTSVKbA"
-
-  }
+  },
 });
 
 export const typeDef = newFunction();
@@ -76,7 +83,7 @@ export const resolvers = {
           return {
             ...booking._doc,
             createdAt: new Date(booking._doc.createdAt).toISOString(),
-            updatedAt: new Date(booking._doc.updatedAt).toISOString()
+            updatedAt: new Date(booking._doc.updatedAt).toISOString(),
           };
         });
       } catch (err) {
@@ -85,20 +92,25 @@ export const resolvers = {
     },
     acceptShowBooking: async (_, _args, context) => {
       try {
-        let oneBooking = await Booking.findOne({ event: _args.event_id, user: _args.user_id });
+        let oneBooking = await Booking.findOne({
+          event: _args.event_id,
+          user: _args.user_id,
+        });
         if (oneBooking) {
           let areYouAuthor = oneBooking.host == context.reqO.req.userId;
-          if(areYouAuthor){
-              return {dataOut: {
+          if (areYouAuthor) {
+            return {
+              dataOut: {
                 ...oneBooking._doc,
                 createdAt: new Date(oneBooking._doc.createdAt).toISOString(),
-                updatedAt: new Date(oneBooking._doc.updatedAt).toISOString()
-              }};
-          }else{
-            return not_author_Error
+                updatedAt: new Date(oneBooking._doc.updatedAt).toISOString(),
+              },
+            };
+          } else {
+            return not_author_Error;
           }
-        }else{
-          return not_found_Error
+        } else {
+          return not_found_Error;
         }
       } catch (err) {
         console.log(err);
@@ -108,14 +120,14 @@ export const resolvers = {
     showUserBookings: async (_, _args, __) => {
       try {
         let bookings = await Booking.find({ user: _args.user_id }).sort({
-          "event.dateStart": -1
+          "event.dateStart": -1,
         });
         //return bookings;
         return bookings.map(async (booking, index) => {
           return {
             ...booking._doc,
             createdAt: new Date(booking._doc.createdAt).toISOString(),
-            updatedAt: new Date(booking._doc.updatedAt).toISOString()
+            updatedAt: new Date(booking._doc.updatedAt).toISOString(),
           };
         });
       } catch (err) {
@@ -124,21 +136,21 @@ export const resolvers = {
     },
     showHostBookings: async (_, _args, __) => {
       try {
-        console.log("showHostBookings: _args ", _args)
+        console.log("showHostBookings: _args ", _args);
         let bookings = await Booking.find({ host: _args.host_id }).sort({
-          "event.dateStart": -1
+          "event.dateStart": -1,
         });
 
         //return bookings;
         return bookings.map(async (booking, index) => {
-          console.log("Iter Booking: ", booking)
-          console.log("Iter _doc.Booking: ", booking._doc)
+          console.log("Iter Booking: ", booking);
+          console.log("Iter _doc.Booking: ", booking._doc);
           return {
             ...booking._doc,
             user: await transformUser(booking._doc.user),
             host: await transformUser(booking._doc.host),
             createdAt: new Date(booking._doc.createdAt).toISOString(),
-            updatedAt: new Date(booking._doc.updatedAt).toISOString()
+            updatedAt: new Date(booking._doc.updatedAt).toISOString(),
           };
         });
       } catch (err) {
@@ -147,10 +159,11 @@ export const resolvers = {
     },
   },
   Mutation: {
-    bookEvent: async (_, _args, __) => { //is this user at all??
+    bookEvent: async (_, _args, __) => {
+      //is this user at all??
       try {
         const existingBooking = await Booking.findOne({
-          event: _args.event_id
+          event: _args.event_id,
         });
         if (existingBooking) {
           const result = await Booking.update(
@@ -162,7 +175,7 @@ export const resolvers = {
           } else return { success: false };
         } else {
           const fetchedEvent = await Event.findOne({ _id: _args.event_id });
-          console.log("FETCHED EVENT: ", fetchedEvent)
+          console.log("FETCHED EVENT: ", fetchedEvent);
 
           const booking = new Booking({
             event: fetchedEvent,
@@ -193,7 +206,7 @@ export const resolvers = {
         //let bookings = await Booking.count();
         let bookings = await Booking.find({
           user: _args.user_id,
-          confirmed: true
+          confirmed: true,
         }).sort("-dateStart");
         console.log("Bookings count: ", bookings);
         // return {
@@ -203,7 +216,7 @@ export const resolvers = {
         return bookings.map(async (booking, index) => {
           return {
             ...booking._doc,
-            createdAt: new Date(booking._doc.createdAt).toISOString()
+            createdAt: new Date(booking._doc.createdAt).toISOString(),
           };
         });
 
@@ -214,13 +227,13 @@ export const resolvers = {
     },
     requestBookEvent: async (_, _args, __) => {
       try {
-        console.log("Hitting requestBookEvent")
+        console.log("Hitting requestBookEvent");
         let event = await Event.findById(_args.event_id);
         let author = await User.findById(event.author);
         //poslat mail a udelat booking with confirmed false
         let existingBooking = await Booking.find({
           event: _args.event_id,
-          user: _args.guest_id
+          user: _args.guest_id,
         });
 
         if (existingBooking.length) {
@@ -235,7 +248,9 @@ export const resolvers = {
             return { success: false, _id: result.electionId };
           }
         } else {
-          const fetchedEventRequesting = await Event.findOne({ _id: _args.event_id });
+          const fetchedEventRequesting = await Event.findOne({
+            _id: _args.event_id,
+          });
           const booking = new Booking({
             host: fetchedEventRequesting.author,
             user: _args.guest_id,
@@ -250,7 +265,7 @@ export const resolvers = {
           });
           const result = await booking.save();
           if (result._id) {
-            console.log("Setting mail inquiry.handlebars")
+            console.log("Setting mail inquiry.handlebars");
             smtpTransport0.use(
               "compile",
               hbs({
@@ -258,13 +273,13 @@ export const resolvers = {
                   extName: ".handlebars",
                   partialsDir: "./views/",
                   layoutsDir: "./views/",
-                  defaultLayout: "inquiry.handlebars"
+                  defaultLayout: "inquiry.handlebars",
                 },
-                viewPath: "views"
+                viewPath: "views",
               })
             );
 
-            var eventURL = `https://www.charliehouseparty.club/profile`
+            var eventURL = `https://www.charliehouseparty.club/profile`;
 
             console.log("mail/post ENDPOINT pOSt: eventURL ", eventURL);
 
@@ -277,8 +292,8 @@ export const resolvers = {
                 eventURL: eventURL,
                 guest_name: _args.guest_name,
                 guest_inquiry: _args.message,
-                event_name: event.name
-              }
+                event_name: event.name,
+              },
             };
 
             const resMail = await smtpTransport0.sendMail(mailOptions0);
@@ -286,7 +301,7 @@ export const resolvers = {
             if (resMail.rejected.length !== 0) {
               return {
                 success: false,
-                message: `Sending mail to ${author.email} has failed`
+                message: `Sending mail to ${author.email} has failed`,
               };
             } else {
               smtpTransport0.close();
@@ -320,36 +335,43 @@ export const resolvers = {
     },
     deleteBooking: async (_, _args, __) => {
       try {
-        const result = await Booking.findOneAndDelete(
-          { event: _args.event_id, user: _args.user_id }
-        );
+        const result = await Booking.findOneAndDelete({
+          event: _args.event_id,
+          user: _args.user_id,
+        });
         //const result = await booking.save();
 
         console.log("deleting Booking finished: ", result);
         if (result) {
-          return { success: true};
+          return { success: true };
         } else {
-          return { success: false};
+          return { success: false };
         }
       } catch (err) {
         throw err;
       }
     },
     confirmBooking: async (_, _args, __) => {
-
       try {
-        console.log("confirmBooking _args: ", _args)
-        const guest = await User.find({_id: _args.user_id})
-        const event = await Event.find({_id: _args.event_id})
+        console.log("confirmBooking _args: ", _args);
+        const guest = await User.find({ _id: _args.user_id });
+        const event = await Event.find({ _id: _args.event_id });
         const result = await Booking.update(
           { event: _args.event_id, user: _args.user_id },
-          { $set: { confirmed: _args.decision, response: _args.response, decided: true, seenUser: false }}
+          {
+            $set: {
+              confirmed: _args.decision,
+              response: _args.response,
+              decided: true,
+              seenUser: false,
+            },
+          }
         );
 
-        console.log("confirmBooking result: ", result)
+        console.log("confirmBooking result: ", result);
 
         if (result.ok) {
-          console.log("Setting clasicGranted mail")
+          console.log("Setting clasicGranted mail");
           smtpTransport1.use(
             "compile",
             hbs({
@@ -357,87 +379,96 @@ export const resolvers = {
                 extName: ".handlebars",
                 partialsDir: "./views/",
                 layoutsDir: "./views/",
-                defaultLayout: "clasicGranted.handlebars" //clasicGranted
+                defaultLayout: "clasicGranted.handlebars", //clasicGranted
               },
-              viewPath: "views"
+              viewPath: "views",
             })
           );
-          const QRKod = await QRCode.toDataURL(`https://charliehouseparty.club/accept/${event[0]._id}/${guest[0]._id}`)
+          const QRKod = await QRCode.toDataURL(
+            `https://charliehouseparty.club/accept/${event[0]._id}/${guest[0]._id}`
+          );
 
-
-          const eventURL = `https://www.charliehouseparty.club/event/${_args.event_id}`
-          const dateString = new Date(event[0].dateStart).toISOString().split("T");
+          const eventURL = `https://www.charliehouseparty.club/event/${_args.event_id}`;
+          const dateString = new Date(event[0].dateStart)
+            .toISOString()
+            .split("T");
           const timeString = dateString[1].split(":");
 
-          let html = createEmailBody({QRCode: QRKod, 
+          let html = createEmailBody({
+            QRCode: QRKod,
             message: _args.response,
-            event_name: event[0].name, 
+            event_name: event[0].name,
             event_address: event[0].address,
-            event_dateStart: dateString[0] + " " + timeString[0] + ":" + timeString[1],
+            event_dateStart:
+              dateString[0] + " " + timeString[0] + ":" + timeString[1],
             event_description: event[0].description,
             guest_name: guest[0].name,
+          });
 
-          })
+          const pdfResult = await pdf.createAsync(html, {
+            format: "A4",
+            phantomPath: "./node_modules/phantomjs-prebuilt/bin/phantomjs", // PhantomJS binary which should get downloaded automatically
+            filename: `PDF/${guest[0].name} - ${event[0].name}.pdf`,
+          });
 
-          const pdfResult = await pdf.createAsync(html, { format: 'A4', filename: `PDF/${guest[0].name} - ${event[0].name}.pdf` });
-
-      
           const mailOptions1 = {
-            from: "Charlie Party: " + event[0].name ,
+            from: "Charlie Party: " + event[0].name,
             to: guest[0].email, //req.body.user_email,
-            subject: `Your request got ${_args.decision ? "CONFIRMED" : "DECLINED"}`,
+            subject: `Your request got ${
+              _args.decision ? "CONFIRMED" : "DECLINED"
+            }`,
             template: "clasicGranted",
             context: {
               eventURL: eventURL,
               event_QRCode: QRKod,
               event_name: event[0].name,
-              event_dateStart: dateString[0] + " " + timeString[0] + ":" + timeString[1],
+              event_dateStart:
+                dateString[0] + " " + timeString[0] + ":" + timeString[1],
               message: _args.response,
-              decision: _args.decision ? "CONFIRMED" : "DECLINED"
+              decision: _args.decision ? "CONFIRMED" : "DECLINED",
             },
-            attachments: _args.decision ? [
-              {
-                  filename: `Event ${event[0].name}.pdf'`, // <= Here: made sure file name match
-                  // path: path.join(__dirname, '../PDF/pozdrav.pdf'), // <= Here
-                  path: pdfResult.filename,
-                  // content: pdfResult.filename,
-                  contentType: 'application/pdf'
-              }
-          ] : []
+            attachments: _args.decision
+              ? [
+                  {
+                    filename: `Event ${event[0].name}.pdf'`, // <= Here: made sure file name match
+                    // path: path.join(__dirname, '../PDF/pozdrav.pdf'), // <= Here
+                    path: pdfResult.filename,
+                    // content: pdfResult.filename,
+                    contentType: "application/pdf",
+                  },
+                ]
+              : [],
           };
 
           const resMail = await smtpTransport1.sendMail(mailOptions1);
 
-
           if (pdfResult && resMail && resMail.rejected.length !== 0) {
             return {
               success: false,
-              message: `Sending mail to ${author.email} has failed`
+              message: `Sending mail to ${author.email} has failed`,
             };
           } else {
             smtpTransport1.close();
             return { success: true, message: "Email has been sent" };
           }
-
         } else {
           return { success: false, message: "Creating of booking failed" };
         }
-
       } catch (err) {
         throw err;
       }
     },
     markBookingSeen: async (_, _args, __) => {
       try {
-        let userHost
-        if(_args.user === true){
-          userHost = {seenUser: true}
-        }else{
-          userHost = {seenHost: true}
+        let userHost;
+        if (_args.user === true) {
+          userHost = { seenUser: true };
+        } else {
+          userHost = { seenHost: true };
         }
         const result = await Booking.update(
-          { _id: _args.booking_id},
-          { $set: userHost}
+          { _id: _args.booking_id },
+          { $set: userHost }
         );
 
         if (result.ok) {
@@ -451,13 +482,17 @@ export const resolvers = {
     },
     markEntered: async (_, _args, __) => {
       try {
-        console.log("markEntered: markEntered: ", _args.event_id, _args.user_id)
+        console.log(
+          "markEntered: markEntered: ",
+          _args.event_id,
+          _args.user_id
+        );
         const result = await Booking.update(
-          { event: _args.event_id, user: _args.user_id},
-          { $set: {entered: true}}
+          { event: _args.event_id, user: _args.user_id },
+          { $set: { entered: true } }
         );
 
-        console.log("Entered: res: ", result)
+        console.log("Entered: res: ", result);
 
         if (result.ok) {
           return { success: true };
@@ -467,10 +502,10 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
-    }
+    },
   },
   Booking: {
-    event: async a => {
+    event: async (a) => {
       try {
         const event = await Event.findById(a.event);
         return transformEvent(event);
@@ -478,7 +513,7 @@ export const resolvers = {
         throw err;
       }
     },
-    user: async a => {
+    user: async (a) => {
       try {
         const user = await User.findById(a.user);
         return user;
@@ -486,15 +521,15 @@ export const resolvers = {
         throw err;
       }
     },
-    host: async a => {
+    host: async (a) => {
       try {
         const user = await User.findById(a.user);
         return user;
       } catch (err) {
         throw err;
       }
-    }
-  }
+    },
+  },
   // Evt: {
   //   event: async a => {
   //     try {

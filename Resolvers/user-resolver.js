@@ -25,7 +25,7 @@ export const typeDef = `
   extend type Mutation {
     newUser(name: String!, password: String!, socialId: String, email: String!, telephone: String, description: String!, picture: String, typeSocial: Boolean, typeDirect: Boolean): ResponseUser
     confirmUser(user_id: ID): ResponseUser
-    updateUser(_id: ID,name: String, password: String, socialId: String, email: String, description: String, picture: String, typeSocial: Boolean, typeDirect: Boolean): ResponseUser
+    updateUser(_id: ID, name: String, password: String, socialId: String, email: String, telephone: String, description: String, picture: String, typeSocial: Boolean, typeDirect: Boolean): ResponseUser
     login(emailOrName: String! password: String!): ResponseUser
     loginExternal(email: String! id: String!): ResponseUser
     getLoggedInUser: User
@@ -183,12 +183,18 @@ export const resolvers = {
           });
 
           const result = await newUser.save();
-          //send email with confirm link
 
+          const token = jwt.sign(
+            { userId: result._doc._id, email: result._doc.email },
+            "somesupersecretkeyEvenMore",
+            { expiresIn: "5h" }
+          );
+
+          //send email with confirm link
           console.log("Result event: ", result);
 
           if (_args.typeSocial) {
-            return { dataOut: { ...result._doc, success: true } };
+            return { dataOut: { ...result._doc, success: true, token: token } };
           }
 
           smtpTransport.use(
@@ -252,6 +258,7 @@ export const resolvers = {
             description: _args.description,
             socialId: _args.socialId,
             picture: _args.picture,
+            telephone: _args.telephone,
             typeSocial: _args.typeSocial ? _args.typeSocial : preTypeSocial,
             typeDirect: _args.typeDirect ? _args.typeDirect : preTypeDirect,
           }

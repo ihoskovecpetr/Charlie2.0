@@ -7,6 +7,7 @@ export const UPDATE_USER = gql`
     $email: String
     $description: String
     $picture: String
+    $telephone: String
     $socialId: String
     $typeSocial: Boolean
     $typeDirect: Boolean
@@ -17,26 +18,27 @@ export const UPDATE_USER = gql`
       email: $email
       description: $description
       picture: $picture
+      telephone: $telephone
       socialId: $socialId
       typeSocial: $typeSocial
       typeDirect: $typeDirect
     ) {
-      dataOut{
-      success
-      _id
-      name
-      token
-      password
-      email
-      socialId
-      typeSocial
-      typeDirect
+      dataOut {
+        success
+        _id
+        name
+        token
+        password
+        email
+        telephone
+        socialId
+        typeSocial
+        typeDirect
       }
-      errorOut{
+      errorOut {
         name
         message
       }
-
     }
   }
 `;
