@@ -2,45 +2,46 @@ import React, { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import Gallery from "react-grid-gallery";
 import request from "superagent";
+import Grid from "@material-ui/core/Grid";
 import WallpaperIcon from "@material-ui/icons/Wallpaper";
 import { makeStyles } from "@material-ui/core/styles";
 
 // import Spinner from "src/Atoms/Spinner";
 
 // const CLOUDINARY_UPLOAD_PRESET = "simple-preset-1";
-const CLOUDINARY_UPLOAD_PRESET = "simpl_pst"; 
+const CLOUDINARY_UPLOAD_PRESET = "simpl_pst";
 // const CLOUDINARY_UPLOAD_URL =
-//   "https://api.cloudinary.com/v1_1/party-images-app/upload"; 
+//   "https://api.cloudinary.com/v1_1/party-images-app/upload";
 const CLOUDINARY_UPLOAD_URL =
-  "https://api.cloudinary.com/v1_1/dkyt8girl/upload"; 
+  "https://api.cloudinary.com/v1_1/dkyt8girl/upload";
 let smallfile;
 
-function MyDropzone({setFormValue, setCountOfFiles}) {
+function MyDropzone({ setFormValue, setCountOfFiles }) {
   const classes = useStyles();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [display, setDisplay] = useState(false);
-  const onDrop = useCallback(acceptedFiles => {
+  const onDrop = useCallback((acceptedFiles) => {
     // Do something with the files
 
     setIsUploading(true);
-  
-    let count = 0 
-    acceptedFiles.map(file => {
+
+    let count = 0;
+    acceptedFiles.map((file) => {
       handleImageUpload(file);
-      count = count + 1
+      count = count + 1;
     });
-    setCountOfFiles(count)
+    setCountOfFiles(count);
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  const handleImageUpload = file => {
+  const handleImageUpload = (file) => {
     const width = 350;
     const height = 350;
     const fileName = file.name;
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = event => {
+    reader.onload = (event) => {
       const img = document.createElement("img");
       img.src = event.target.result;
 
@@ -52,10 +53,10 @@ function MyDropzone({setFormValue, setCountOfFiles}) {
         // img.width and img.height will contain the original dimensions
         ctx.drawImage(img, 0, 0, width, height);
         ctx.canvas.toBlob(
-          blob => {
+          (blob) => {
             smallfile = new File([blob], fileName, {
               type: "image/jpeg",
-              lastModified: Date.now()
+              lastModified: Date.now(),
             });
             uploadingOneImg(smallfile, file);
           },
@@ -63,7 +64,7 @@ function MyDropzone({setFormValue, setCountOfFiles}) {
           1
         );
       };
-      reader.onerror = error => console.log(error);
+      reader.onerror = (error) => console.log(error);
     };
   };
 
@@ -102,13 +103,13 @@ function MyDropzone({setFormValue, setCountOfFiles}) {
             scaletwidth: 100,
             thumbnailHeight: response.body.height,
             isSelected: false,
-            caption: "After Rain (Jeshu John - designerspics.com)"
+            caption: "After Rain (Jeshu John - designerspics.com)",
           });
 
           setUploadedFiles([...uplArr]);
           setIsUploading(false);
           setDisplay(true);
-          setFormValue(prevValues => {
+          setFormValue((prevValues) => {
             return { ...prevValues, ImagesArr: uplArr };
           });
         }
@@ -123,54 +124,72 @@ function MyDropzone({setFormValue, setCountOfFiles}) {
         style={{
           outline: "none",
           cursor: "pointer",
-          border: "1px dashed grey"
+          border: "1px dashed grey",
         }}
       >
         <input {...getInputProps()} />
-        {isDragActive ? (
-          <>
-            <WallpaperIcon fontSize="large" className={classes.uploadIcon} />
-          </>
-        ) : (
-          <>
-            <WallpaperIcon fontSize="large" className={classes.uploadIcon} />
-          </>
-        )}
+        <Grid container justify="center">
+          <Grid item>
+            {isDragActive ? (
+              <>
+                <WallpaperIcon
+                  fontSize="large"
+                  className={classes.uploadIcon}
+                />
+              </>
+            ) : (
+              <>
+                <WallpaperIcon
+                  fontSize="large"
+                  className={classes.uploadIcon}
+                />
+              </>
+            )}
+          </Grid>
+        </Grid>
         {/* <p>Place HERE your pictures</p> */}
 
         {/* {isUploading ? <Spinner height={100} width={100} /> : null} */}
+
         {display ? (
-          <Gallery
-            images={uploadedFiles}
-            rowHeight={100}
-            display={display}
-            backdropClosesModal={true}
-          />
+          <div className={classes.wrap_gallery}>
+            <Gallery
+              images={uploadedFiles}
+              rowHeight={100}
+              display={display}
+              backdropClosesModal={true}
+            />
+          </div>
         ) : (
           <span> </span>
         )}
         {display ? (
           <span> </span>
         ) : (
-          <Gallery
-            images={uploadedFiles}
-            rowHeight={100}
-            display={display}
-            backdropClosesModal={true}
-          />
+          <div className={classes.wrap_gallery}>
+            <Gallery
+              images={uploadedFiles}
+              rowHeight={100}
+              display={display}
+              backdropClosesModal={true}
+            />
+          </div>
         )}
       </div>
     </>
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   uploadIcon: {
     margin: 20,
     "&:hover": {
-      cursor: "pointer"
-    }
-  }
+      cursor: "pointer",
+    },
+  },
+  wrap_gallery: {
+    width: "100%",
+  },
 }));
 
 export default MyDropzone;

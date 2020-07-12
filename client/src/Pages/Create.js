@@ -11,21 +11,6 @@ import CreateView from "./CreateView";
 
 import { useLogicPlusMinusValue } from "./Logic/Create/useLogicPlusMinusValue";
 
-const currencies = [
-  {
-    value: "USD",
-    label: "$",
-  },
-  {
-    value: "EUR",
-    label: "€",
-  },
-  {
-    value: "CZK",
-    label: "Kč",
-  },
-];
-
 function Create(props) {
   let history = useHistory();
 

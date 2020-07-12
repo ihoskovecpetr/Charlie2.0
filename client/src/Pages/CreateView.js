@@ -295,7 +295,7 @@ function CreateView({
             </Grid>
             <Grid item xs={8}>
               <Grid container justify="center">
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardTimePicker
                     margin="normal"
                     id="time-picker"
@@ -309,8 +309,22 @@ function CreateView({
                     KeyboardButtonProps={{
                       "aria-label": "change time",
                     }}
-                  />
-                </MuiPickersUtilsProvider>
+                  /> */}
+                <TextField
+                  id="time"
+                  // label="Alarm clock"
+                  type="time"
+                  // defaultValue="07:30"
+                  value={formValue.startDate}
+                  className={classes.dateField}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    step: 300, // 5 min
+                  }}
+                />
+                {/* </MuiPickersUtilsProvider> */}
               </Grid>
             </Grid>
             <Grid item xs={2}>
@@ -515,7 +529,7 @@ function CreateView({
             alignContent="center"
             className={clsx(classes.formRow, classes.dropContainer)}
           >
-            <Grid item xs={2}>
+            <Grid item xs={12}>
               <Dropzone
                 setFormValue={setFormValue}
                 setCountOfFiles={setCountOfFiles}
