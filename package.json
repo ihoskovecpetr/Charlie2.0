@@ -24,7 +24,7 @@
     "graphql-tools": "^4.0.6",
     "html-pdf": "^2.2.0",
     "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mongoose": "^5.7.11",
     "nodemailer": "^6.3.1",
     "nodemailer-express-handlebars": "^3.1.0",
