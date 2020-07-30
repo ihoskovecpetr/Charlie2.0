@@ -14,7 +14,6 @@ import clsx from "clsx";
 import "../../Pages/Menu.css";
 
 import Carousel from "../../Atoms/carousel";
-import Skyline from "../../Images/skyline.png";
 import BlogPost1 from "./blog/BlogPost1";
 import BlogPost2 from "./blog/BlogPost2";
 import BlogPost3 from "./blog/BlogPost3";
@@ -68,25 +67,25 @@ export default function BlogPosts() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container_5: {
     height: "100vh",
     color: "black",
-    paddingTop: "12vh"
+    paddingTop: "12vh",
   },
   quarter_grid: {
     height: "64vh",
-    padding: "2vh"
+    padding: "2vh",
   },
   defaultHeader: {
     color: theme.palette.charliePink,
     fontWeight: 300,
     paddingTop: 20,
     fontSize: 20,
-    margin: 10
+    margin: 10,
   },
   defaultContent: {
     margin: 20,
-    fontWeight: 500
-  }
+    fontWeight: 500,
+  },
 }));

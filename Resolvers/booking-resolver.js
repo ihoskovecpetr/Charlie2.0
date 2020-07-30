@@ -18,12 +18,15 @@ import {
 import QRCode from "qrcode";
 
 const Promise = require("bluebird");
-const pdf = Promise.promisifyAll(require("html-pdf"));
 var base64Img = require("base64-img");
 const nodemailer = require("nodemailer");
 const path = require("path");
 const { google } = require("googleapis");
 const hbs = require("nodemailer-express-handlebars");
+// var pdf = require("pdf-creator-node");
+// const pdf = Promise.promisifyAll(require("html-pdf"));
+const PDFDocument = require("pdfkit");
+var fs = require("fs");
 
 const OAuth2 = google.auth.OAuth2;
 
@@ -35,7 +38,7 @@ const oauth2Client = new OAuth2(
 
 oauth2Client.setCredentials({
   refresh_token:
-    "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8",
+    "1//04hOsAJbgaDOgCgYIARAAGAQSNwF-L9IrhdZywiV91vSsjiwrJ1mPSBxqzoiTZ6Kg-mMWIPTeB2jZc9qr_dvuG0pwvpdGkdk5Ma4",
 });
 
 const accessToken = oauth2Client.getAccessToken();
@@ -49,7 +52,7 @@ const smtpTransport0 = nodemailer.createTransport({
       "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com",
     clientSecret: "w6myevje4fX4ule3Lnr7_zBI",
     refreshToken:
-      "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8",
+      "1//04hOsAJbgaDOgCgYIARAAGAQSNwF-L9IrhdZywiV91vSsjiwrJ1mPSBxqzoiTZ6Kg-mMWIPTeB2jZc9qr_dvuG0pwvpdGkdk5Ma4",
     accessToken: accessToken,
   },
 });
@@ -59,15 +62,11 @@ const smtpTransport1 = nodemailer.createTransport({
   auth: {
     type: "OAuth2",
     user: "charliehouseparty@gmail.com",
-    // "hoskovectest@gmail.com",
     clientId:
       "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com",
-    //"119981354324-qlg4hf4dlb1k8dd7r32jkouoaoni0gt7.apps.googleusercontent.com",
     clientSecret: "w6myevje4fX4ule3Lnr7_zBI",
-    //"rJKG6kbFTkk80WCAaB1dKgAF",
     refreshToken:
-      "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8",
-    //"1/51zxtNU8LnjfKH-7McNaqtWK6OCSK0X0vogDTcAhc0U",
+      "1//04hOsAJbgaDOgCgYIARAAGAQSNwF-L9IrhdZywiV91vSsjiwrJ1mPSBxqzoiTZ6Kg-mMWIPTeB2jZc9qr_dvuG0pwvpdGkdk5Ma4",
     accessToken: accessToken,
     // accessToken: "ya29.a0AfH6SMCegn8JH9GTLnDbjLoxkrLcs-YS02QiGLwSjJZj8ReenO_ucdznv8SP3R-vqHCFNl-wNqpDpfJg2Ebl53uC0hGnSXKKi55gI-b2XCeetc5aqQ1kmXg6kFy8Tfw3vA_00EeRG_GxbaV2_tR7BRkszbj4lTSVKbA"
   },
@@ -385,7 +384,7 @@ export const resolvers = {
             })
           );
           const QRKod = await QRCode.toDataURL(
-            `https://charliehouseparty.club/accept/${event[0]._id}/${guest[0]._id}`
+            `https://www.charliehouseparty.club/accept/${event[0]._id}/${guest[0]._id}`
           );
 
           const eventURL = `https://www.charliehouseparty.club/event/${_args.event_id}`;
@@ -394,22 +393,79 @@ export const resolvers = {
             .split("T");
           const timeString = dateString[1].split(":");
 
-          let html = createEmailBody({
-            QRCode: QRKod,
-            message: _args.response,
-            event_name: event[0].name,
-            event_address: event[0].address,
-            event_dateStart:
-              dateString[0] + " " + timeString[0] + ":" + timeString[1],
-            event_description: event[0].description,
-            guest_name: guest[0].name,
-          });
+          // let html = createEmailBody({
+          //   QRCode: QRKod,
+          //   message: _args.response,
+          //   event_name: event[0].name,
+          //   event_address: event[0].address,
+          //   event_dateStart:
+          //     dateString[0] + " " + timeString[0] + ":" + timeString[1],
+          //   event_description: event[0].description,
+          //   guest_name: guest[0].name,
+          // });
 
-          const pdfResult = await pdf.createAsync(html, {
-            format: "A4",
-            phantomPath: "./node_modules/phantomjs-prebuilt/bin/phantomjs", // PhantomJS binary which should get downloaded automatically
-            filename: `PDF/${guest[0].name} - ${event[0].name}.pdf`,
-          });
+          var html = fs.readFileSync(
+            path.join(__dirname, "../htmlTemplates/ticket.html"),
+            "utf8"
+          );
+
+          // var options = {
+          //   format: "A3",
+          //   orientation: "portrait",
+          //   border: "10mm",
+          //   header: {
+          //     height: "45mm",
+          //     contents:
+          //       '<div style="text-align: center;">Author: Shyam Hajare</div>',
+          //   },
+          //   footer: {
+          //     height: "28mm",
+          //     contents: {
+          //       first: "Cover page",
+          //       2: "Second page", // Any page number is working. 1-based index
+          //       default:
+          //         '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+          //       last: "Last Page",
+          //     },
+          //   },
+          // };
+
+          // var users = [
+          //   {
+          //     name: "Shyam",
+          //     age: "26",
+          //   },
+          //   {
+          //     name: "Navjot",
+          //     age: "26",
+          //   },
+          // ];
+
+          // var document = {
+          //   html: html,
+          //   data: {
+          //     users: users,
+          //   },
+          //   path: `./PDFNEW/${event[0].name}-${guest[0].name}.pdf`,
+          // };
+          // const pdfResult = await pdf.create(document, options);
+
+          // const pdfResult = await pdf.createAsync(html, {
+          //   format: "A4",
+          //   phantomPath: "./node_modules/phantomjs-prebuilt/bin/phantomjs", // PhantomJS binary which should get downloaded automatically
+          //   filename: `PDF/${guest[0].name} - ${event[0].name}.pdf`,
+          // });
+
+          const doc = new PDFDocument();
+
+          doc.pipe(fs.createWriteStream(`ticket.pdf`));
+          doc
+            .fontSize(25)
+            .text(`Ticket QR code for event ${event[0].name}`, 100, 100);
+          doc.image(QRKod);
+          doc.end();
+
+          console.log("New pdf KIT job: ", doc);
 
           const mailOptions1 = {
             from: "Charlie Party: " + event[0].name,
@@ -432,7 +488,7 @@ export const resolvers = {
                   {
                     filename: `Event ${event[0].name}.pdf'`, // <= Here: made sure file name match
                     // path: path.join(__dirname, '../PDF/pozdrav.pdf'), // <= Here
-                    path: pdfResult.filename,
+                    path: `ticket.pdf`,
                     // content: pdfResult.filename,
                     contentType: "application/pdf",
                   },
@@ -442,10 +498,13 @@ export const resolvers = {
 
           const resMail = await smtpTransport1.sendMail(mailOptions1);
 
-          if (pdfResult && resMail && resMail.rejected.length !== 0) {
+          console.log("resMail: ", resMail);
+
+          if (resMail && resMail.rejected.length !== 0) {
+            // pdfResult &&
             return {
               success: false,
-              message: `Sending mail to ${author.email} has failed`,
+              message: `Sending mail to ${guest[0].email} has failed`,
             };
           } else {
             smtpTransport1.close();

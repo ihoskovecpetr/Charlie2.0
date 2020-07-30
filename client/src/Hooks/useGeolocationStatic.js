@@ -9,12 +9,13 @@ export const usePositionStatic = () => {
     latitude: null,
     longitude: null,
     speed: null,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
   let mounted = true;
   let watchId;
 
-  const onEvent = event => {
+  const onEvent = (event) => {
+    console.log("I got geolocation: ", event);
     if (mounted) {
       setState({
         accuracy: event.coords.accuracy,
@@ -24,7 +25,7 @@ export const usePositionStatic = () => {
         latitude: event.coords.latitude,
         longitude: event.coords.longitude,
         speed: event.coords.speed,
-        timestamp: event.timestamp
+        timestamp: event.timestamp,
       });
     }
   };

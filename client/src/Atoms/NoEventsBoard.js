@@ -1,10 +1,10 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import Grid from "@material-ui/core/Grid";
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from "@material-ui/core/Switch";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
-import FilterListIcon from '@material-ui/icons/FilterList';
+import FilterListIcon from "@material-ui/icons/FilterList";
 import { makeStyles } from "@material-ui/core/styles";
 import { Animated } from "react-animated-css";
 import { UserContext } from "src/userContext";
@@ -18,17 +18,18 @@ function NoEventsBoard(props) {
 
   const handleFilterOnOff = (e) => {
     e.stopPropagation();
-    console.log("Filter ON,Off: ", e.target.checked )
-    setContext(prev => {return {
-      ...prev, 
-      playFilterObj: {
-        ...prev.playFilterObj,
-        filterOn: !context.playFilterObj.filterOn ,
-        shownEvents: []
-      }
-      }});
+    console.log("setCtx Filter ON,Off: ", e.target.checked);
+    setContext((prev) => {
+      return {
+        ...prev,
+        playFilterObj: {
+          ...prev.playFilterObj,
+          filterOn: !context.playFilterObj.filterOn,
+          shownEvents: [],
+        },
+      };
+    });
   };
-
 
   return (
     <Grid
@@ -41,28 +42,32 @@ function NoEventsBoard(props) {
       }}
     >
       <Grid item xs={12} className={classes.loginTransparent}>
-        <Grid
-          container
-          justify="center"
-          alignItems="center"
-        >
+        <Grid container justify="center" alignItems="center">
           <Grid item>
             <p className={classes.loginFirstContainer}>
-              There are no more events <b>within {context.radius} km</b> from <b>{context.curPositionAddress}</b> in <b>{context.plusDays}</b> days from today
+              There are no more events{" "}
+              <b>within {context.playFilterObj.radius} km</b> from{" "}
+              <b>{context.curPositionAddress}</b> in{" "}
+              <b>{context.playFilterObj.plusDays}</b> days from today
             </p>
           </Grid>
 
-        <Grid item className={classes.turnOffItem}>
-        <FormControlLabel 
-          control={<Switch  
-                      checked={context.playFilterObj.filterOn} 
-                      onChange={handleFilterOnOff}
-                      onClick={(e) => {e.stopPropagation()}}
-                      value="checkedA"
-                      inputProps={{ 'aria-label': 'secondary checkbox' }}
-                        />} 
-          label={`filter ${context.playFilterObj.filterOn ? "ON" : "OFF"}`} />
-        </Grid> 
+          <Grid item className={classes.turnOffItem}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={context.playFilterObj.filterOn}
+                  onChange={handleFilterOnOff}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  value="checkedA"
+                  inputProps={{ "aria-label": "secondary checkbox" }}
+                />
+              }
+              label={`filter ${context.playFilterObj.filterOn ? "ON" : "OFF"}`}
+            />
+          </Grid>
         </Grid>
       </Grid>
       {/* <Grid item xs={12} className={classes.fingerItem}>
@@ -91,37 +96,37 @@ function NoEventsBoard(props) {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   mainGrid: {
     width: 250,
-    backgroundColor: '#CECDCD', //theme.palette.charliePink,
+    backgroundColor: "#CECDCD", //theme.palette.charliePink,
     borderRadius: 20,
     color: "black",
-    boxShadow: "4px 3px 5px 0px rgba(0,0,0,0.5)"
+    boxShadow: "4px 3px 5px 0px rgba(0,0,0,0.5)",
   },
 
   loginTransparent: {
-    height: 180
+    height: 180,
   },
   loginFirstContainer: {
     // height: "100%",
     fontSize: 16,
     fontWeight: 400,
-    textAlign: 'center',
-    padding: 5
+    textAlign: "center",
+    padding: 5,
   },
   // fingerItem: {
   //   height: 60
   // },
-  backToApp:{
+  backToApp: {
     padding: 10,
     textAlign: "center",
-    width: "100%"
+    width: "100%",
   },
   arrowIcon: {
     height: 50,
     width: 50,
-    color: 'grey'
+    color: "grey",
   },
 
   loginBlack: {
@@ -129,11 +134,11 @@ const useStyles = makeStyles(theme => ({
     color: "white",
     height: "25%",
     borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20
+    borderBottomRightRadius: 20,
   },
   loginContainer: {
-    height: "100%"
-  }
+    height: "100%",
+  },
 }));
 
 export default NoEventsBoard;

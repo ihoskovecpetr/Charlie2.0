@@ -55,16 +55,9 @@ export const typeDef = `
   type SucsResp {
     success: Boolean
   }
-
 `;
 
 const OAuth2 = google.auth.OAuth2;
-
-// const oauth2Client = new OAuth2(
-//   "119981354324-qlg4hf4dlb1k8dd7r32jkouoaoni0gt7.apps.googleusercontent.com", // ClientID
-//   "rJKG6kbFTkk80WCAaB1dKgAF", // Client Secret
-//   "https://developers.google.com/oauthplayground" // Redirect URL
-// );
 
 const oauth2Client = new OAuth2(
   "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com", // ClientID
@@ -74,12 +67,8 @@ const oauth2Client = new OAuth2(
 
 oauth2Client.setCredentials({
   refresh_token:
-    "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8",
+    "1//04hOsAJbgaDOgCgYIARAAGAQSNwF-L9IrhdZywiV91vSsjiwrJ1mPSBxqzoiTZ6Kg-mMWIPTeB2jZc9qr_dvuG0pwvpdGkdk5Ma4",
 });
-
-// oauth2Client.setCredentials({
-//   refresh_token: "1/51zxtNU8LnjfKH-7McNaqtWK6OCSK0X0vogDTcAhc0U"
-// });
 
 const accessToken = oauth2Client.getAccessToken();
 
@@ -92,7 +81,7 @@ const smtpTransport = nodemailer.createTransport({
       "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com",
     clientSecret: "w6myevje4fX4ule3Lnr7_zBI",
     refreshToken:
-      "1//04o_LdB4Ptk_cCgYIARAAGAQSNwF-L9IrhVpNGS26BfcA1aOmzPI6vMTyzOqMxg0ewsxIrgmqQsAtz91klx4Y9EkJFcgT2f_24E8",
+      "1//04hOsAJbgaDOgCgYIARAAGAQSNwF-L9IrhdZywiV91vSsjiwrJ1mPSBxqzoiTZ6Kg-mMWIPTeB2jZc9qr_dvuG0pwvpdGkdk5Ma4",
     accessToken: accessToken,
   },
 });

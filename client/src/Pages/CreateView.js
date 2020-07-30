@@ -190,7 +190,7 @@ function CreateView({
                   fullWidth
                   id="name"
                   inputRef={inputName}
-                  label="My First Party"
+                  placeholder="My Home Event"
                   name="name"
                   autoFocus
                   className={classes.inputName}
@@ -295,7 +295,7 @@ function CreateView({
             </Grid>
             <Grid item xs={8}>
               <Grid container justify="center">
-                {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <KeyboardTimePicker
                     margin="normal"
                     id="time-picker"
@@ -309,13 +309,16 @@ function CreateView({
                     KeyboardButtonProps={{
                       "aria-label": "change time",
                     }}
-                  /> */}
-                <TextField
+                  />
+                </MuiPickersUtilsProvider>
+                {/* <TextField
                   id="time"
                   // label="Alarm clock"
                   type="time"
                   // defaultValue="07:30"
-                  value={formValue.startDate}
+                  value={`${new Date(
+                    formValue.startDate
+                  ).getHours()}:${new Date(formValue.startDate).getMinutes()}`}
                   className={classes.dateField}
                   InputLabelProps={{
                     shrink: true,
@@ -323,8 +326,10 @@ function CreateView({
                   inputProps={{
                     step: 300, // 5 min
                   }}
-                />
-                {/* </MuiPickersUtilsProvider> */}
+                  // onChange={(e) => {
+                  //   console.log("Time Changes: ", e, e.value, e.target.value);
+                  // }}
+                /> */}
               </Grid>
             </Grid>
             <Grid item xs={2}>
@@ -370,7 +375,9 @@ function CreateView({
                   type="number"
                   value={duration}
                   //onChange={handleChange("amount")}
-
+                  classes={{
+                    input: classes.inputDurationRoot,
+                  }}
                   onChange={(value) => {
                     setNewValueDuration(value.target.value);
                   }}
@@ -419,6 +426,9 @@ function CreateView({
                   type="number"
                   value={price}
                   //onChange={handleChange("amount")}
+                  classes={{
+                    input: classes.inputPriceRoot,
+                  }}
                   onChange={(value) => {
                     console.log("CHange Price: ", value);
                     setNewValuePrice(value.target.value);
@@ -621,7 +631,7 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     height: "100%",
     width: "100%",
-    position: "absolute",
+    // position: "absolute",
     // background:
     //   "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
   },
@@ -695,6 +705,12 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 40,
     // color: "red",
     // backgroundColor: "red",
+  },
+  inputDurationRoot: {
+    maxWidth: 140,
+  },
+  inputPriceRoot: {
+    maxWidth: 100,
   },
   switchBYO: {
     marginBottom: "20px",

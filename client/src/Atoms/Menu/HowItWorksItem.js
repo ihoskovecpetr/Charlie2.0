@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
   mainItem: {
     height: 274,
     padding: 10,
+    cursor: "pointer",
   },
   hwIcon: {
     height: 90,
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
     margin: 10,
     color: theme.palette.charliePink,
+    textDecoration: "underline",
   },
   text: {
     fontSize: 18,
@@ -32,7 +34,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function HowItWorksItem({ image, subtitle, text, location }) {
+export default function HowItWorksItem({
+  image,
+  subtitle,
+  text,
+  location,
+  translate,
+}) {
   const classes = useStyles();
   let history = useHistory();
   const [expanded, setExpanded] = React.useState(false);

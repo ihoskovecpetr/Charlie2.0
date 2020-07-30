@@ -8,20 +8,18 @@ import { Animated } from "react-animated-css";
 
 import { useHistory } from "react-router-dom";
 
-function LoginFirstBoard(props) {
+function LoginFirstBoard() {
   let history = useHistory();
   const classes = useStyles();
 
+  const goToSignIn = () => {
+    setTimeout(() => {
+      history.push(`/signin`);
+    }, 200);
+  };
+
   return (
-    <Grid
-      container
-      className={classes.mainGrid}
-      onClick={() => {
-        setTimeout(() => {
-          history.push(`/signin`);
-        }, 200);
-      }}
-    >
+    <Grid container className={classes.mainGrid} onClick={goToSignIn}>
       <Grid item xs={12} className={classes.loginTransparent}>
         <Grid
           container

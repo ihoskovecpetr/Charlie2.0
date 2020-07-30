@@ -42,10 +42,11 @@ const USER_NEW_BOOKINGS = gql`
   }
 `;
 
-let Sorted = [];
+// let Sorted = [];
 
 export default function Screen3(props) {
   const classes = useStyles();
+  const [sorted, setSorted] = useState([]);
   const { context } = useContext(UserContext);
   const [newBookingsArr, { loading, error, data }] = useMutation(
     USER_NEW_BOOKINGS
@@ -58,14 +59,20 @@ export default function Screen3(props) {
   }, [context]);
 
   useEffect(() => {
+    let workSorted = [];
+
     if (data) {
-      Sorted = data.newestUserBookings.filter((item) => {
+      console.log("Sorted0: data ", data);
+
+      workSorted = data.newestUserBookings.filter((item) => {
         if (item.event) return true;
         return false;
       });
 
-      if (Sorted.length >= 2) {
-        Sorted = data.newestUserBookings.sort(function(a, b) {
+      console.log("Sorted1: ", workSorted);
+
+      if (workSorted.length >= 2) {
+        workSorted = data.newestUserBookings.sort(function(a, b) {
           let aDate = new Date(a.event.dateStart);
           let bDate = new Date(b.event.dateStart);
           if (aDate > bDate) {
@@ -76,8 +83,10 @@ export default function Screen3(props) {
           }
         });
       }
+      console.log("To State those sorted: ", workSorted);
     }
-  }, [data]);
+    setSorted(workSorted);
+  }, [data, data && data.newestUserBookings]);
 
   return (
     <div className="section s3">
@@ -104,14 +113,14 @@ export default function Screen3(props) {
             <Grid item>
               {!loading && !data && <LoginFirstBoard />}
               {loading && <Spinner height={100} width={100} />}
-              {Sorted.map((event, index) => {
-                if (new Date(event.event.dateStart) >= new Date()) {
-                  return <EventCard event={event.event} key={index} />;
+              {sorted.map((booking, index) => {
+                if (new Date(booking.event.dateStart) >= new Date()) {
+                  return <EventCard event={booking.event} key={index} />;
                 } else {
                   return <p>You dont have an upcomming event</p>;
                 }
               })}
-              {data && Sorted.length === 0 && (
+              {data && sorted.length === 0 && (
                 <Typography> You dont have an upcomming event </Typography>
               )}
             </Grid>

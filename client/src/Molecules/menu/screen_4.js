@@ -20,13 +20,11 @@ export default function Screen4(props) {
 
   return (
     <div className="section s4">
-      <Container
-        maxWidth="sm"
-        className={classes.container_4}
-        id="s_4_id"
-        // style={{ display: "none" }}
-      >
-        <Grid container className={classes.header_be_gone}>
+      <Container maxWidth="sm" className={classes.container_4} id="s_4_id">
+        <Grid
+          container
+          // className={classes.header_be_gone}
+        >
           <Grid item>
             <Animated
               animationIn="bounceInLeft"
@@ -53,9 +51,6 @@ export default function Screen4(props) {
             justify="center"
             alignItems="center"
             className={classes.blackContainerDiscover}
-            onClick={() => {
-              history.push("/play");
-            }}
           >
             <Grid item xs={4}>
               <Grid container justify="center">
@@ -67,7 +62,7 @@ export default function Screen4(props) {
                     onClick={props.handleDrawerToggle}
                     className={classes.menuButton}
                   >
-                    <ExploreIcon fontSize="large" color="secondary" />
+                    <ExploreIcon fontSize="large" />
                   </IconButton>
                 </Grid>
               </Grid>
@@ -75,7 +70,7 @@ export default function Screen4(props) {
             <Grid item xs={8}>
               <Grid container justify="center">
                 <Grid item>
-                  <Typography variant="h5">DISCOVER</Typography>
+                  <Typography variant="h5">Go Discover</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -87,7 +82,15 @@ export default function Screen4(props) {
               <ul>
                 <li>
                   <Typography variant="body1" gutterBottom>
-                    JOIN event
+                    <span
+                      className={classes.linkPink}
+                      onClick={() => {
+                        history.push("/play");
+                      }}
+                    >
+                      JOIN
+                    </span>{" "}
+                    event
                   </Typography>
                 </li>
                 <li>
@@ -116,9 +119,6 @@ export default function Screen4(props) {
             justify="center"
             alignItems="center"
             className={classes.blackContainerCreate}
-            onClick={() => {
-              history.push("/create");
-            }}
           >
             <Grid item xs={4}>
               <Grid container justify="center">
@@ -144,7 +144,7 @@ export default function Screen4(props) {
                     // gutterBottom
                     // style={{ fontSize: "1.2em" }}
                   >
-                    CREATE
+                    Be an Creator
                   </Typography>
                 </Grid>
               </Grid>
@@ -158,7 +158,15 @@ export default function Screen4(props) {
               <ul>
                 <li>
                   <Typography variant="body1" gutterBottom>
-                    CREATE event
+                    <span
+                      className={classes.linkPink}
+                      onClick={() => {
+                        history.push("/create");
+                      }}
+                    >
+                      CREATE
+                    </span>{" "}
+                    event
                   </Typography>
                 </li>
                 <li>
@@ -186,11 +194,11 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 80,
     paddingBottom: 80,
   },
-  header_be_gone: {
-    [theme.breakpoints.down("xs")]: {
-      display: "none",
-    },
-  },
+  // header_be_gone: {
+  //   [theme.breakpoints.down("xs")]: {
+  //     display: "none",
+  //   },
+  // },
   defaultHeader: {
     color: theme.palette.charliePink,
     fontWeight: 300,
@@ -210,7 +218,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
     marginBottom: 20,
     fontSize: 16,
-    cursor: "pointer",
+    // cursor: "pointer",
   },
   blackContainerCreate: {
     background: theme.palette.darkGrey,
@@ -218,6 +226,11 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
     marginBottom: 20,
     fontSize: 16,
+    // cursor: "pointer",
+  },
+  linkPink: {
+    color: theme.palette.charliePink,
     cursor: "pointer",
+    textDecoration: "underline",
   },
 }));

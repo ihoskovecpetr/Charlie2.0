@@ -94,7 +94,7 @@ function MyDropzone({ setFormValue, setCountOfFiles }) {
         if (err) {
           window.alert("Problem with uploading your picture..");
         }
-        if (response.body.secure_url !== "") {
+        if (response && response.body && response.body.secure_url !== "") {
           var uplArr = uploadedFiles;
           uplArr.push({
             src: response.body.secure_url,

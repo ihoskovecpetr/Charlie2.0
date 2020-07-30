@@ -74,6 +74,7 @@ function Profile() {
   const { context, setContext } = useContext(UserContext);
   const [value, setValue] = useState(0);
   const [bookingsArray, setBookingsArray] = useState([]);
+  const [requestsArray, setRequestsArray] = useState([]);
   const {
     countHostBookings,
     countUserBookings,
@@ -105,16 +106,28 @@ function Profile() {
 
       const transformedBookingsArr = [
         ...trsfmFeed(showUserBookings, "yourBooking"),
+        // ...trsfmFeed(showHostBookings, "askForJoin"),
+      ];
+
+      const transformedRequestsArr = [
+        // ...trsfmFeed(showUserBookings, "yourBooking"),
         ...trsfmFeed(showHostBookings, "askForJoin"),
       ];
 
-      const sortedFeed = sortByDate(
+      const sortedMyBookings = sortByDate(
         transformedBookingsArr,
         "createdAt",
         "DESC"
       );
 
-      setBookingsArray(sortedFeed);
+      const sortedRequests = sortByDate(
+        transformedRequestsArr,
+        "createdAt",
+        "DESC"
+      );
+
+      setBookingsArray(sortedMyBookings);
+      setRequestsArray(sortedRequests);
     }
   }, [data]);
 
@@ -169,38 +182,44 @@ function Profile() {
               >
                 <Tab
                   label={
-                    <Badge
-                      color="secondary"
-                      badgeContent={countHostBookings + countUserBookings}
-                    >
-                      BOOKINGS
+                    <Badge color="secondary" badgeContent={countHostBookings}>
+                      REQUESTS ON ME
                     </Badge>
                   }
-                  {...a11yProps(1)}
+                  {...a11yProps(0)}
                 />
                 <Tab
                   label={
                     <Badge
                       color="primary"
                       badgeContent={
-                        data &&
-                        data.showUserBookings &&
-                        data.showUserBookings.length + data.userEvents.length
+                        data && data.userEvents && data.userEvents.length
                       }
+                      // data &&
+                      // data.showUserBookings &&
+                      // data.showUserBookings.length +
                     >
-                      EVENTS
+                      MY EVENTS
                     </Badge>
                   }
-                  {...a11yProps(2)}
+                  {...a11yProps(1)}
                 />
 
-                <Tab
+                {/* <Tab
                   label={
                     <Badge color="secondary" badgeContent={countRatings}>
                       RATINGS
                     </Badge>
                   }
                   {...a11yProps(3)}
+                /> */}
+                <Tab
+                  label={
+                    <Badge color="secondary" badgeContent={countUserBookings}>
+                      MY BOOKINGS
+                    </Badge>
+                  }
+                  {...a11yProps(2)}
                 />
               </Tabs>
             </AppBar>
@@ -210,14 +229,70 @@ function Profile() {
               onChangeIndex={handleChangeIndex}
               style={{ width: "100%", padding: 0, overflow: "hidden" }}
             >
-              {/* TAB PANEL 1 */}
+              {/* TAB PANEL 4 */}
               <TabPanel
                 value={value}
                 index={0}
                 dir={theme.direction}
+                className={classes.tabPanel}
+                style={{ width: "100%" }}
+              >
+                {requestsArray &&
+                  requestsArray.map((booking, index) => (
+                    <Grid
+                      container
+                      justify="center"
+                      alignItems="center"
+                      alignContent="center"
+                      style={{ width: "100%", padding: 0 }}
+                    >
+                      <Grid item xs={12} key={index}>
+                        <ProfileBookingsPrinter booking={booking} />
+                      </Grid>
+                    </Grid>
+                  ))}
+              </TabPanel>
+
+              {/* TAB PANEL 2 */}
+              <TabPanel
+                value={value}
+                index={1}
+                dir={theme.direction}
+                className={classes.tabPanel}
+              >
+                {loading && <Spinner />}
+                {data && (
+                  <ProfileEventsPrinter
+                    // showUserBookings={data.showUserBookings}
+                    userEvents={data.userEvents}
+                  />
+                )}
+              </TabPanel>
+              {/* TAB PANEL 3 */}
+              {/* <TabPanel
+                value={value}
+                index={2}
+                dir={theme.direction}
+                className={classes.tabPanel}
+                style={{ width: "100%" }}
+              >
+                {loading && <Spinner height={100} width={100} />}
+                {data &&
+                  data.showRatings &&
+                  data.showRatings.map((rating, index) => (
+                    <>
+                      <ReceivedRatingsCard rating={rating} key={index} />
+                    </>
+                  ))}
+              </TabPanel> */}
+
+              {/* TAB PANEL 1 */}
+              <TabPanel
+                value={value}
+                index={2}
+                dir={theme.direction}
                 id="TabPanelXX"
                 className={classes.tabPanel}
-                style={{ padding: 0 }}
               >
                 {loading && (
                   <Grid container justify="center">
@@ -239,38 +314,6 @@ function Profile() {
                         <ProfileBookingsPrinter booking={booking} />
                       </Grid>
                     </Grid>
-                  ))}
-              </TabPanel>
-              {/* TAB PANEL 2 */}
-              <TabPanel
-                value={value}
-                index={1}
-                dir={theme.direction}
-                className={classes.tabPanel}
-              >
-                {loading && <Spinner />}
-                {data && (
-                  <ProfileEventsPrinter
-                    showUserBookings={data.showUserBookings}
-                    userEvents={data.userEvents}
-                  />
-                )}
-              </TabPanel>
-              {/* TAB PANEL 3 */}
-              <TabPanel
-                value={value}
-                index={2}
-                dir={theme.direction}
-                className={classes.tabPanel}
-                style={{ width: "100%" }}
-              >
-                {loading && <Spinner height={100} width={100} />}
-                {data &&
-                  data.showRatings &&
-                  data.showRatings.map((rating, index) => (
-                    <>
-                      <ReceivedRatingsCard rating={rating} key={index} />
-                    </>
                   ))}
               </TabPanel>
             </SwipeableViews>
@@ -306,6 +349,8 @@ const useStyles = makeStyles((theme) => ({
   },
   tabPanel: {
     // minHeight: "100vh",
+    paddingTop: 7,
+    paddingBottom: 7,
     width: "100%",
   },
   boxRoot: {

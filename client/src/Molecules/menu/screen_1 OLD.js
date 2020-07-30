@@ -15,7 +15,6 @@ import { useXsSize } from "../../Hooks/useXsSize";
 import FlippingLogo from "../../Atoms/Flipping-logo/logo";
 import EmpireOriginal from "../../Images/empire.jpg";
 import CharlieBlack from "../../Images/charlie_black.png";
-import Skyline from "../../Images/skyline.png";
 
 export default function Screen1() {
   const classes = useStyles();
@@ -119,10 +118,7 @@ export default function Screen1() {
                 </NavLink>
                 <NavLink to={`/create`} className={classes.link_main_grey}>
                   <Grid item>
-                    <Button
-                      variant="contained"
-                      className={classes.button}
-                    >
+                    <Button variant="contained" className={classes.button}>
                       CREATE
                     </Button>
                   </Grid>
@@ -165,58 +161,58 @@ export default function Screen1() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container_1: {
     // height: "100vh",
     color: "black",
     //background: "rgba(25,25,25,0.3)"
-    backgroundImage: `url(${Skyline})`,
+    // backgroundImage: `url(${Skyline})`,
     backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center bottom",
     [theme.breakpoints.up("sm")]: {
-      background: "none"
+      background: "none",
     },
     [theme.breakpoints.down("xs")]: {
-      paddingTop: "12vh"
-    }
+      paddingTop: "12vh",
+    },
   },
   quarter_grid: {
     height: "50vh",
     [theme.breakpoints.down("xs")]: {
-      height: "22vh"
-    }
+      height: "22vh",
+    },
   },
   quarter_grid_empty: {
     height: 0,
     display: "none",
     [theme.breakpoints.down("xs")]: {
       height: "20vh",
-      display: "block"
-    }
+      display: "block",
+    },
   },
   menuGrid_1: {
-    height: "100%"
+    height: "100%",
   },
   menuGrid_2: {
-    height: "100%"
+    height: "100%",
   },
   menuGrid_3: {
     [theme.breakpoints.down("xs")]: {
-      paddingTop: "0vh"
-    }
+      paddingTop: "0vh",
+    },
   },
   menuGrid_4: {
     [theme.breakpoints.down("xs")]: {
       position: "relative",
-      top: -30
-    }
+      top: -30,
+    },
   },
   main_nadpis_row: {
     marginRight: "30%",
     [theme.breakpoints.down("xs")]: {
       //marginRight: "50%",
-    }
+    },
   },
   party: {
     textAlign: "center",
@@ -227,11 +223,11 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 20,
     textShadow: "2px 2px 3px grey",
     [theme.breakpoints.up("sm")]: {
-      fontSize: 40
+      fontSize: 40,
     },
     [theme.breakpoints.down("xs")]: {
-      fontSize: 30
-    }
+      fontSize: 30,
+    },
   },
   charlie: {
     textAlign: "center",
@@ -240,48 +236,48 @@ const useStyles = makeStyles(theme => ({
     color: "black",
     textShadow: "2px 2px 3px grey",
     [theme.breakpoints.up("sm")]: {
-      fontSize: 40
+      fontSize: 40,
     },
     [theme.breakpoints.down("xs")]: {
-      fontSize: 30
-    }
+      fontSize: 30,
+    },
   },
   link_main_pink: {
     width: "100%",
     marginRight: "30%",
     [theme.breakpoints.down("xs")]: {
       width: "30%",
-      margin: 10
-    }
+      margin: 10,
+    },
   },
   link_main_grey: {
     width: "100%",
     marginRight: "30%",
     [theme.breakpoints.down("xs")]: {
       width: "30%",
-      margin: 10
+      margin: 10,
     },
     backgroundColor: "lightGrey",
-    color: "black"
+    color: "black",
   },
   menuGrid_2_item: {
     marginLeft: "30%",
     [theme.breakpoints.down("xs")]: {
-      marginLeft: 0
-    }
+      marginLeft: 0,
+    },
   },
   button: {
     width: "100%",
     marginTop: 10,
     fontWeight: "700 !important",
-    boxShadow: "2px 4px 6px grey !important"
+    boxShadow: "2px 4px 6px grey !important",
   },
   text: {
     color: "black",
     fontWeight: 400,
     marginLeft: "30%",
     [theme.breakpoints.down("xs")]: {
-      marginLeft: 0
-    }
-  }
+      marginLeft: 0,
+    },
+  },
 }));

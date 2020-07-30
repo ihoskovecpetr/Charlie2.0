@@ -20,13 +20,12 @@ import PlayPageList from "../Molecules/play/PlayPageList";
 import PlayPageGallery from "../Molecules/play/PlayPageGallery";
 import PlayPageMap from "../Molecules/play/PlayPageMap";
 
-import {GET_ONE_EVENT} from "src/Services/GQL/GET_ONE_EVENT";
+import { GET_ONE_EVENT } from "src/Services/GQL/GET_ONE_EVENT";
 import { EVENT_RATINGS } from "src/Services/GQL/EVENT_RATINGS";
 import ModalLayout from "../Layouts/ModalLayout";
 import EventButtons from "../Molecules/event/EventButtons";
 import RatingCard from "../Molecules/rating-card";
 import Spinner from "../Atoms/Spinner";
-
 
 let dataMock;
 
@@ -34,16 +33,16 @@ function Event(props) {
   const classes = useStyles();
   const [windowHeight, setWindowHeight] = useState(0);
   const { loading, error, data, refetch } = useQuery(GET_ONE_EVENT, {
-    variables: { event_id: props.match.params.id }
+    variables: { event_id: props.match.params.id },
   });
   const ratings = useQuery(EVENT_RATINGS, {
-    variables: { event_id: props.match.params.id }
+    variables: { event_id: props.match.params.id },
   });
 
-  console.log("Event modal print")
+  console.log("Event modal print");
   useEffect(() => {
     window.scrollTo(0, 0);
-    setWindowHeight(window.innerHeight)
+    setWindowHeight(window.innerHeight);
   }, []);
 
   useEffect(() => {
@@ -58,15 +57,18 @@ function Event(props) {
 
   let dataDB;
 
-  const PaperEvent = props => {
-    return <Paper 
-                  className={classes.paper}
-                  style={{marginTop: window.eventId ? "10vh" : "10vh", height: 0.9 * windowHeight}}
-                  >
-              {props.children}
-          </Paper>;
+  const PaperEvent = (props) => {
+    return (
+      <Paper
+        className={classes.paper}
+        style={{
+          height: 0.9 * windowHeight,
+        }}
+      >
+        {props.children}
+      </Paper>
+    );
   };
-
 
   if (dataMock) {
     dataDB = dataMock;
@@ -74,38 +76,41 @@ function Event(props) {
     dataDB = data;
   }
 
-
   if (dataDB && dataDB.getOneEvent.success) {
     return (
       <ModalLayout>
         <div id="paper_scrollable">
           <PaperEvent>
-
-
-            <Grid
-              container
-              justify="center"
-            >
+            <Grid container justify="center">
               <Grid item className={classes.nameGrid}>
                 {/* <Typography component="h4" variant="h4" className={classes.name}>
                   {dataDB.getOneEvent.name}
                   <p className={classes.thisLineHeader}></p>
                 </Typography> */}
-                {dataDB.getOneEvent.hide && <Typography component="h3" variant="h3" className={classes.name}>
-                  CANCELLED
-                </Typography>}
+                {dataDB.getOneEvent.hide && (
+                  <Typography
+                    component="h3"
+                    variant="h3"
+                    className={classes.name}
+                  >
+                    CANCELLED
+                  </Typography>
+                )}
               </Grid>
               <PlayPageGallery event={dataDB.getOneEvent} />
+              <EventButtons event={dataDB && dataDB.getOneEvent} />
               <PlayPageList
-                    event={dataDB.getOneEvent}
-                    bookings={dataDB.getOneEvent.bookings}
-                    GQL_refetch={GET_ONE_EVENT}
-                    refetchVariables={{ id: props.match.params.id }}
-                  />
+                event={dataDB.getOneEvent}
+                bookings={dataDB.getOneEvent.bookings}
+                GQL_refetch={GET_ONE_EVENT}
+                refetchVariables={{ id: props.match.params.id }}
+              />
+              <EventButtons event={dataDB && dataDB.getOneEvent} />
+
               <PlayPageMap
-                    event={dataDB.getOneEvent}
-                    showBookings={dataDB.getOneEvent.bookings} //showBookings
-                  /> 
+                event={dataDB.getOneEvent}
+                showBookings={dataDB.getOneEvent.bookings} //showBookings
+              />
 
               <Grid
                 container
@@ -122,33 +127,9 @@ function Event(props) {
                     </Grid>
                   ))}
               </Grid>
-              <EventButtons
-                event={dataDB && dataDB.getOneEvent}
-              />
             </Grid>
           </PaperEvent>
         </div>
-        {/* <Grid
-          container
-          direction="row"
-          justify="center"
-          alignItems="center"
-          alignContent="center"
-          className={classes.gridButtons}
-        >
-          <EventButtons
-            event={dataDB && dataDB.getOneEvent}
-            bookings={dataDB && dataDB.getOneEvent.bookings}
-            createBooking={createBooking}
-            cancelBooking={cancelBooking}
-            deleteOneEvent={deleteOneEvent}
-            eventId={props.match.params.id}
-            ONE_EVENT={GET_ONE_EVENT}
-            EVENT_RATINGS={EVENT_RATINGS}
-            className={classes.eventButtons}
-          />
-
-        </Grid> */}
       </ModalLayout>
     );
   }
@@ -174,26 +155,33 @@ function Event(props) {
       </ModalLayout>
     );
   }
-  return(
+  return (
     <ModalLayout>
       <PaperEvent>
-          <Grid container justify="center" alignItems="center" style={{width: "100%", height: 300}}>
-            <Grid item>
-              <Spinner height={100} width={100} />
-            </Grid>
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          style={{ width: "100%", height: 300 }}
+        >
+          <Grid item>
+            <Spinner height={100} width={100} />
           </Grid>
+        </Grid>
       </PaperEvent>
     </ModalLayout>
-  );;
+  );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     background: "#242323",
+    marginTop: "10vh",
+    paddingBottom: "5vh",
     color: "white",
     overflow: "scroll",
     borderBottomRightRadius: 0,
-    borderBottomLeftRadius: 0
+    borderBottomLeftRadius: 0,
   },
   gridButtons: {
     background: "black",
@@ -205,58 +193,58 @@ const useStyles = makeStyles(theme => ({
     overflow: "scroll",
     borderBottomRightRadius: 5,
     borderBottomLeftRadius: 5,
-    boxShadow: "0px -2px 5px 0px rgba(200,200,200,0.3)"
+    boxShadow: "0px -2px 5px 0px rgba(200,200,200,0.3)",
   },
   closeButton: {
     background: theme.palette.violetova,
-    color: "white"
+    color: "white",
   },
   nameGrid: {
-    margin: 15
+    margin: 15,
   },
   name: {
-    textAlign: "center"
+    textAlign: "center",
   },
-  thisLineHeader:{
-    height: '1px',
-    width: '100%',
-    marginTop: '2px',
-    backgroundColor: "#707070"
+  thisLineHeader: {
+    height: "1px",
+    width: "100%",
+    marginTop: "2px",
+    backgroundColor: "#707070",
   },
   galleryGrid: {
     width: "100%",
     background: "rgba(255,255,255,0.2)",
     borderRadius: 4,
-    padding: theme.spacing(3, 2)
+    padding: theme.spacing(3, 2),
   },
-  listRow:{
-    width: '100%',
+  listRow: {
+    width: "100%",
     marginTop: 2,
     marginBottom: 2,
     backgroundColor: "rgba(255,255,255,0.05)",
   },
   standardHeading: {
-    width: '100%',
+    width: "100%",
     fontWeight: 500,
-    textAlign: 'left',
+    textAlign: "left",
     backgroundColor: "rgba(255,255,255,0.05)",
     padding: 10,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
   standardContent: {
     fontWeight: 400,
-    textAlign: 'right',
-    color: '#29FFF7',
-    padding: 10
+    textAlign: "right",
+    color: "#29FFF7",
+    padding: 10,
   },
   authorContainer: {
-    width: "100%"
+    width: "100%",
   },
   ratingContainer: {
     width: "100%",
-    overflow: "scroll"
+    overflow: "scroll",
   },
 }));
 

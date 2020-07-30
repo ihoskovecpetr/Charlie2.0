@@ -10,6 +10,7 @@ import { UserContext } from "../userContext";
 import CreateView from "./CreateView";
 
 import { useLogicPlusMinusValue } from "./Logic/Create/useLogicPlusMinusValue";
+import { PLAY_EVENTS_QUERY } from "src/Services/GQL/PLAY_EVENTS_QUERY";
 
 function Create(props) {
   let history = useHistory();
@@ -146,6 +147,27 @@ function Create(props) {
     if (empty.length == 0) {
       createEvent({
         variables: load,
+        refetchQueries: () => [
+          {
+            query: PLAY_EVENTS_QUERY,
+            variables: {
+              plusDays: context.playFilterObj.filterOn
+                ? context.playFilterObj.plusDays
+                : 10000,
+              lng: context.playFilterObj.geolocationPlay
+                ? context.playFilterObj.geolocationPlay.lng
+                : null,
+              lat: context.playFilterObj.geolocationPlay
+                ? context.playFilterObj.geolocationPlay.lat
+                : null,
+              radius: context.playFilterObj.filterOn
+                ? context.playFilterObj.radius
+                : 9999999,
+              shownEvents: context.playFilterObj.shownEvents,
+            },
+          },
+          // here refetch play data and event data
+        ],
       });
     } else {
       setFeErrors(empty);

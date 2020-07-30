@@ -29,7 +29,11 @@ const CANCEL_EVENT = gql`
   }
 `;
 
-function EventButtons({ event, propContext }) {
+const MemoizedEventBtns = React.memo(function EventButtons({
+  event,
+  propContext,
+  name,
+}) {
   const classes = useStyles();
   let history = useHistory();
   const { context } = useContext(UserContext);
@@ -50,7 +54,7 @@ function EventButtons({ event, propContext }) {
     userIsAuthor: null,
   });
 
-  console.log("RERENDER EVENTBTNS: ", propContext);
+  console.log("RERENDER EVENTBTNS: ", name, event.name, propContext);
 
   useEffect(() => {
     if (propContext) {
@@ -61,6 +65,7 @@ function EventButtons({ event, propContext }) {
   }, [context, propContext]);
 
   useEffect(() => {
+    console.log("EventButtons Eff ", event, event._id, localContext._id, data);
     let userIsAtt = false;
     let userIsPend = false;
     let userIsDecl = false;
@@ -128,7 +133,7 @@ function EventButtons({ event, propContext }) {
       eventIsPast: eventIsPast,
       userIsAuthor: userIsAuthor,
     });
-  }, [event, event._id, data, localContext, data && data.showBookings]);
+  }, [event, event._id, localContext._id, data]); // && data.showBookings
 
   const alertCancelBooking = () => {
     var r = window.confirm(
@@ -317,7 +322,7 @@ function EventButtons({ event, propContext }) {
       stateOfMyBooking.eventIsPast &&
       stateOfMyBooking.userIsAtt
     ) {
-      ArrOfComponents.push(<ModalRate event={event} />);
+      // ArrOfComponents.push(<ModalRate event={event} />);
     }
 
     if (
@@ -371,7 +376,7 @@ function EventButtons({ event, propContext }) {
   return printComponents.map((item) => {
     return item;
   });
-}
+});
 
 const useStyles = makeStyles((theme) => ({
   buttonCls: {
@@ -389,10 +394,13 @@ const useStyles = makeStyles((theme) => ({
   chipOne: {
     // width: "90%",
     // fontWeight: 500,
-    fontSize: 22,
+    // fontSize: 22,
     // padding: 5,
     // margin: "5%"
   },
 }));
 
-export default EventButtons;
+// export default EventButtons;
+export default MemoizedEventBtns;
+// const EventButtonsMemoized = React.memo(EventButtons);
+// export default EventButtonsMemoized;

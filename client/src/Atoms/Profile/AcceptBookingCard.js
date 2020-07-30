@@ -35,14 +35,6 @@ export default function AcceptBookingCard({ booking }) {
   const { context, setContext } = useContext(UserContext);
   const [markBookingSeen, seenStates] = useMutation(SEEN_BOOKING);
 
-  useEffect(() => {
-    // if(context.expanded_id === booking._id){
-    //   setExpanded(true)
-    // }else{
-    //   setExpanded(false)
-    // }
-  }, []);
-
   const handleExpandClick = () => {
     if (expanded) {
       setExpanded(false);
@@ -143,6 +135,15 @@ export default function AcceptBookingCard({ booking }) {
                   badgeContent={badgeContent}
                   className={classes.badge}
                   color={booking.decided ? "primary" : "secondary"}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  classes={{
+                    colorPrimary: booking.confirmed
+                      ? classes.greenBack
+                      : classes.greyBack,
+                  }}
                   // style={{ backgroundColor: booking.decided ? "grey" : "red"}}
                 >
                   <Avatar
@@ -218,6 +219,7 @@ export default function AcceptBookingCard({ booking }) {
             event={booking.event}
             transparent={true}
             context={context}
+            activeLinkEvent={true}
           />
         </Grid>
         <EventButtons event={booking.event} />
@@ -285,11 +287,16 @@ const useStyles = makeStyles((theme) => ({
     height: 60,
     width: 60,
   },
-
   thisLine: {
     height: "1px",
     width: "100%",
     marginTop: "2px",
     backgroundColor: "#707070",
+  },
+  greenBack: {
+    backgroundColor: "green",
+  },
+  greyBack: {
+    backgroundColor: "grey",
   },
 }));

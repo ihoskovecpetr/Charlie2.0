@@ -18,13 +18,12 @@ import { useXsSize } from "../../Hooks/useXsSize";
 import FlippingLogo from "../../Atoms/Flipping-logo/logo";
 import EmpireOriginal from "../../Images/empire.jpg";
 import CharlieBlack from "../../Images/charlie_black.png";
-import Skyline from "../../Images/skyline.png";
 import Scroll from "../../Images/scroll.png";
 import ScrollAnimated from "../../Atoms/ScrollAnimated";
 
 export default function Screen1() {
   const classes = useStyles();
-  const { xs_size_memo } = useXsSize();
+  const { md_size_memo } = useXsSize();
   let history = useHistory();
 
   return (
@@ -102,7 +101,7 @@ export default function Screen1() {
                     container
                     justify="center"
                     direction="row"
-                    spacing={3}
+                    spacing={2}
                     className={classes.menuGrid_3}
                   >
                     <Grid item xs={6}>
@@ -115,7 +114,9 @@ export default function Screen1() {
                         }}
                       >
                         <p className={classes.big_pty}>JOIN</p>
-                        <p className={classes.small_pty}>PARTY</p>
+                        {!md_size_memo && (
+                          <p className={classes.small_pty}>PARTY</p>
+                        )}
                       </Button>
                     </Grid>
                     <Grid item xs={6}>
@@ -127,7 +128,9 @@ export default function Screen1() {
                         }}
                       >
                         <p className={classes.big_pty}>CREATE</p>
-                        <p className={classes.small_pty}>PARTY</p>
+                        {!md_size_memo && (
+                          <p className={classes.small_pty}>PARTY</p>
+                        )}
                       </Button>
                     </Grid>
                   </Grid>
@@ -154,8 +157,6 @@ const useStyles = makeStyles((theme) => ({
   container_1: {
     // height: "100vh",
     color: "black",
-    //background: "rgba(25,25,25,0.3)"
-    // backgroundImage: `url(${Skyline})`,
     backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center bottom",
@@ -220,6 +221,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     backgroundColor: "lightGrey",
     color: "black",
+    boxShadow: "2px 4px 6px 0px black !important",
   },
   scrollWrap: {
     marginTop: 60,

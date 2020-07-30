@@ -14,52 +14,62 @@ export default function UserEventsProfile({ showUserBookings, userEvents }) {
   const classes = useStyles();
   const [sortedEvents, setSortedEvents] = useState([]);
 
-
   useEffect(() => {
+    // const justShowUserBookings = showUserBookings.map((item) => {
+    //   return item.event;
+    // });
 
-    const justShowUserBookings = showUserBookings.map(item => {
-        return item.event
-    })
+    const justUserEvents = userEvents.map((item) => {
+      let extEvent = item;
+      extEvent.areYouAuthor = true;
+      return extEvent;
+    });
 
-    const justUserEvents = userEvents.map(item => {
-        let extEvent = item
-        extEvent.areYouAuthor = true
-        return extEvent
-    })
+    let sortedEventsPrep = sortByDate(
+      [
+        ...justUserEvents, // ...justShowUserBookings
+      ],
+      "dateStart",
+      "DESC"
+    );
 
-    let sortedEventsPrep = sortByDate([
-        ...justShowUserBookings,
-        ...justUserEvents
-    ], "dateStart", "DESC");
+    console.log("Profile Person Events: ", userEvents, justUserEvents);
 
-    setSortedEvents(sortedEventsPrep)
+    setSortedEvents(sortedEventsPrep);
+  }, [userEvents]); //showUserBookings
 
-  },[ userEvents, showUserBookings ])
+  console.log(
+    "sortedEvents && sortedEvents.length > 1",
+    sortedEvents && sortedEvents.length > 0,
+    sortedEvents
+  );
 
   return (
     <Grid
-    container
-    justify="center"
-    direction="column"
-    alignItems="flex-start"
-    alignContent="center"
-    className={classes.mainContainer}
-  >
-    {userEvents && showUserBookings && sortedEvents && sortedEvents.map((event, index) => (
-        <Grid item xs={12} key={index} className={classes.itemGrid}>
+      container
+      justify="center"
+      direction="column"
+      alignItems="flex-start"
+      alignContent="center"
+      className={classes.mainContainer}
+    >
+      {sortedEvents &&
+        sortedEvents.length > 0 &&
+        sortedEvents.map((event, index) => (
+          <Grid item xs={12} key={index} className={classes.itemGrid}>
             <Grid container justify="center" className={classes.itemContainer}>
-                <EventCardProfile event={event} />
+              <EventCardProfile event={event} />
             </Grid>
-        </Grid>
-      ))}
-  </Grid>
+          </Grid>
+        ))}
+    </Grid>
   );
 }
 
-const useStyles = makeStyles(theme => ({
-    mainContainer: {
-        width: "100%",
-      },
+const useStyles = makeStyles((theme) => ({
+  mainContainer: {
+    width: "100%",
+  },
   itemContainer: {
     width: "100%",
   },

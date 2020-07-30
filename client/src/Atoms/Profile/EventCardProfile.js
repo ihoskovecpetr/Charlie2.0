@@ -169,8 +169,8 @@ export default function EventCardProfile({ event }) {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <PlayPageGallery event={event} />
         <PlayListWrap event={event} />
-        <PlayPageMap event={event} paddingSides={"0px"} />
         <EventButtons event={event} />
+        <PlayPageMap event={event} paddingSides={"0px"} />
         <Grid container justify="center">
           <Grid item>
             <IconButton

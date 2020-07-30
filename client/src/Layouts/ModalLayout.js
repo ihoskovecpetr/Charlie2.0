@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
@@ -7,20 +7,23 @@ import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import CloseIcon from "@material-ui/icons/Close";
 
-import { withRouter, useHistory } from "react-router-dom";
+import { UserContext } from "../userContext";
+import { useHistory } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 
-import { useXsSize } from "src/Hooks/useXsSize";
+import { useScrollDisable } from "../Hooks/useScrollDisable";
 
 function Layout(props) {
   const classes = useStyles();
-  const { xs_size_memo } = useXsSize();
+  let history = useHistory();
+  const { context, setContext } = useContext(UserContext);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
   const swingIn = useSpring({
     transform: "scale(1)",
     opacity: 1,
     from: { opacity: 0, transform: "scale(0.8)" },
   });
+  useScrollDisable();
 
   useEffect(() => {
     setWindowHeight(window.innerHeight);
@@ -66,10 +69,13 @@ function Layout(props) {
             className={classes.closeButton}
             onClick={() => {
               if (window.eventId) {
-                window.eventId = null;
-                props.history.push("/");
+                // window.eventId = null;
+                history.push({
+                  pathname: "/",
+                  customNameData: { D: "s" },
+                });
               } else {
-                props.history.goBack();
+                history.goBack();
               }
             }}
           >
@@ -121,4 +127,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default withRouter(Layout);
+export default Layout;

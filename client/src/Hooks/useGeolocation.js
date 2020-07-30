@@ -1,43 +1,45 @@
 import React, { useState, useEffect } from "react";
+
 export const usePosition = () => {
   const [position, setPosition] = useState({});
   const [error, setError] = useState(null);
-  const [address, setAddress] = useState('')
+  const [address, setAddress] = useState("");
+
   let geocoder;
 
-  const onChange = ({ coords }) => {
-    console.log("Found your New Location: ", coords.latitude, coords.longitude)
+  useEffect(() => {
+    console.log("UseEffect in useGeolocation for error: ", error);
+  }, [error]);
 
-// Find Address:
+  const onChange = (event) => {
+    const { coords } = event;
+    console.log("Granted Geolocation: ", event);
 
-  geocoder = new window.google.maps.Geocoder();
+    // Find Address:
 
-  geocoder.geocode({ location: { lat: coords.latitude, lng: coords.longitude } }, function(
-    results,
-    status,
-    error_message
-  ){
-    if (results) {
-      var spl = results[0].formatted_address.split(" ");
-      setAddress(`${spl[(spl.length-2)]} ${spl[(spl.length-1)]}`)
-    } else {
-      console.log("NOOOO Setting address to context: ")
-    }
-  }
-  )
+    geocoder = new window.google.maps.Geocoder();
+
+    geocoder.geocode(
+      { location: { lat: coords.latitude, lng: coords.longitude } },
+      function(results, status, error_message) {
+        if (results) {
+          var spl = results[0].formatted_address.split(" ");
+          setAddress(`${spl[spl.length - 2]} ${spl[spl.length - 1]}`);
+        } else {
+          console.log("NOOOO Setting address to context: ");
+        }
+      }
+    );
     setPosition({
       latitude: coords.latitude,
-      longitude: coords.longitude
+      longitude: coords.longitude,
     });
-
-
   };
 
-
-  const onError = error => {
+  const onError = (error) => {
+    console.log("Declined Geolocation: ", error);
     setError(error.message);
   };
-
 
   useEffect(() => {
     const geo = window.navigator.geolocation;
@@ -49,8 +51,8 @@ export const usePosition = () => {
     let watcher = geo.getCurrentPosition(onChange, onError);
     return () => geo.clearWatch(watcher);
   }, []);
-  return { ...position, address, error };
+  return { ...position, address, geoError: error };
 };
 
 export const Memoized = React.memo(usePosition);
-//export default Memoized;
+// export default usePosition;

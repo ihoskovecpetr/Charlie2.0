@@ -7,18 +7,13 @@ import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import InputLabel from "@material-ui/core/InputLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
-import CloseIcon from '@material-ui/icons/Close';
-
+import CloseIcon from "@material-ui/icons/Close";
 import { makeStyles } from "@material-ui/core/styles";
-import { useMutation } from "@apollo/react-hooks";
 
-import gql from "graphql-tag";
-import { useHistory } from "react-router-dom";
+import { useMutation } from "@apollo/react-hooks";
+import { useHistory, NavLink } from "react-router-dom";
 import { useWindowSize } from "../Hooks/useWindowSize";
 import { useScrollDisable } from "../Hooks/useScrollDisable";
 import { findEmpty } from "../Services/functions";
@@ -28,12 +23,11 @@ import ModalLayout from "../Layouts/ModalLayout";
 import Copyright from "../Atoms/copyright";
 import Spinner from "../Atoms/Spinner";
 import DropzoneSignup from "../Molecules/DropzoneSignup";
-import { NEW_USER } from 'src/Services/GQL/NEW_USER'
+import { NEW_USER } from "src/Services/GQL/NEW_USER";
 
 // function tryLogin() {
 //   console.log("Mutation data: ", data);
 // }
-
 
 function SignUp() {
   const classes = useStyles();
@@ -47,7 +41,7 @@ function SignUp() {
 
   const { dataOut } = data ? data.newUser : { dataOut: undefined };
   const { errorOut } = data ? data.newUser : { errorOut: undefined };
-  
+
   useScrollDisable();
   const inputDescRef = useRef(null);
 
@@ -55,62 +49,75 @@ function SignUp() {
     window.scrollTo(0, 0);
   }, []);
 
-
   const onSubmitHandler = (e) => {
     e.preventDefault();
     let load = {
-      name: document.getElementById("name").value == "" ? null : document.getElementById("name").value,
-      email: document.getElementById("emailSignUp").value == "" ? null : document.getElementById("emailSignUp").value,
-      telephone: document.getElementById("telephoneSignUp").value == "" ? null : document.getElementById("telephoneSignUp").value,
-      password: document.getElementById("password").value == "" ? null : document.getElementById("password").value,
-      password2: document.getElementById("password2").value == "" ? null : document.getElementById("password2").value,
+      name:
+        document.getElementById("name").value == ""
+          ? null
+          : document.getElementById("name").value,
+      email:
+        document.getElementById("emailSignUp").value == ""
+          ? null
+          : document.getElementById("emailSignUp").value,
+      telephone:
+        document.getElementById("telephoneSignUp").value == ""
+          ? null
+          : document.getElementById("telephoneSignUp").value,
+      password:
+        document.getElementById("password").value == ""
+          ? null
+          : document.getElementById("password").value,
+      password2:
+        document.getElementById("password2").value == ""
+          ? null
+          : document.getElementById("password2").value,
       picture: formValue.picture,
       description: inputDescRef.current.value
-          ? inputDescRef.current.value
-          : null,
+        ? inputDescRef.current.value
+        : null,
       typeDirect: true,
-      typeSocial: false
-      };
+      typeSocial: false,
+    };
     let empty = findEmpty(load);
-    empty = empty.map(item => `${item} is Empty`)
-    if(load.password != load.password2) empty.push("Not matching passwords")
+    empty = empty.map((item) => `${item} is Empty`);
+    if (load.password != load.password2) empty.push("Not matching passwords");
 
     console.log("Empty ones: ", empty);
 
-  if (empty.length == 0) {
-      setFEerrors([]) // reset fe errors
+    if (empty.length == 0) {
+      setFEerrors([]); // reset fe errors
       console.log("SUBMIT: ", load);
       newUser({
-        variables: load
+        variables: load,
       });
-  } else {
+    } else {
       setFEerrors(empty);
     }
+  };
 
-}
-
-if (dataOut && dataOut.success) {
-
-  console.log("Success signUp data: ", dataOut)
-  // window.localStorage.setItem("token", dataOut.token);
-  setTimeout(() => {
+  if (dataOut && dataOut.success) {
+    console.log("Success signUp data: ", dataOut);
     // window.localStorage.setItem("token", dataOut.token);
-    setContext(prev => { return {
-      ...prev,
-      showAlertAdviseEmail: true,
-    }});
-    history.push('/');
-  },200)
-  return (
-    <ModalLayout>
-      <Paper className={classes.paper}>
-        <p>Succes redirecting to main page</p>
-      </Paper>
-    </ModalLayout>
-  );
-}
+    setTimeout(() => {
+      // window.localStorage.setItem("token", dataOut.token);
+      setContext((prev) => {
+        return {
+          ...prev,
+          showAlertAdviseEmail: true,
+        };
+      });
+      history.push("/");
+    }, 200);
+    return (
+      <ModalLayout>
+        <Paper className={classes.paper}>
+          <p>Succes redirecting to main page</p>
+        </Paper>
+      </ModalLayout>
+    );
+  }
 
-  
   // if (loading) {
   //   return (
   //     <ModalLayout>
@@ -130,7 +137,7 @@ if (dataOut && dataOut.success) {
             variant="contained"
             color="secondary"
             onClick={() => {
-              history.push("/")
+              history.push("/");
             }}
           >
             MENU
@@ -140,168 +147,175 @@ if (dataOut && dataOut.success) {
     );
   }
 
-
-  if(data && data.newUser.success == true ){
-          setTimeout(() => {
-          history.push("/");
-        }, 1000);
-        return (
-          <ModalLayout>
-            <Paper className={classes.paper}>
-              <p>Success! Redirecting..</p>
-            </Paper>
-          </ModalLayout>
-        );
+  if (data && data.newUser.success == true) {
+    setTimeout(() => {
+      history.push("/");
+    }, 1000);
+    return (
+      <ModalLayout>
+        <Paper className={classes.paper}>
+          <p>Success! Redirecting..</p>
+        </Paper>
+      </ModalLayout>
+    );
   }
 
   return (
     <ModalLayout>
-      <Paper  className={classes.paper}
-              style={{
-                marginTop: 0.10 * windowSize.height,
-                maxHeight: 0.88 * windowSize.height,
-                overflow: 'scroll'
-              }}>
+      <Paper
+        className={classes.paper}
+        style={{
+          marginTop: 0.1 * windowSize.height,
+          maxHeight: 0.88 * windowSize.height,
+          overflow: "scroll",
+        }}
+      >
         <CssBaseline />
-      <Grid container justify='flex-end'>
+        <Grid container justify="flex-end">
           <Grid item>
-            <CloseIcon onClick={() => {history.goBack()}} />
+            <CloseIcon
+              onClick={() => {
+                history.goBack();
+              }}
+            />
           </Grid>
         </Grid>
-      <Grid container justify="center">
-        <Grid item>
-          <Typography component="h1" variant="h5" className={classes.mainHeading}>
-           {loading ? "Loading" : "Sign UP"}
-          </Typography>
+        <Grid container justify="center">
+          <Grid item>
+            <Typography
+              component="h1"
+              variant="h5"
+              className={classes.mainHeading}
+            >
+              {loading ? "Loading" : "Sign UP"}
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
 
-
-        
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-            direction="column"
-            className={classes.gridDropzone}
-          >
-            <Grid item>
-              <DropzoneSignup setFormValue={setFormValue} formValue={formValue} />
-            </Grid>
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          direction="column"
+          className={classes.gridDropzone}
+        >
+          <Grid item>
+            <DropzoneSignup setFormValue={setFormValue} formValue={formValue} />
           </Grid>
+        </Grid>
 
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="name"
-            label="User name"
-            name="name"
-            variant='outlined'
-            // autoFocus
-            // autocomplete="off"
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="emailSignUp"
-            label="Email Address"
-            name="email"
-            variant='outlined'
-            //autoComplete="email"
-          />
-          <TextField
-            margin="normal"
-            fullWidth
-            id="telephoneSignUp"
-            label="Telephone Nr."
-            name="telephone"
-            variant='outlined'
-            defaultValue={'+420'}
-            //autoComplete="email"
-          />
-          <TextField
-            variant='outlined'
-            margin="normal"
-            required
-            fullWidth
-            name="password2"
-            label="Password"
-            type="password"
-            id="password2"
-          />
-          <TextField
-            variant='outlined'
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Confirm password"
-            type="password"
-            id="password"
-          />
-           <InputLabel htmlFor="standard-adornment-amount">
-            DESCRIBE YOURSELF
-          </InputLabel>
-          <Grid
-            container
-            className={classes.descriptionContainer}
-          >
-            <Grid item className={classes.descriptionItem} xs={12}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="decsription"
-                placeholder="Hi there, I am an upcomming enterpreneur commig to the sceen, join and witness my rise."
-                multiline
-                rows="4"
-                inputRef={inputDescRef}
-                //label="Description"
-                name="decsription"
-                // autoComplete="false" //imporvizace
-              />
-            </Grid>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="name"
+          label="User name"
+          name="name"
+          variant="outlined"
+          // autoFocus
+          // autocomplete="off"
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="emailSignUp"
+          label="Email Address"
+          name="email"
+          variant="outlined"
+          //autoComplete="email"
+        />
+        <TextField
+          margin="normal"
+          fullWidth
+          id="telephoneSignUp"
+          label="Telephone Nr."
+          name="telephone"
+          variant="outlined"
+          defaultValue={"+420"}
+          //autoComplete="email"
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="password2"
+          label="Password"
+          type="password"
+          id="password2"
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Confirm password"
+          type="password"
+          id="password"
+        />
+        <InputLabel htmlFor="standard-adornment-amount">
+          DESCRIBE YOURSELF
+        </InputLabel>
+        <Grid container className={classes.descriptionContainer}>
+          <Grid item className={classes.descriptionItem} xs={12}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="decsription"
+              placeholder="Hi there, I am an upcomming enterpreneur commig to the sceen, join and witness my rise."
+              multiline
+              rows="4"
+              inputRef={inputDescRef}
+              //label="Description"
+              name="decsription"
+              // autoComplete="false" //imporvizace
+            />
           </Grid>
-          <Grid container justify="center">
+        </Grid>
+        <Grid container justify="center">
           {feErrors &&
-            feErrors.map(item => (
+            feErrors.map((item) => (
               <Alert severity="error" key={item}>
                 {item}
               </Alert>
             ))}
           {errorOut &&
-            errorOut.map(item => (
+            errorOut.map((item) => (
               <Alert severity="error" key={item.message}>
                 {item.message}
               </Alert>
             ))}
-            </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            disabled={loading || (data && data.newUser && data.newUser.success)}
-            className={classes.submit}
-            onClick={onSubmitHandler}
-          >
-            {loading ? "sending..." : 'Sign Up'}
-          </Button>
-          <Grid container>
-            <Grid item>
-              <Link href="#" variant="body2">
-                
-              </Link>
-            </Grid>
-            <Grid item onClick={() => {history.push('/signin')}}>
-              <Link variant="body2">
-                Already Signed up?
-              </Link>
-            </Grid>
+        </Grid>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          disabled={loading || (data && data.newUser && data.newUser.success)}
+          className={classes.submit}
+          onClick={onSubmitHandler}
+        >
+          {loading ? "sending..." : "Sign Up"}
+        </Button>
+        <Grid container>
+          <Grid item>
+            <NavLink to="#" className={classes.linkClass}></NavLink>
           </Grid>
+          <Grid
+            item
+            onClick={() => {
+              history.push("/signin");
+            }}
+          >
+            <NavLink to="/signin" className={classes.linkClass}>
+              Already Signed up?
+            </NavLink>
+          </Grid>
+        </Grid>
         <Box mt={8}>
           <Copyright />
         </Box>
@@ -331,31 +345,33 @@ if (dataOut && dataOut.success) {
 //   return {};
 // };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   "@global": {
     body: {
-      backgroundColor: theme.palette.common.white
-    }
+      backgroundColor: theme.palette.common.white,
+    },
   },
   paper: {
-    marginTop: "10vh",
-    paddingTop: 40,
-    padding: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    height: "88vh",
-    overflow: "scroll",
-    paddingBottom: 40
+    // marginTop: "10vh",
+    // paddingTop: 40,
+    // // height: "88vh",
+    // overflow: "scroll",
+    // paddingBottom: 40,
+
+    padding: theme.spacing(3, 2),
+    width: "100%",
+    // display: "flex",
+    // flexDirection: "column",
+    // alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(4),
     backgroundColor: theme.palette.secondary.main,
     height: 100,
-    width: 100
+    width: 100,
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
+    margin: theme.spacing(3, 0, 2),
   },
   standardHeading: {
     //borderBottom: "solid 1px grey",
@@ -363,11 +379,16 @@ const useStyles = makeStyles(theme => ({
   },
   gridDropzone: {
     width: "100%",
-    margin: theme.spacing(3, 0, 2)
+    margin: theme.spacing(3, 0, 2),
   },
   mainHeading: {
-    marginTop: 10
-  }
+    marginTop: 10,
+  },
+  linkClass: {
+    paddingBottom: 10,
+    color: "blue",
+    textDecoration: "underline",
+  },
 }));
 
 export default SignUp;

@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import DoneIcon from "@material-ui/icons/Done";
-import CloseIcon from "@material-ui/icons/Close";
+import NotInterestedIcon from "@material-ui/icons/NotInterested";
 import Badge from "@material-ui/core/Badge";
 
 import Collapse from "@material-ui/core/Collapse";
@@ -13,8 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 
 import countdown from "countdown";
-import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 
 import { useXsSize } from "../../Hooks/useXsSize";
 import { UserContext } from "../../userContext";
@@ -25,6 +25,7 @@ import PartyOn from "src/Atoms/PartyOn";
 import BookingMessages from "src/Atoms/BookingMessages";
 import ListTopHalf from "src/Atoms/Play/ListTopHalf";
 import EventButtons from "src/Molecules/event/EventButtons";
+import { GET_ONE_EVENT } from "src/Services/GQL/GET_ONE_EVENT";
 
 export default function PendingBokingCard({ booking }) {
   const classes = useStyles();
@@ -33,8 +34,17 @@ export default function PendingBokingCard({ booking }) {
   const [expanded, setExpanded] = useState(false);
   const [status, setStatus] = useState("pending");
   const [markBookingSeen, seenStates] = useMutation(SEEN_BOOKING);
+  // const { loading, error, data } = useQuery(GET_ONE_EVENT, {
+  //   variables: { event_id: booking.event._id },
+  // });
 
-  console.log("Rerender PendingBokingCard: ", booking.event.name);
+  console.log(
+    "Rerender PendingBokingCard: getting EVENT ",
+    { ...booking.event, bookings: [booking] }
+    // loading,
+    // error,
+    // data
+  );
 
   useEffect(() => {
     if (booking.decided) {
@@ -49,18 +59,8 @@ export default function PendingBokingCard({ booking }) {
   const handleExpandClick = () => {
     if (expanded) {
       setExpanded(false);
-      // setContext(prev => {
-      //   return { ...prev,
-      //     expanded_id: null
-      //   };
-      //   })
     } else {
       setExpanded(true);
-      //   setContext(prev => {
-      //     return { ...prev,
-      //       expanded_id: booking._id
-      //     };
-      // })
     }
     if (!booking.seenUser) {
       seenUserHandle();
@@ -114,10 +114,10 @@ export default function PendingBokingCard({ booking }) {
     if (booking.confirmed) {
       badgeContent = <DoneIcon fontSize="small" />;
     } else {
-      badgeContent = <CloseIcon fontSize="small" />; //"rgba(0,0,0,0.05)"
+      badgeContent = <NotInterestedIcon fontSize="small" />; //"rgba(0,0,0,0.05)"
     }
   } else {
-    badgeContent = null; //<FiberManualRecordIcon fontSize="small" className={classes.dotBadge} />
+    badgeContent = <HelpOutlineIcon fontSize="small" />; // null;
   }
 
   return (
@@ -125,7 +125,6 @@ export default function PendingBokingCard({ booking }) {
       item
       className={classes.mainItem}
       style={{
-        // boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
         color: md_size_memo ? "white" : "black",
         width: xs_size_memo ? "100%" : "85%",
         backgroundColor: color, //expanded ? color : "transparent",
@@ -148,11 +147,13 @@ export default function PendingBokingCard({ booking }) {
             className={classes.mainHeader}
           >
             <b>Your</b> request to join <b>{booking.event.name}</b> is{" "}
-            {!booking.decided
-              ? "PENDING"
-              : booking.confirmed
-              ? "CONFIRMED"
-              : "DECLINED"}
+            {!booking.decided ? (
+              <span className={classes.pendingText}>PENDING</span>
+            ) : booking.confirmed ? (
+              <span className={classes.confirmedText}>CONFIRMED</span>
+            ) : (
+              <span className={classes.declinedText}>DECLINED</span>
+            )}
           </Typography>
           <Grid container>
             <Grid item xs={6}>
@@ -179,19 +180,26 @@ export default function PendingBokingCard({ booking }) {
         <Grid item xs={xs_size_memo ? 3 : 2}>
           <Grid container justify="center">
             <Grid item>
-              <IconButton aria-label="settings">
-                <Badge
-                  badgeContent={badgeContent}
-                  className={classes.badge}
-                  color={booking.decided ? "primary" : "secondary"}
-                  // style={{ backgroundColor: booking.decided ? "grey" : "red"}}
-                >
-                  <img
-                    src={booking.event.imagesArr[0].thumbnail}
-                    className={classes.mainAvatar}
-                  />
-                </Badge>
-              </IconButton>
+              <Badge
+                badgeContent={badgeContent}
+                className={classes.badge}
+                color={booking.decided ? "primary" : "secondary"}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                classes={{
+                  colorPrimary: booking.confirmed
+                    ? classes.greenBack
+                    : classes.greyBack,
+                }}
+                // style={{ backgroundColor: booking.decided ? "grey" : "red"}}
+              >
+                <img
+                  src={booking.event.imagesArr[0].thumbnail}
+                  className={classes.mainAvatar}
+                />
+              </Badge>
             </Grid>
           </Grid>
         </Grid>
@@ -226,9 +234,22 @@ export default function PendingBokingCard({ booking }) {
             event={booking.event}
             transparent={true}
             context={context}
+            activeLinkEvent={true}
           />
         </Grid>
-        <EventButtons event={booking.event} />
+        {/* {loading && <Typography> Loading...</Typography>} */}
+        <EventButtons event={{ ...booking.event, bookings: [booking] }} />
+        <Grid container justify="center">
+          <Grid item style={{ margin: 5 }}>
+            <IconButton
+              aria-label="settings"
+              className={classes.iconBtn}
+              onClick={handleExpandClick}
+            >
+              <ExpandLessIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
       </Collapse>
     </Grid>
   );
@@ -261,10 +282,6 @@ const useStyles = makeStyles((theme) => ({
   badge: {
     padding: "0 important",
   },
-  dotBadge: {
-    height: 15,
-    width: 15,
-  },
   userAvatar: {
     backgroundColor: red[500],
     height: 80,
@@ -289,5 +306,24 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginTop: "2px",
     backgroundColor: "#707070",
+  },
+  pendingText: {
+    color: "red",
+    fontWeight: 800,
+  },
+  confirmedText: {
+    color: "green",
+    fontWeight: 700,
+  },
+  declinedText: {
+    color: "grey",
+    fontWeight: 700,
+    textDecoration: "line-through",
+  },
+  greenBack: {
+    backgroundColor: "green",
+  },
+  greyBack: {
+    backgroundColor: "grey",
   },
 }));

@@ -19,11 +19,6 @@ import ScrollAnimated from "../../Atoms/ScrollAnimated";
 
 import "../../Pages/Menu.css";
 
-// import FlippingLogo from "../../Atoms/Flipping-logo/logo";
-// import EmpireOriginal from "../../Images/empire.jpg";
-// import CharlieHalf from "../../Images/charlie_half.png";
-// import Skyline from "../../Images/skyline.png";
-
 export default function Screen1() {
   const classes = useStyles();
   let history = useHistory();
@@ -159,7 +154,7 @@ export default function Screen1() {
                           <Grid container>
                             <Grid
                               item
-                              className={classes.button_mobile}
+                              // className={classes.button_mobile}
                               xs={12}
                             >
                               <p className={classes.big_pty}>JOIN</p>
@@ -192,7 +187,7 @@ export default function Screen1() {
                           classes={{
                             root: classes.rootButton,
                           }}
-                          className={classes.fab_grey}
+                          className={classes.grey_button}
                           onClick={redirectCreate}
                         >
                           <Grid container>
@@ -267,9 +262,9 @@ const useStyles = makeStyles((theme) => ({
     left: -20,
     // lineHeight: '80%',
   },
-  button_mobile: {
-    padding: 3,
-  },
+  // button_mobile: {
+  //   padding: 3,
+  // },
   big_pty: {
     fontSize: 20,
     fontWeight: 700,
@@ -333,19 +328,15 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 10,
   },
   fab_pink: {
-    // backgroundColor: "#E8045D",
-    // color: "white",
-    // fontWeight: 700,
-    // fontSize: 20,
     letterSpacing: 4,
-    // width: "100%",
-    // padding: 4,
+    boxShadow: "2px 4px 6px black !important",
   },
-  fab_grey: {
+  grey_button: {
     backgroundColor: "#C4C3C3",
     color: "black",
     fontSize: 20,
     width: "100%",
+    boxShadow: "2px 4px 6px black !important",
   },
   rootButton: {
     borderRadius: 20,

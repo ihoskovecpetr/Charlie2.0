@@ -9,7 +9,6 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import CloseIcon from "@material-ui/icons/Close";
@@ -18,7 +17,6 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 
-import gql from "graphql-tag";
 import { useHistory, NavLink } from "react-router-dom";
 import { useMutation, useQuery, useApolloClient } from "@apollo/react-hooks";
 import { Animated } from "react-animated-css";
@@ -302,15 +300,15 @@ function SignIn({ propContext }) {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={(e) => {
-              onSignIn(e);
-            }}
+            onClick={onSignIn}
           >
             Sign In
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link variant="body2">Forgot password?</Link>
+              <NavLink to={`/signup`} className={classes.linkClass}>
+                Forgot password?
+              </NavLink>
             </Grid>
             <Grid item>
               <Badge
@@ -325,9 +323,9 @@ function SignIn({ propContext }) {
                   horizontal: "left",
                 }}
               >
-                <Link href="/signup" className={classes.linkClass}>
+                <NavLink to={`/signup`} className={classes.linkClass}>
                   Sign Up here!
-                </Link>
+                </NavLink>
               </Badge>
             </Grid>
           </Grid>
@@ -391,6 +389,8 @@ const useStyles = makeStyles((theme) => ({
   },
   linkClass: {
     paddingBottom: 10,
+    color: "blue",
+    textDecoration: "underline",
   },
 }));
 

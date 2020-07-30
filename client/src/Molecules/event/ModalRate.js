@@ -113,7 +113,7 @@ function ModalRate({ event, match }) {
   if (rateEventState.data && rateEventState.data.rateEvent.success) {
     setTimeout(() => {
       handleClose();
-    }, 1000);
+    }, 500);
   }
 
   return (
@@ -283,7 +283,7 @@ const useStyles = makeStyles((theme) => ({
   chipOne: {
     // width: "90%",
     fontWeight: 500,
-    fontSize: 22,
+    // fontSize: 22,
     // padding: 20,
     // margin: "5%",
   },

@@ -29,10 +29,12 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"
     />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADHzQ7cTn3uwDBUMoROC2JFdzZ_gEAzvI&libraries=geometry,places"></script>
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <script src="infobubble.js"></script>
+    <script src="../infobubble.js"></script>
+    <!-- I need second infobubble coz it was not loaded on /event/:id and play/:id routs from outside -->
 
     <title>
       Charlie House Party - palce to share joy and connect to like-minded people

@@ -33,7 +33,14 @@ export default function UserAskMessage({
         direction={reverse ? "row-reverse" : "row"}
         className={classes.containerMain}
       >
-        <Grid item xs={4}>
+        <Grid
+          item
+          xs={4}
+          className={classes.avatarGrid}
+          onClick={() => {
+            history.push(`/user/${user._id}`);
+          }}
+        >
           <Grid container>
             <Grid item xs={12}>
               <Grid container justify="center">
@@ -42,9 +49,6 @@ export default function UserAskMessage({
                     aria-label="recipe"
                     className={classes.avatar}
                     src={user.picture}
-                    onClick={() => {
-                      history.push(`/user/${user._id}`);
-                    }}
                   />
                 </Grid>
               </Grid>
@@ -53,7 +57,7 @@ export default function UserAskMessage({
             <Grid item xs={12}>
               <Grid container justify="center">
                 <Grid item>
-                  <Typography variant="subtitle2" className={classes.text}>
+                  <Typography variant="subtitle2" className={classes.textName}>
                     {user.name}
                   </Typography>
                 </Grid>
@@ -72,7 +76,7 @@ export default function UserAskMessage({
                   {confirmed ? (
                     <span className={classes.greenText}>GRANTED</span>
                   ) : (
-                    <span className={classes.redText}>DECLINED</span>
+                    <span className={classes.greyText}>DECLINED</span>
                   )}
                 </Typography>
               )}
@@ -96,11 +100,23 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 20,
     paddingRight: 20,
   },
+  avatarGrid: {
+    cursor: "pointer",
+  },
   avatar: {
     backgroundColor: "red",
     color: "lightgrey",
     width: 40,
     height: 40,
+    boxShadow: "2px 2px 5px black",
+  },
+  textName: {
+    marginTop: 10,
+    marginBottom: 10,
+    textAlign: "center",
+    fontWeight: 500,
+    color: "#E8045D",
+    textDecoration: "underline",
   },
   text: {
     marginTop: 10,
@@ -115,7 +131,7 @@ const useStyles = makeStyles((theme) => ({
   greenText: {
     color: "green",
   },
-  redText: {
-    color: "red",
+  greyText: {
+    color: "grey",
   },
 }));

@@ -11,7 +11,8 @@ import Chip from "@material-ui/core/Chip";
 import Backdrop from "@material-ui/core/Backdrop";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
+import VerticalAlignBottomIcon from "@material-ui/icons/VerticalAlignBottom";
+import VerticalAlignTopIcon from "@material-ui/icons/VerticalAlignTop";
 
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import AllOutIcon from "@material-ui/icons/AllOut";
@@ -23,6 +24,7 @@ import clsx from "clsx";
 import { withRouter, useHistory } from "react-router-dom";
 
 import { UserContext } from "../../userContext";
+import { IconButton } from "@material-ui/core";
 
 const SettingsPanel = ({ loading }) => {
   const classes = useStyles();
@@ -32,8 +34,8 @@ const SettingsPanel = ({ loading }) => {
     radius: context.playFilterObj.radius,
     days: context.playFilterObj.plusDays,
   });
-  const [close, setClose] = useState(false);
-  const [checked, setChecked] = useState(false);
+  // const [close, setClose] = useState(false);
+  const [checked, setChecked] = useState(context._id ? true : false); // openning of settings panel
 
   useEffect(() => {
     console.log("Setitngs panel context: ", context);
@@ -103,22 +105,12 @@ const SettingsPanel = ({ loading }) => {
   };
 
   const setCityLocation = (value) => {
-    console.log("Set City location val: ", value.target.value);
     switch (value.target.value) {
       case "Praha":
-        console.log("Set location on Prague");
         setContextPlayLocation({ lng: 14.40076, lat: 50.08804 });
 
         break;
       case "Brno":
-        console.log("Set location on Brno");
-        // setContext(prev => {
-        //   return { ...prev,
-        //     playFilterObj: {
-        //       ...prev.playFilterObj,
-        //       geolocationPlay: {lng: 16.608045854922107 , lat: 49.17725732578309}
-        //   }};
-        // });
         setContextPlayLocation({
           lng: 16.608045854922107,
           lat: 49.17725732578309,
@@ -126,25 +118,10 @@ const SettingsPanel = ({ loading }) => {
 
         break;
       case "Ostrava":
-        console.log("Set location on OSTRAVA");
-        // setContext(prev => {
-        //   return { ...prev,
-        //     playFilterObj: {
-        //       ...prev.playFilterObj,
-        //       geolocationPlay: {lng: 18.27117 , lat: 49.822941}
-        //   }};
-        // });
         setContextPlayLocation({ lng: 18.27117, lat: 49.822941 });
 
         break;
       case "Current":
-        // setContext(prev => {
-        //   return { ...prev,
-        //     playFilterObj: {
-        //       ...prev.playFilterObj,
-        //       geolocationPlay: context.geolocationObj
-        //   }};
-        // });
         setContextPlayLocation(context.geolocationObj);
         break;
       default:
@@ -167,7 +144,6 @@ const SettingsPanel = ({ loading }) => {
   return (
     <div className={classes.eggContainerWrap}>
       <Backdrop
-        className={classes.backdrop}
         open={checked}
         onClick={closeBackdrop}
         className={classes.backdropMain}
@@ -246,7 +222,7 @@ const SettingsPanel = ({ loading }) => {
                 </Grid>
               </Grid>
               <Grid item xs={2}>
-                <Grid container justify="center">
+                <Grid container justify="flex-end">
                   <Grid item>
                     {/* <Chip label={!loading ? `${context.playFilterObj.shownEvents.length + 1}/${context.playFilterObj.playEventsCount}` : null} 
                               icon={loading && <CircularProgress style={{height: 20, width: 20, color: 'white', left: 0, position: "relative"}} />}
@@ -272,38 +248,11 @@ const SettingsPanel = ({ loading }) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={6} className={classes.turnOffItem}>
-                <Grid container justify="center">
-                  <Grid item>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={context.playFilterObj.filterOn}
-                          onChange={handleFilterOnOff}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          classes={{
-                            track: classes.switchTrack,
-                          }}
-                          value="checkedA"
-                          inputProps={{ "aria-label": "secondary checkbox" }}
-                        />
-                      }
-                      label={`filter ${
-                        context.playFilterObj.filterOn ? "ON" : "OFF"
-                      }`}
-                    />
-                  </Grid>
-                </Grid>
-              </Grid>
+
               <Grid item xs={6}>
                 <Select
                   labelId="demo-controlled-open-select-label"
                   id="demo-controlled-open-select"
-                  // open={open}
-                  // onClose={handleClose}
-                  // onOpen={handleOpen}
                   defaultValue={"Current"}
                   classes={{
                     root: classes.select, // class name, e.g. `classes-nesting-root-x`
@@ -312,19 +261,40 @@ const SettingsPanel = ({ loading }) => {
                     icon: classes.selectIcon, // class name, e.g. `classes-nesting-label-x`
                   }}
                   onChange={setCityLocation}
-                  // style={{color: context.playFilterObj.filterOn ? "#59F0EA" : '#D1D0D0'}}
                 >
                   <MenuItem value={"Current"}>
                     <em>
                       {context.curPositionAddress
                         ? context.curPositionAddress
-                        : "Praha, loading..."}
+                        : !context.declinedGeolocation
+                        ? "Praha, loading..."
+                        : ""}
+                      {!context.curPositionAddress &&
+                        context.declinedGeolocation &&
+                        "No GPS info, default - Prague"}
                     </em>
                   </MenuItem>
                   <MenuItem value={"Praha"}>Prague</MenuItem>
                   <MenuItem value={"Brno"}>Brno</MenuItem>
                   <MenuItem value={"Ostrava"}>Ostrava</MenuItem>
                 </Select>
+              </Grid>
+              <Grid item xs={6}>
+                <Grid container justify="flex-end">
+                  <Grid item>
+                    {checked ? (
+                      <VerticalAlignTopIcon
+                        fontSize="large"
+                        color="secondary"
+                      />
+                    ) : (
+                      <VerticalAlignBottomIcon
+                        fontSize="large"
+                        color="secondary"
+                      />
+                    )}
+                  </Grid>
+                </Grid>
               </Grid>
               <Grid item xs={12}>
                 <Collapse in={checked}>
@@ -428,6 +398,31 @@ const SettingsPanel = ({ loading }) => {
                   </Grid>
                 </Collapse>
               </Grid>
+              <Grid item xs={6} className={classes.turnOffItem}>
+                <Grid container justify="flex-start">
+                  <Grid item>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={context.playFilterObj.filterOn}
+                          onChange={handleFilterOnOff}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                          classes={{
+                            track: classes.switchTrack,
+                          }}
+                          value="checkedA"
+                          inputProps={{ "aria-label": "secondary checkbox" }}
+                        />
+                      }
+                      label={`filter ${
+                        context.playFilterObj.filterOn ? "ON" : "OFF"
+                      }`}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
               {/* <Grid item xs={2} className={classes.arrowGrid} style={{display: "none"}} >
                     <KeyboardArrowDownIcon 
                             color="secondary" 
@@ -440,25 +435,27 @@ const SettingsPanel = ({ loading }) => {
           <Grid item xs={2} id="play_close" className={classes.closeCrossGrid}>
             <Grid container justify="center">
               <Grid item>
-                <CloseIcon
-                  className={clsx(
-                    classes.closeCross,
-                    close && classes.whiteBordered
-                  )}
-                  onClick={() => {
-                    setClose(true);
-                    setContext((prev) => {
-                      return {
-                        ...prev,
-                        playFilterObj: {
-                          ...prev.playFilterObj,
-                          shownEvents: [],
-                        },
-                      };
-                    });
-                    history.goBack();
-                  }}
-                />
+                <IconButton color="secondary">
+                  <CloseIcon
+                    className={clsx(
+                      classes.closeCross
+                      // close && classes.whiteBordered
+                    )}
+                    onClick={() => {
+                      // setClose(true);
+                      history.goBack();
+                      setContext((prev) => {
+                        return {
+                          ...prev,
+                          playFilterObj: {
+                            ...prev.playFilterObj,
+                            shownEvents: [],
+                          },
+                        };
+                      });
+                    }}
+                  />
+                </IconButton>
               </Grid>
             </Grid>
           </Grid>
@@ -493,6 +490,7 @@ const useStyles = makeStyles((theme) => ({
   },
   backdropMain: {
     zIndex: 10,
+    backgroundColor: "rgba(0,0,0,0.8)",
   },
   switchTrack: {
     backgroundColor: "rgba(255,255,255,0.6)",

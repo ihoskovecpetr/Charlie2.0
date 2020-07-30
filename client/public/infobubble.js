@@ -1,6 +1,4 @@
-
-
-console.log("Ahoj z InfoBubble")
+console.log("Ahoj z InfoBubble");
 // ==ClosureCompiler==
 // @compilation_level ADVANCED_OPTIMIZATIONS
 // @externs_url http://closure-compiler.googlecode.com/svn/trunk/contrib/externs/maps/google_maps_api_v3.js
@@ -29,13 +27,13 @@ console.log("Ahoj z InfoBubble")
  * limitations under the License.
  */
 
-
 /**
  * A CSS3 InfoBubble v0.8
  * @param {Object.<string, *>=} opt_options Optional properties to set.
  * @extends {google.maps.OverlayView}
  * @constructor
  */
+
 function InfoBubble(opt_options) {
   this.extend(InfoBubble, google.maps.OverlayView);
   this.tabs_ = [];
@@ -45,60 +43,59 @@ function InfoBubble(opt_options) {
 
   var options = opt_options || {};
 
-  if (options['backgroundColor'] == undefined) {
-    options['backgroundColor'] = this.BACKGROUND_COLOR_;
+  if (options["backgroundColor"] == undefined) {
+    options["backgroundColor"] = this.BACKGROUND_COLOR_;
   }
 
-  if (options['borderColor'] == undefined) {
-    options['borderColor'] = this.BORDER_COLOR_;
+  if (options["borderColor"] == undefined) {
+    options["borderColor"] = this.BORDER_COLOR_;
   }
 
-  if (options['borderRadius'] == undefined) {
-    options['borderRadius'] = this.BORDER_RADIUS_;
+  if (options["borderRadius"] == undefined) {
+    options["borderRadius"] = this.BORDER_RADIUS_;
   }
 
-  if (options['borderWidth'] == undefined) {
-    options['borderWidth'] = this.BORDER_WIDTH_;
+  if (options["borderWidth"] == undefined) {
+    options["borderWidth"] = this.BORDER_WIDTH_;
   }
 
-  if (options['padding'] == undefined) {
-    options['padding'] = this.PADDING_;
+  if (options["padding"] == undefined) {
+    options["padding"] = this.PADDING_;
   }
 
-  if (options['arrowPosition'] == undefined) {
-    options['arrowPosition'] = this.ARROW_POSITION_;
+  if (options["arrowPosition"] == undefined) {
+    options["arrowPosition"] = this.ARROW_POSITION_;
   }
 
-  if (options['disableAutoPan'] == undefined) {
-    options['disableAutoPan'] = false;
+  if (options["disableAutoPan"] == undefined) {
+    options["disableAutoPan"] = false;
   }
 
-  if (options['disableAnimation'] == undefined) {
-    options['disableAnimation'] = false;
+  if (options["disableAnimation"] == undefined) {
+    options["disableAnimation"] = false;
   }
 
-  if (options['minWidth'] == undefined) {
-    options['minWidth'] = this.MIN_WIDTH_;
+  if (options["minWidth"] == undefined) {
+    options["minWidth"] = this.MIN_WIDTH_;
   }
 
-  if (options['shadowStyle'] == undefined) {
-    options['shadowStyle'] = this.SHADOW_STYLE_;
+  if (options["shadowStyle"] == undefined) {
+    options["shadowStyle"] = this.SHADOW_STYLE_;
   }
 
-  if (options['arrowSize'] == undefined) {
-    options['arrowSize'] = this.ARROW_SIZE_;
+  if (options["arrowSize"] == undefined) {
+    options["arrowSize"] = this.ARROW_SIZE_;
   }
 
-  if (options['arrowStyle'] == undefined) {
-    options['arrowStyle'] = this.ARROW_STYLE_;
+  if (options["arrowStyle"] == undefined) {
+    options["arrowStyle"] = this.ARROW_STYLE_;
   }
 
   this.buildDom_();
 
   this.setValues(options);
 }
-window['InfoBubble'] = InfoBubble;
-
+window["InfoBubble"] = InfoBubble;
 
 /**
  * Default arrow size
@@ -107,14 +104,12 @@ window['InfoBubble'] = InfoBubble;
  */
 InfoBubble.prototype.ARROW_SIZE_ = 15;
 
-
 /**
  * Default arrow style
  * @const
  * @private
  */
 InfoBubble.prototype.ARROW_STYLE_ = 0;
-
 
 /**
  * Default shadow style
@@ -123,14 +118,12 @@ InfoBubble.prototype.ARROW_STYLE_ = 0;
  */
 InfoBubble.prototype.SHADOW_STYLE_ = 1;
 
-
 /**
  * Default min width
  * @const
  * @private
  */
 InfoBubble.prototype.MIN_WIDTH_ = 50;
-
 
 /**
  * Default arrow position
@@ -139,14 +132,12 @@ InfoBubble.prototype.MIN_WIDTH_ = 50;
  */
 InfoBubble.prototype.ARROW_POSITION_ = 50;
 
-
 /**
  * Default padding
  * @const
  * @private
  */
 InfoBubble.prototype.PADDING_ = 10;
-
 
 /**
  * Default border width
@@ -155,14 +146,12 @@ InfoBubble.prototype.PADDING_ = 10;
  */
 InfoBubble.prototype.BORDER_WIDTH_ = 1;
 
-
 /**
  * Default border color
  * @const
  * @private
  */
-InfoBubble.prototype.BORDER_COLOR_ = '#ccc';
-
+InfoBubble.prototype.BORDER_COLOR_ = "#ccc";
 
 /**
  * Default border radius
@@ -171,14 +160,12 @@ InfoBubble.prototype.BORDER_COLOR_ = '#ccc';
  */
 InfoBubble.prototype.BORDER_RADIUS_ = 10;
 
-
 /**
  * Default background color
  * @const
  * @private
  */
-InfoBubble.prototype.BACKGROUND_COLOR_ = '#fff';
-
+InfoBubble.prototype.BACKGROUND_COLOR_ = "#fff";
 
 /**
  * Extends a objects prototype by anothers.
@@ -189,77 +176,78 @@ InfoBubble.prototype.BACKGROUND_COLOR_ = '#fff';
  * @ignore
  */
 InfoBubble.prototype.extend = function(obj1, obj2) {
-  return (function(object) {
+  return function(object) {
     for (var property in object.prototype) {
       this.prototype[property] = object.prototype[property];
     }
     return this;
-  }).apply(obj1, [obj2]);
+  }.apply(obj1, [obj2]);
 };
-
 
 /**
  * Builds the InfoBubble dom
  * @private
  */
 InfoBubble.prototype.buildDom_ = function() {
-  var bubble = this.bubble_ = document.createElement('DIV');
-  bubble.style['position'] = 'absolute';
-  bubble.style['zIndex'] = this.baseZIndex_;
+  var bubble = (this.bubble_ = document.createElement("DIV"));
+  bubble.style["position"] = "absolute";
+  bubble.style["zIndex"] = this.baseZIndex_;
 
-  var tabsContainer = this.tabsContainer_ = document.createElement('DIV');
-  tabsContainer.style['position'] = 'relative';
+  var tabsContainer = (this.tabsContainer_ = document.createElement("DIV"));
+  tabsContainer.style["position"] = "relative";
 
   // Close button
-  var close = this.close_ = document.createElement('IMG');
-  close.style['position'] = 'absolute';
-  close.style['width'] = this.px(12);
-  close.style['height'] = this.px(12);
-  close.style['border'] = 0;
-  close.style['zIndex'] = this.baseZIndex_ + 1;
-  close.style['cursor'] = 'pointer';
-  close.src = 'https://maps.gstatic.com/intl/en_us/mapfiles/iw_close.gif';
+  var close = (this.close_ = document.createElement("IMG"));
+  close.style["position"] = "absolute";
+  close.style["width"] = this.px(12);
+  close.style["height"] = this.px(12);
+  close.style["border"] = 0;
+  close.style["zIndex"] = this.baseZIndex_ + 1;
+  close.style["cursor"] = "pointer";
+  close.src = "https://maps.gstatic.com/intl/en_us/mapfiles/iw_close.gif";
 
   var that = this;
-  google.maps.event.addDomListener(close, 'click', function() {
+  google.maps.event.addDomListener(close, "click", function() {
     that.close();
-    google.maps.event.trigger(that, 'closeclick');
+    google.maps.event.trigger(that, "closeclick");
   });
 
   // Content area
-  var contentContainer = this.contentContainer_ = document.createElement('DIV');
-  contentContainer.style['overflowX'] = 'auto';
-  contentContainer.style['overflowY'] = 'auto';
-  contentContainer.style['cursor'] = 'default';
-  contentContainer.style['clear'] = 'both';
-  contentContainer.style['position'] = 'relative';
+  var contentContainer = (this.contentContainer_ = document.createElement(
+    "DIV"
+  ));
+  contentContainer.style["overflowX"] = "auto";
+  contentContainer.style["overflowY"] = "auto";
+  contentContainer.style["cursor"] = "default";
+  contentContainer.style["clear"] = "both";
+  contentContainer.style["position"] = "relative";
 
-  var content = this.content_ = document.createElement('DIV');
+  var content = (this.content_ = document.createElement("DIV"));
   contentContainer.appendChild(content);
 
   // Arrow
-  var arrow = this.arrow_ = document.createElement('DIV');
-  arrow.style['position'] = 'relative';
+  var arrow = (this.arrow_ = document.createElement("DIV"));
+  arrow.style["position"] = "relative";
 
-  var arrowOuter = this.arrowOuter_ = document.createElement('DIV');
-  var arrowInner = this.arrowInner_ = document.createElement('DIV');
+  var arrowOuter = (this.arrowOuter_ = document.createElement("DIV"));
+  var arrowInner = (this.arrowInner_ = document.createElement("DIV"));
 
   var arrowSize = this.getArrowSize_();
 
-  arrowOuter.style['position'] = arrowInner.style['position'] = 'absolute';
-  arrowOuter.style['left'] = arrowInner.style['left'] = '50%';
-  arrowOuter.style['height'] = arrowInner.style['height'] = '0';
-  arrowOuter.style['width'] = arrowInner.style['width'] = '0';
-  arrowOuter.style['marginLeft'] = this.px(-arrowSize);
-  arrowOuter.style['borderWidth'] = this.px(arrowSize);
-  arrowOuter.style['borderBottomWidth'] = 0;
+  arrowOuter.style["position"] = arrowInner.style["position"] = "absolute";
+  arrowOuter.style["left"] = arrowInner.style["left"] = "50%";
+  arrowOuter.style["height"] = arrowInner.style["height"] = "0";
+  arrowOuter.style["width"] = arrowInner.style["width"] = "0";
+  arrowOuter.style["marginLeft"] = this.px(-arrowSize);
+  arrowOuter.style["borderWidth"] = this.px(arrowSize);
+  arrowOuter.style["borderBottomWidth"] = 0;
 
   // Shadow
-  var bubbleShadow = this.bubbleShadow_ = document.createElement('DIV');
-  bubbleShadow.style['position'] = 'absolute';
+  var bubbleShadow = (this.bubbleShadow_ = document.createElement("DIV"));
+  bubbleShadow.style["position"] = "absolute";
 
   // Hide the InfoBubble by default
-  bubble.style['display'] = bubbleShadow.style['display'] = 'none';
+  bubble.style["display"] = bubbleShadow.style["display"] = "none";
 
   bubble.appendChild(this.tabsContainer_);
   bubble.appendChild(close);
@@ -268,26 +256,31 @@ InfoBubble.prototype.buildDom_ = function() {
   arrow.appendChild(arrowInner);
   bubble.appendChild(arrow);
 
-  var stylesheet = document.createElement('style');
-  stylesheet.setAttribute('type', 'text/css');
+  var stylesheet = document.createElement("style");
+  stylesheet.setAttribute("type", "text/css");
 
   /**
    * The animation for the infobubble
    * @type {string}
    */
-  this.animationName_ = '_ibani_' + Math.round(Math.random() * 10000);
+  this.animationName_ = "_ibani_" + Math.round(Math.random() * 10000);
 
-  var css = '.' + this.animationName_ + '{-webkit-animation-name:' +
-      this.animationName_ + ';-webkit-animation-duration:0.5s;' +
-      '-webkit-animation-iteration-count:1;}' +
-      '@-webkit-keyframes ' + this.animationName_ + ' {from {' +
-      '-webkit-transform: scale(0)}50% {-webkit-transform: scale(1.2)}90% ' +
-      '{-webkit-transform: scale(0.95)}to {-webkit-transform: scale(1)}}';
+  var css =
+    "." +
+    this.animationName_ +
+    "{-webkit-animation-name:" +
+    this.animationName_ +
+    ";-webkit-animation-duration:0.5s;" +
+    "-webkit-animation-iteration-count:1;}" +
+    "@-webkit-keyframes " +
+    this.animationName_ +
+    " {from {" +
+    "-webkit-transform: scale(0)}50% {-webkit-transform: scale(1.2)}90% " +
+    "{-webkit-transform: scale(0.95)}to {-webkit-transform: scale(1)}}";
 
   stylesheet.textContent = css;
-  document.getElementsByTagName('head')[0].appendChild(stylesheet);
+  document.getElementsByTagName("head")[0].appendChild(stylesheet);
 };
-
 
 /**
  * Sets the background class name
@@ -295,21 +288,19 @@ InfoBubble.prototype.buildDom_ = function() {
  * @param {string} className The class name to set.
  */
 InfoBubble.prototype.setBackgroundClassName = function(className) {
-  this.set('backgroundClassName', className);
+  this.set("backgroundClassName", className);
 };
-InfoBubble.prototype['setBackgroundClassName'] =
-    InfoBubble.prototype.setBackgroundClassName;
-
+InfoBubble.prototype["setBackgroundClassName"] =
+  InfoBubble.prototype.setBackgroundClassName;
 
 /**
  * changed MVC callback
  */
 InfoBubble.prototype.backgroundClassName_changed = function() {
-  this.content_.className = this.get('backgroundClassName');
+  this.content_.className = this.get("backgroundClassName");
 };
-InfoBubble.prototype['backgroundClassName_changed'] =
-    InfoBubble.prototype.backgroundClassName_changed;
-
+InfoBubble.prototype["backgroundClassName_changed"] =
+  InfoBubble.prototype.backgroundClassName_changed;
 
 /**
  * Sets the class of the tab
@@ -317,11 +308,9 @@ InfoBubble.prototype['backgroundClassName_changed'] =
  * @param {string} className the class name to set.
  */
 InfoBubble.prototype.setTabClassName = function(className) {
-  this.set('tabClassName', className);
+  this.set("tabClassName", className);
 };
-InfoBubble.prototype['setTabClassName'] =
-    InfoBubble.prototype.setTabClassName;
-
+InfoBubble.prototype["setTabClassName"] = InfoBubble.prototype.setTabClassName;
 
 /**
  * tabClassName changed MVC callback
@@ -329,9 +318,8 @@ InfoBubble.prototype['setTabClassName'] =
 InfoBubble.prototype.tabClassName_changed = function() {
   this.updateTabStyles_();
 };
-InfoBubble.prototype['tabClassName_changed'] =
-    InfoBubble.prototype.tabClassName_changed;
-
+InfoBubble.prototype["tabClassName_changed"] =
+  InfoBubble.prototype.tabClassName_changed;
 
 /**
  * Gets the style of the arrow
@@ -340,9 +328,8 @@ InfoBubble.prototype['tabClassName_changed'] =
  * @return {number} The style of the arrow.
  */
 InfoBubble.prototype.getArrowStyle_ = function() {
-  return parseInt(this.get('arrowStyle'), 10) || 0;
+  return parseInt(this.get("arrowStyle"), 10) || 0;
 };
-
 
 /**
  * Sets the style of the arrow
@@ -350,11 +337,9 @@ InfoBubble.prototype.getArrowStyle_ = function() {
  * @param {number} style The style of the arrow.
  */
 InfoBubble.prototype.setArrowStyle = function(style) {
-  this.set('arrowStyle', style);
+  this.set("arrowStyle", style);
 };
-InfoBubble.prototype['setArrowStyle'] =
-    InfoBubble.prototype.setArrowStyle;
-
+InfoBubble.prototype["setArrowStyle"] = InfoBubble.prototype.setArrowStyle;
 
 /**
  * Arrow style changed MVC callback
@@ -362,9 +347,8 @@ InfoBubble.prototype['setArrowStyle'] =
 InfoBubble.prototype.arrowStyle_changed = function() {
   this.arrowSize_changed();
 };
-InfoBubble.prototype['arrowStyle_changed'] =
-    InfoBubble.prototype.arrowStyle_changed;
-
+InfoBubble.prototype["arrowStyle_changed"] =
+  InfoBubble.prototype.arrowStyle_changed;
 
 /**
  * Gets the size of the arrow
@@ -373,9 +357,8 @@ InfoBubble.prototype['arrowStyle_changed'] =
  * @return {number} The size of the arrow.
  */
 InfoBubble.prototype.getArrowSize_ = function() {
-  return parseInt(this.get('arrowSize'), 10) || 0;
+  return parseInt(this.get("arrowSize"), 10) || 0;
 };
-
 
 /**
  * Sets the size of the arrow
@@ -383,11 +366,9 @@ InfoBubble.prototype.getArrowSize_ = function() {
  * @param {number} size The size of the arrow.
  */
 InfoBubble.prototype.setArrowSize = function(size) {
-  this.set('arrowSize', size);
+  this.set("arrowSize", size);
 };
-InfoBubble.prototype['setArrowSize'] =
-    InfoBubble.prototype.setArrowSize;
-
+InfoBubble.prototype["setArrowSize"] = InfoBubble.prototype.setArrowSize;
 
 /**
  * Arrow size changed MVC callback
@@ -395,9 +376,8 @@ InfoBubble.prototype['setArrowSize'] =
 InfoBubble.prototype.arrowSize_changed = function() {
   this.borderWidth_changed();
 };
-InfoBubble.prototype['arrowSize_changed'] =
-    InfoBubble.prototype.arrowSize_changed;
-
+InfoBubble.prototype["arrowSize_changed"] =
+  InfoBubble.prototype.arrowSize_changed;
 
 /**
  * Set the position of the InfoBubble arrow
@@ -405,11 +385,10 @@ InfoBubble.prototype['arrowSize_changed'] =
  * @param {number} pos The position to set.
  */
 InfoBubble.prototype.setArrowPosition = function(pos) {
-  this.set('arrowPosition', pos);
+  this.set("arrowPosition", pos);
 };
-InfoBubble.prototype['setArrowPosition'] =
-    InfoBubble.prototype.setArrowPosition;
-
+InfoBubble.prototype["setArrowPosition"] =
+  InfoBubble.prototype.setArrowPosition;
 
 /**
  * Get the position of the InfoBubble arrow
@@ -418,22 +397,20 @@ InfoBubble.prototype['setArrowPosition'] =
  * @return {number} The position..
  */
 InfoBubble.prototype.getArrowPosition_ = function() {
-  return parseInt(this.get('arrowPosition'), 10) || 0;
+  return parseInt(this.get("arrowPosition"), 10) || 0;
 };
-
 
 /**
  * arrowPosition changed MVC callback
  */
 InfoBubble.prototype.arrowPosition_changed = function() {
   var pos = this.getArrowPosition_();
-  this.arrowOuter_.style['left'] = this.arrowInner_.style['left'] = pos + '%';
+  this.arrowOuter_.style["left"] = this.arrowInner_.style["left"] = pos + "%";
 
   this.redraw_();
 };
-InfoBubble.prototype['arrowPosition_changed'] =
-    InfoBubble.prototype.arrowPosition_changed;
-
+InfoBubble.prototype["arrowPosition_changed"] =
+  InfoBubble.prototype.arrowPosition_changed;
 
 /**
  * Set the zIndex of the InfoBubble
@@ -441,10 +418,9 @@ InfoBubble.prototype['arrowPosition_changed'] =
  * @param {number} zIndex The zIndex to set.
  */
 InfoBubble.prototype.setZIndex = function(zIndex) {
-  this.set('zIndex', zIndex);
+  this.set("zIndex", zIndex);
 };
-InfoBubble.prototype['setZIndex'] = InfoBubble.prototype.setZIndex;
-
+InfoBubble.prototype["setZIndex"] = InfoBubble.prototype.setZIndex;
 
 /**
  * Get the zIndex of the InfoBubble
@@ -452,9 +428,8 @@ InfoBubble.prototype['setZIndex'] = InfoBubble.prototype.setZIndex;
  * @return {number} The zIndex to set.
  */
 InfoBubble.prototype.getZIndex = function() {
-  return parseInt(this.get('zIndex'), 10) || this.baseZIndex_;
+  return parseInt(this.get("zIndex"), 10) || this.baseZIndex_;
 };
-
 
 /**
  * zIndex changed MVC callback
@@ -462,11 +437,10 @@ InfoBubble.prototype.getZIndex = function() {
 InfoBubble.prototype.zIndex_changed = function() {
   var zIndex = this.getZIndex();
 
-  this.bubble_.style['zIndex'] = this.baseZIndex_ = zIndex;
-  this.close_.style['zIndex'] = zIndex + 1;
+  this.bubble_.style["zIndex"] = this.baseZIndex_ = zIndex;
+  this.close_.style["zIndex"] = zIndex + 1;
 };
-InfoBubble.prototype['zIndex_changed'] = InfoBubble.prototype.zIndex_changed;
-
+InfoBubble.prototype["zIndex_changed"] = InfoBubble.prototype.zIndex_changed;
 
 /**
  * Set the style of the shadow
@@ -474,10 +448,9 @@ InfoBubble.prototype['zIndex_changed'] = InfoBubble.prototype.zIndex_changed;
  * @param {number} shadowStyle The style of the shadow.
  */
 InfoBubble.prototype.setShadowStyle = function(shadowStyle) {
-  this.set('shadowStyle', shadowStyle);
+  this.set("shadowStyle", shadowStyle);
 };
-InfoBubble.prototype['setShadowStyle'] = InfoBubble.prototype.setShadowStyle;
-
+InfoBubble.prototype["setShadowStyle"] = InfoBubble.prototype.setShadowStyle;
 
 /**
  * Get the style of the shadow
@@ -486,9 +459,8 @@ InfoBubble.prototype['setShadowStyle'] = InfoBubble.prototype.setShadowStyle;
  * @return {number} The style of the shadow.
  */
 InfoBubble.prototype.getShadowStyle_ = function() {
-  return parseInt(this.get('shadowStyle'), 10) || 0;
+  return parseInt(this.get("shadowStyle"), 10) || 0;
 };
-
 
 /**
  * shadowStyle changed MVC callback
@@ -496,62 +468,58 @@ InfoBubble.prototype.getShadowStyle_ = function() {
 InfoBubble.prototype.shadowStyle_changed = function() {
   var shadowStyle = this.getShadowStyle_();
 
-  var display = '';
-  var shadow = '';
-  var backgroundColor = '';
+  var display = "";
+  var shadow = "";
+  var backgroundColor = "";
   switch (shadowStyle) {
     case 0:
-      display = 'none';
+      display = "none";
       break;
     case 1:
-      shadow = '40px 15px 10px rgba(33,33,33,0.3)';
-      backgroundColor = 'transparent';
+      shadow = "40px 15px 10px rgba(33,33,33,0.3)";
+      backgroundColor = "transparent";
       break;
     case 2:
-      shadow = '0 0 2px rgba(33,33,33,0.3)';
-      backgroundColor = 'rgba(33,33,33,0.35)';
+      shadow = "0 0 2px rgba(33,33,33,0.3)";
+      backgroundColor = "rgba(33,33,33,0.35)";
       break;
   }
-  this.bubbleShadow_.style['boxShadow'] =
-      this.bubbleShadow_.style['webkitBoxShadow'] =
-      this.bubbleShadow_.style['MozBoxShadow'] = shadow;
-  this.bubbleShadow_.style['backgroundColor'] = backgroundColor;
+  this.bubbleShadow_.style["boxShadow"] = this.bubbleShadow_.style[
+    "webkitBoxShadow"
+  ] = this.bubbleShadow_.style["MozBoxShadow"] = shadow;
+  this.bubbleShadow_.style["backgroundColor"] = backgroundColor;
   if (this.isOpen_) {
-    this.bubbleShadow_.style['display'] = display;
+    this.bubbleShadow_.style["display"] = display;
     this.draw();
   }
 };
-InfoBubble.prototype['shadowStyle_changed'] =
-    InfoBubble.prototype.shadowStyle_changed;
-
+InfoBubble.prototype["shadowStyle_changed"] =
+  InfoBubble.prototype.shadowStyle_changed;
 
 /**
  * Show the close button
  */
 InfoBubble.prototype.showCloseButton = function() {
-  this.set('hideCloseButton', false);
+  this.set("hideCloseButton", false);
 };
-InfoBubble.prototype['showCloseButton'] = InfoBubble.prototype.showCloseButton;
-
+InfoBubble.prototype["showCloseButton"] = InfoBubble.prototype.showCloseButton;
 
 /**
  * Hide the close button
  */
 InfoBubble.prototype.hideCloseButton = function() {
-  this.set('hideCloseButton', true);
+  this.set("hideCloseButton", true);
 };
-InfoBubble.prototype['hideCloseButton'] = InfoBubble.prototype.hideCloseButton;
-
+InfoBubble.prototype["hideCloseButton"] = InfoBubble.prototype.hideCloseButton;
 
 /**
  * hideCloseButton changed MVC callback
  */
 InfoBubble.prototype.hideCloseButton_changed = function() {
-  this.close_.style['display'] = this.get('hideCloseButton') ? 'none' : '';
+  this.close_.style["display"] = this.get("hideCloseButton") ? "none" : "";
 };
-InfoBubble.prototype['hideCloseButton_changed'] =
-    InfoBubble.prototype.hideCloseButton_changed;
-
+InfoBubble.prototype["hideCloseButton_changed"] =
+  InfoBubble.prototype.hideCloseButton_changed;
 
 /**
  * Set the background color
@@ -560,27 +528,25 @@ InfoBubble.prototype['hideCloseButton_changed'] =
  */
 InfoBubble.prototype.setBackgroundColor = function(color) {
   if (color) {
-    this.set('backgroundColor', color);
+    this.set("backgroundColor", color);
   }
 };
-InfoBubble.prototype['setBackgroundColor'] =
-    InfoBubble.prototype.setBackgroundColor;
-
+InfoBubble.prototype["setBackgroundColor"] =
+  InfoBubble.prototype.setBackgroundColor;
 
 /**
  * backgroundColor changed MVC callback
  */
 InfoBubble.prototype.backgroundColor_changed = function() {
-  var backgroundColor = this.get('backgroundColor');
-  this.contentContainer_.style['backgroundColor'] = backgroundColor;
+  var backgroundColor = this.get("backgroundColor");
+  this.contentContainer_.style["backgroundColor"] = backgroundColor;
 
-  this.arrowInner_.style['borderColor'] = backgroundColor +
-      ' transparent transparent';
+  this.arrowInner_.style["borderColor"] =
+    backgroundColor + " transparent transparent";
   this.updateTabStyles_();
 };
-InfoBubble.prototype['backgroundColor_changed'] =
-    InfoBubble.prototype.backgroundColor_changed;
-
+InfoBubble.prototype["backgroundColor_changed"] =
+  InfoBubble.prototype.backgroundColor_changed;
 
 /**
  * Set the border color
@@ -589,34 +555,31 @@ InfoBubble.prototype['backgroundColor_changed'] =
  */
 InfoBubble.prototype.setBorderColor = function(color) {
   if (color) {
-    this.set('borderColor', color);
+    this.set("borderColor", color);
   }
 };
-InfoBubble.prototype['setBorderColor'] = InfoBubble.prototype.setBorderColor;
-
+InfoBubble.prototype["setBorderColor"] = InfoBubble.prototype.setBorderColor;
 
 /**
  * borderColor changed MVC callback
  */
 InfoBubble.prototype.borderColor_changed = function() {
-  var borderColor = this.get('borderColor');
+  var borderColor = this.get("borderColor");
 
   var contentContainer = this.contentContainer_;
   var arrowOuter = this.arrowOuter_;
-  contentContainer.style['borderColor'] = borderColor;
+  contentContainer.style["borderColor"] = borderColor;
 
-  arrowOuter.style['borderColor'] = borderColor +
-      ' transparent transparent';
+  arrowOuter.style["borderColor"] = borderColor + " transparent transparent";
 
-  contentContainer.style['borderStyle'] =
-      arrowOuter.style['borderStyle'] =
-      this.arrowInner_.style['borderStyle'] = 'solid';
+  contentContainer.style["borderStyle"] = arrowOuter.style[
+    "borderStyle"
+  ] = this.arrowInner_.style["borderStyle"] = "solid";
 
   this.updateTabStyles_();
 };
-InfoBubble.prototype['borderColor_changed'] =
-    InfoBubble.prototype.borderColor_changed;
-
+InfoBubble.prototype["borderColor_changed"] =
+  InfoBubble.prototype.borderColor_changed;
 
 /**
  * Set the radius of the border
@@ -624,10 +587,9 @@ InfoBubble.prototype['borderColor_changed'] =
  * @param {number} radius The radius of the border.
  */
 InfoBubble.prototype.setBorderRadius = function(radius) {
-  this.set('borderRadius', radius);
+  this.set("borderRadius", radius);
 };
-InfoBubble.prototype['setBorderRadius'] = InfoBubble.prototype.setBorderRadius;
-
+InfoBubble.prototype["setBorderRadius"] = InfoBubble.prototype.setBorderRadius;
 
 /**
  * Get the radius of the border
@@ -636,9 +598,8 @@ InfoBubble.prototype['setBorderRadius'] = InfoBubble.prototype.setBorderRadius;
  * @return {number} The radius of the border.
  */
 InfoBubble.prototype.getBorderRadius_ = function() {
-  return parseInt(this.get('borderRadius'), 10) || 0;
+  return parseInt(this.get("borderRadius"), 10) || 0;
 };
-
 
 /**
  * borderRadius changed MVC callback
@@ -647,22 +608,22 @@ InfoBubble.prototype.borderRadius_changed = function() {
   var borderRadius = this.getBorderRadius_();
   var borderWidth = this.getBorderWidth_();
 
-  this.contentContainer_.style['borderRadius'] =
-      this.contentContainer_.style['MozBorderRadius'] =
-      this.contentContainer_.style['webkitBorderRadius'] =
-      this.bubbleShadow_.style['borderRadius'] =
-      this.bubbleShadow_.style['MozBorderRadius'] =
-      this.bubbleShadow_.style['webkitBorderRadius'] = this.px(borderRadius);
+  this.contentContainer_.style["borderRadius"] = this.contentContainer_.style[
+    "MozBorderRadius"
+  ] = this.contentContainer_.style[
+    "webkitBorderRadius"
+  ] = this.bubbleShadow_.style["borderRadius"] = this.bubbleShadow_.style[
+    "MozBorderRadius"
+  ] = this.bubbleShadow_.style["webkitBorderRadius"] = this.px(borderRadius);
 
-  this.tabsContainer_.style['paddingLeft'] =
-      this.tabsContainer_.style['paddingRight'] =
-      this.px(borderRadius + borderWidth);
+  this.tabsContainer_.style["paddingLeft"] = this.tabsContainer_.style[
+    "paddingRight"
+  ] = this.px(borderRadius + borderWidth);
 
   this.redraw_();
 };
-InfoBubble.prototype['borderRadius_changed'] =
-    InfoBubble.prototype.borderRadius_changed;
-
+InfoBubble.prototype["borderRadius_changed"] =
+  InfoBubble.prototype.borderRadius_changed;
 
 /**
  * Get the width of the border
@@ -671,9 +632,8 @@ InfoBubble.prototype['borderRadius_changed'] =
  * @return {number} width The width of the border.
  */
 InfoBubble.prototype.getBorderWidth_ = function() {
-  return parseInt(this.get('borderWidth'), 10) || 0;
+  return parseInt(this.get("borderWidth"), 10) || 0;
 };
-
 
 /**
  * Set the width of the border
@@ -681,10 +641,9 @@ InfoBubble.prototype.getBorderWidth_ = function() {
  * @param {number} width The width of the border.
  */
 InfoBubble.prototype.setBorderWidth = function(width) {
-  this.set('borderWidth', width);
+  this.set("borderWidth", width);
 };
-InfoBubble.prototype['setBorderWidth'] = InfoBubble.prototype.setBorderWidth;
-
+InfoBubble.prototype["setBorderWidth"] = InfoBubble.prototype.setBorderWidth;
 
 /**
  * borderWidth change MVC callback
@@ -692,17 +651,16 @@ InfoBubble.prototype['setBorderWidth'] = InfoBubble.prototype.setBorderWidth;
 InfoBubble.prototype.borderWidth_changed = function() {
   var borderWidth = this.getBorderWidth_();
 
-  this.contentContainer_.style['borderWidth'] = this.px(borderWidth);
-  this.tabsContainer_.style['top'] = this.px(borderWidth);
+  this.contentContainer_.style["borderWidth"] = this.px(borderWidth);
+  this.tabsContainer_.style["top"] = this.px(borderWidth);
 
   this.updateArrowStyle_();
   this.updateTabStyles_();
   this.borderRadius_changed();
   this.redraw_();
 };
-InfoBubble.prototype['borderWidth_changed'] =
-    InfoBubble.prototype.borderWidth_changed;
-
+InfoBubble.prototype["borderWidth_changed"] =
+  InfoBubble.prototype.borderWidth_changed;
 
 /**
  * Update the arrow style
@@ -718,41 +676,40 @@ InfoBubble.prototype.updateArrowStyle_ = function() {
   var outer = this.arrowOuter_;
   var inner = this.arrowInner_;
 
-  this.arrow_.style['marginTop'] = this.px(-borderWidth);
-  outer.style['borderTopWidth'] = arrowOuterSizePx;
-  inner.style['borderTopWidth'] = arrowInnerSizePx;
+  this.arrow_.style["marginTop"] = this.px(-borderWidth);
+  outer.style["borderTopWidth"] = arrowOuterSizePx;
+  inner.style["borderTopWidth"] = arrowInnerSizePx;
 
   // Full arrow or arrow pointing to the left
   if (arrowStyle == 0 || arrowStyle == 1) {
-    outer.style['borderLeftWidth'] = arrowOuterSizePx;
-    inner.style['borderLeftWidth'] = arrowInnerSizePx;
+    outer.style["borderLeftWidth"] = arrowOuterSizePx;
+    inner.style["borderLeftWidth"] = arrowInnerSizePx;
   } else {
-    outer.style['borderLeftWidth'] = inner.style['borderLeftWidth'] = 0;
+    outer.style["borderLeftWidth"] = inner.style["borderLeftWidth"] = 0;
   }
 
   // Full arrow or arrow pointing to the right
   if (arrowStyle == 0 || arrowStyle == 2) {
-    outer.style['borderRightWidth'] = arrowOuterSizePx;
-    inner.style['borderRightWidth'] = arrowInnerSizePx;
+    outer.style["borderRightWidth"] = arrowOuterSizePx;
+    inner.style["borderRightWidth"] = arrowInnerSizePx;
   } else {
-    outer.style['borderRightWidth'] = inner.style['borderRightWidth'] = 0;
+    outer.style["borderRightWidth"] = inner.style["borderRightWidth"] = 0;
   }
 
   if (arrowStyle < 2) {
-    outer.style['marginLeft'] = this.px(-(arrowSize));
-    inner.style['marginLeft'] = this.px(-(arrowSize - borderWidth));
+    outer.style["marginLeft"] = this.px(-arrowSize);
+    inner.style["marginLeft"] = this.px(-(arrowSize - borderWidth));
   } else {
-    outer.style['marginLeft'] = inner.style['marginLeft'] = 0;
+    outer.style["marginLeft"] = inner.style["marginLeft"] = 0;
   }
 
   // If there is no border then don't show thw outer arrow
   if (borderWidth == 0) {
-    outer.style['display'] = 'none';
+    outer.style["display"] = "none";
   } else {
-    outer.style['display'] = '';
+    outer.style["display"] = "";
   }
 };
-
 
 /**
  * Set the padding of the InfoBubble
@@ -760,10 +717,9 @@ InfoBubble.prototype.updateArrowStyle_ = function() {
  * @param {number} padding The padding to apply.
  */
 InfoBubble.prototype.setPadding = function(padding) {
-  this.set('padding', padding);
+  this.set("padding", padding);
 };
-InfoBubble.prototype['setPadding'] = InfoBubble.prototype.setPadding;
-
+InfoBubble.prototype["setPadding"] = InfoBubble.prototype.setPadding;
 
 /**
  * Set the padding of the InfoBubble
@@ -772,22 +728,20 @@ InfoBubble.prototype['setPadding'] = InfoBubble.prototype.setPadding;
  * @return {number} padding The padding to apply.
  */
 InfoBubble.prototype.getPadding_ = function() {
-  return parseInt(this.get('padding'), 10) || 0;
+  return parseInt(this.get("padding"), 10) || 0;
 };
-
 
 /**
  * padding changed MVC callback
  */
 InfoBubble.prototype.padding_changed = function() {
   var padding = this.getPadding_();
-  this.contentContainer_.style['padding'] = this.px(padding);
+  this.contentContainer_.style["padding"] = this.px(padding);
   this.updateTabStyles_();
 
   this.redraw_();
 };
-InfoBubble.prototype['padding_changed'] = InfoBubble.prototype.padding_changed;
-
+InfoBubble.prototype["padding_changed"] = InfoBubble.prototype.padding_changed;
 
 /**
  * Add px extention to the number
@@ -798,11 +752,10 @@ InfoBubble.prototype['padding_changed'] = InfoBubble.prototype.padding_changed;
 InfoBubble.prototype.px = function(num) {
   if (num) {
     // 0 doesn't need to be wrapped
-    return num + 'px';
+    return num + "px";
   }
   return num;
 };
-
 
 /**
  * Add events to stop propagation
@@ -810,13 +763,24 @@ InfoBubble.prototype.px = function(num) {
  */
 InfoBubble.prototype.addEvents_ = function() {
   // We want to cancel all the events so they do not go to the map
-  var events = ['mousedown', 'mousemove', 'mouseover', 'mouseout', 'mouseup',
-      'mousewheel', 'DOMMouseScroll', 'touchstart', 'touchend', 'touchmove',
-      'dblclick', 'contextmenu'];
+  var events = [
+    "mousedown",
+    "mousemove",
+    "mouseover",
+    "mouseout",
+    "mouseup",
+    "mousewheel",
+    "DOMMouseScroll",
+    "touchstart",
+    "touchend",
+    "touchmove",
+    "dblclick",
+    "contextmenu",
+  ];
 
   var bubble = this.bubble_;
   this.listeners_ = [];
-  for (var i = 0, event; event = events[i]; i++) {
+  for (var i = 0, event; (event = events[i]); i++) {
     this.listeners_.push(
       google.maps.event.addDomListener(bubble, event, function(e) {
         e.cancelBubble = true;
@@ -827,7 +791,6 @@ InfoBubble.prototype.addEvents_ = function() {
     );
   }
 };
-
 
 /**
  * On Adding the InfoBubble to a map
@@ -846,8 +809,7 @@ InfoBubble.prototype.onAdd = function() {
     panes.floatShadow.appendChild(this.bubbleShadow_);
   }
 };
-InfoBubble.prototype['onAdd'] = InfoBubble.prototype.onAdd;
-
+InfoBubble.prototype["onAdd"] = InfoBubble.prototype.onAdd;
 
 /**
  * Draw the InfoBubble
@@ -861,7 +823,7 @@ InfoBubble.prototype.draw = function() {
     return;
   }
 
-  var latLng = /** @type {google.maps.LatLng} */ (this.get('position'));
+  var latLng = /** @type {google.maps.LatLng} */ (this.get("position"));
 
   if (!latLng) {
     this.close();
@@ -896,39 +858,39 @@ InfoBubble.prototype.draw = function() {
     top -= anchorHeight;
   }
 
-  var left = pos.x - (width * arrowPosition);
+  var left = pos.x - width * arrowPosition;
 
-  this.bubble_.style['top'] = this.px(top);
-  this.bubble_.style['left'] = this.px(left);
+  this.bubble_.style["top"] = this.px(top);
+  this.bubble_.style["left"] = this.px(left);
 
-  var shadowStyle = parseInt(this.get('shadowStyle'), 10);
+  var shadowStyle = parseInt(this.get("shadowStyle"), 10);
 
   switch (shadowStyle) {
     case 1:
       // Shadow is behind
-      this.bubbleShadow_.style['top'] = this.px(top + tabHeight - 1);
-      this.bubbleShadow_.style['left'] = this.px(left);
-      this.bubbleShadow_.style['width'] = this.px(width);
-      this.bubbleShadow_.style['height'] =
-          this.px(this.contentContainer_.offsetHeight - arrowSize);
+      this.bubbleShadow_.style["top"] = this.px(top + tabHeight - 1);
+      this.bubbleShadow_.style["left"] = this.px(left);
+      this.bubbleShadow_.style["width"] = this.px(width);
+      this.bubbleShadow_.style["height"] = this.px(
+        this.contentContainer_.offsetHeight - arrowSize
+      );
       break;
     case 2:
       // Shadow is below
       width = width * 0.8;
       if (anchorHeight) {
-        this.bubbleShadow_.style['top'] = this.px(pos.y);
+        this.bubbleShadow_.style["top"] = this.px(pos.y);
       } else {
-        this.bubbleShadow_.style['top'] = this.px(pos.y + arrowSize);
+        this.bubbleShadow_.style["top"] = this.px(pos.y + arrowSize);
       }
-      this.bubbleShadow_.style['left'] = this.px(pos.x - width * arrowPosition);
+      this.bubbleShadow_.style["left"] = this.px(pos.x - width * arrowPosition);
 
-      this.bubbleShadow_.style['width'] = this.px(width);
-      this.bubbleShadow_.style['height'] = this.px(2);
+      this.bubbleShadow_.style["width"] = this.px(width);
+      this.bubbleShadow_.style["height"] = this.px(2);
       break;
   }
 };
-InfoBubble.prototype['draw'] = InfoBubble.prototype.draw;
-
+InfoBubble.prototype["draw"] = InfoBubble.prototype.draw;
 
 /**
  * Removing the InfoBubble from a map
@@ -941,12 +903,11 @@ InfoBubble.prototype.onRemove = function() {
     this.bubbleShadow_.parentNode.removeChild(this.bubbleShadow_);
   }
 
-  for (var i = 0, listener; listener = this.listeners_[i]; i++) {
+  for (var i = 0, listener; (listener = this.listeners_[i]); i++) {
     google.maps.event.removeListener(listener);
   }
 };
-InfoBubble.prototype['onRemove'] = InfoBubble.prototype.onRemove;
-
+InfoBubble.prototype["onRemove"] = InfoBubble.prototype.onRemove;
 
 /**
  * Is the InfoBubble open
@@ -956,29 +917,31 @@ InfoBubble.prototype['onRemove'] = InfoBubble.prototype.onRemove;
 InfoBubble.prototype.isOpen = function() {
   return this.isOpen_;
 };
-InfoBubble.prototype['isOpen'] = InfoBubble.prototype.isOpen;
-
+InfoBubble.prototype["isOpen"] = InfoBubble.prototype.isOpen;
 
 /**
  * Close the InfoBubble
  */
 InfoBubble.prototype.close = function() {
   if (this.bubble_) {
-    this.bubble_.style['display'] = 'none';
+    this.bubble_.style["display"] = "none";
     // Remove the animation so we next time it opens it will animate again
-    this.bubble_.className =
-        this.bubble_.className.replace(this.animationName_, '');
+    this.bubble_.className = this.bubble_.className.replace(
+      this.animationName_,
+      ""
+    );
   }
 
   if (this.bubbleShadow_) {
-    this.bubbleShadow_.style['display'] = 'none';
-    this.bubbleShadow_.className =
-        this.bubbleShadow_.className.replace(this.animationName_, '');
+    this.bubbleShadow_.style["display"] = "none";
+    this.bubbleShadow_.className = this.bubbleShadow_.className.replace(
+      this.animationName_,
+      ""
+    );
   }
   this.isOpen_ = false;
 };
-InfoBubble.prototype['close'] = InfoBubble.prototype.close;
-
+InfoBubble.prototype["close"] = InfoBubble.prototype.close;
 
 /**
  * Open the InfoBubble (asynchronous).
@@ -1007,25 +970,25 @@ InfoBubble.prototype.open_ = function(opt_map, opt_anchor) {
   }
 
   if (opt_anchor) {
-    this.set('anchor', opt_anchor);
-    this.bindTo('anchorPoint', opt_anchor);
-    this.bindTo('position', opt_anchor);
+    this.set("anchor", opt_anchor);
+    this.bindTo("anchorPoint", opt_anchor);
+    this.bindTo("position", opt_anchor);
   }
 
   // Show the bubble and the show
-  this.bubble_.style['display'] = this.bubbleShadow_.style['display'] = '';
-  var animation = !this.get('disableAnimation');
+  this.bubble_.style["display"] = this.bubbleShadow_.style["display"] = "";
+  var animation = !this.get("disableAnimation");
 
   if (animation) {
     // Add the animation
-    this.bubble_.className += ' ' + this.animationName_;
-    this.bubbleShadow_.className += ' ' + this.animationName_;
+    this.bubble_.className += " " + this.animationName_;
+    this.bubbleShadow_.className += " " + this.animationName_;
   }
 
   this.redraw_();
   this.isOpen_ = true;
 
-  var pan = !this.get('disableAutoPan');
+  var pan = !this.get("disableAutoPan");
   if (pan) {
     var that = this;
     window.setTimeout(function() {
@@ -1034,8 +997,7 @@ InfoBubble.prototype.open_ = function(opt_map, opt_anchor) {
     }, 200);
   }
 };
-InfoBubble.prototype['open'] = InfoBubble.prototype.open;
-
+InfoBubble.prototype["open"] = InfoBubble.prototype.open;
 
 /**
  * Set the position of the InfoBubble
@@ -1044,11 +1006,10 @@ InfoBubble.prototype['open'] = InfoBubble.prototype.open;
  */
 InfoBubble.prototype.setPosition = function(position) {
   if (position) {
-    this.set('position', position);
+    this.set("position", position);
   }
 };
-InfoBubble.prototype['setPosition'] = InfoBubble.prototype.setPosition;
-
+InfoBubble.prototype["setPosition"] = InfoBubble.prototype.setPosition;
 
 /**
  * Returns the position of the InfoBubble
@@ -1056,10 +1017,9 @@ InfoBubble.prototype['setPosition'] = InfoBubble.prototype.setPosition;
  * @return {google.maps.LatLng} the position.
  */
 InfoBubble.prototype.getPosition = function() {
-  return /** @type {google.maps.LatLng} */ (this.get('position'));
+  return /** @type {google.maps.LatLng} */ (this.get("position"));
 };
-InfoBubble.prototype['getPosition'] = InfoBubble.prototype.getPosition;
-
+InfoBubble.prototype["getPosition"] = InfoBubble.prototype.getPosition;
 
 /**
  * position changed MVC callback
@@ -1067,9 +1027,8 @@ InfoBubble.prototype['getPosition'] = InfoBubble.prototype.getPosition;
 InfoBubble.prototype.position_changed = function() {
   this.draw();
 };
-InfoBubble.prototype['position_changed'] =
-    InfoBubble.prototype.position_changed;
-
+InfoBubble.prototype["position_changed"] =
+  InfoBubble.prototype.position_changed;
 
 /**
  * Pan the InfoBubble into view
@@ -1089,7 +1048,7 @@ InfoBubble.prototype.panToView = function() {
 
   var anchorHeight = this.getAnchorHeight_();
   var height = this.bubble_.offsetHeight + anchorHeight;
-  var map = this.get('map');
+  var map = this.get("map");
   var mapDiv = map.getDiv();
   var mapHeight = mapDiv.offsetHeight;
 
@@ -1118,8 +1077,7 @@ InfoBubble.prototype.panToView = function() {
     map.panTo(latLng);
   }
 };
-InfoBubble.prototype['panToView'] = InfoBubble.prototype.panToView;
-
+InfoBubble.prototype["panToView"] = InfoBubble.prototype.panToView;
 
 /**
  * Converts a HTML string to a document fragment.
@@ -1129,8 +1087,8 @@ InfoBubble.prototype['panToView'] = InfoBubble.prototype.panToView;
  * @private
  */
 InfoBubble.prototype.htmlToDocumentFragment_ = function(htmlString) {
-  htmlString = htmlString.replace(/^\s*([\S\s]*)\b\s*$/, '$1');
-  var tempDiv = document.createElement('DIV');
+  htmlString = htmlString.replace(/^\s*([\S\s]*)\b\s*$/, "$1");
+  var tempDiv = document.createElement("DIV");
   tempDiv.innerHTML = htmlString;
   if (tempDiv.childNodes.length == 1) {
     return /** @type {!Node} */ (tempDiv.removeChild(tempDiv.firstChild));
@@ -1142,7 +1100,6 @@ InfoBubble.prototype.htmlToDocumentFragment_ = function(htmlString) {
     return fragment;
   }
 };
-
 
 /**
  * Removes all children from the node.
@@ -1156,11 +1113,10 @@ InfoBubble.prototype.removeChildren_ = function(node) {
   }
 
   var child;
-  while (child = node.firstChild) {
+  while ((child = node.firstChild)) {
     node.removeChild(child);
   }
 };
-
 
 /**
  * Sets the content of the infobubble.
@@ -1168,10 +1124,9 @@ InfoBubble.prototype.removeChildren_ = function(node) {
  * @param {string|Node} content The content to set.
  */
 InfoBubble.prototype.setContent = function(content) {
-  this.set('content', content);
+  this.set("content", content);
 };
-InfoBubble.prototype['setContent'] = InfoBubble.prototype.setContent;
-
+InfoBubble.prototype["setContent"] = InfoBubble.prototype.setContent;
 
 /**
  * Get the content of the infobubble.
@@ -1179,10 +1134,9 @@ InfoBubble.prototype['setContent'] = InfoBubble.prototype.setContent;
  * @return {string|Node} The marker content.
  */
 InfoBubble.prototype.getContent = function() {
-  return /** @type {Node|string} */ (this.get('content'));
+  return /** @type {Node|string} */ (this.get("content"));
 };
-InfoBubble.prototype['getContent'] = InfoBubble.prototype.getContent;
-
+InfoBubble.prototype["getContent"] = InfoBubble.prototype.getContent;
 
 /**
  * Sets the marker content and adds loading events to images
@@ -1196,22 +1150,22 @@ InfoBubble.prototype.updateContent_ = function() {
   this.removeChildren_(this.content_);
   var content = this.getContent();
   if (content) {
-    if (typeof content == 'string') {
+    if (typeof content == "string") {
       content = this.htmlToDocumentFragment_(content);
     }
     this.content_.appendChild(content);
 
     var that = this;
-    var images = this.content_.getElementsByTagName('IMG');
-    for (var i = 0, image; image = images[i]; i++) {
+    var images = this.content_.getElementsByTagName("IMG");
+    for (var i = 0, image; (image = images[i]); i++) {
       // Because we don't know the size of an image till it loads, add a
       // listener to the image load so the marker can resize and reposition
       // itself to be the correct height.
-      google.maps.event.addDomListener(image, 'load', function() {
+      google.maps.event.addDomListener(image, "load", function() {
         that.imageLoaded_();
       });
     }
-    google.maps.event.trigger(this, 'domready');
+    google.maps.event.trigger(this, "domready");
   }
   this.redraw_();
 };
@@ -1221,7 +1175,7 @@ InfoBubble.prototype.updateContent_ = function() {
  * @private
  */
 InfoBubble.prototype.imageLoaded_ = function() {
-  var pan = !this.get('disableAutoPan');
+  var pan = !this.get("disableAutoPan");
   this.redraw_();
   if (pan && (this.tabs_.length == 0 || this.activeTab_.index == 0)) {
     this.panToView();
@@ -1234,17 +1188,16 @@ InfoBubble.prototype.imageLoaded_ = function() {
  */
 InfoBubble.prototype.updateTabStyles_ = function() {
   if (this.tabs_ && this.tabs_.length) {
-    for (var i = 0, tab; tab = this.tabs_[i]; i++) {
+    for (var i = 0, tab; (tab = this.tabs_[i]); i++) {
       this.setTabStyle_(tab.tab);
     }
-    this.activeTab_.style['zIndex'] = this.baseZIndex_;
+    this.activeTab_.style["zIndex"] = this.baseZIndex_;
     var borderWidth = this.getBorderWidth_();
     var padding = this.getPadding_() / 2;
-    this.activeTab_.style['borderBottomWidth'] = 0;
-    this.activeTab_.style['paddingBottom'] = this.px(padding + borderWidth);
+    this.activeTab_.style["borderBottomWidth"] = 0;
+    this.activeTab_.style["paddingBottom"] = this.px(padding + borderWidth);
   }
 };
-
 
 /**
  * Sets the style of a tab
@@ -1252,13 +1205,13 @@ InfoBubble.prototype.updateTabStyles_ = function() {
  * @param {Element} tab The tab to style.
  */
 InfoBubble.prototype.setTabStyle_ = function(tab) {
-  var backgroundColor = this.get('backgroundColor');
-  var borderColor = this.get('borderColor');
+  var backgroundColor = this.get("backgroundColor");
+  var borderColor = this.get("borderColor");
   var borderRadius = this.getBorderRadius_();
   var borderWidth = this.getBorderWidth_();
   var padding = this.getPadding_();
 
-  var marginRight = this.px(-(Math.max(padding, borderRadius)));
+  var marginRight = this.px(-Math.max(padding, borderRadius));
   var borderRadiusPx = this.px(borderRadius);
 
   var index = this.baseZIndex_;
@@ -1268,34 +1221,33 @@ InfoBubble.prototype.setTabStyle_ = function(tab) {
 
   // The styles for the tab
   var styles = {
-    'cssFloat': 'left',
-    'position': 'relative',
-    'cursor': 'pointer',
-    'backgroundColor': backgroundColor,
-    'border': this.px(borderWidth) + ' solid ' + borderColor,
-    'padding': this.px(padding / 2) + ' ' + this.px(padding),
-    'marginRight': marginRight,
-    'whiteSpace': 'nowrap',
-    'borderRadiusTopLeft': borderRadiusPx,
-    'MozBorderRadiusTopleft': borderRadiusPx,
-    'webkitBorderTopLeftRadius': borderRadiusPx,
-    'borderRadiusTopRight': borderRadiusPx,
-    'MozBorderRadiusTopright': borderRadiusPx,
-    'webkitBorderTopRightRadius': borderRadiusPx,
-    'zIndex': index,
-    'display': 'inline'
+    cssFloat: "left",
+    position: "relative",
+    cursor: "pointer",
+    backgroundColor: backgroundColor,
+    border: this.px(borderWidth) + " solid " + borderColor,
+    padding: this.px(padding / 2) + " " + this.px(padding),
+    marginRight: marginRight,
+    whiteSpace: "nowrap",
+    borderRadiusTopLeft: borderRadiusPx,
+    MozBorderRadiusTopleft: borderRadiusPx,
+    webkitBorderTopLeftRadius: borderRadiusPx,
+    borderRadiusTopRight: borderRadiusPx,
+    MozBorderRadiusTopright: borderRadiusPx,
+    webkitBorderTopRightRadius: borderRadiusPx,
+    zIndex: index,
+    display: "inline",
   };
 
   for (var style in styles) {
     tab.style[style] = styles[style];
   }
 
-  var className = this.get('tabClassName');
+  var className = this.get("tabClassName");
   if (className != undefined) {
-    tab.className += ' ' + className;
+    tab.className += " " + className;
   }
 };
-
 
 /**
  * Add user actions to a tab
@@ -1304,11 +1256,10 @@ InfoBubble.prototype.setTabStyle_ = function(tab) {
  */
 InfoBubble.prototype.addTabActions_ = function(tab) {
   var that = this;
-  tab.listener_ = google.maps.event.addDomListener(tab, 'click', function() {
+  tab.listener_ = google.maps.event.addDomListener(tab, "click", function() {
     that.setTabActive_(this);
   });
 };
-
 
 /**
  * Set a tab at a index to be active
@@ -1322,8 +1273,7 @@ InfoBubble.prototype.setTabActive = function(index) {
     this.setTabActive_(tab.tab);
   }
 };
-InfoBubble.prototype['setTabActive'] = InfoBubble.prototype.setTabActive;
-
+InfoBubble.prototype["setTabActive"] = InfoBubble.prototype.setTabActive;
 
 /**
  * Set a tab to be active
@@ -1332,7 +1282,7 @@ InfoBubble.prototype['setTabActive'] = InfoBubble.prototype.setTabActive;
  */
 InfoBubble.prototype.setTabActive_ = function(tab) {
   if (!tab) {
-    this.setContent('');
+    this.setContent("");
     this.updateContent_();
     return;
   }
@@ -1342,15 +1292,15 @@ InfoBubble.prototype.setTabActive_ = function(tab) {
 
   if (this.activeTab_) {
     var activeTab = this.activeTab_;
-    activeTab.style['zIndex'] = this.baseZIndex_ - activeTab.index;
-    activeTab.style['paddingBottom'] = this.px(padding);
-    activeTab.style['borderBottomWidth'] = this.px(borderWidth);
+    activeTab.style["zIndex"] = this.baseZIndex_ - activeTab.index;
+    activeTab.style["paddingBottom"] = this.px(padding);
+    activeTab.style["borderBottomWidth"] = this.px(borderWidth);
   }
 
-  tab.style['zIndex'] = this.baseZIndex_;
-  tab.style['borderBottomWidth'] = 0;
-  tab.style['marginBottomWidth'] = '-10px';
-  tab.style['paddingBottom'] = this.px(padding + borderWidth);
+  tab.style["zIndex"] = this.baseZIndex_;
+  tab.style["borderBottomWidth"] = 0;
+  tab.style["marginBottomWidth"] = "-10px";
+  tab.style["paddingBottom"] = this.px(padding + borderWidth);
 
   this.setContent(this.tabs_[tab.index].content);
   this.updateContent_();
@@ -1360,17 +1310,15 @@ InfoBubble.prototype.setTabActive_ = function(tab) {
   this.redraw_();
 };
 
-
 /**
  * Set the max width of the InfoBubble
  *
  * @param {number} width The max width.
  */
 InfoBubble.prototype.setMaxWidth = function(width) {
-  this.set('maxWidth', width);
+  this.set("maxWidth", width);
 };
-InfoBubble.prototype['setMaxWidth'] = InfoBubble.prototype.setMaxWidth;
-
+InfoBubble.prototype["setMaxWidth"] = InfoBubble.prototype.setMaxWidth;
 
 /**
  * maxWidth changed MVC callback
@@ -1378,9 +1326,8 @@ InfoBubble.prototype['setMaxWidth'] = InfoBubble.prototype.setMaxWidth;
 InfoBubble.prototype.maxWidth_changed = function() {
   this.redraw_();
 };
-InfoBubble.prototype['maxWidth_changed'] =
-    InfoBubble.prototype.maxWidth_changed;
-
+InfoBubble.prototype["maxWidth_changed"] =
+  InfoBubble.prototype.maxWidth_changed;
 
 /**
  * Set the max height of the InfoBubble
@@ -1388,10 +1335,9 @@ InfoBubble.prototype['maxWidth_changed'] =
  * @param {number} height The max height.
  */
 InfoBubble.prototype.setMaxHeight = function(height) {
-  this.set('maxHeight', height);
+  this.set("maxHeight", height);
 };
-InfoBubble.prototype['setMaxHeight'] = InfoBubble.prototype.setMaxHeight;
-
+InfoBubble.prototype["setMaxHeight"] = InfoBubble.prototype.setMaxHeight;
 
 /**
  * maxHeight changed MVC callback
@@ -1399,9 +1345,8 @@ InfoBubble.prototype['setMaxHeight'] = InfoBubble.prototype.setMaxHeight;
 InfoBubble.prototype.maxHeight_changed = function() {
   this.redraw_();
 };
-InfoBubble.prototype['maxHeight_changed'] =
-    InfoBubble.prototype.maxHeight_changed;
-
+InfoBubble.prototype["maxHeight_changed"] =
+  InfoBubble.prototype.maxHeight_changed;
 
 /**
  * Set the min width of the InfoBubble
@@ -1409,10 +1354,9 @@ InfoBubble.prototype['maxHeight_changed'] =
  * @param {number} width The min width.
  */
 InfoBubble.prototype.setMinWidth = function(width) {
-  this.set('minWidth', width);
+  this.set("minWidth", width);
 };
-InfoBubble.prototype['setMinWidth'] = InfoBubble.prototype.setMinWidth;
-
+InfoBubble.prototype["setMinWidth"] = InfoBubble.prototype.setMinWidth;
 
 /**
  * minWidth changed MVC callback
@@ -1420,9 +1364,8 @@ InfoBubble.prototype['setMinWidth'] = InfoBubble.prototype.setMinWidth;
 InfoBubble.prototype.minWidth_changed = function() {
   this.redraw_();
 };
-InfoBubble.prototype['minWidth_changed'] =
-    InfoBubble.prototype.minWidth_changed;
-
+InfoBubble.prototype["minWidth_changed"] =
+  InfoBubble.prototype.minWidth_changed;
 
 /**
  * Set the min height of the InfoBubble
@@ -1430,10 +1373,9 @@ InfoBubble.prototype['minWidth_changed'] =
  * @param {number} height The min height.
  */
 InfoBubble.prototype.setMinHeight = function(height) {
-  this.set('minHeight', height);
+  this.set("minHeight", height);
 };
-InfoBubble.prototype['setMinHeight'] = InfoBubble.prototype.setMinHeight;
-
+InfoBubble.prototype["setMinHeight"] = InfoBubble.prototype.setMinHeight;
 
 /**
  * minHeight changed MVC callback
@@ -1441,9 +1383,8 @@ InfoBubble.prototype['setMinHeight'] = InfoBubble.prototype.setMinHeight;
 InfoBubble.prototype.minHeight_changed = function() {
   this.redraw_();
 };
-InfoBubble.prototype['minHeight_changed'] =
-    InfoBubble.prototype.minHeight_changed;
-
+InfoBubble.prototype["minHeight_changed"] =
+  InfoBubble.prototype.minHeight_changed;
 
 /**
  * Add a tab
@@ -1452,7 +1393,7 @@ InfoBubble.prototype['minHeight_changed'] =
  * @param {string|Element} content The content of the tab.
  */
 InfoBubble.prototype.addTab = function(label, content) {
-  var tab = document.createElement('DIV');
+  var tab = document.createElement("DIV");
   tab.innerHTML = label;
 
   this.setTabStyle_(tab);
@@ -1463,21 +1404,21 @@ InfoBubble.prototype.addTab = function(label, content) {
   this.tabs_.push({
     label: label,
     content: content,
-    tab: tab
+    tab: tab,
   });
 
   tab.index = this.tabs_.length - 1;
-  tab.style['zIndex'] = this.baseZIndex_ - tab.index;
+  tab.style["zIndex"] = this.baseZIndex_ - tab.index;
 
   if (!this.activeTab_) {
     this.setTabActive_(tab);
   }
 
-  tab.className = tab.className + ' ' + this.animationName_;
+  tab.className = tab.className + " " + this.animationName_;
 
   this.redraw_();
 };
-InfoBubble.prototype['addTab'] = InfoBubble.prototype.addTab;
+InfoBubble.prototype["addTab"] = InfoBubble.prototype.addTab;
 
 /**
  * Update a tab at a speicifc index
@@ -1506,8 +1447,7 @@ InfoBubble.prototype.updateTab = function(index, opt_label, opt_content) {
   }
   this.redraw_();
 };
-InfoBubble.prototype['updateTab'] = InfoBubble.prototype.updateTab;
-
+InfoBubble.prototype["updateTab"] = InfoBubble.prototype.updateTab;
 
 /**
  * Remove a tab at a specific index
@@ -1528,7 +1468,7 @@ InfoBubble.prototype.removeTab = function(index) {
 
   delete tab;
 
-  for (var i = 0, t; t = this.tabs_[i]; i++) {
+  for (var i = 0, t; (t = this.tabs_[i]); i++) {
     t.tab.index = i;
   }
 
@@ -1550,8 +1490,7 @@ InfoBubble.prototype.removeTab = function(index) {
 
   this.redraw_();
 };
-InfoBubble.prototype['removeTab'] = InfoBubble.prototype.removeTab;
-
+InfoBubble.prototype["removeTab"] = InfoBubble.prototype.removeTab;
 
 /**
  * Get the size of an element
@@ -1561,14 +1500,17 @@ InfoBubble.prototype['removeTab'] = InfoBubble.prototype.removeTab;
  * @param {number=} opt_maxHeight Optional max height of the element.
  * @return {google.maps.Size} The size of the element.
  */
-InfoBubble.prototype.getElementSize_ = function(element, opt_maxWidth,
-                                                opt_maxHeight) {
-  var sizer = document.createElement('DIV');
-  sizer.style['display'] = 'inline';
-  sizer.style['position'] = 'absolute';
-  sizer.style['visibility'] = 'hidden';
+InfoBubble.prototype.getElementSize_ = function(
+  element,
+  opt_maxWidth,
+  opt_maxHeight
+) {
+  var sizer = document.createElement("DIV");
+  sizer.style["display"] = "inline";
+  sizer.style["position"] = "absolute";
+  sizer.style["visibility"] = "hidden";
 
-  if (typeof element == 'string') {
+  if (typeof element == "string") {
     sizer.innerHTML = element;
   } else {
     sizer.appendChild(element.cloneNode(true));
@@ -1579,14 +1521,14 @@ InfoBubble.prototype.getElementSize_ = function(element, opt_maxWidth,
 
   // If the width is bigger than the max width then set the width and size again
   if (opt_maxWidth && size.width > opt_maxWidth) {
-    sizer.style['width'] = this.px(opt_maxWidth);
+    sizer.style["width"] = this.px(opt_maxWidth);
     size = new google.maps.Size(sizer.offsetWidth, sizer.offsetHeight);
   }
 
   // If the height is bigger than the max height then set the height and size
   // again
   if (opt_maxHeight && size.height > opt_maxHeight) {
-    sizer.style['height'] = this.px(opt_maxHeight);
+    sizer.style["height"] = this.px(opt_maxHeight);
     size = new google.maps.Size(sizer.offsetWidth, sizer.offsetHeight);
   }
 
@@ -1594,7 +1536,6 @@ InfoBubble.prototype.getElementSize_ = function(element, opt_maxWidth,
   delete sizer;
   return size;
 };
-
 
 /**
  * Redraw the InfoBubble
@@ -1606,13 +1547,12 @@ InfoBubble.prototype.redraw_ = function() {
   this.draw();
 };
 
-
 /**
  * Figure out the optimum size of the InfoBubble
  * @private
  */
 InfoBubble.prototype.figureOutSize_ = function() {
-  var map = this.get('map');
+  var map = this.get("map");
 
   if (!map) {
     return;
@@ -1628,10 +1568,10 @@ InfoBubble.prototype.figureOutSize_ = function() {
   var mapWidth = mapDiv.offsetWidth - gutter;
   var mapHeight = mapDiv.offsetHeight - gutter - this.getAnchorHeight_();
   var tabHeight = 0;
-  var width = /** @type {number} */ (this.get('minWidth') || 0);
-  var height = /** @type {number} */ (this.get('minHeight') || 0);
-  var maxWidth = /** @type {number} */ (this.get('maxWidth') || 0);
-  var maxHeight = /** @type {number} */ (this.get('maxHeight') || 0);
+  var width = /** @type {number} */ (this.get("minWidth") || 0);
+  var height = /** @type {number} */ (this.get("minHeight") || 0);
+  var maxWidth = /** @type {number} */ (this.get("maxWidth") || 0);
+  var maxHeight = /** @type {number} */ (this.get("maxHeight") || 0);
 
   maxWidth = Math.min(mapWidth, maxWidth);
   maxHeight = Math.min(mapHeight, maxHeight);
@@ -1639,7 +1579,7 @@ InfoBubble.prototype.figureOutSize_ = function() {
   var tabWidth = 0;
   if (this.tabs_.length) {
     // If there are tabs then you need to check the size of each tab's content
-    for (var i = 0, tab; tab = this.tabs_[i]; i++) {
+    for (var i = 0, tab; (tab = this.tabs_[i]); i++) {
       var tabSize = this.getElementSize_(tab.tab, maxWidth, maxHeight);
       var contentSize = this.getElementSize_(tab.content, maxWidth, maxHeight);
 
@@ -1668,8 +1608,8 @@ InfoBubble.prototype.figureOutSize_ = function() {
       }
     }
   } else {
-    var content = /** @type {string|Node} */ (this.get('content'));
-    if (typeof content == 'string') {
+    var content = /** @type {string|Node} */ (this.get("content"));
+    if (typeof content == "string") {
       content = this.htmlToDocumentFragment_(content);
     }
     if (content) {
@@ -1714,13 +1654,12 @@ InfoBubble.prototype.figureOutSize_ = function() {
 
   if (this.tabsContainer_) {
     this.tabHeight_ = tabHeight;
-    this.tabsContainer_.style['width'] = this.px(tabWidth);
+    this.tabsContainer_.style["width"] = this.px(tabWidth);
   }
 
-  this.contentContainer_.style['width'] = this.px(width);
-  this.contentContainer_.style['height'] = this.px(height);
+  this.contentContainer_.style["width"] = this.px(width);
+  this.contentContainer_.style["height"] = this.px(height);
 };
-
 
 /**
  *  Get the height of the anchor
@@ -1731,9 +1670,9 @@ InfoBubble.prototype.figureOutSize_ = function() {
  *  @return {number} The height of the anchor.
  */
 InfoBubble.prototype.getAnchorHeight_ = function() {
-  var anchor = this.get('anchor');
+  var anchor = this.get("anchor");
   if (anchor) {
-    var anchorPoint = /** @type google.maps.Point */(this.get('anchorPoint'));
+    var anchorPoint = /** @type google.maps.Point */ this.get("anchorPoint");
 
     if (anchorPoint) {
       return -1 * anchorPoint.y;
@@ -1745,8 +1684,8 @@ InfoBubble.prototype.getAnchorHeight_ = function() {
 InfoBubble.prototype.anchorPoint_changed = function() {
   this.draw();
 };
-InfoBubble.prototype['anchorPoint_changed'] = InfoBubble.prototype.anchorPoint_changed;
-
+InfoBubble.prototype["anchorPoint_changed"] =
+  InfoBubble.prototype.anchorPoint_changed;
 
 /**
  * Position the close button in the right spot.
@@ -1773,6 +1712,6 @@ InfoBubble.prototype.positionCloseButton_ = function() {
     right += 15;
   }
 
-  this.close_.style['right'] = this.px(right);
-  this.close_.style['top'] = this.px(top);
+  this.close_.style["right"] = this.px(right);
+  this.close_.style["top"] = this.px(top);
 };

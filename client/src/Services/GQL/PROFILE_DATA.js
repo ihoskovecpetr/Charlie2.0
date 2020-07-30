@@ -131,6 +131,15 @@ export const PROFILE_DATA = gql`
           picture
           description
         }
+        bookings {
+          response
+          confirmed
+          cancelled
+          decided
+          host {
+            _id
+          }
+        }
       }
     }
     showHostBookings(host_id: $host_id) {

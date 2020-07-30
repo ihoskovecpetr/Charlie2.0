@@ -29,7 +29,7 @@ import CharlieLogo from "src/Images/charlie-logo.png";
 import SearchInput from "src/Atoms/UpperStripeAndDrawer/SearchInput";
 
 function UpperStripe({
-  drawerWidth,
+  //drawerWidth,
   location,
   handleDrawerToggle,
   ListOfNames,
@@ -53,77 +53,10 @@ function UpperStripe({
     countRatings
   );
 
-  const useStyles = makeStyles((theme) => ({
-    upperWrap: {
-      position: "fixed",
-      top: 0,
-      width: "100vw",
-    },
-    containerMain: {
-      paddingLeft: 5,
-      paddingRight: 5,
-      zIndex: 100,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-      [theme.breakpoints.up("sm")]: {
-        display: "none",
-      },
-    },
-    hideSmall: {
-      display: "block",
-      [theme.breakpoints.down("sm")]: {
-        display: "none",
-      },
-    },
-    showSmall: {
-      display: "none",
-      [theme.breakpoints.down("sm")]: {
-        display: "block",
-      },
-    },
-    appBar: {
-      position: "fixed",
-      // width: "100%",
-      // zIndex: 100,
-      // marginLeft: drawerWidth,
-      color: "black",
-    },
-    buttonToBeHidden: {
-      [theme.breakpoints.down("xs")]: {
-        width: `calc(100% - ${drawerWidth}px)`,
-        display: "none",
-        fontWeight: "400 !important",
-      },
-      fontWeight: "550 !important",
-    },
-    ButtonAvatar: {
-      marginLeft: "10px",
-      marginRight: "10px",
-    },
-    buttonNavi: {
-      fontWeight: "600 !important",
-      float: "right",
-    },
-    ellipsName: {
-      maxWidth: 100,
-      whiteSpace: "nowrap",
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-      textAlign: "center",
-    },
-    middle: {
-      position: "absolute",
-      zIndex: 1,
-      left: 0,
-      right: 0,
-      margin: "0 auto",
-    },
-  }));
   const classes = useStyles();
 
   const pathSet = location.pathname.split("/");
-  const disabledFromOut = window.eventId ? true : false;
+  const disabledFromOut = false; // window.eventId ? true : false;
 
   return (
     <>
@@ -288,5 +221,73 @@ function UpperStripe({
     </>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  upperWrap: {
+    position: "fixed",
+    top: 0,
+    width: "100vw",
+  },
+  containerMain: {
+    paddingLeft: 5,
+    paddingRight: 5,
+    zIndex: 100,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+  },
+  hideSmall: {
+    display: "block",
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
+  showSmall: {
+    display: "none",
+    [theme.breakpoints.down("sm")]: {
+      display: "block",
+    },
+  },
+  appBar: {
+    position: "fixed",
+    // width: "100%",
+    // zIndex: 100,
+    // marginLeft: drawerWidth,
+    color: "black",
+  },
+  buttonToBeHidden: {
+    [theme.breakpoints.down("xs")]: {
+      // width: `calc(100% - ${drawerWidth}px)`,
+      display: "none",
+      // fontWeight: "400 !important",
+    },
+    fontWeight: "550 !important",
+  },
+  ButtonAvatar: {
+    marginLeft: "10px",
+    marginRight: "10px",
+  },
+  buttonNavi: {
+    fontWeight: "600 !important",
+    float: "right",
+  },
+  ellipsName: {
+    maxWidth: 100,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    textAlign: "center",
+  },
+  middle: {
+    position: "absolute",
+    zIndex: 1,
+    left: 0,
+    right: 0,
+    margin: "0 auto",
+  },
+}));
 
 export default withRouter(UpperStripe);

@@ -74,6 +74,7 @@ export default function SocialLogins() {
               picture: data.loginExternal.dataOut.picture,
               description: data.loginExternal.dataOut.description,
               token: data.loginExternal.dataOut.token,
+              rememberSignIn: document.getElementById("rememberMe").checked,
             };
           });
         } else {
@@ -107,6 +108,7 @@ export default function SocialLogins() {
               picture: data.loginExternal.dataOut.picture,
               description: data.loginExternal.dataOut.description,
               token: data.loginExternal.dataOut.token,
+              rememberSignIn: document.getElementById("rememberMe").checked,
             };
           });
         }

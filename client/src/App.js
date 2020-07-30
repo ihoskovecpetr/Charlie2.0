@@ -1,13 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import "./App.css";
-import {
-  Switch,
-  Route,
-  NavLink,
-  Redirect,
-  useHistory,
-  BrowserRouter as Router,
-} from "react-router-dom";
+import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import Drawer from "@material-ui/core/Drawer";
@@ -24,9 +17,11 @@ import { useXsSize } from "./Hooks/useXsSize";
 import UpperStripe from "./Atoms/UpperStripe";
 import DrawerContent from "./Atoms/UpperStripeAndDrawer/DrawerContent";
 import WindowEventSnackbar from "./Atoms/WindowEventSnackbar";
+import InAppBrowserSnackbar from "./Atoms/InAppBrowserSnackbar";
 
 import { UserContext } from "./userContext";
 import { usePosition } from "./Hooks/useGeolocation";
+import { useHandleAppBrowser } from "./Hooks/useHandleAppBrowser";
 import { GET_LOGGED_IN_USER } from "src/Services/GQL/GET_LOGGED_IN_USER";
 
 // import { useWindowSize } from "./Hooks/useWindowSize";
@@ -52,13 +47,17 @@ import FloatingBtnWrap from "./Molecules/FloatingBtnWrap";
 const drawerWidth = 240;
 let prevLocation;
 
+function RenderCounter() {
+  console.log("RerenderCounter");
+  return "RRC";
+}
+
 function App({ location, container }) {
-  let history = useHistory();
   const { md_size_memo } = useXsSize();
-  console.log("App.js rErEnDeR, conteiner: ", location, container);
-  const { latitude, longitude, address, err } = usePosition();
+  const { latitude, longitude, address, geoError } = usePosition();
+  const { inAppBrowser } = useHandleAppBrowser();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [finishedAnimation, setFinishedAnimation] = useState(false);
+  // const [finishedAnimation, setFinishedAnimation] = useState(false);
   const [routerState, setRouterState] = useState({
     firstPrint: false,
     Modal: false,
@@ -72,6 +71,39 @@ function App({ location, container }) {
   const [getLoggedInUser, { loading, error, data }] = useMutation(
     GET_LOGGED_IN_USER
   );
+
+  const [contx, setContx] = useState({
+    success: false,
+    name: false,
+    _id: null,
+    email: null,
+    picture: null,
+    description: null,
+    geolocationObj: null,
+    declinedGeolocation: false,
+    curPositionAddress: null,
+    countUnseenBookings: 0,
+    countUnseenRatings: 0,
+    getLoggedInUser: () => getLoggedInUser(),
+    setUserToContext: () => setUserToContext(),
+    deleteToken: () => window.localStorage.setItem("token", "_deleted_"),
+
+    openDrawer: true,
+    freezScroll: false,
+    showAlertAdviseEmail: false,
+    rememberSignIn: false,
+    expanded_id: null,
+    playFilterObj: {
+      filterOn: false,
+      geolocationPlay: { lng: 14.40076, lat: 50.08804 },
+      playEventsCount: null,
+      radius: 40,
+      plusDays: 4,
+      shownEvents: [],
+    },
+  });
+
+  console.log("App.js rErEnDeR, conteiner: ", location, container);
 
   //Overriding default styles in Material UI
   const theme = createMuiTheme({
@@ -132,36 +164,6 @@ function App({ location, container }) {
 
   const classes = useStyles();
 
-  const [contx, setContx] = useState({
-    success: false,
-    name: false,
-    _id: null,
-    email: null,
-    picture: null,
-    description: null,
-    geolocationObj: null,
-    curPositionAddress: null,
-    countUnseenBookings: 0,
-    countUnseenRatings: 0,
-    getLoggedInUser: () => getLoggedInUser(),
-    setUserToContext: () => setUserToContext(),
-    deleteToken: () => window.localStorage.setItem("token", "_deleted_"),
-
-    openDrawer: true,
-    freezScroll: false,
-    showAlertAdviseEmail: false,
-    rememberSignIn: false,
-    expanded_id: null,
-    playFilterObj: {
-      filterOn: false,
-      geolocationPlay: { lng: 14.40076, lat: 50.08804 },
-      playEventsCount: null,
-      radius: 20,
-      plusDays: 2,
-      shownEvents: [],
-    },
-  });
-
   console.log("Rerendering whole App cntx: ", contx);
 
   const setUserToContext = (userObj) => {
@@ -204,8 +206,15 @@ function App({ location, container }) {
   }, [data]);
 
   useEffect(() => {
+    console.log("UseEffect App.js geolocation");
     if (latitude && longitude && !contx.geolocationObj) {
-      console.log("Context. setting Geolocation Obj: ", latitude, longitude);
+      console.log(
+        "Context. setting Geolocation Obj: ",
+        latitude,
+        longitude,
+        geoError,
+        geoError ? "ano" : "ne"
+      );
       setContx((prev) => {
         return {
           ...prev,
@@ -218,10 +227,19 @@ function App({ location, container }) {
         };
       });
     }
-  }, [latitude, longitude]);
+    if (geoError) {
+      console.log("Context. setting Geolocation Obj:EROR ", geoError);
+      setContx((prev) => {
+        return {
+          ...prev,
+          declinedGeolocation: geoError ? true : false,
+        };
+      });
+    }
+  }, [latitude, longitude, geoError]);
 
   useEffect(() => {
-    if (!contx.curPositionAddress) {
+    if (!contx.curPositionAddress && address) {
       console.log("Context. setting ADDRESS: ", address);
       setContx((prev) => {
         return { ...prev, curPositionAddress: address };
@@ -280,8 +298,8 @@ function App({ location, container }) {
         <Menu
           ListOfNames={ListOfNames}
           ListOfUrls={ListOfUrls}
-          finishedAnimation={finishedAnimation}
-          setFinishedAnimation={setFinishedAnimation}
+          // finishedAnimation={finishedAnimation}
+          // setFinishedAnimation={setFinishedAnimation}
         />,
         <Play />,
         <Create />, //create
@@ -300,8 +318,8 @@ function App({ location, container }) {
         <Menu
           ListOfNames={ListOfNames}
           ListOfUrls={ListOfUrls}
-          finishedAnimation={finishedAnimation}
-          setFinishedAnimation={setFinishedAnimation}
+          // finishedAnimation={finishedAnimation}
+          // setFinishedAnimation={setFinishedAnimation}
         />,
         <Play />,
         <Create />,
@@ -326,16 +344,12 @@ function App({ location, container }) {
     );
   };
 
-  let firstPrint = false;
-  let Modal = false;
-  let justGoBack = false;
-
   useEffect(() => {
     console.log("App Location props rerendered: ", location);
 
-    firstPrint = false;
-    Modal = false;
-    justGoBack = false;
+    let firstPrint = false;
+    let Modal = false;
+    let justGoBack = false;
     var pathSet = location.pathname.split("/");
 
     if (
@@ -353,6 +367,10 @@ function App({ location, container }) {
 
     if (prevLocation == location) {
       firstPrint = true;
+      console.log("FirstPrint : ", location.pathname.split("/"));
+      if (location.pathname.split("/")[1] === "event") {
+        window.eventId = location.pathname.split("/")[2];
+      }
     }
 
     if (location && location.state && location.state.justGoBack == true) {
@@ -401,7 +419,7 @@ function App({ location, container }) {
               />
             </Drawer>
           </Hidden>
-
+          <InAppBrowserSnackbar />
           <WindowEventSnackbar />
         </>
         {routerState.firstPrint && routerState.Modal && (
@@ -418,7 +436,7 @@ function App({ location, container }) {
                     ListOfNames={ListOfNames}
                     ListOfUrls={ListOfUrls}
                     handleDrawerToggle={handleDrawerToggle}
-                    drawerWidth={drawerWidth}
+                    // drawerWidth={drawerWidth}
                   />
                   <main className={classes.content}>
                     <div className={classes.toolbar} />
@@ -439,7 +457,7 @@ function App({ location, container }) {
                     ListOfNames={ListOfNames}
                     ListOfUrls={ListOfUrls}
                     handleDrawerToggle={handleDrawerToggle}
-                    drawerWidth={drawerWidth}
+                    // drawerWidth={drawerWidth}
                   />
                   <main className={classes.content}>
                     <div className={classes.toolbar} />
@@ -460,7 +478,7 @@ function App({ location, container }) {
                     ListOfNames={ListOfNames}
                     ListOfUrls={ListOfUrls}
                     handleDrawerToggle={handleDrawerToggle}
-                    drawerWidth={drawerWidth}
+                    // drawerWidth={drawerWidth}
                   />
                   <main className={classes.content}>
                     <div className={classes.toolbar} />
@@ -481,7 +499,7 @@ function App({ location, container }) {
                     ListOfNames={ListOfNames}
                     ListOfUrls={ListOfUrls}
                     handleDrawerToggle={handleDrawerToggle}
-                    drawerWidth={drawerWidth}
+                    // drawerWidth={drawerWidth}
                   />
                   <main className={classes.content}>
                     <div className={classes.toolbar} />
@@ -548,7 +566,7 @@ function App({ location, container }) {
                           ListOfNames={ListOfNames}
                           ListOfUrls={ListOfUrls}
                           handleDrawerToggle={handleDrawerToggle}
-                          drawerWidth={drawerWidth}
+                          // drawerWidth={drawerWidth}
                         />
                       )}
                       <main className={classes.content}>
@@ -571,7 +589,7 @@ function App({ location, container }) {
                       ListOfNames={ListOfNames}
                       ListOfUrls={ListOfUrls}
                       handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
+                      // drawerWidth={drawerWidth}
                     />
                     <main className={classes.content}>
                       <div className={classes.toolbar} />
@@ -598,7 +616,7 @@ function App({ location, container }) {
                       ListOfNames={ListOfNames}
                       ListOfUrls={ListOfUrls}
                       handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
+                      // drawerWidth={drawerWidth}
                     />
                     <main className={classes.content}>
                       <div className={classes.toolbar} />
@@ -625,7 +643,7 @@ function App({ location, container }) {
                       ListOfNames={ListOfNames}
                       ListOfUrls={ListOfUrls}
                       handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
+                      // drawerWidth={drawerWidth}
                     />
                     <main className={classes.content}>
                       <div className={classes.toolbar} />
@@ -640,13 +658,12 @@ function App({ location, container }) {
                 key={"index"}
                 render={() => (
                   <>
-                    {window.firstPrintPlay != "play" && (
-                      <main className={classes.content}>
-                        <div className={classes.toolbar} />
-                        {returnComponent(1)}
-                      </main>
-                    )}
-                    )
+                    <RenderCounter />
+                    <main className={classes.content}>
+                      <div className={classes.toolbar} />
+                      {returnComponent(1)}
+                    </main>
+                    } )
                   </>
                 )}
               />
@@ -686,7 +703,7 @@ function App({ location, container }) {
                       ListOfNames={ListOfNames}
                       ListOfUrls={ListOfUrls}
                       handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
+                      // drawerWidth={drawerWidth}
                     />
                     <main className={classes.content}>
                       <div className={classes.toolbar} />
@@ -706,7 +723,7 @@ function App({ location, container }) {
                       ListOfNames={ListOfNames}
                       ListOfUrls={ListOfUrls}
                       handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
+                      // drawerWidth={drawerWidth}
                     />
                     <main className={classes.content}>
                       <div className={classes.toolbar} />
@@ -728,7 +745,7 @@ function App({ location, container }) {
                         ListOfNames={ListOfNames}
                         ListOfUrls={ListOfUrls}
                         handleDrawerToggle={handleDrawerToggle}
-                        drawerWidth={drawerWidth}
+                        // drawerWidth={drawerWidth}
                       />
                       <main className={classes.content}>
                         <div className={classes.toolbar} />
@@ -749,7 +766,7 @@ function App({ location, container }) {
                       ListOfNames={ListOfNames}
                       ListOfUrls={ListOfUrls}
                       handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
+                      // drawerWidth={drawerWidth}
                     />
                     <main className={classes.content}>
                       <div className={classes.toolbar} />
@@ -769,42 +786,20 @@ function App({ location, container }) {
               exact
               path={`/play/:id`}
               render={() => (
-                <>
-                  {/* <UpperStripe
-                      //bringOwnUser?? true??
-                      loading={loading}
-                      userApp={false}
-                      ListOfNames={ListOfNames}
-                      ListOfUrls={ListOfUrls}
-                      handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
-                    /> */}
-                  <main className={classes.content}>
-                    <div className={classes.toolbar} />
-                    <PlayOutside />
-                  </main>
-                </>
+                <main className={classes.content}>
+                  <div className={classes.toolbar} />
+                  <PlayOutside />
+                </main>
               )}
             />
             <Route
               exact
               path={`/play`}
               render={() => (
-                <>
-                  {/* <UpperStripe
-                      //bringOwnUser?? true??
-                      loading={loading}
-                      userApp={false}
-                      ListOfNames={ListOfNames}
-                      ListOfUrls={ListOfUrls}
-                      handleDrawerToggle={handleDrawerToggle}
-                      drawerWidth={drawerWidth}
-                    /> */}
-                  <main className={classes.content}>
-                    <div className={classes.toolbar} />
-                    <Play />
-                  </main>
-                </>
+                <main className={classes.content}>
+                  <div className={classes.toolbar} />
+                  <Play />
+                </main>
               )}
             />
           </>

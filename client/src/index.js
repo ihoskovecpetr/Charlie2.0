@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import ReactDOM from "react-dom";
 import { Route, BrowserRouter as Router } from "react-router-dom";
 import {
@@ -6,10 +6,11 @@ import {
   InMemoryCache,
   HttpLink,
   split,
-  gql
+  gql,
 } from "apollo-boost";
 import { BatchHttpLink } from "apollo-link-batch-http";
 import { ApolloProvider } from "@apollo/react-hooks";
+import MyApolloProvider from "./MyApolloProvider";
 import { WebSocketLink } from "apollo-link-ws";
 import { setContext } from "apollo-link-context";
 import { getMainDefinition } from "apollo-utilities";
@@ -23,8 +24,8 @@ if (process.env.NODE_ENV == "production") {
 const httpLink = new BatchHttpLink({
   uri: GQL_ENDPOINT,
   headers: {
-    authorization: window.localStorage.getItem("token")
-  }
+    authorization: window.localStorage.getItem("token"),
+  },
 });
 
 var WS_ENDPOINT = `ws://localhost:4005/subs`;
@@ -35,20 +36,19 @@ if (process.env.NODE_ENV == "production") {
 const wsLink = new WebSocketLink({
   uri: WS_ENDPOINT,
   options: {
-    reconnect: true
-  }
+    reconnect: true,
+  },
 });
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
   const token = window.localStorage.getItem("token");
   // return the headers to the context so httpLink can read them
-  console.log("Bearer token: ", token)
   return {
     headers: {
       ...headers,
-      authorization: `Bearer ${token}`
-    }
+      authorization: `Bearer ${token}`,
+    },
   };
 });
 
@@ -67,9 +67,9 @@ const defaultOptions = {
   //   errorPolicy: "ignore"
   // },
   query: {
-    fetchPolicy: "network-only",
-    errorPolicy: "all"
-  }
+    fetchPolicy: "network-only", // "no-cache", // "network-only",
+    errorPolicy: "all",
+  },
 };
 
 //const link = httpLink;
@@ -77,7 +77,7 @@ const defaultOptions = {
 const client = new ApolloClient({
   link,
   cache: new InMemoryCache(),
-  defaultOptions: defaultOptions
+  defaultOptions: defaultOptions,
 });
 
 // const client = new ApolloClient({
@@ -85,9 +85,9 @@ const client = new ApolloClient({
 //   });
 
 ReactDOM.hydrate(
-  <ApolloProvider client={client}>
+  <MyApolloProvider client={client}>
     <App />
-  </ApolloProvider>,
+  </MyApolloProvider>,
   document.getElementById("root")
 );
 // <Router>

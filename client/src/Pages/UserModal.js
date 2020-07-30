@@ -9,7 +9,6 @@ import Avatar from "@material-ui/core/Avatar";
 import CloseIcon from "@material-ui/icons/Close";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Rating from "@material-ui/lab/Rating";
-import AlternateEmailIcon from "@material-ui/icons/AlternateEmail";
 
 import { withRouter, useHistory, useRouteMatch } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
@@ -66,7 +65,7 @@ function UserModal(props) {
 
   const PaperUser = (props) => {
     return (
-      <Grid container className={classes.paperUser}>
+      <Grid container justify="center" className={classes.paperUser}>
         {props.children}
       </Grid>
     );
@@ -130,7 +129,6 @@ function UserModal(props) {
                 align="left"
                 className={classes.email}
               >
-                <AlternateEmailIcon />
                 <a href={`mailto:${dataDB.getOneUser.email}`}>
                   {dataDB.getOneUser.email}
                 </a>
@@ -160,7 +158,10 @@ function UserModal(props) {
                 className={classes.descriptionCont}
               >
                 <Grid item>
-                  <Typography variant="subtitle1">
+                  <Typography
+                    variant="subtitle1"
+                    className={classes.descriptionText}
+                  >
                     {dataDB.getOneUser.description}
                   </Typography>
                 </Grid>
@@ -241,8 +242,6 @@ const useStyles = makeStyles((theme) => ({
     borderBottomLeftRadius: 0,
   },
   avatarMain: {
-    // height: 120,
-    // width: 120,
     width: "3rem",
     height: "3rem",
     margin: 10,
@@ -253,6 +252,7 @@ const useStyles = makeStyles((theme) => ({
   nameHeader: {
     // textAlign: "center",
   },
+
   email: {
     // textAlign: "center",
     marginTop: 5,
@@ -265,6 +265,10 @@ const useStyles = makeStyles((theme) => ({
   },
   descriptionCont: {
     backgroundColor: "rgba(0,0,0,0.2)",
+    borderRadius: 10,
+  },
+  descriptionText: {
+    margin: 10,
   },
   eventButtons: {
     position: "absolute",
