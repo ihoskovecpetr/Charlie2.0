@@ -30,7 +30,7 @@ import "date-fns";
 import { useQuery } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 
-import { UserContext } from "src/userContext";
+import { UserContext } from "src/Contexts/userContext";
 import mapSetup from "../Services/map-settings";
 import { ALL_EVENTS } from "../Services/GQL";
 

@@ -15,7 +15,7 @@ import SwipeableViews from "react-swipeable-views";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-import { UserContext } from "../userContext";
+import { UserContext } from "src/Contexts/userContext";
 import { sortByDate } from "../Services/functions";
 import { useXsSize } from "../Hooks/useXsSize";
 import { useCountUnseenBookingsRatings } from "src/Hooks/useCountUnseenBookingsRatings";
@@ -85,12 +85,6 @@ function Profile() {
     variables: { host_id: context._id },
     fetchPolicy: "network-only",
   });
-  // const hostingStates = useQuery(USER_EVENTS, {
-  //   variables: { user_id: user._id }
-  // });
-  // const bookingStates = useQuery(USER_BOOKING, {
-  //   variables: { user_id: user._id }
-  // });
 
   useEffect(() => {
     document.documentElement.style.overflow = "auto";
@@ -182,8 +176,8 @@ function Profile() {
               >
                 <Tab
                   label={
-                    <Badge color="secondary" badgeContent={countHostBookings}>
-                      REQUESTS ON ME
+                    <Badge color="secondary" badgeContent={countUserBookings}>
+                      MY BOOKINGS
                     </Badge>
                   }
                   {...a11yProps(0)}
@@ -213,10 +207,11 @@ function Profile() {
                   }
                   {...a11yProps(3)}
                 /> */}
+
                 <Tab
                   label={
-                    <Badge color="secondary" badgeContent={countUserBookings}>
-                      MY BOOKINGS
+                    <Badge color="secondary" badgeContent={countHostBookings}>
+                      REQUESTS ON ME
                     </Badge>
                   }
                   {...a11yProps(2)}
@@ -229,16 +224,21 @@ function Profile() {
               onChangeIndex={handleChangeIndex}
               style={{ width: "100%", padding: 0, overflow: "hidden" }}
             >
-              {/* TAB PANEL 4 */}
               <TabPanel
                 value={value}
                 index={0}
                 dir={theme.direction}
                 className={classes.tabPanel}
-                style={{ width: "100%" }}
               >
-                {requestsArray &&
-                  requestsArray.map((booking, index) => (
+                {loading && (
+                  <Grid container justify="center">
+                    <Grid item>
+                      <Spinner height={100} width={100} />
+                    </Grid>
+                  </Grid>
+                )}
+                {bookingsArray &&
+                  bookingsArray.map((booking, index) => (
                     <Grid
                       container
                       justify="center"
@@ -253,7 +253,6 @@ function Profile() {
                   ))}
               </TabPanel>
 
-              {/* TAB PANEL 2 */}
               <TabPanel
                 value={value}
                 index={1}
@@ -261,48 +260,18 @@ function Profile() {
                 className={classes.tabPanel}
               >
                 {loading && <Spinner />}
-                {data && (
-                  <ProfileEventsPrinter
-                    // showUserBookings={data.showUserBookings}
-                    userEvents={data.userEvents}
-                  />
-                )}
+                {data && <ProfileEventsPrinter userEvents={data.userEvents} />}
               </TabPanel>
-              {/* TAB PANEL 3 */}
-              {/* <TabPanel
+
+              <TabPanel
                 value={value}
                 index={2}
                 dir={theme.direction}
                 className={classes.tabPanel}
                 style={{ width: "100%" }}
               >
-                {loading && <Spinner height={100} width={100} />}
-                {data &&
-                  data.showRatings &&
-                  data.showRatings.map((rating, index) => (
-                    <>
-                      <ReceivedRatingsCard rating={rating} key={index} />
-                    </>
-                  ))}
-              </TabPanel> */}
-
-              {/* TAB PANEL 1 */}
-              <TabPanel
-                value={value}
-                index={2}
-                dir={theme.direction}
-                id="TabPanelXX"
-                className={classes.tabPanel}
-              >
-                {loading && (
-                  <Grid container justify="center">
-                    <Grid item>
-                      <Spinner height={100} width={100} />
-                    </Grid>
-                  </Grid>
-                )}
-                {bookingsArray &&
-                  bookingsArray.map((booking, index) => (
+                {requestsArray &&
+                  requestsArray.map((booking, index) => (
                     <Grid
                       container
                       justify="center"

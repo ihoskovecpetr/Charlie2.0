@@ -14,7 +14,7 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import Gallery from "react-grid-gallery";
 import { displayDate } from "../Services/transform-services";
 
-import { UserContext } from "../userContext";
+import { UserContext } from "src/Contexts/userContext";
 
 import PlayPageList from "../Molecules/play/PlayPageList";
 import PlayPageGallery from "../Molecules/play/PlayPageGallery";

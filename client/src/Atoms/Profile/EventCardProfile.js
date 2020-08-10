@@ -21,7 +21,7 @@ import { red } from "@material-ui/core/colors";
 
 import { useXsSize } from "../../Hooks/useXsSize";
 import { useCountdown } from "src/Hooks/useCountdown";
-import { UserContext } from "../../userContext";
+import { UserContext } from "src/Contexts/userContext";
 
 import PlayListWrap from "./PlayListWrap";
 import PlayPageGallery from "../../Molecules/play/PlayPageGallery";

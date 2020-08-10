@@ -17,7 +17,7 @@ import { useHistory, NavLink } from "react-router-dom";
 import { useWindowSize } from "../Hooks/useWindowSize";
 import { useScrollDisable } from "../Hooks/useScrollDisable";
 import { findEmpty } from "../Services/functions";
-import { UserContext } from "src/userContext";
+import { UserContext } from "src/Contexts/userContext";
 
 import ModalLayout from "../Layouts/ModalLayout";
 import Copyright from "../Atoms/copyright";

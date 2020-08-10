@@ -10,7 +10,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // import gql from "graphql-tag";
 import { NavLink } from "react-router-dom";
 
-import { UserContext } from "../userContext";
+import { UserContext } from "src/Contexts/userContext";
 import { useXsSize } from "../Hooks/useXsSize";
 
 import Carousel from "../Atoms/carousel";
@@ -117,7 +117,7 @@ export default function Menu(props) {
         }}
         // autoHideDuration={6000}
         onClose={handleCloseAlert}
-        message="Successfully signed up! Go to email and cofirm your identity by clicking on link"
+        message="Successfully signed up! Go to email and confirm your identity by clicking on a link"
         action={
           <IconButton
             size="small"

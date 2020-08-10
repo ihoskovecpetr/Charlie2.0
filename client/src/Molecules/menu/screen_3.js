@@ -8,7 +8,7 @@ import { Animated } from "react-animated-css";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-import { UserContext } from "src/userContext";
+import { UserContext } from "src/Contexts/userContext";
 
 import Spinner from "src/Atoms/Spinner";
 import LoginFirstBoard from "src/Atoms/LoginFirstBoard";

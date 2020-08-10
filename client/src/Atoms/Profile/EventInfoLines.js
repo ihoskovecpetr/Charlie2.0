@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 
 import { displayDate } from "../../Services/transform-services";
 import { useCountDistance } from "../../Hooks/useCountDistance";
-import { UserContext } from "../../userContext";
+import { UserContext } from "src/Contexts/userContext";
 
 import countdown from "countdown";
 
@@ -26,9 +26,12 @@ export default function TimeLine({ event }) {
 
   return (
     <Grid container className={classes.mainContainer}>
-      <div className={classes.wrapDiv} onClick={() => {
-        history.push(`/event/${event._id}`)
-      }}>
+      <div
+        className={classes.wrapDiv}
+        onClick={() => {
+          history.push(`/event/${event._id}`);
+        }}
+      >
         <Grid item>
           <Typography component="p" className={classes.mainHead}>
             {event.name}
@@ -73,22 +76,22 @@ export default function TimeLine({ event }) {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   mainContainer: {
     padding: 5,
-    paddingLeft: 15
+    paddingLeft: 15,
   },
   wrapDiv: {
     border: "2px solid #26BFB9",
     borderRadius: 10,
     width: "100%",
     marginLeft: 20,
-    marginRight: 20
+    marginRight: 20,
   },
   listRow: {
     //width: "100%",
     marginTop: 2,
-    marginBottom: 2
+    marginBottom: 2,
     // backgroundColor: "rgba(213,208,208,0.4)",
   },
   mainHead: {
@@ -105,12 +108,12 @@ const useStyles = makeStyles(theme => ({
     textAlign: "right",
     color: "#26BFB9",
     // backgroundColor: "rgba(136,136,136,0.2)",
-    padding: 10
+    padding: 10,
   },
   standardContent: {
     fontWeight: 600,
     textAlign: "left",
     // color: "rgba(50,48,28,1)",
-    padding: 10
-  }
+    padding: 10,
+  },
 }));

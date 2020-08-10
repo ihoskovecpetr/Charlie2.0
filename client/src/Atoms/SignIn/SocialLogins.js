@@ -5,11 +5,10 @@ import Button from "@material-ui/core/Button";
 import FacebookLogin from "react-facebook-login";
 import GoogleLogin from "react-google-login";
 import { useHistory } from "react-router-dom";
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { UserContext } from "src/userContext";
+import { UserContext } from "src/Contexts/userContext";
 import { NEW_USER } from "src/Services/GQL/NEW_USER";
 import { UPDATE_USER } from "src/Services/GQL/UPDATE_USER";
 import { LOGIN_EXTERNAL } from "src/Services/GQL/LOGIN_EXTERNAL";
@@ -112,8 +111,6 @@ export default function SocialLogins() {
             };
           });
         }
-
-        // context.setUserToContext(data.loginExternal.dataOut)
       }
     }
   }, [data && data.loginExternal]);
@@ -246,6 +243,9 @@ export default function SocialLogins() {
               className={classes.googleBtn}
               onClick={renderProps.onClick}
               disabled={renderProps.disabled}
+              classes={{
+                disabled: classes.disabledButton,
+              }}
             >
               <Grid container alignItems="center" justify="center">
                 <Grid item>
@@ -316,5 +316,10 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonFacebook: {
     width: "100%",
+  },
+  disabledButton: {
+    color: "grey !important",
+    backgroundColor: "rgba(255,255,255,0.33) !important",
+    marginBottom: 2,
   },
 }));

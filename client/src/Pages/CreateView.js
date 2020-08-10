@@ -42,7 +42,7 @@ import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 
 import { findEmpty } from "../Services/functions";
-import { UserContext } from "../userContext";
+import { UserContext } from "../Contexts/userContext";
 
 import Copyright from "../Atoms/copyright";
 import Dropzone from "../Molecules/Dropzone";

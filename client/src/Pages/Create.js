@@ -5,14 +5,14 @@ import { useHistory } from "react-router-dom";
 
 import { findEmpty } from "../Services/functions";
 import { NEW_EVENT } from "../Services/GQL/NEW_EVENT";
-import { UserContext } from "../userContext";
+import { UserContext } from "../Contexts/userContext";
 
 import CreateView from "./CreateView";
 
 import { useLogicPlusMinusValue } from "./Logic/Create/useLogicPlusMinusValue";
 import { PLAY_EVENTS_QUERY } from "src/Services/GQL/PLAY_EVENTS_QUERY";
 
-function Create(props) {
+function Create() {
   let history = useHistory();
 
   const { context } = useContext(UserContext);

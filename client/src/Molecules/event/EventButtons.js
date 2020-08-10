@@ -6,11 +6,11 @@ import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
 import Chip from "@material-ui/core/Chip";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { withRouter, NavLink, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-import { UserContext } from "src/userContext";
+import { UserContext } from "src/Contexts/userContext";
 import { ALL_EVENTS } from "src/Services/GQL";
 import { GET_ONE_EVENT } from "src/Services/GQL/GET_ONE_EVENT";
 import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
@@ -242,7 +242,6 @@ const MemoizedEventBtns = React.memo(function EventButtons({
           color="secondary"
           variant="contained"
           fullWidth
-          className={classes.chipOne}
           onClick={() => {
             history.push("/signin");
           }}
@@ -261,7 +260,9 @@ const MemoizedEventBtns = React.memo(function EventButtons({
           variant="contained"
           fullWidth
           disabled={true}
-          className={classes.chipOne}
+          classes={{
+            disabled: classes.disabledButton,
+          }}
         >
           CANCELLED by author
         </Button>
@@ -276,8 +277,10 @@ const MemoizedEventBtns = React.memo(function EventButtons({
           color="primary"
           variant="contained"
           disabled={true}
+          classes={{
+            disabled: classes.disabledButton,
+          }}
           fullWidth
-          className={classes.chipOne}
         >
           PAST EVENT
         </Button>
@@ -293,7 +296,6 @@ const MemoizedEventBtns = React.memo(function EventButtons({
           variant="contained"
           // disabled={true}
           fullWidth
-          className={classes.chipOne}
         >
           Pending request
         </Button>
@@ -308,8 +310,10 @@ const MemoizedEventBtns = React.memo(function EventButtons({
           color="primary"
           variant="contained"
           disabled={true}
+          classes={{
+            disabled: classes.disabledButton,
+          }}
           fullWidth
-          className={classes.chipOne}
         >
           Declined request
         </Button>
@@ -322,7 +326,7 @@ const MemoizedEventBtns = React.memo(function EventButtons({
       stateOfMyBooking.eventIsPast &&
       stateOfMyBooking.userIsAtt
     ) {
-      // ArrOfComponents.push(<ModalRate event={event} />);
+      ArrOfComponents.push(<ModalRate event={event} />);
     }
 
     if (
@@ -336,7 +340,6 @@ const MemoizedEventBtns = React.memo(function EventButtons({
           color="secondary"
           variant="contained"
           fullWidth
-          className={classes.chipOne}
           onClick={alertCancelBooking}
         >
           {`CANCEL your ${
@@ -359,7 +362,6 @@ const MemoizedEventBtns = React.memo(function EventButtons({
           color="secondary"
           variant="contained"
           fullWidth
-          className={classes.chipOne}
           onClick={cancelEventHandle}
         >
           CANCEL this event
@@ -391,13 +393,11 @@ const useStyles = makeStyles((theme) => ({
     height: 60,
     borderRadius: 0,
   },
-  chipOne: {
-    // width: "90%",
-    // fontWeight: 500,
-    // fontSize: 22,
-    // padding: 5,
-    // margin: "5%"
-  },
+  // disabledButton: {
+  //   color: "black !important",
+  //   backgroundColor: "rgba(255,255,255,0.33) !important",
+  //   marginBottom: 2,
+  // },
 }));
 
 // export default EventButtons;

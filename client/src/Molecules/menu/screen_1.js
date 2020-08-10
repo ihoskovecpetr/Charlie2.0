@@ -20,6 +20,7 @@ import EmpireOriginal from "../../Images/empire.jpg";
 import CharlieBlack from "../../Images/charlie_black.png";
 import Scroll from "../../Images/scroll.png";
 import ScrollAnimated from "../../Atoms/ScrollAnimated";
+import InAppBrowserSnackbar from "src/Atoms/InAppBrowserSnackbar";
 
 export default function Screen1() {
   const classes = useStyles();

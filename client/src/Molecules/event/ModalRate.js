@@ -7,7 +7,6 @@ import Fade from "@material-ui/core/Fade";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import GradeIcon from "@material-ui/icons/Grade";
-import Chip from "@material-ui/core/Chip";
 import StarRatingComponent from "react-star-rating-component";
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
@@ -17,7 +16,7 @@ import gql from "graphql-tag";
 
 import { EVENT_RATINGS } from "src/Services/GQL/EVENT_RATINGS";
 import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
-import { UserContext } from "src/userContext";
+import { UserContext } from "src/Contexts/userContext";
 
 import Spinner from "src/Atoms/Spinner";
 
@@ -137,7 +136,11 @@ function ModalRate({ event, match }) {
           variant="contained"
           fullWidth
           disabled={true}
+          disableElevation={false}
           className={classes.chipOne}
+          classes={{
+            disabled: classes.disabledButton,
+          }}
           onClick={handleOpen}
         >
           EVENT RATED
@@ -175,23 +178,13 @@ function ModalRate({ event, match }) {
                 >
                   <Grid item>
                     <StarRatingComponent
-                      name={
-                        String
-                      } /* name of the radio input, it is required */
+                      name={String}
                       className={classes.starContainer}
-                      value={
-                        stars
-                      } /* number of selected icon (`0` - none, `1` - first) */
-                      starCount={5} /* number of icons in rating, default `5` */
-                      starColor={
-                        "#E8045D"
-                      } /* color of selected icons, default `#ffb400` */
-                      emptyStarColor={
-                        "#999"
-                      } /* color of non-selected icons, default `#333` */
-                      editing={
-                        true
-                      } /* is component available for editing, default `true` */
+                      value={stars}
+                      starCount={5}
+                      starColor={"#E8045D"}
+                      emptyStarColor={"#999"}
+                      editing={true}
                       onStarClick={(nextValue, prevValue, name) => {
                         setStars(nextValue);
                       }}
@@ -287,6 +280,10 @@ const useStyles = makeStyles((theme) => ({
     // padding: 20,
     // margin: "5%",
   },
+  // disabledButton: {
+  //   color: "black !important",
+  //   backgroundColor: "rgba(255,255,255,0.33) !important",
+  // },
 }));
 
 export default withRouter(ModalRate);

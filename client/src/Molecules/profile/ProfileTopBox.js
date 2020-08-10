@@ -24,7 +24,7 @@ import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
 import { findEmpty } from "src/Services/functions";
 import { useXsSize } from "src/Hooks/useXsSize";
 import { useAverageRating } from "src/Hooks/useAverageRating";
-import { UserContext } from "src/userContext";
+import { UserContext } from "src/Contexts/userContext";
 
 import DropzoneSignup from "src/Molecules/DropzoneSignup";
 

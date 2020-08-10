@@ -10,12 +10,11 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { makeStyles } from "@material-ui/core/styles";
 import LinkIcon from "@material-ui/icons/Link";
 
-import clsx from "clsx";
 import { useHistory } from "react-router-dom";
 
 import { displayDate } from "../../Services/transform-services";
 import { useXsSize } from "src/Hooks/useXsSize";
-import { UserContext } from "src/userContext";
+import { UserContext } from "src/Contexts/userContext";
 
 import ListTopHalf from "src/Atoms/Play/ListTopHalf";
 // import QRCodeEntering from "src/Atoms/Play/QRCodeEntering";
@@ -388,70 +387,17 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10%",
     backgroundColor: "#707070",
   },
-  thisLineHeader: {
-    height: "1px",
-    width: "100%",
-    marginTop: "2px",
-    backgroundColor: "#707070",
-  },
-  mainHeader: {
-    textAlign: "center",
-    fontSize: 30,
-    fontWeight: 600,
-    padding: 10,
-  },
-  headerPrice: {
-    fontSize: 20,
-  },
-  headerPerPerson: {
-    fontSize: 16,
-    fontWeight: 300,
-  },
-  addressGreyWrap: {
-    padding: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
   switchBYOWrap: {
     margin: 10,
   },
-  addressGrey: {},
-  timeDistanceWrap: {
-    padding: 10,
-    paddingRight: 20,
-  },
-  timeDistance: {
-    fontSize: 16,
-  },
   descWrap: {
     padding: 20,
-  },
-  standardHeading: {
-    width: "100%",
-    fontWeight: 500,
-    // color: "lightGrey",
-    textAlign: "right",
-    backgroundColor: "rgba(255,255,255,0.05)",
-    padding: 10,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
   },
   standardDescription: {
     fontWeight: 500,
     fontSize: 16,
     textAlign: "left",
     padding: 10,
-  },
-  standardContent: {
-    width: "100%",
-    fontWeight: 400,
-    textAlign: "left",
-    color: "#29FFF7",
-    padding: 10,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
   },
   bookingMessInput: {
     backgroundColor: "rgba(0,0,0,0.38)",

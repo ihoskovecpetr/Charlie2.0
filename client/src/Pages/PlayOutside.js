@@ -3,16 +3,13 @@ import React, { useState, useContext, useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 
-import gql from "graphql-tag";
 import { useHistory, NavLink } from "react-router-dom";
 
-import { UserContext } from "../userContext";
+import { UserContext } from "src/Contexts/userContext";
 
 import Spinner from "../Atoms/Spinner";
 
@@ -77,16 +74,7 @@ export default function PlayOutside() {
 
             {getPlayEvents && getPlayEvents.success === true && (
               <>
-                <Grid container justify="center">
-                  {/* <Grid item >
-                      <Typography variant="h4" className={classes.mainHeader}>
-                    {getPlayEvents.name}
-                    <p className={classes.thisLine}></p>
-
-                      </Typography>
-                  </Grid>
-                  <TimeDistanceChips event={getPlayEvents} /> */}
-                </Grid>
+                <Grid container justify="center"></Grid>
                 <PlayPageGallery event={getPlayEvents} />
                 <PlayPageList
                   event={getPlayEvents}

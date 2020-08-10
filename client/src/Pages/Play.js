@@ -10,7 +10,7 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 
 import { useHistory, NavLink } from "react-router-dom";
 
-import { UserContext } from "../userContext";
+import { UserContext } from "src/Contexts/userContext";
 import { PLAY_EVENTS } from "src/Services/GQL/PLAY_EVENTS";
 import { PLAY_EVENTS_QUERY } from "src/Services/GQL/PLAY_EVENTS_QUERY";
 import { useXsSize } from "src/Hooks/useXsSize";

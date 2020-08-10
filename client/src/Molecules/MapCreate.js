@@ -3,9 +3,9 @@ import React, { useContext, useState, useMemo, useCallback } from "react";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 // import { GeolocationMarker } from 'geolocation-marker'
-import GeolocationMarker from 'geolocation-marker'
+import GeolocationMarker from "geolocation-marker";
 
-import { UserContext } from "../userContext";
+import { UserContext } from "../Contexts/userContext";
 
 import Map from "../Atoms/MapAtom";
 
@@ -33,15 +33,14 @@ function MapCreate(props) {
       zoomControl: true,
       //mapTypeId: window.google.maps.MapTypeId.ROADMAP,
       clickableIcons: false,
-      gestureHandling: "cooperative"
+      gestureHandling: "cooperative",
     };
   }, [LngLatCenter]);
 
-  const onMapMount = useCallback(map => {
-
+  const onMapMount = useCallback((map) => {
     marker = new window.google.maps.Marker({
       map: map,
-      anchorPoint: new window.google.maps.Point(0, -29)
+      anchorPoint: new window.google.maps.Point(0, -29),
     });
 
     var GeoMarker = new window.GeolocationMarker(map);
@@ -54,11 +53,11 @@ function MapCreate(props) {
     if (props.customMapParam) {
       marker.setPosition({
         lng: props.customMapParam.lng,
-        lat: props.customMapParam.lat
+        lat: props.customMapParam.lat,
       });
       map.panTo({
         lng: props.customMapParam.lng,
-        lat: props.customMapParam.lat
+        lat: props.customMapParam.lat,
       });
       map.setZoom(props.customMapParam.zoom);
       document.getElementById("input-location").value =
@@ -69,20 +68,20 @@ function MapCreate(props) {
       geocodeLatLng(geocoder, map, LngLatCenter.lat, LngLatCenter.lng);
     }
     map.addListener("zoom_changed", function() {
-      props.setCustomMapParam(prev => {
+      props.setCustomMapParam((prev) => {
         return {
           ...prev,
-          zoom: map.zoom
+          zoom: map.zoom,
         };
       });
     });
 
-    map.addListener("click", e => {
+    map.addListener("click", (e) => {
       document.getElementById("input-location").value = "";
       marker.setVisible(false);
       marker.setPosition(e.latLng);
       marker.setVisible(true);
-      console.log("Click")
+      console.log("Click");
 
       geocodeLatLng(geocoder, map, e.latLng.lat(), e.latLng.lng());
     });
@@ -110,7 +109,7 @@ function MapCreate(props) {
 
       LngLatCenter = {
         lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng()
+        lng: place.geometry.location.lng(),
       };
 
       let address = "";
@@ -125,23 +124,20 @@ function MapCreate(props) {
             "",
           (place.address_components[2] &&
             place.address_components[2].short_name) ||
-            ""
+            "",
         ].join(" ");
       }
 
-      console.log(
-        "Tohle place ma addresu: ",
-        place.address_components
-      );
+      console.log("Tohle place ma addresu: ", place.address_components);
 
-      props.setCustomMapParam(prev => {
+      props.setCustomMapParam((prev) => {
         return {
           ...prev,
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
           address: address,
           zoom: map.zoom,
-          uncontrolledAdr: false
+          uncontrolledAdr: false,
         };
       });
     });
@@ -156,23 +152,23 @@ function MapCreate(props) {
       //console.log("results: ", results, status, error_message);
       var shortAddress;
       if (results) {
-        console.log("Agres: ", results)
+        console.log("Agres: ", results);
         var spl = results[0].formatted_address.split(" ");
         // shortAddress = [spl[0], spl[1], spl[2], spl[3]].join(" ");
-        shortAddress = results[0].formatted_address
+        shortAddress = results[0].formatted_address;
       } else {
         shortAddress = "Google did not find address for this location.";
       }
 
       status &&
-        props.setCustomMapParam(prev => {
+        props.setCustomMapParam((prev) => {
           return {
             ...prev,
             address: shortAddress,
             lat: lat,
             lng: lng,
             zoom: map.zoom,
-            uncontrolledAdr: false
+            uncontrolledAdr: false,
           };
         });
       if (error_message) {
@@ -194,7 +190,7 @@ function MapCreate(props) {
         styling={{
           height: "200px",
           width: "100%",
-          marginBottom: 20
+          marginBottom: 20,
         }}
       />
     ),
@@ -218,9 +214,9 @@ function MapCreate(props) {
               display:
                 props.customMapParam && props.customMapParam.uncontrolledAdr
                   ? "block"
-                  : "none"
+                  : "none",
             }}
-            onKeyPress={e => {
+            onKeyPress={(e) => {
               if (e.key === "Enter") e.preventDefault();
             }}
             autoFocus
@@ -244,17 +240,17 @@ function MapCreate(props) {
               display:
                 props.customMapParam &&
                 props.customMapParam.uncontrolledAdr &&
-                "none"
+                "none",
             }}
             disabled
-            onKeyPress={e => {
+            onKeyPress={(e) => {
               if (e.key === "Enter") e.preventDefault();
             }}
             onClick={() => {
-              props.setCustomMapParam(prev => {
+              props.setCustomMapParam((prev) => {
                 return {
                   ...prev,
-                  uncontrolledAdr: true
+                  uncontrolledAdr: true,
                 };
               });
             }}

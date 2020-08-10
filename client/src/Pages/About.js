@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Screen6 from "../Molecules/menu/screen_6";
 import share_link from "src/Images/share_link.png";
 
-const FullpageWrapper = () => {
+const About = () => {
   const classes = useStyles();
 
   return (
@@ -36,7 +36,7 @@ const FullpageWrapper = () => {
           </Grid>
         </Grid>
         <Grid container>
-          <Grid item>
+          <Grid item xs={12}>
             <Typography
               variant="h5"
               component="h5"
@@ -45,7 +45,7 @@ const FullpageWrapper = () => {
               <b>F.A.Q.</b>
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item xs={12}>
             <Typography
               variant="h6"
               component="h6"
@@ -112,6 +112,21 @@ const FullpageWrapper = () => {
               Just copy link in description and share it with anyone.
               <img src={share_link} alt="Logo" className={classes.shareLink} />
             </Typography>
+
+            <Typography
+              variant="h6"
+              component="h6"
+              className={classes.defaultSubHeader}
+            >
+              Why you can not open this app directly in Messenger?
+            </Typography>
+            <Typography component="p" className={classes.defaultParagraph}>
+              Due to security issues you would not be able to login to this app
+              via Facebook or Google account directly from Messenger browser. If
+              you will open app in Messenger browser, snackbar popup will open
+              and you will be forced to open in another browser.
+            </Typography>
+
             <Divider />
             <div className={classes.formidableMentions}>
               <p>
@@ -171,12 +186,16 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgba(0,0,0,0.1)",
     padding: 10,
     borderRadius: 10,
+    width: "100%",
   },
   formidableMentions: {
     fontSize: 14,
     marginTop: 20,
     marginBottom: 40,
   },
+  shareLink: {
+    width: "100%",
+  },
 }));
 
-export default FullpageWrapper;
+export default About;

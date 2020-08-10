@@ -17,7 +17,7 @@ import countdown from "countdown";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 
 import { useXsSize } from "../../Hooks/useXsSize";
-import { UserContext } from "../../userContext";
+import { UserContext } from "src/Contexts/userContext";
 import { SHOW_HOST_NEWS } from "src/Services/GQL/SHOW_HOST_NEWS";
 import { SEEN_BOOKING } from "src/Services/GQL/SEEN_BOOKING";
 

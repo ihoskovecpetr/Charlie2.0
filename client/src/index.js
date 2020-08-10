@@ -1,6 +1,5 @@
-import React, { useMemo } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-import { Route, BrowserRouter as Router } from "react-router-dom";
 import {
   ApolloClient,
   InMemoryCache,
@@ -90,6 +89,7 @@ ReactDOM.hydrate(
   </MyApolloProvider>,
   document.getElementById("root")
 );
+
 // <Router>
 //     <Route component={props => <App {...props} />} />
 //   </Router>

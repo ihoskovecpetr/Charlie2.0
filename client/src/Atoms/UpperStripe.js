@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import React, { useContext } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
@@ -7,10 +7,6 @@ import Grid from "@material-ui/core/Grid";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Input from "@material-ui/core/Input";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import Button from "@material-ui/core/Button";
 import Avatar from "@material-ui/core/Avatar";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -21,12 +17,14 @@ import { useScrollY } from "../Hooks/useScrollY";
 import { withRouter, useHistory } from "react-router-dom";
 import clsx from "clsx";
 
-import { UserContext } from "src/userContext";
+import { UserContext } from "src/Contexts/userContext";
 import { useCountUnseenBookingsRatings } from "src/Hooks/useCountUnseenBookingsRatings";
 
 import Spinner from "./Spinner";
 import CharlieLogo from "src/Images/charlie-logo.png";
 import SearchInput from "src/Atoms/UpperStripeAndDrawer/SearchInput";
+
+let renderCounter = 0;
 
 function UpperStripe({
   //drawerWidth,
@@ -46,12 +44,8 @@ function UpperStripe({
     countRatings,
   } = useCountUnseenBookingsRatings();
 
-  console.log(
-    "Upper Stripe: countHostBookings, countUserBookings, countRatings ",
-    countHostBookings,
-    countUserBookings,
-    countRatings
-  );
+  renderCounter = renderCounter + 1;
+  console.log("Upper Stripe re render", renderCounter);
 
   const classes = useStyles();
 

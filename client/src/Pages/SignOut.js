@@ -17,13 +17,12 @@ import Container from "@material-ui/core/Container";
 import gql from "graphql-tag";
 import { Redirect, useHistory } from "react-router-dom";
 
-import { UserContext } from "../userContext";
+import { UserContext } from "../Contexts/userContext";
 import { useScrollDisable } from "../Hooks/useScrollDisable";
 
 import ModalLayout from "../Layouts/ModalLayout";
 import Spinner from "../Atoms/Spinner";
 import Copyright from "../Atoms/copyright";
-
 
 function SignIn(props) {
   const classes = useStyles();
@@ -37,16 +36,16 @@ function SignIn(props) {
   }, []);
 
   useEffect(() => {
-    if(context.success === false){
+    if (context.success === false) {
       setTimeout(() => {
-      history.push("/");
-    }, 100);
+        history.push("/");
+      }, 100);
     }
- }, [context]);
+  }, [context]);
 
   const Out = () => {
-    context.deleteToken()
-    context.getLoggedInUser()
+    context.deleteToken();
+    context.getLoggedInUser();
   };
 
   return (
@@ -66,7 +65,7 @@ function SignIn(props) {
           variant="contained"
           color="primary"
           className={classes.submit}
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault();
             Out();
           }}
@@ -81,29 +80,29 @@ function SignIn(props) {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   "@global": {
     body: {
-      backgroundColor: theme.palette.common.white
-    }
+      backgroundColor: theme.palette.common.white,
+    },
   },
   paper: {
     marginTop: theme.spacing(10),
     padding: theme.spacing(3, 2),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(3),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    width: "50%"
+    width: "50%",
   },
-  copyRight:{
-    color: "white"
+  copyRight: {
+    color: "white",
   },
 }));
 

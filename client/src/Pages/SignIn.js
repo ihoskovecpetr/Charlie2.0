@@ -21,7 +21,7 @@ import { useHistory, NavLink } from "react-router-dom";
 import { useMutation, useQuery, useApolloClient } from "@apollo/react-hooks";
 import { Animated } from "react-animated-css";
 
-import { UserContext } from "../userContext";
+import { UserContext } from "src/Contexts/userContext";
 import { useScrollDisable } from "../Hooks/useScrollDisable";
 import { useWindowSize } from "../Hooks/useWindowSize";
 
@@ -31,6 +31,8 @@ import Copyright from "../Atoms/copyright";
 import SocialLogins from "../Atoms/SignIn/SocialLogins";
 
 import { LOGIN } from "src/Services/GQL/LOGIN";
+
+let renderCounter = 1;
 
 function SignIn({ propContext }) {
   const classes = useStyles();
@@ -109,6 +111,9 @@ function SignIn({ propContext }) {
       ...input,
       [e.currentTarget.name]: e.currentTarget.value,
     });
+
+  renderCounter = renderCounter + 1;
+  console.log("SignIn render counter: ", renderCounter);
 
   return (
     <ModalLayout>

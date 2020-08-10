@@ -1,14 +1,11 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { NavLink, useHistory } from "react-router-dom";
+import { useXsSize } from "src/Hooks/useXsSize";
+import { sortByDate } from "src/Services/functions";
 
-import { useXsSize } from "../../Hooks/useXsSize";
-import { UserContext } from "../../userContext";
-import { sortByDate } from "../../Services/functions";
-
-import EventCardProfile from "../../Atoms/Profile/EventCardProfile";
+import EventCardProfile from "src/Atoms/Profile/EventCardProfile";
 
 export default function UserEventsProfile({ showUserBookings, userEvents }) {
   const classes = useStyles();

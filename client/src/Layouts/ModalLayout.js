@@ -7,7 +7,7 @@ import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import CloseIcon from "@material-ui/icons/Close";
 
-import { UserContext } from "../userContext";
+import { UserContext } from "src/Contexts/userContext";
 import { useHistory } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 

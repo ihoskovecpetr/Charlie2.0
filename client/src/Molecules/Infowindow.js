@@ -11,7 +11,7 @@ import {
   InMemoryCache,
   HttpLink,
   split,
-  gql
+  gql,
 } from "apollo-boost";
 import { BatchHttpLink } from "apollo-link-batch-http";
 import { ApolloProvider } from "@apollo/react-hooks";
@@ -21,10 +21,9 @@ import { getMainDefinition } from "apollo-utilities";
 
 import countdown from "countdown";
 import { useCountdown } from "src/Hooks/useCountdown";
-import { UserContext } from "src/userContext";
+// import { UserContext } from "src/Contexts/userContext";
 import { displayDate } from "src/Services/transform-services";
-import DrawerWrap from 'src/Molecules/map/DrawerWrap';
-
+import DrawerWrap from "src/Molecules/map/DrawerWrap";
 
 var GQL_ENDPOINT = `http://localhost:4005/graphql`;
 if (process.env.NODE_ENV == "production") {
@@ -33,8 +32,8 @@ if (process.env.NODE_ENV == "production") {
 const httpLink = new BatchHttpLink({
   uri: GQL_ENDPOINT,
   headers: {
-    authorization: window.localStorage.getItem("token")
-  }
+    authorization: window.localStorage.getItem("token"),
+  },
 });
 
 var WS_ENDPOINT = `ws://localhost:4005/subs`;
@@ -45,8 +44,8 @@ if (process.env.NODE_ENV == "production") {
 const wsLink = new WebSocketLink({
   uri: WS_ENDPOINT,
   options: {
-    reconnect: true
-  }
+    reconnect: true,
+  },
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -56,8 +55,8 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: `Bearer ${token}`
-    }
+      authorization: `Bearer ${token}`,
+    },
   };
 });
 
@@ -76,35 +75,35 @@ const client = new ApolloClient({
   defaultOptions: {
     query: {
       fetchPolicy: "network-only",
-      errorPolicy: "all"
-    }
-  }
+      errorPolicy: "all",
+    },
+  },
 });
 
 function Infowindow(props) {
   const classes = useStyles();
-  const { counteddownDate } = useCountdown(props.location.dateStart, 1)
+  const { counteddownDate } = useCountdown(props.location.dateStart, 1);
   // const { context, setContext } = useContext(UserContext);
   let Pic = props.location.imagesArr[0];
   let Author = props.location.author;
 
   useEffect(() => {
-    return(() => {
-      console.log("INfowindw unmounting")
-    })
-  },[])
+    return () => {
+      console.log("INfowindw unmounting");
+    };
+  }, []);
 
   const handleClickOpen = (e) => {
-      console.log("handleClickOpen EE")
-      e.preventDefault();
-      e.stopPropagation();
-      if (props.context.success) {
-        console.log("openModalEvent EE")
-        props.setOpenDrawer(true)
-      } else {
-        props.redirectLogin();
-      }
-  }
+    console.log("handleClickOpen EE");
+    e.preventDefault();
+    e.stopPropagation();
+    if (props.context.success) {
+      console.log("openModalEvent EE");
+      props.setOpenDrawer(true);
+    } else {
+      props.redirectLogin();
+    }
+  };
 
   // const openModalEvent = () => {
   //   console.log("openModalEvent EE")
@@ -116,11 +115,11 @@ function Infowindow(props) {
   //   //                   </Router>
   //   //                 </UserContext.Provider>
   //   //               </ApolloProvider>
-  //   // ) 
+  //   // )
 
   //   // var string = "/event/" + props.location._id;
   //   // window.AppHistory.push(string, {
-  //   //   //tady: napsatStateKdyžtak 
+  //   //   //tady: napsatStateKdyžtak
   //   // });
   // };
 
@@ -133,7 +132,12 @@ function Infowindow(props) {
         </Grid>
       </Grid>
       {/* <img src={Pic.src} alt={Pic.capture} className={classes.img} /> */}
-      <div className={classes.img} style={{backgroundImage: `url('${Pic.thumbnail}')`}}> </div>
+      <div
+        className={classes.img}
+        style={{ backgroundImage: `url('${Pic.thumbnail}')` }}
+      >
+        {" "}
+      </div>
       <Grid container justify="center" className={classes.authorGrid}>
         <Avatar
           alt="Author picture"
@@ -149,17 +153,17 @@ function Infowindow(props) {
         className={classes.infoWindBody}
       >
         <Grid item xs={12}>
-            <Typography variant="body1" className={classes.countdown}>
-              {/* {countdown(
+          <Typography variant="body1" className={classes.countdown}>
+            {/* {countdown(
                 new Date(props.location.dateStart),
                 new Date(),
                 "X",
                 1
               ).toString()}{" "}
               ago */}
-              start {counteddownDate}
-            </Typography>
-          </Grid>
+            start {counteddownDate}
+          </Typography>
+        </Grid>
       </Grid>
 
       {/* <Grid
@@ -181,11 +185,11 @@ function Infowindow(props) {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   img: {
     height: 100,
     width: 200,
-    backgroundSize: "cover"
+    backgroundSize: "cover",
   },
   topbar: {
     position: "absolute",
@@ -196,29 +200,29 @@ const useStyles = makeStyles(theme => ({
     color: "white",
     flexGrow: 1,
     alignItems: "center",
-    alignContent: "center"
+    alignContent: "center",
   },
   buttonOpen: {
     width: "100%",
     background: "#E8045D",
     color: "white",
-    borderRadius: 0
+    borderRadius: 0,
   },
   h3Name: {
     display: "inline-block",
     margin: "0.5em",
-    fontSize: 18
+    fontSize: 18,
   },
 
   authorGrid: {
     top: -30,
     height: 0,
-    position: "relative"
+    position: "relative",
   },
   avatar: {
     border: "2px solid #FFFFFF",
     width: 60,
-    height: 60
+    height: 60,
   },
   infoWindBody: {
     position: "relative",
@@ -227,20 +231,20 @@ const useStyles = makeStyles(theme => ({
   countdown: {
     position: "relative",
     width: "100%",
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
     fontWeight: 600,
     color: "grey",
-    textAlign: "center"
+    textAlign: "center",
   },
   gridButton: {
     width: "100%",
     bottom: 0,
     position: "absolute",
     color: "white",
-    flexGrow: 1
-  }
+    flexGrow: 1,
+  },
 }));
 
 export default Infowindow;

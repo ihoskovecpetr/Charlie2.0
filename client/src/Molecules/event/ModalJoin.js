@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
@@ -11,11 +11,10 @@ import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { useHistory } from "react-router-dom";
 
+import { GET_ONE_EVENT } from "src/Services/GQL/GET_ONE_EVENT";
+import { UserContext } from "src/Contexts/userContext";
 
-import {GET_ONE_EVENT} from "src/Services/GQL/GET_ONE_EVENT";
-import { UserContext } from "../../userContext";
-
-import Spinner from "../../Atoms/Spinner";
+import Spinner from "src/Atoms/Spinner";
 
 const BOOKING_REQ = gql`
   mutation requestBookEvent(
@@ -37,7 +36,7 @@ const BOOKING_REQ = gql`
   }
 `;
 
-function ModalJoin({event}) {
+function ModalJoin({ event }) {
   const classes = useStyles();
   const { context } = useContext(UserContext);
   let history = useHistory();
@@ -46,7 +45,7 @@ function ModalJoin({event}) {
   const [message, setMessage] = useState("Hi, please let me in");
   const [createReqBooking, bookingReqStates] = useMutation(BOOKING_REQ);
 
-  console.log("ModalJoin: history: ", history)
+  console.log("ModalJoin: history: ", history);
 
   const handleOpen = () => {
     setOpen(true);
@@ -62,16 +61,16 @@ function ModalJoin({event}) {
         guest_id: context._id,
         guest_name: context.name,
         event_id: event._id,
-        message: message
+        message: message,
       },
       refetchQueries: () => [
         {
           query: GET_ONE_EVENT,
-          variables: { event_id: history.location.pathname.split("/")[2] }
-        }
-      ]
+          variables: { event_id: history.location.pathname.split("/")[2] },
+        },
+      ],
     });
-  }
+  };
 
   if (bookingReqStates.data && bookingReqStates.data.requestBookEvent.success) {
     setTimeout(() => {
@@ -85,7 +84,7 @@ function ModalJoin({event}) {
         variant="contained"
         color="primary"
         className={classes.trueBtn}
-        onClick={e => {
+        onClick={(e) => {
           e.preventDefault();
           handleOpen();
         }}
@@ -101,7 +100,7 @@ function ModalJoin({event}) {
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
-          timeout: 500
+          timeout: 500,
         }}
       >
         <Fade in={open}>
@@ -149,16 +148,16 @@ function ModalJoin({event}) {
                     rows={5}
                     value={message}
                     style={{ minWidth: 250 }}
-                    onChange={e => {
+                    onChange={(e) => {
                       setMessage(e.target.value);
                     }}
                   />
                 </Grid>
                 <Grid item>
-                <Button
+                  <Button
                     variant="contained"
                     color="primary"
-                    onClick={e => {
+                    onClick={(e) => {
                       e.preventDefault();
                       handleClose();
                     }}
@@ -182,11 +181,11 @@ function ModalJoin({event}) {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
@@ -194,22 +193,22 @@ const useStyles = makeStyles(theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     outline: "0 !important",
-    minWidth: 400
+    minWidth: 400,
   },
   mainGrid: {
-    width: "100%"
+    width: "100%",
   },
   textItem: {
     "& > *": {
       margin: theme.spacing(1),
-      width: "100%"
-    }
+      width: "100%",
+    },
   },
   trueBtn: {
     width: "100%",
     height: 60,
-    borderRadius: 0
-  }
+    borderRadius: 0,
+  },
 }));
 
 export default ModalJoin;

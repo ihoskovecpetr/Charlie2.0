@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { makeStyles } from "@material-ui/core/styles";
 import { Animated } from "react-animated-css";
-import { UserContext } from "src/userContext";
+import { UserContext } from "src/Contexts/userContext";
 
 import { useHistory } from "react-router-dom";
 
@@ -18,7 +18,6 @@ function NoEventsBoard(props) {
 
   const handleFilterOnOff = (e) => {
     e.stopPropagation();
-    console.log("setCtx Filter ON,Off: ", e.target.checked);
     setContext((prev) => {
       return {
         ...prev,

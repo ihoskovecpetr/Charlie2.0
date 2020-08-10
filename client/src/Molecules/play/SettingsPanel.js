@@ -23,7 +23,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import clsx from "clsx";
 import { withRouter, useHistory } from "react-router-dom";
 
-import { UserContext } from "../../userContext";
+import { UserContext } from "src/Contexts/userContext";
 import { IconButton } from "@material-ui/core";
 
 const SettingsPanel = ({ loading }) => {

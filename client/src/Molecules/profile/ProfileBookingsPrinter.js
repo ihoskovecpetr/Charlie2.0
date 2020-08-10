@@ -2,7 +2,6 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { UserContext } from "../../userContext";
 import AcceptBookingCard from "../../Atoms/Profile/AcceptBookingCard";
 import PendingBookingCard from "../../Atoms/Profile/PendingBookingCard";
 

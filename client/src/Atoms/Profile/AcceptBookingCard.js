@@ -18,7 +18,7 @@ import countdown from "countdown";
 import { useMutation } from "@apollo/react-hooks";
 
 import { useXsSize } from "src/Hooks/useXsSize";
-import { UserContext } from "src/userContext";
+import { UserContext } from "src/Contexts/userContext";
 import { PROFILE_DATA } from "src/Services/GQL/PROFILE_DATA";
 import { SEEN_BOOKING } from "src/Services/GQL/SEEN_BOOKING";
 

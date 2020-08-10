@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 
 import { useMutation, useQuery } from "@apollo/react-hooks";
 
-import { UserContext } from "../userContext";
+import { UserContext } from "../Contexts/userContext";
 import { SHOW_HOST_NEWS } from "src/Services/GQL/SHOW_HOST_NEWS";
 
 export function useCountUnseenBookingsRatings() {

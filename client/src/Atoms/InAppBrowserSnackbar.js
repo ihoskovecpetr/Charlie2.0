@@ -4,24 +4,18 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
+import TextField from "@material-ui/core/TextField";
+import Tooltip from "@material-ui/core/Tooltip";
+import LinkIcon from "@material-ui/icons/Link";
 
-import { useHistory } from "react-router-dom";
+import { useHistory, NavLink } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
-  spinnerWrap: {
-    display: "flex",
-    "& > * + *": {
-      marginLeft: theme.spacing(2),
-    },
-  },
-}));
-
-export default function WindowEventSnackbar(props) {
+export default function WindowEventSnackbar() {
   const classes = useStyles();
   let history = useHistory();
-  const [open, setOpen] = useState(true);
-  const [userAgent, setUserAgent] = useState([]);
-  const [inAppBrowser, setInAppBrowser] = useState(false);
+  const [open, setOpen] = useState(false);
+  // const [inAppBrowser, setInAppBrowser] = useState(false);
+  const [openTooltip, setOpenTooltip] = useState(false);
 
   useEffect(() => {
     const openInBrowser = (target, browserScheme) => {
@@ -33,10 +27,11 @@ export default function WindowEventSnackbar(props) {
     const isInApp = (appSpecificUserAgents) => {
       var userAgent = navigator.userAgent || navigator.vendor || window.opera;
       console.log("What navigator.userAgent ", userAgent);
-      setUserAgent(userAgent);
       for (var i = 0; i <= appSpecificUserAgents.length; i++) {
-        if (userAgent.indexOf(appSpecificUserAgents[i]) > -1) return true;
+        if (userAgent.indexOf(appSpecificUserAgents[i]) > -1)
+          return appSpecificUserAgents[i];
       }
+      return false;
     };
 
     const tryOpenBrowser = () => {
@@ -46,14 +41,9 @@ export default function WindowEventSnackbar(props) {
           window.location.href,
           window.location.href.split("//")[1]
         );
-        // window.open(window.location.href, "_blank");
-        // openInBrowser(
-        //   "www.charliehouseparty.club",
-        //   "googlechrome://navigate?url="
-        // );
-        if (isInApp(["FBAN", "FBAV"])) {
-          console.log("SettingInAppBrowser: ");
-          setInAppBrowser(true);
+        let isInAppBrowser = isInApp(["FBAN", "FBAV"]);
+
+        if (isInAppBrowser) {
           setOpen(true);
           openInBrowser(window.location.href.split("//")[1], "googlechrome://"); //x-web-search://
           // openInBrowser(window.location.href, "googlechrome://navigate?url=");
@@ -66,43 +56,95 @@ export default function WindowEventSnackbar(props) {
     tryOpenBrowser();
   }, []);
 
+  const handleCopyLink = () => {
+    var copyText = document.getElementById("myInput");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    setOpenTooltip(true);
+    setTimeout(() => {
+      setOpenTooltip(false);
+    }, 1000);
+  };
+
+  const handleOpenCloseTooltip = () => {
+    setOpenTooltip(false);
+  };
+
   return (
     <>
-      {open && (
-        <Snackbar
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          open={open ? true : false}
-          autoHideDuration={6000}
-          message={`You are inside of app browser: ${userAgent}`}
-          action={
-            <>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        open={open ? true : false}
+        autoHideDuration={6000}
+        message={[
+          "You are inside of an APP! \n",
+          <b>OPEN in Safari, Chrome</b>,
+          " or any other browser.",
+          <NavLink to={`/about`}>
+            <i style={{ textDecoration: "underline" }}>Want to know why?</i>
+          </NavLink>,
+          // <TextField
+          //   id="myInput"
+          //   className={classes.copyLink}
+          //   fullWidth
+          //   classes={{
+          //     root: classes.copyLink,
+          //   }}
+          //   variant="filled"
+          //   value={window.location.href}
+          // />,
+          <input
+            id="myInput"
+            className={classes.copyLink}
+            style={{ width: "100%", marginTop: "10px" }}
+            value={window.location.href}
+          />,
+        ]}
+        action={
+          <>
+            <Tooltip
+              title="link copied"
+              PopperProps={{
+                disablePortal: true,
+              }}
+              onClose={handleOpenCloseTooltip}
+              open={openTooltip}
+              disableFocusListener
+              disableHoverListener
+              disableTouchListener
+              placement="top"
+            >
               <Button
+                variand="outlined"
                 color="secondary"
-                size="small"
-                onClick={() => {
-                  history.replace(`/event/${window.eventId}`);
-                }}
+                fullWidth
+                onClick={handleCopyLink}
               >
-                OPEN
+                <LinkIcon /> copy URL
               </Button>
-              <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={() => {
-                  window.eventId = null;
-                  setOpen(false);
-                }}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </>
-          }
-        />
-      )}
+            </Tooltip>
+          </>
+        }
+      />
     </>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  spinnerWrap: {
+    display: "flex",
+    "& > * + *": {
+      marginLeft: theme.spacing(2),
+    },
+    copyLink: {
+      margin: 10,
+      color: "white !important",
+      backgroundColor: "white !important",
+      padding: 20,
+    },
+  },
+}));
