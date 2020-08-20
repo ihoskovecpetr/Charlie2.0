@@ -1,40 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
+//TODO: add memoized value
 
-export function useHighlitedSearchString({string, searchText}) {
-	const [averageRating, setAverageRating] = useState(0)
+export function useHighlitedSearchString({ string, searchText }) {
+  var regex = new RegExp(searchText, "i");
 
-	var regex = new RegExp(searchText, "i");
+  let resultStrArr = string.split(regex);
+  let newSearchText = searchText;
 
-	console.log("REGEX TEXTS: ", regex)
+  if (resultStrArr.length === 1) {
+    const searchTxtArr = searchText.split(" ");
+    for (var i = 0; i < searchTxtArr.length; i++) {
+      //   const regex = new RegExp(searchTxtArr[i], "i");
+      const deepSearchStringArr = resultStrArr[0].split(
+        new RegExp(searchTxtArr[i], "i")
+      );
+      if (deepSearchStringArr.length != 1) {
+        resultStrArr = deepSearchStringArr;
+        newSearchText = searchTxtArr[i];
+        break;
+      }
+    }
+  }
 
+  const processedStringMap = resultStrArr.map((subS, index) => {
+    return (
+      <>
+        <span>{subS}</span>
+        {resultStrArr.length != index + 1 && (
+          <span style={{ backgroundColor: "yellow" }}>{newSearchText}</span>
+        )}
+      </>
+    );
+  });
 
-	let resultStrArr = string.split(regex)
-	let newSearchText = searchText
-
-	console.log("resultStrArr: ", resultStrArr)
-
-	if(resultStrArr.length === 1){
-		console.log("FIRST SPILT NIC")
-		const searchTxtArr = searchText.split(" ")
-		for (var i = 0; i < searchTxtArr.length; i++) {
-			console.log("DEEP SPLIT")
-			const regex = new RegExp(searchTxtArr[i], "i");
-			const deepSearchStringArr = resultStrArr[0].split(regex)
-			if (deepSearchStringArr.length != 1) {
-				resultStrArr = deepSearchStringArr;
-				newSearchText = searchTxtArr[i]
-				console.log("DEEP cutter: ", newSearchText)
-			  break;
-			}
-		  }
-	}
-
-	const processedStringMap = resultStrArr.map((subS, index) => {return(
-	<><span>{subS}</span>
-		{resultStrArr.length != index + 1 
-		&& <span style={{backgroundColor: "yellow"}} >{newSearchText}</span>}</>
-	)})
-
-return processedStringMap
+  return processedStringMap;
 }

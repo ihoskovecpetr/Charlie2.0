@@ -13,7 +13,10 @@ function LoginFirstButton(props) {
       style={{ marginTop: 30 }}
       onClick={() => {
         setTimeout(() => {
-          history.push(`/signin`);
+          history.push({
+            pathname: history.location.pathname,
+            search: `?signin=true`,
+          });
         }, 200);
       }}
     >

@@ -14,7 +14,7 @@ const EnteredGuests = ({ bookings }) => {
   return (
     <Grid item xs={12} className={classes.wrapIt}>
       {bookings &&
-        bookings.map((booking) => {
+        bookings.map(booking => {
           if (booking.entered) {
             console.log("ENTERREEEEEEEEE");
             return (
@@ -23,7 +23,7 @@ const EnteredGuests = ({ bookings }) => {
                 src={booking.user.picture}
                 className={classes.ButtonAvatar}
                 onClick={() => {
-                  history.push(`/user/${booking.user._id}`);
+                  history.push(`/?user=${booking.user._id}`);
                 }}
               >
                 x
@@ -36,7 +36,7 @@ const EnteredGuests = ({ bookings }) => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   wrapIt: {
     padding: 10,
   },

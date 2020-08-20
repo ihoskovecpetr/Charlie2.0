@@ -115,7 +115,7 @@ function CreateView({
       component="main"
       id="mainCreate"
       className={classes.profileWrap}
-      style={{ position: context.freezScroll ? "fixed" : "absolute" }} // fixed is freezed, absolute is scrollable
+      // style={{ position: "absolute" }}
     >
       <CssBaseline />
       {dialogOpen && (
@@ -135,7 +135,11 @@ function CreateView({
                     variant="outlined"
                     color="secondary"
                     onClick={() => {
-                      history.push(`/event/${dataOut._id}`);
+                      handleDialogClose();
+                      history.push({
+                        pathname: history.location.pathname,
+                        search: `?event=${dataOut._id}`,
+                      });
                     }}
                   >
                     OPEN "{dataOut ? dataOut.name : "_"}"
@@ -303,7 +307,7 @@ function CreateView({
                     //label="Time picker"
                     className={classes.dateField}
                     value={formValue.startDate}
-                    onChange={(e) => {
+                    onChange={e => {
                       handleDateChange(e);
                     }}
                     KeyboardButtonProps={{
@@ -378,7 +382,7 @@ function CreateView({
                   classes={{
                     input: classes.inputDurationRoot,
                   }}
-                  onChange={(value) => {
+                  onChange={value => {
                     setNewValueDuration(value.target.value);
                   }}
                   endAdornment={
@@ -429,7 +433,7 @@ function CreateView({
                   classes={{
                     input: classes.inputPriceRoot,
                   }}
-                  onChange={(value) => {
+                  onChange={value => {
                     console.log("CHange Price: ", value);
                     setNewValuePrice(value.target.value);
                   }}
@@ -448,7 +452,7 @@ function CreateView({
                   //helperText="Please select your currency"
                   //variant="outlined"
                 >
-                  {currencies.map((option) => (
+                  {currencies.map(option => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
@@ -490,7 +494,7 @@ function CreateView({
                 <TextField
                   value={capacity}
                   type="number"
-                  onChange={(value) => {
+                  onChange={value => {
                     setNewValueCapacity(value.target.value);
                   }}
                   InputProps={{
@@ -588,14 +592,14 @@ function CreateView({
           </Grid>
 
           {errorOut &&
-            errorOut.map((item) => (
+            errorOut.map(item => (
               <Alert severity="error" key={item.message}>
                 {item.message}
               </Alert>
             ))}
 
           {FeErrors &&
-            FeErrors.map((item) => (
+            FeErrors.map(item => (
               <Alert severity="error" key={item}>
                 {item} is empty
               </Alert>
@@ -607,7 +611,7 @@ function CreateView({
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={(e) => onSubmit(e)}
+            onClick={e => onSubmit(e)}
             // disabled={
             //   formValue.ImagesArr && formValue.ImagesArr.length ? false : true
             // }
@@ -626,7 +630,7 @@ function CreateView({
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   profileWrap: {
     top: 0,
     height: "100%",

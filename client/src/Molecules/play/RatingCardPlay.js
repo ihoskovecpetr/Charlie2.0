@@ -24,32 +24,32 @@ const useStyles = makeStyles(theme => ({
     width: "100%",
     display: "block",
     marginBottom: 5,
-    background: "rgba(255,255,255,0.5)"
+    background: "rgba(255,255,255,0.5)",
   },
   cardHeader: {
     width: "100%",
-    padding: 0
+    padding: 0,
   },
   media: {
     height: 0,
-    paddingTop: "56.25%" // 16:9
+    paddingTop: "56.25%", // 16:9
   },
   avatar: {
-    backgroundColor: red[500]
+    backgroundColor: red[500],
   },
   expand: {
     transform: "rotate(0deg)",
     marginLeft: "auto",
     transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest
-    })
+      duration: theme.transitions.duration.shortest,
+    }),
   },
   expandOpen: {
-    transform: "rotate(180deg)"
+    transform: "rotate(180deg)",
   },
   starContainer: {
-    fontSize: 20
-  }
+    fontSize: 20,
+  },
 }));
 
 export default function RecipeReviewCard(props) {
@@ -64,10 +64,10 @@ export default function RecipeReviewCard(props) {
     <Card className={classes.card}>
       <CardHeader
         avatar={
-          <NavLink to={`/user/${props.rating.guest._id}`}>
+          <NavLink to={`/?user=${props.rating.guest._id}`}>
             <IconButton
               className={clsx(classes.expand, {
-                [classes.expandOpen]: expanded
+                [classes.expandOpen]: expanded,
               })}
               onClick={handleExpandClick}
               aria-expanded={expanded}
@@ -87,7 +87,7 @@ export default function RecipeReviewCard(props) {
         action={
           <IconButton
             className={clsx(classes.expand, {
-              [classes.expandOpen]: expanded
+              [classes.expandOpen]: expanded,
             })}
             onClick={handleExpandClick}
             aria-expanded={expanded}

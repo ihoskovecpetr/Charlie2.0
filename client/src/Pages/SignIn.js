@@ -54,7 +54,7 @@ function SignIn({ propContext }) {
       if (window.eventId && !sendedBack) {
         setSendedBack(true);
         console.log("After Sign In goEvent");
-        history.push(`/event/${window.eventId}`);
+        history.push(`/?event=${window.eventId}`);
       } else {
         setSendedBack(true);
         console.log("After Sign In Goback");
@@ -78,7 +78,7 @@ function SignIn({ propContext }) {
         "document.getElementById(rememberMe).checked: ",
         document.getElementById("rememberMe").checked
       );
-      setContext((prev) => {
+      setContext(prev => {
         return {
           ...prev,
           _id: dataOut._id,
@@ -94,7 +94,7 @@ function SignIn({ propContext }) {
     }
   }, [dataOut, localContext]);
 
-  const onSignIn = (e) => {
+  const onSignIn = e => {
     e.preventDefault();
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
@@ -106,7 +106,7 @@ function SignIn({ propContext }) {
     });
   };
 
-  const handleInputChange = (e) =>
+  const handleInputChange = e =>
     setInput({
       ...input,
       [e.currentTarget.name]: e.currentTarget.value,
@@ -186,7 +186,7 @@ function SignIn({ propContext }) {
 
         <form className={classes.form} noValidate>
           {errorOut &&
-            errorOut.map((item) => (
+            errorOut.map(item => (
               <Alert severity="error" key={item.message}>
                 {item.message}
               </Alert>
@@ -343,7 +343,7 @@ function SignIn({ propContext }) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   "@global": {
     body: {
       backgroundColor: theme.palette.common.white,

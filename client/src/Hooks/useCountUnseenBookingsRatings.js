@@ -25,16 +25,23 @@ export function useCountUnseenBookingsRatings() {
       var countUserBookings = 0;
       var countRatings = 0;
 
-      showHostBookings.map((item) => {
-        if (!item.seenHost) countHostBookings++;
+      showHostBookings.map(item => {
+        if (!item.seenHost) {
+          countHostBookings++;
+        }
       });
-      showUserBookings.map((item) => {
-        if (!item.seenUser) countUserBookings++;
+      showUserBookings.map(item => {
+        if (!item.seenUser) {
+          countUserBookings++;
+        }
       });
 
-      showRatings.map((item) => {
-        if (!item.seenHost) countRatings++;
-      });
+      // showRatings.map(item => {
+      //   if (!item.seenHost) {
+      //     countRatings++;
+      //   }
+      // });
+
       setValues({
         countHostBookings: countHostBookings,
         countUserBookings: countUserBookings,

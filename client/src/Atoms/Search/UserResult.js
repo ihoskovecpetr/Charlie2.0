@@ -33,7 +33,7 @@ export default function UserResult({ user, searchText }) {
     <Grid
       item
       className={classes.mainItem}
-      onClick={() => history.push(`/user/${user._id}`)}
+      onClick={() => history.push(`/?user=${user._id}`)}
       style={{ backgroundColor: bgColor }}
     >
       <Grid container alignItems="center" className={classes.mainSolidLine}>
@@ -55,7 +55,7 @@ export default function UserResult({ user, searchText }) {
               {useHighlitedSearchString({
                 string: user.name,
                 searchText: searchText,
-              }).map((item) => item)}
+              }).map(item => item)}
             </b>
           </Typography>
           <AverageRatingStars userId={user._id} />
@@ -69,7 +69,7 @@ export default function UserResult({ user, searchText }) {
                 {useHighlitedSearchString({
                   string: user.description,
                   searchText: searchText,
-                }).map((item) => item)}
+                }).map(item => item)}
               </Typography>
             </Grid>
           </Grid>
@@ -79,7 +79,7 @@ export default function UserResult({ user, searchText }) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainItem: {
     width: "100%",
     borderBottom: "1px solid lightGrey",

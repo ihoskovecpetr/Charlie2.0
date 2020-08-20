@@ -38,7 +38,7 @@ export default function UserAskMessage({
           xs={4}
           className={classes.avatarGrid}
           onClick={() => {
-            history.push(`/user/${user._id}`);
+            history.push(`/?user=${user._id}`);
           }}
         >
           <Grid container>
@@ -94,7 +94,7 @@ export default function UserAskMessage({
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   containerMain: {
     padding: 5,
     paddingLeft: 20,

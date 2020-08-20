@@ -14,7 +14,7 @@ import { NavLink, useHistory } from "react-router-dom";
 
 import { UserContext } from "src/Contexts/userContext";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   blackBox: {
     width: "100%",
     height: 160,
@@ -65,7 +65,10 @@ export default function DrawerProfileBox({ handleDrawerToggle }) {
   };
 
   const SignIn = () => {
-    history.push("/signin");
+    history.push({
+      pathname: history.location.pathname,
+      search: `?signin=true`,
+    });
     handleDrawerToggle();
   };
 

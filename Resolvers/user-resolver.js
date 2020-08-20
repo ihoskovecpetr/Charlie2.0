@@ -92,7 +92,9 @@ export const resolvers = {
   Mutation: {
     newUser: async (_, _args, __) => {
       try {
-        await updateUserYupSchema.validate(_args, { abortEarly: false });
+        await updateUserYupSchema.validate(_args, {
+          abortEarly: false,
+        });
       } catch (err) {
         return formatYupError(err);
       }
@@ -138,16 +140,23 @@ export const resolvers = {
               template: "confirmEmail",
               context: {
                 eventId: updated._id,
-                eventFullUrl: `https://www.charliehouseparty.club/confirm/${updated._id}`,
+                eventFullUrl: `https://www.charliehouseparty.club/?confirm=${updated._id}`,
               },
             };
             const resMail1 = await smtpTransport.sendMail(mailOptions2);
 
             if (resMail1.rejected.length !== 0) {
-              return { errorOut: { success: false } };
+              return {
+                errorOut: { success: false },
+              };
             } else {
               smtpTransport.close();
-              return { dataOut: { success: true, ...updated } };
+              return {
+                dataOut: {
+                  success: true,
+                  ...updated,
+                },
+              };
             }
           }
           return duplicate_email_Error;
@@ -174,7 +183,10 @@ export const resolvers = {
           const result = await newUser.save();
 
           const token = jwt.sign(
-            { userId: result._doc._id, email: result._doc.email },
+            {
+              userId: result._doc._id,
+              email: result._doc.email,
+            },
             "somesupersecretkeyEvenMore",
             { expiresIn: "5h" }
           );
@@ -183,7 +195,13 @@ export const resolvers = {
           console.log("Result event: ", result);
 
           if (_args.typeSocial) {
-            return { dataOut: { ...result._doc, success: true, token: token } };
+            return {
+              dataOut: {
+                ...result._doc,
+                success: true,
+                token: token,
+              },
+            };
           }
 
           smtpTransport.use(
@@ -208,7 +226,7 @@ export const resolvers = {
             template: "confirmEmail",
             context: {
               eventId: result._id,
-              eventFullUrl: `https://www.charliehouseparty.club/confirm/${result._id}`,
+              eventFullUrl: `https://www.charliehouseparty.club/?confirm=${result._id}`,
             },
           };
 
@@ -218,7 +236,12 @@ export const resolvers = {
             return { errorOut: { success: false } };
           } else {
             smtpTransport.close();
-            return { dataOut: { ...result._doc, success: true } };
+            return {
+              dataOut: {
+                ...result._doc,
+                success: true,
+              },
+            };
           }
         }
       } catch (err) {
@@ -228,7 +251,9 @@ export const resolvers = {
     updateUser: async (_, _args, context) => {
       console.log("UPDATING START: ", _args);
       try {
-        await updateUserYupSchema.validate(_args, { abortEarly: false });
+        await updateUserYupSchema.validate(_args, {
+          abortEarly: false,
+        });
       } catch (err) {
         return formatYupError(err);
       }
@@ -277,8 +302,12 @@ export const resolvers = {
     login: async (_, _args, __) => {
       try {
         console.log("_args na login: ", _args);
-        let foundUserByEmail = await User.findOne({ email: _args.emailOrName });
-        let foundUserByName = await User.findOne({ name: _args.emailOrName });
+        let foundUserByEmail = await User.findOne({
+          email: _args.emailOrName,
+        });
+        let foundUserByName = await User.findOne({
+          name: _args.emailOrName,
+        });
         console.log(
           "foundUserByEmail: foundUserByName: ",
           foundUserByEmail,
@@ -307,12 +336,19 @@ export const resolvers = {
 
           if (isEqual) {
             const token = jwt.sign(
-              { userId: realUser.id, email: realUser.email },
+              {
+                userId: realUser.id,
+                email: realUser.email,
+              },
               "somesupersecretkeyEvenMore",
               { expiresIn: "5h" }
             );
             return {
-              dataOut: { ...realUser._doc, success: true, token: token },
+              dataOut: {
+                ...realUser._doc,
+                success: true,
+                token: token,
+              },
             };
           }
         }
@@ -325,7 +361,9 @@ export const resolvers = {
     loginExternal: async (_, _args, __) => {
       console.log("Hitted loginExternal email: ", _args.email);
       try {
-        let foundUser = await User.findOne({ email: _args.email });
+        let foundUser = await User.findOne({
+          email: _args.email,
+        });
         console.log("Found User: ", foundUser);
         if (!foundUser) {
           console.log("Noo Found User: ");
@@ -337,7 +375,11 @@ export const resolvers = {
           { expiresIn: "5h" }
         );
         return {
-          dataOut: { ...foundUser._doc, success: true, token: token },
+          dataOut: {
+            ...foundUser._doc,
+            success: true,
+            token: token,
+          },
         };
       } catch (err) {
         console.log(err);
@@ -388,7 +430,10 @@ export const resolvers = {
           };
         } else {
           smtpTransport.close();
-          return { success: true, message: "Email has been sent" };
+          return {
+            success: true,
+            message: "Email has been sent",
+          };
         }
       } catch (err) {
         console.log(err);

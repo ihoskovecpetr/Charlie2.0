@@ -152,17 +152,20 @@ function MapPage(props) {
   };
 
   const redirectLogin = () => {
-    history.push("/signin");
+    history.push({
+      pathname: history.location.pathname,
+      search: `?signin=true`,
+    });
   };
 
   if (error) {
     alert("Unable to load Events...");
   }
 
-  const handleScrollLocTime = (isoDate) => {
+  const handleScrollLocTime = isoDate => {
     let center = MapObject.getCenter();
     console.log("Setting Working Position from hndleScroll", center.lng());
-    props.setWorkingPosition((prev) => {
+    props.setWorkingPosition(prev => {
       return {
         ...prev,
         geometry: { lng: center.lng(), lat: center.lat() },
@@ -172,7 +175,7 @@ function MapPage(props) {
     });
   };
 
-  const onMapMount = useCallback((map) => {
+  const onMapMount = useCallback(map => {
     let uniqueArrayOfId = [];
     let UniqArr = [];
     // let dataDB;
@@ -325,7 +328,7 @@ function MapPage(props) {
               infoBubble.close();
               previousMarker = undefined;
             } else {
-              infoBubble.addListener("domready", (e) => {
+              infoBubble.addListener("domready", e => {
                 setTimeout(() => {
                   ReactDOM.render(
                     <>
@@ -373,7 +376,7 @@ function MapPage(props) {
     if (context.geolocationObj && !props.workingPosition.geolocation) {
       console.log("Settig LngLat from CONTEXT  ", context.geolocationObj);
 
-      setMapOptions((prev) => {
+      setMapOptions(prev => {
         return {
           ...prev,
           center: context.geolocationObj,
@@ -387,7 +390,7 @@ function MapPage(props) {
     if (props.workingPosition && props.workingPosition.geometry) {
       console.log("Settig lngLat prop.workingLoc ", props.workingPosition);
 
-      setMapOptions((prev) => {
+      setMapOptions(prev => {
         return {
           ...prev,
           center: props.workingPosition.geometry,
@@ -446,7 +449,7 @@ function MapPage(props) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(2),
     display: "flex",

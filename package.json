@@ -36,5 +36,9 @@
     "react-swipeable-views": "^0.13.3",
     "serve-index": "^1.9.1",
     "yup": "^0.28.0"
-  }
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2
+   }
 }

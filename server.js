@@ -17,7 +17,7 @@ mongoose.set("useFindAndModify", false);
 
 app.use(express.static(path.join(__dirname, "build")));
 
-app.get("/", function (req, res, next) {
+app.get("/", function(req, res, next) {
   res.sendFile(path.join(__dirname, "build/index.html"));
 });
 
@@ -45,25 +45,25 @@ app.get("/play/:id", (req, res, next) => {
   res.sendFile(path.join(__dirname, "build/index.html"));
 });
 
-app.get("/event/:id", (req, res, next) => {
-  res.sendFile(path.join(__dirname, "build/index.html"));
-});
+// app.get("/event/:id", (req, res, next) => {
+//   res.sendFile(path.join(__dirname, "build/index.html"));
+// });
 
-app.get("/accept/:event_id/:user_id", (req, res, next) => {
-  res.sendFile(path.join(__dirname, "build/index.html"));
-});
+// app.get("/accept/:event_id/:user_id", (req, res, next) => {
+//   res.sendFile(path.join(__dirname, "build/index.html"));
+// });
 
-app.get("/confirm/:user_id", (req, res, next) => {
-  res.sendFile(path.join(__dirname, "build/index.html"));
-});
+// app.get("/confirm/:user_id", (req, res, next) => {
+//   res.sendFile(path.join(__dirname, "build/index.html"));
+// });
 
-app.get("/signup", (req, res, next) => {
-  res.sendFile(path.join(__dirname, "build/index.html"));
-});
+// app.get("/signup", (req, res, next) => {
+//   res.sendFile(path.join(__dirname, "build/index.html"));
+// });
 
-app.get("/signin", (req, res, next) => {
-  res.sendFile(path.join(__dirname, "build/index.html"));
-});
+// app.get("/signin", (req, res, next) => {
+//   res.sendFile(path.join(__dirname, "build/index.html"));
+// });
 
 app.get("/profile", (req, res, next) => {
   res.sendFile(path.join(__dirname, "build/index.html"));
@@ -94,7 +94,7 @@ app.use(
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: (req) => ({ /* pubsub, */ reqO: req }),
+  context: req => ({ /* pubsub, */ reqO: req }),
   subscriptions: "/subs",
   playground: true,
   introspection: true,
@@ -123,7 +123,7 @@ mongoose
       );
     });
   })
-  .catch((err) => {
+  .catch(err => {
     console.log(err);
   });
 

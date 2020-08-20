@@ -12,8 +12,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import SwipeableViews from "react-swipeable-views";
-import { useMutation, useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
+import { useQuery } from "@apollo/react-hooks";
 
 import { UserContext } from "src/Contexts/userContext";
 import { sortByDate } from "../Services/functions";
@@ -41,13 +40,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box
-          // classes={{
-          //   root: classes.boxRoot,
-          // }}
-          component="span"
-          p={1}
-        >
+        <Box component="span" p={1}>
           {children}
         </Box>
       )}
@@ -91,7 +84,7 @@ function Profile() {
   }, []);
 
   const trsfmFeed = (events, type) => {
-    return events.map((item) => ({ ...item, type: type }));
+    return events.map(item => ({ ...item, type: type }));
   };
 
   useEffect(() => {
@@ -129,7 +122,7 @@ function Profile() {
     setValue(newValue);
   };
 
-  const handleChangeIndex = (index) => {
+  const handleChangeIndex = index => {
     setValue(index);
   };
 
@@ -296,7 +289,7 @@ function Profile() {
     </div>
   );
 }
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   profileWrap: {
     top: 0,
     width: "100%",

@@ -28,6 +28,7 @@ const CANCEL_EVENT = gql`
     }
   }
 `;
+let counter = 1;
 
 const MemoizedEventBtns = React.memo(function EventButtons({
   event,
@@ -54,7 +55,12 @@ const MemoizedEventBtns = React.memo(function EventButtons({
     userIsAuthor: null,
   });
 
-  console.log("RERENDER EVENTBTNS: ", name, event.name, propContext);
+  console.log("EventBtns render counter: ", counter);
+  counter += 1;
+
+  useEffect(() => {
+    console.log("EventBtns full rerender");
+  }, []);
 
   useEffect(() => {
     if (propContext) {
@@ -93,11 +99,11 @@ const MemoizedEventBtns = React.memo(function EventButtons({
     if (data && data.showBookings && !userIsAuthor) {
       // First filter only booking of current user
       const filteredUserBooking = data.showBookings.filter(
-        (booking) => booking.user._id === localContext._id
+        booking => booking.user._id === localContext._id
       );
       console.log("FILTERED BOOKING: ", filteredUserBooking);
       // First filter only booking of current user
-      filteredUserBooking.map((booking) => {
+      filteredUserBooking.map(booking => {
         console.log("JUDGEING THIS BOOKING: ", booking);
 
         if (!booking.confirmed && !booking.cancelled && !booking.decided) {
@@ -243,7 +249,10 @@ const MemoizedEventBtns = React.memo(function EventButtons({
           variant="contained"
           fullWidth
           onClick={() => {
-            history.push("/signin");
+            history.push({
+              pathname: history.location.pathname,
+              search: `?signin=true`,
+            });
           }}
         >
           LOGIN first
@@ -320,6 +329,13 @@ const MemoizedEventBtns = React.memo(function EventButtons({
       );
     }
 
+    console.log(
+      "Rate: ",
+      localContext._id,
+      stateOfMyBooking.eventIsPast,
+      stateOfMyBooking.userIsAtt
+    );
+
     // PAST EVENT RATE OR RATED
     if (
       localContext._id &&
@@ -375,12 +391,12 @@ const MemoizedEventBtns = React.memo(function EventButtons({
     `EventButtons stateOfMyBooking for event: ${event.name} is:`,
     stateOfMyBooking
   );
-  return printComponents.map((item) => {
+  return printComponents.map(item => {
     return item;
   });
 });
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   buttonCls: {
     margin: 10,
     width: "50%",
@@ -393,11 +409,6 @@ const useStyles = makeStyles((theme) => ({
     height: 60,
     borderRadius: 0,
   },
-  // disabledButton: {
-  //   color: "black !important",
-  //   backgroundColor: "rgba(255,255,255,0.33) !important",
-  //   marginBottom: 2,
-  // },
 }));
 
 // export default EventButtons;

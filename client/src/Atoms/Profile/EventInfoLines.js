@@ -29,7 +29,7 @@ export default function TimeLine({ event }) {
       <div
         className={classes.wrapDiv}
         onClick={() => {
-          history.push(`/event/${event._id}`);
+          history.push(`/?event=${event._id}`);
         }}
       >
         <Grid item>
@@ -76,7 +76,7 @@ export default function TimeLine({ event }) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainContainer: {
     padding: 5,
     paddingLeft: 15,

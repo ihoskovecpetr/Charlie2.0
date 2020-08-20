@@ -37,15 +37,15 @@ export default function Screen6() {
   const emailRef = useRef();
   const descRef = useRef();
 
-  const handleValueChange = (e) => {
+  const handleValueChange = e => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
-    setFormValue((prev) => {
+    setFormValue(prev => {
       return { ...prev, [name]: value };
     });
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = e => {
     e.preventDefault();
     console.log("emailRef: ", emailRef, emailRef.current.value);
     sendEnquiry({
@@ -161,7 +161,7 @@ export default function Screen6() {
                   </NavLink>
                 </Grid>
                 <Grid item>
-                  <NavLink to={`/faq`}>
+                  <NavLink to={`/about`}>
                     <Grid item>
                       <Typography variant="subtitle2">F.A.Q.</Typography>
                     </Grid>
@@ -181,7 +181,7 @@ export default function Screen6() {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container_6: {
     color: "black",
     //background: "rgba(25,25,25,0.3)"

@@ -8,11 +8,10 @@ import TextField from "@material-ui/core/TextField";
 import Tooltip from "@material-ui/core/Tooltip";
 import LinkIcon from "@material-ui/icons/Link";
 
-import { useHistory, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function WindowEventSnackbar() {
   const classes = useStyles();
-  let history = useHistory();
   const [open, setOpen] = useState(false);
   // const [inAppBrowser, setInAppBrowser] = useState(false);
   const [openTooltip, setOpenTooltip] = useState(false);
@@ -24,7 +23,7 @@ export default function WindowEventSnackbar() {
       document.body.appendChild(ifc);
     };
 
-    const isInApp = (appSpecificUserAgents) => {
+    const isInApp = appSpecificUserAgents => {
       var userAgent = navigator.userAgent || navigator.vendor || window.opera;
       console.log("What navigator.userAgent ", userAgent);
       for (var i = 0; i <= appSpecificUserAgents.length; i++) {
@@ -81,26 +80,15 @@ export default function WindowEventSnackbar() {
         open={open ? true : false}
         autoHideDuration={6000}
         message={[
-          "You are inside of an APP! \n",
-          <b>OPEN in Safari, Chrome</b>,
+          <b style={{ fontSize: "1.5em" }}>Please OPEN in Safari or Chrome</b>,
           " or any other browser.",
+          "You are inside of an APP browser! ",
           <NavLink to={`/about`}>
             <i style={{ textDecoration: "underline" }}>Want to know why?</i>
           </NavLink>,
-          // <TextField
-          //   id="myInput"
-          //   className={classes.copyLink}
-          //   fullWidth
-          //   classes={{
-          //     root: classes.copyLink,
-          //   }}
-          //   variant="filled"
-          //   value={window.location.href}
-          // />,
           <input
             id="myInput"
-            className={classes.copyLink}
-            style={{ width: "100%", marginTop: "10px" }}
+            style={{ width: "100%", marginTop: "10px", fontSize: "1.5em" }}
             value={window.location.href}
           />,
         ]}
@@ -124,7 +112,7 @@ export default function WindowEventSnackbar() {
                 fullWidth
                 onClick={handleCopyLink}
               >
-                <LinkIcon /> copy URL
+                <LinkIcon /> copy current URL
               </Button>
             </Tooltip>
           </>
@@ -134,7 +122,7 @@ export default function WindowEventSnackbar() {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   spinnerWrap: {
     display: "flex",
     "& > * + *": {
@@ -145,6 +133,11 @@ const useStyles = makeStyles((theme) => ({
       color: "white !important",
       backgroundColor: "white !important",
       padding: 20,
+      fontSize: "24px",
+    },
+    test: {
+      margin: 10,
+      color: "red !important",
     },
   },
 }));

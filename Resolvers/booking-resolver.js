@@ -384,10 +384,10 @@ export const resolvers = {
             })
           );
           const QRKod = await QRCode.toDataURL(
-            `https://www.charliehouseparty.club/accept/${event[0]._id}/${guest[0]._id}`
+            `https://www.charliehouseparty.club/?accept_event=${event[0]._id}&accept_user=${guest[0]._id}`
           );
 
-          const eventURL = `https://www.charliehouseparty.club/event/${_args.event_id}`;
+          const eventURL = `https://www.charliehouseparty.club/?event=${_args.event_id}`;
           const dateString = new Date(event[0].dateStart)
             .toISOString()
             .split("T");
@@ -564,7 +564,7 @@ export const resolvers = {
     },
   },
   Booking: {
-    event: async (a) => {
+    event: async a => {
       try {
         const event = await Event.findById(a.event);
         return transformEvent(event);
@@ -572,7 +572,7 @@ export const resolvers = {
         throw err;
       }
     },
-    user: async (a) => {
+    user: async a => {
       try {
         const user = await User.findById(a.user);
         return user;
@@ -580,7 +580,7 @@ export const resolvers = {
         throw err;
       }
     },
-    host: async (a) => {
+    host: async a => {
       try {
         const user = await User.findById(a.user);
         return user;

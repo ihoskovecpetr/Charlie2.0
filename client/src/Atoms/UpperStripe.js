@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -50,7 +50,6 @@ function UpperStripe({
   const classes = useStyles();
 
   const pathSet = location.pathname.split("/");
-  const disabledFromOut = false; // window.eventId ? true : false;
 
   return (
     <>
@@ -88,7 +87,6 @@ function UpperStripe({
                       <Button
                         color="inherit"
                         className={classes.buttonToBeHidden}
-                        disabled={disabledFromOut}
                         onClick={() => {
                           history.push(`/${ListOfUrls[index]}`);
                         }}
@@ -111,7 +109,6 @@ function UpperStripe({
                         classes.buttonToBeHidden,
                         classes.showSmall
                       )}
-                      disabled={disabledFromOut}
                       onClick={() => {
                         history.push(`/search`);
                       }}
@@ -131,7 +128,6 @@ function UpperStripe({
                   <Button
                     color="inherit"
                     className={classes.buttonNavi}
-                    disabled={disabledFromOut}
                     onClick={() => history.push(`/profile`)}
                   >
                     <p className={classes.ellipsName}>{context.name} X</p>
@@ -161,9 +157,11 @@ function UpperStripe({
                     <Button
                       color="inherit"
                       className={classes.buttonNavi}
-                      disabled={disabledFromOut}
                       onClick={() => {
-                        history.push("/signin");
+                        history.push({
+                          pathname: history.location.pathname,
+                          search: "?signin=true",
+                        });
                       }}
                     >
                       SIGN IN
@@ -183,7 +181,6 @@ function UpperStripe({
                   <Button
                     color="inherit"
                     className={classes.buttonNavi}
-                    disabled={disabledFromOut}
                     onClick={() => {
                       history.push("/profile");
                     }}
@@ -216,7 +213,7 @@ function UpperStripe({
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   upperWrap: {
     position: "fixed",
     top: 0,
