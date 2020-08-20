@@ -45,7 +45,10 @@ const ListTopHalf = ({ event, context, transparent, activeLinkEvent }) => {
 
   const redirectEvent = () => {
     if (activeLinkEvent) {
-      history.push(`/event/${event._id}`);
+      history.push({
+        pathname: history.location.pathname,
+        search: `?event=${event._id}`,
+      });
     }
   };
 
@@ -148,7 +151,7 @@ const ListTopHalf = ({ event, context, transparent, activeLinkEvent }) => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   blackBackContainer: {
     borderRadius: 15,
     marginTop: 20,

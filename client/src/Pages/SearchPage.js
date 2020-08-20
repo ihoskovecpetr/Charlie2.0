@@ -13,7 +13,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-import { useXsSize } from "../Hooks/useXsSize";
 import EventSearchResult from "src/Atoms/Search/EventSearchResult";
 import UserResult from "src/Atoms/Search/UserResult";
 
@@ -72,7 +71,6 @@ const SEARCH = gql`
 export default function Search() {
   const classes = useStyles();
   let history = useHistory();
-  const { md_size_memo } = useXsSize();
   const [text, setText] = useState();
   const [placeHolder, setPlaceHolder] = useState();
   const { loading, error, data, refetch } = useQuery(SEARCH, {
@@ -88,8 +86,7 @@ export default function Search() {
     setPlaceHolder(decodeURIComponent(query));
   }, []);
 
-  const handleChangeText = (value) => {
-    console.log("Value: ", value, value.target.value);
+  const handleChangeText = value => {
     setPlaceHolder(value.target.value);
   };
 
@@ -104,7 +101,7 @@ export default function Search() {
       style={{
         overflow: "hidden",
         color: false ? "white" : "black",
-        height: "100vh",
+        // height: "100vh",
         background: false
           ? "linear-gradient(90deg, rgba(29,47,94,1) 0%, rgba(104,81,123,1) 100%)"
           : null,
@@ -120,10 +117,8 @@ export default function Search() {
               value={placeHolder}
               fullWidth={true}
               name="text"
-              onKeyDown={(ev) => {
+              onKeyDown={ev => {
                 if (ev.key === "Enter") {
-                  //ev.preventDefault();
-                  console.log("onKeyDown: ENTER ", ev);
                   handleSearch();
                 }
               }}
@@ -181,7 +176,7 @@ export default function Search() {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainGridCont: {
     position: "relative",
     paddingTop: 20,

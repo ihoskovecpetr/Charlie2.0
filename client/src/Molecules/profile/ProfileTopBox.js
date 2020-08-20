@@ -15,7 +15,7 @@ import Collapse from "@material-ui/core/Collapse";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { NavLink, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
 
 import { UPDATE_USER } from "src/Services/GQL/UPDATE_USER";
@@ -53,7 +53,7 @@ export default function ProfileTopBox({ errorQuery, showRatings }) {
     }
   }, [dataOut]);
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = e => {
     e.preventDefault();
     let load = {
       _id: context._id,
@@ -64,7 +64,7 @@ export default function ProfileTopBox({ errorQuery, showRatings }) {
       picture: formValue ? formValue.picture : context.picture,
     };
     let empty = findEmpty(load);
-    empty = empty.map((item) => `${item} is Empty`);
+    empty = empty.map(item => `${item} is Empty`);
     if (load.password != load.password2) empty.push("Not matching passwords");
 
     console.log("Empty ones: ", empty);
@@ -245,7 +245,7 @@ export default function ProfileTopBox({ errorQuery, showRatings }) {
                   variant="contained"
                   color="primary"
                   className={classes.saveButton}
-                  onClick={(e) => {
+                  onClick={e => {
                     onSubmitHandler(e);
                   }}
                 >
@@ -261,11 +261,13 @@ export default function ProfileTopBox({ errorQuery, showRatings }) {
                       <Button
                         className={classes.outButton}
                         onClick={() => {
-                          history.push(`/signout`);
+                          history.push({
+                            pathname: history.location.pathname,
+                            search: "?signout=true",
+                          });
                         }}
                       >
                         SIGN OUT
-                        {/* <ExitToAppIcon /> */}
                       </Button>
                     </Grid>
                   </Grid>
@@ -295,7 +297,7 @@ export default function ProfileTopBox({ errorQuery, showRatings }) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainWrap: {
     backgroundColor: "rgba(0,0,0,0.1)",
   },

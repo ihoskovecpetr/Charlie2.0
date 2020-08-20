@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useParams, useHistory } from "react-router-dom";
+
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
@@ -11,6 +13,12 @@ import share_link from "src/Images/share_link.png";
 
 const About = () => {
   const classes = useStyles();
+
+  console.log("About rerender");
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <>
@@ -166,7 +174,7 @@ const About = () => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   aboutContainer: {
     paddingTop: 20,
   },

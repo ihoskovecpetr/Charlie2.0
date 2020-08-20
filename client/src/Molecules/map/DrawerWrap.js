@@ -22,7 +22,7 @@ import PlayPageMap from "src/Molecules/play/PlayPageMap";
 import { GET_ONE_EVENT } from "src/Services/GQL/GET_ONE_EVENT";
 import { EVENT_RATINGS } from "src/Services/GQL/EVENT_RATINGS";
 import EventButtons from "src/Molecules/event/EventButtons";
-import RatingCard from "src/Molecules/rating-card";
+import RatingCard from "src/Molecules/RatingCard";
 import Spinner from "src/Atoms/Spinner";
 
 let dataMock;
@@ -57,7 +57,7 @@ function DrawerWrap(props) {
 
   let dataDB;
 
-  const PaperEvent = (props) => {
+  const PaperEvent = props => {
     return (
       <Paper
         className={classes.paper}
@@ -184,7 +184,7 @@ function DrawerWrap(props) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   paper: {
     background: "#242323",
     color: "white",

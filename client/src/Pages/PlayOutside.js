@@ -40,7 +40,10 @@ export default function PlayOutside() {
 
   // const gointToApp = () => {
   //   window.eventId = history.location.pathname.split("/")[2];
-  //   history.push("/signin");
+  //   history.push({
+  //   pathname: history.location.pathname,
+  //   search: `?signin=true`,
+  // });
   // };
 
   return (
@@ -135,7 +138,7 @@ export default function PlayOutside() {
     </div>
   );
 }
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   playContainer: {
     padding: 0,
   },

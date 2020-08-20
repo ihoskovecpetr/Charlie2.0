@@ -39,7 +39,7 @@ export default function UserCardPlay(props) {
       return <Spinner height={100} width={100} />;
     }
     if (data) {
-      let arrValues = data.showRatings.map((x) => x.ratingValue);
+      let arrValues = data.showRatings.map(x => x.ratingValue);
       const arrAvg = arrValues.reduce((a, b) => a + b, 0) / arrValues.length;
       return (
         <>
@@ -57,7 +57,7 @@ export default function UserCardPlay(props) {
           xs={4}
           className={classes.clickableProfile}
           onClick={() => {
-            history.push(`/user/${props.author._id}`);
+            history.push(`/?user=${props.author._id}`);
           }}
         >
           <Grid container>
@@ -105,7 +105,7 @@ export default function UserCardPlay(props) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   avatar: {
     backgroundColor: red[500],
     // color: "lightgrey",

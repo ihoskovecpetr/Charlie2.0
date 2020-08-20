@@ -5,11 +5,10 @@ import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 
-import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 
-import { withRouter, useHistory, NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { useXsSize } from "src/Hooks/useXsSize";
 import { useCountdown } from "src/Hooks/useCountdown";
@@ -41,7 +40,12 @@ export default function EventCardProfile({ event, searchText }) {
     <Grid
       item
       className={classes.mainItem}
-      onClick={() => history.push(`/event/${event._id}`)}
+      onClick={() =>
+        history.push({
+          pathname: history.location.pathname,
+          search: `?event=${event._id}`,
+        })
+      }
       style={{ backgroundColor: bgColor }}
     >
       <Grid container alignItems="center" className={classes.mainSolidLine}>
@@ -75,7 +79,7 @@ export default function EventCardProfile({ event, searchText }) {
               {useHighlitedSearchString({
                 string: event.name,
                 searchText: searchText,
-              }).map((item) => item)}
+              }).map(item => item)}
             </b>{" "}
             hosted by <b>{event.author.name}</b>
           </Typography>
@@ -89,7 +93,7 @@ export default function EventCardProfile({ event, searchText }) {
                 {useHighlitedSearchString({
                   string: event.address,
                   searchText: searchText,
-                }).map((item) => item)}
+                }).map(item => item)}
                 , Start <b>{counteddownDate}</b>
               </Typography>
               <Typography
@@ -100,7 +104,7 @@ export default function EventCardProfile({ event, searchText }) {
                 {useHighlitedSearchString({
                   string: event.description,
                   searchText: searchText,
-                }).map((item) => item)}
+                }).map(item => item)}
               </Typography>
             </Grid>
             <Grid item xs={6} className={classes.partyOnGrid}>
@@ -113,7 +117,7 @@ export default function EventCardProfile({ event, searchText }) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainItem: {
     width: "100%",
     borderBottom: "1px solid lightGrey",

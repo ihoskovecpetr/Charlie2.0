@@ -1,24 +1,28 @@
 import React, { useState, useEffect, useMemo } from "react";
 
- export function useScrollY({y}) {
+let limit;
+
+export function useScrollY({ y }) {
   const [displayPlay, setDisplayPlay] = useState(false);
 
-  const limit = y ? y : 450
+  useEffect(() => {
+    limit = y ? y : 450;
+  }, [y]);
 
   useEffect(() => {
     const handleResize = () => {
-      if(window.scrollY >= limit && !displayPlay){
-        setDisplayPlay(true)
-      }else if(window.scrollY <= limit && displayPlay){
-        setDisplayPlay(false)
+      if (window.scrollY >= limit && !displayPlay) {
+        setDisplayPlay(true);
+      } else if (window.scrollY <= limit && displayPlay) {
+        setDisplayPlay(false);
       }
-    }
+    };
 
     window.addEventListener("scroll", handleResize);
     return () => {
       window.removeEventListener("scroll", handleResize);
     };
-  });
+  }, []);
 
   const displayPlay_memo = useMemo(() => {
     return displayPlay;

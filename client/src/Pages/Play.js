@@ -53,13 +53,17 @@ const MemoizedPlay = React.memo(function Play() {
   console.log("Play renderr : loading, error, data: ", loading, error, data);
 
   useEffect(() => {
+    console.log("Play full rerender");
+  }, []);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, [context.playFilterObj]);
 
   useEffect(() => {
     return () => {
       console.log("Going out of Play");
-      setContext((prev) => {
+      setContext(prev => {
         return {
           ...prev,
           playFilterObj: {
@@ -77,7 +81,7 @@ const MemoizedPlay = React.memo(function Play() {
         // context.playEventsCount === null
         console.log("Pass if null");
         //inactive to try less rerenders
-        setContext((prev) => {
+        setContext(prev => {
           return {
             ...prev,
             playFilterObj: {
@@ -101,7 +105,7 @@ const MemoizedPlay = React.memo(function Play() {
     setLoadingPlay(true);
     setTimeout(() => {
       // setDiscovered(discovered + 1)
-      setContext((prev) => {
+      setContext(prev => {
         return {
           ...prev,
           playFilterObj: {
@@ -249,7 +253,7 @@ const MemoizedPlay = React.memo(function Play() {
     </div>
   );
 });
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   playWrap: {
     width: "100%",
     top: 0,

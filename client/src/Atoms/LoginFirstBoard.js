@@ -14,7 +14,10 @@ function LoginFirstBoard() {
 
   const goToSignIn = () => {
     setTimeout(() => {
-      history.push(`/signin`);
+      history.push({
+        pathname: history.location.pathname,
+        search: `?signin=true`,
+      });
     }, 200);
   };
 
@@ -78,7 +81,7 @@ function LoginFirstBoard() {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainGrid: {
     height: 250,
     width: 200,

@@ -20,7 +20,7 @@ import { withRouter, useHistory, NavLink } from "react-router-dom";
 
 import { displayDate } from "../Services/transform-services";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: 500,
     width: "100%",
@@ -56,7 +56,7 @@ export default function RecipeReviewCard(props) {
     <Card className={classes.card}>
       <CardHeader
         avatar={
-          <NavLink to={`/user/${props.event.author._id}`}>
+          <NavLink to={`/?user=${props.event.author._id}`}>
             <Avatar
               aria-label="recipe"
               src={props.event.author.picture}
@@ -67,18 +67,20 @@ export default function RecipeReviewCard(props) {
           </NavLink>
         }
         action={
-          <NavLink to={`/event/${props.event._id}`}>
+          <NavLink to={`/?event=${props.event._id}`}>
             <IconButton aria-label="settings">
               <MoreVertIcon />
             </IconButton>
           </NavLink>
         }
         title={
-          <NavLink to={`/event/${props.event._id}`}>{props.event.name}</NavLink>
+          <NavLink to={`/?event=${props.event._id}`}>
+            {props.event.name}
+          </NavLink>
         }
         subheader={displayDate(props.event.dateStart)}
       />
-      <NavLink to={`/event/${props.event._id}`}>
+      <NavLink to={`/?event=${props.event._id}`}>
         <CardMedia
           className={classes.media}
           //image="/static/images/cards/paella.jpg"

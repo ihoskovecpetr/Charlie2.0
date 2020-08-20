@@ -49,7 +49,7 @@ function SignUp() {
     window.scrollTo(0, 0);
   }, []);
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = e => {
     e.preventDefault();
     let load = {
       name:
@@ -80,7 +80,7 @@ function SignUp() {
       typeSocial: false,
     };
     let empty = findEmpty(load);
-    empty = empty.map((item) => `${item} is Empty`);
+    empty = empty.map(item => `${item} is Empty`);
     if (load.password != load.password2) empty.push("Not matching passwords");
 
     console.log("Empty ones: ", empty);
@@ -101,7 +101,7 @@ function SignUp() {
     // window.localStorage.setItem("token", dataOut.token);
     setTimeout(() => {
       // window.localStorage.setItem("token", dataOut.token);
-      setContext((prev) => {
+      setContext(prev => {
         return {
           ...prev,
           showAlertAdviseEmail: true,
@@ -278,13 +278,13 @@ function SignUp() {
         </Grid>
         <Grid container justify="center">
           {feErrors &&
-            feErrors.map((item) => (
+            feErrors.map(item => (
               <Alert severity="error" key={item}>
                 {item}
               </Alert>
             ))}
           {errorOut &&
-            errorOut.map((item) => (
+            errorOut.map(item => (
               <Alert severity="error" key={item.message}>
                 {item.message}
               </Alert>
@@ -303,17 +303,20 @@ function SignUp() {
         </Button>
         <Grid container>
           <Grid item>
-            <NavLink to="#" className={classes.linkClass}></NavLink>
+            <Typography className={classes.linkClass}></Typography>
           </Grid>
           <Grid
             item
             onClick={() => {
-              history.push("/signin");
+              history.push({
+                pathname: history.location.pathname,
+                search: `?signin=true`,
+              });
             }}
           >
-            <NavLink to="/signin" className={classes.linkClass}>
+            <Typography className={classes.linkClass}>
               Already Signed up?
-            </NavLink>
+            </Typography>
           </Grid>
         </Grid>
         <Box mt={8}>
@@ -324,28 +327,7 @@ function SignUp() {
   );
 }
 
-// SignIn.getInitialProps = async context => {
-//   console.log("Sign IN INIT PROPS: CONTEXT ", context);
-//   // if (!loggedInUser.user) {
-//   //   // If not signed in, send them somewhere more useful
-//   //   redirect(context, "/signin");
-//   // }
-//   const { loggedInUser } = await checkLoggedIn(context.apolloClient);
-
-//   if (loggedInUser.user) {
-//     // Already signed in? No need to continue.
-//     // Throw them back to the main page
-//     //redirect(context, '/')
-//     console.log("We have User!!", loggedInUser.user);
-//     redirect(context, "/");
-//   } else {
-//     console.log("No User :[ ");
-//   }
-
-//   return {};
-// };
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   "@global": {
     body: {
       backgroundColor: theme.palette.common.white,

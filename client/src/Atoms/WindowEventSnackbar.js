@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Snackbar from '@material-ui/core/Snackbar';
-import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 
@@ -11,9 +11,9 @@ const useStyles = makeStyles(theme => ({
   spinnerWrap: {
     display: "flex",
     "& > * + *": {
-      marginLeft: theme.spacing(2)
-    }
-  }
+      marginLeft: theme.spacing(2),
+    },
+  },
 }));
 
 export default function WindowEventSnackbar(props) {
@@ -21,34 +21,43 @@ export default function WindowEventSnackbar(props) {
   let history = useHistory();
   const [open, setOpen] = useState(true);
 
-
   return (
     <>
-    {window.eventId && <Snackbar
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              open={window.eventId ? true : false}
-              autoHideDuration={6000}
-              message={`Event: ${window.eventId}`}
-              action={
-                <>
-                  <Button color="secondary" size="small" onClick={() => {history.replace(`/event/${window.eventId}`)}}>
-                    OPEN
-                  </Button>
-                  <IconButton   size="small" 
-                                aria-label="close" 
-                                color="inherit" 
-                                onClick={() => {
-                                    window.eventId = null
-                                    setOpen(false)
-                                    }} >
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                </>
-              }
-            />}
+      {window.eventId && (
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          open={window.eventId ? true : false}
+          autoHideDuration={6000}
+          message={`Event: ${window.eventId}`}
+          action={
+            <>
+              <Button
+                color="secondary"
+                size="small"
+                onClick={() => {
+                  history.replace(`/?event=${window.eventId}`);
+                }}
+              >
+                OPEN
+              </Button>
+              <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={() => {
+                  window.eventId = null;
+                  setOpen(false);
+                }}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </>
+          }
+        />
+      )}
     </>
   );
 }

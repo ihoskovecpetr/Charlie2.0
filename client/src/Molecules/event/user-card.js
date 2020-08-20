@@ -41,9 +41,8 @@ export default function UserCard(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(2);
   const { loading, error, data } = useQuery(HOST_RATINGS, {
-    variables: { host_id: props.author._id }
+    variables: { host_id: props.author._id },
   });
-
 
   const SubHeader = () => {
     if (loading) {
@@ -74,7 +73,7 @@ export default function UserCard(props) {
           </Avatar>
         }
         action={
-          <NavLink to={`/user/${props.author._id}`}>
+          <NavLink to={`/?user=${props.author._id}`}>
             <IconButton aria-label="settings">
               <MoreVertIcon className={classes.dots} />
             </IconButton>
@@ -99,16 +98,16 @@ const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: 345,
     width: "100%",
-    background: "#600328"
+    background: "#600328",
   },
   avatar: {
     backgroundColor: red[500],
-    color: "lightgrey"
+    color: "lightgrey",
   },
   dots: {
-    color: "lightgrey"
+    color: "lightgrey",
   },
   whiteText: {
-    color: "lightgrey"
-  }
+    color: "lightgrey",
+  },
 }));

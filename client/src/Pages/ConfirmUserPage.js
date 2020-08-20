@@ -1,17 +1,18 @@
 import React, { useState, useContext, useEffect } from "react";
-import CssBaseline from "@material-ui/core/CssBaseline";
+
+import { withRouter, useHistory } from "react-router-dom";
+import { useMutation } from "@apollo/react-hooks";
+import gql from "graphql-tag";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
-import { withRouter, useHistory } from "react-router-dom";
-import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
-
 import { UserContext } from "src/Contexts/userContext";
 
+import ModalLayout from "src/Layouts/ModalLayout";
 import Spinner from "src/Atoms/Spinner";
 
 const CONFIRM_QUERY = gql`
@@ -30,6 +31,7 @@ const CONFIRM_QUERY = gql`
 function ConfirmUserPage(props) {
   const classes = useStyles();
   let history = useHistory();
+  let query = new URLSearchParams(history.location.search);
   const { context, setContext } = useContext(UserContext);
   const [confirmUser, confirmUserStates] = useMutation(CONFIRM_QUERY);
 
@@ -40,7 +42,7 @@ function ConfirmUserPage(props) {
   useEffect(() => {
     confirmUser({
       variables: {
-        user_id: props.match.params.user_id,
+        user_id: query.get("confirm"),
       },
     });
   }, []);
@@ -53,62 +55,64 @@ function ConfirmUserPage(props) {
   console.log("dataOut: ", dataOut);
 
   return (
-    <Container maxWidth="sm" className={classes.mainContainer}>
-      <Grid
-        container
-        direction="column"
-        justify="center"
-        alignItems="center"
-        className={classes.containerGrid}
-      >
-        {confirmUserStates && confirmUserStates.loading && (
-          <>
-            <Grid item alignContent="center">
-              <Typography variant="h6">LOADING..</Typography>
-            </Grid>
-            <Grid item>
-              <Spinner height={50} width={50} />
-            </Grid>
-          </>
-        )}
+    <ModalLayout>
+      <Container maxWidth="sm" className={classes.mainContainer}>
+        <Grid
+          container
+          direction="column"
+          justify="center"
+          alignItems="center"
+          className={classes.containerGrid}
+        >
+          {confirmUserStates && confirmUserStates.loading && (
+            <>
+              <Grid item alignContent="center">
+                <Typography variant="h6">LOADING..</Typography>
+              </Grid>
+              <Grid item>
+                <Spinner height={50} width={50} />
+              </Grid>
+            </>
+          )}
 
-        {dataOut && dataOut.success && (
-          <>
+          {dataOut && dataOut.success && (
+            <>
+              <Grid item>
+                <Typography variant="h6">Email Confirmed</Typography>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleGoMenu}
+                >
+                  Go to APP
+                </Button>
+              </Grid>
+            </>
+          )}
+          {dataOut && !dataOut.success && (
             <Grid item>
-              <Typography variant="h6">Email Confirmed</Typography>
+              <Typography variant="h6">confirmation FAILED</Typography>
             </Grid>
+          )}
+          {!dataOut && confirmUserStates && !confirmUserStates.loading && (
             <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleGoMenu}
-              >
-                Go to APP
-              </Button>
+              <Typography variant="h6">NO DATA</Typography>
             </Grid>
-          </>
-        )}
-        {dataOut && !dataOut.success && (
-          <Grid item>
-            <Typography variant="h6">confirmation FAILED</Typography>
-          </Grid>
-        )}
-        {!dataOut && confirmUserStates && !confirmUserStates.loading && (
-          <Grid item>
-            <Typography variant="h6">NO DATA</Typography>
-          </Grid>
-        )}
-      </Grid>
-    </Container>
+          )}
+        </Grid>
+      </Container>
+    </ModalLayout>
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainContainer: {
     marginTop: 80,
-    paddingLeft: 40,
-    paddingRight: 40,
-    borderRadius: 20,
+    padding: 20,
+    borderRadius: 5,
+    backgroundColor: "white",
   },
   containerGrid: {
     padding: 10,

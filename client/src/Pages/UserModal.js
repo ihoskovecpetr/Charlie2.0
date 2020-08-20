@@ -10,14 +10,14 @@ import CloseIcon from "@material-ui/icons/Close";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Rating from "@material-ui/lab/Rating";
 
-import { withRouter, useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
 import { USER_RATINGS } from "src/Services/GQL/USER_RATINGS";
 
-import ModalLayout from "../Layouts/ModalLayout";
-import RatingCard from "../Molecules/rating-card";
+import ModalLayout from "src/Layouts/ModalLayout";
+import RatingCard from "src/Molecules/RatingCard";
 import ReceivedRatingsCard from "src/Atoms/Profile/ReceivedRatingsCard";
 import Spinner from "../Atoms/Spinner";
 import Copyright from "../Atoms/copyright";
@@ -41,14 +41,15 @@ const GET_USER = gql`
   }
 `;
 
-function UserModal(props) {
+function UserModal() {
   const classes = useStyles();
   const theme = useTheme();
   let history = useHistory();
-  let match = useRouteMatch();
+  let query = new URLSearchParams(history.location.search);
+
   const { loading, error, data, refetch } = useQuery(GET_USER, {
     variables: {
-      user_id: match.params.id,
+      user_id: query.get("user"),
       // limit: 2
     },
     //skip: !id,
@@ -56,14 +57,14 @@ function UserModal(props) {
   });
 
   const ratingStates = useQuery(USER_RATINGS, {
-    variables: { host_id: match.params.id },
+    variables: { host_id: query.get("user") },
   });
 
   console.log("RENDERING USER MODAL: ", data);
 
   let dataDB;
 
-  const PaperUser = (props) => {
+  const PaperUser = props => {
     return (
       <Grid container justify="center" className={classes.paperUser}>
         {props.children}
@@ -219,7 +220,7 @@ function UserModal(props) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   opaque: {
     // flexGrow: 1,
     background: "rgba(100,10,10,0.2)",
@@ -284,4 +285,4 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default withRouter(UserModal);
+export default UserModal;

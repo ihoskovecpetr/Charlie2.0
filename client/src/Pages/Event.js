@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Avatar from "@material-ui/core/Avatar";
 
-import { withRouter, useHistory, NavLink } from "react-router-dom";
+import { withRouter, useHistory } from "react-router-dom";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 import Gallery from "react-grid-gallery";
 import { displayDate } from "../Services/transform-services";
@@ -24,7 +24,7 @@ import { GET_ONE_EVENT } from "src/Services/GQL/GET_ONE_EVENT";
 import { EVENT_RATINGS } from "src/Services/GQL/EVENT_RATINGS";
 import ModalLayout from "../Layouts/ModalLayout";
 import EventButtons from "../Molecules/event/EventButtons";
-import RatingCard from "../Molecules/rating-card";
+import RatingCard from "src/Molecules/RatingCard";
 import Spinner from "../Atoms/Spinner";
 
 let dataMock;
@@ -32,14 +32,20 @@ let dataMock;
 function Event(props) {
   const classes = useStyles();
   const [windowHeight, setWindowHeight] = useState(0);
+  let history = useHistory();
+
+  let query = new URLSearchParams(history.location.search);
   const { loading, error, data, refetch } = useQuery(GET_ONE_EVENT, {
-    variables: { event_id: props.match.params.id },
+    variables: { event_id: query.get("event") },
   });
   const ratings = useQuery(EVENT_RATINGS, {
     variables: { event_id: props.match.params.id },
   });
 
-  console.log("Event modal print");
+  useEffect(() => {
+    console.log("Event full rerender");
+  }, []);
+
   useEffect(() => {
     window.scrollTo(0, 0);
     setWindowHeight(window.innerHeight);
@@ -57,7 +63,7 @@ function Event(props) {
 
   let dataDB;
 
-  const PaperEvent = (props) => {
+  const PaperEvent = props => {
     return (
       <Paper
         className={classes.paper}
@@ -173,7 +179,7 @@ function Event(props) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   paper: {
     background: "#242323",
     marginTop: "10vh",

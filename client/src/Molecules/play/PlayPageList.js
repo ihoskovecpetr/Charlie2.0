@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -40,20 +40,25 @@ const PlayPageList = ({
   const classes = useStyles();
   const { xs_size_memo, md_size_memo } = useXsSize();
   const { context, setContext } = useContext(UserContext);
+  const [confirmedBookings, setConfirmedBookings] = useState(0);
   const [openTooltip, setOpenTooltip] = useState(false);
   let history = useHistory();
   //Count confirmed
-  var confBookings = 0;
-  if (bookings) {
-    confBookings = bookings.filter((booking) => {
-      if (booking.confirmed) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
-  console.log("confBookings: ", confBookings, event.name);
+
+  useEffect(() => {
+    let confBookings = 0;
+
+    if (bookings) {
+      confBookings = bookings.filter(booking => {
+        if (booking.confirmed && !booking.cancelled) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }
+    setConfirmedBookings(confBookings);
+  }, [bookings]);
 
   let bgColor = "transparent";
   if (md_size_memo) {
@@ -141,7 +146,7 @@ const PlayPageList = ({
         <Grid container alignItems="center" justify="flex-end">
           <Grid item xs={12}>
             <Typography variant="subtitle1" className={classes.lineHeader}>
-              ATTENDEES ({confBookings && confBookings.length}/
+              ATTENDEES ({confirmedBookings && confirmedBookings.length}/
               {event.capacityMax})
             </Typography>
           </Grid>
@@ -195,7 +200,7 @@ const PlayPageList = ({
               <Grid item xs={12}>
                 <Grid container justify="center">
                   {bookings &&
-                    bookings.map((booking) => {
+                    bookings.map(booking => {
                       console.log("Booking: ", booking);
                       if (!booking.decided) {
                         return (
@@ -266,7 +271,7 @@ const PlayPageList = ({
                 className={classes.copyLink}
                 fullWidth
                 variant="outlined"
-                value={`https://www.charliehouseparty.club/event/${event._id}`}
+                value={`https://www.charliehouseparty.club/?event=${event._id}`}
               />
             </Grid>
           </Grid>
@@ -312,7 +317,7 @@ const PlayPageList = ({
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainContainer: {
     paddingTop: 5,
     paddingBottom: "0px",

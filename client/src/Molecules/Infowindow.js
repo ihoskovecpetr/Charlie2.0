@@ -93,7 +93,7 @@ function Infowindow(props) {
     };
   }, []);
 
-  const handleClickOpen = (e) => {
+  const handleClickOpen = e => {
     console.log("handleClickOpen EE");
     e.preventDefault();
     e.stopPropagation();
@@ -117,7 +117,7 @@ function Infowindow(props) {
   //   //               </ApolloProvider>
   //   // )
 
-  //   // var string = "/event/" + props.location._id;
+  //   // var string = "/?event=" + props.location._id;
   //   // window.AppHistory.push(string, {
   //   //   //tady: napsatStateKdyžtak
   //   // });
@@ -185,7 +185,7 @@ function Infowindow(props) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   img: {
     height: 100,
     width: 200,

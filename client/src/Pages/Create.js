@@ -67,14 +67,14 @@ function Create() {
   //Day +- one day
   const plusDay = () => {
     den.setDate(den.getDate() + 1);
-    setFormValue((prev) => {
+    setFormValue(prev => {
       return { ...prev, startDate: den };
     });
   };
 
   const minusDay = () => {
     den.setDate(den.getDate() - 1);
-    setFormValue((prev) => {
+    setFormValue(prev => {
       return { ...prev, startDate: den };
     });
   };
@@ -83,7 +83,7 @@ function Create() {
   const plusHour = () => {
     den.setHours(den.getHours() + 1);
     let isoDen = den.toISOString().split(":")[0];
-    setFormValue((prev) => {
+    setFormValue(prev => {
       return { ...prev, startDate: `${isoDen}:00:00.000Z` };
     });
   };
@@ -91,7 +91,7 @@ function Create() {
   const minusHour = () => {
     den.setHours(den.getHours() - 1);
     let isoDen = den.toISOString().split(":")[0];
-    setFormValue((prev) => {
+    setFormValue(prev => {
       return { ...prev, startDate: `${isoDen}:00:00.000Z` };
     });
   };
@@ -99,7 +99,10 @@ function Create() {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!context._id) {
-      history.push("/signin");
+      history.push({
+        pathname: history.location.pathname,
+        search: `?signin=true`,
+      });
     }
   }, []);
 
@@ -107,7 +110,7 @@ function Create() {
     if (dataOut) {
       setDialogOpen(true);
       // setTimeout(() => {
-      //   history.push(`/event/${dataOut._id}`);
+      //   history.push(`/?event=${dataOut._id}`);
       // }, 200);
     }
   }, [dataOut]);
@@ -118,7 +121,7 @@ function Create() {
   const inputDescription = useRef(null);
   const inputMarker = useRef(null);
 
-  const onSubmit = (e) => {
+  const onSubmit = e => {
     e.preventDefault();
 
     let load = {
@@ -174,20 +177,20 @@ function Create() {
     }
   };
 
-  const handleDateChange = (date) => {
-    setFormValue((prev) => {
+  const handleDateChange = date => {
+    setFormValue(prev => {
       return { ...prev, startDate: date };
     });
   };
 
-  const handleChangeCurrency = (event) => {
-    setFormValue((prev) => {
+  const handleChangeCurrency = event => {
+    setFormValue(prev => {
       return { ...prev, currency: event.target.value };
     });
   };
 
   const handleChangeBYO = () => {
-    setFormValue((prev) => {
+    setFormValue(prev => {
       return { ...prev, BYO: !formValue.BYO };
     });
   };

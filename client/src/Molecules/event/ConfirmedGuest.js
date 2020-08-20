@@ -11,8 +11,7 @@ import { NavLink } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
 import { ALL_EVENTS, CANCELLING_BOOKING } from "../../Services/GQL";
 
-
-function ConfirmedGuest({event, bookings, GQL_refetch, refetchVariables}) {
+function ConfirmedGuest({ event, bookings, GQL_refetch, refetchVariables }) {
   const classes = useStyles();
   const [cancellingMutation, cancellingState] = useMutation(CANCELLING_BOOKING);
 
@@ -20,14 +19,24 @@ function ConfirmedGuest({event, bookings, GQL_refetch, refetchVariables}) {
   let overFlowGst = false;
   let leftoverGst = [];
 
-  console.log("ConfirmedGuest, bookings: ", bookings,);
+  console.log("ConfirmedGuest, bookings: ", bookings);
 
   return (
-    <Grid container justify="flex-start" alignItems="center" direction="row" className={classes.mainContainer}>
+    <Grid
+      container
+      justify="flex-start"
+      alignItems="center"
+      direction="row"
+      className={classes.mainContainer}
+    >
       {event && event.areYouAuthor ? ( //
         <>
-          {bookings && bookings.map((booking, index) => 
-            booking.confirmed && !booking.cancelled && <Grid item key={index}>
+          {bookings &&
+            bookings.map(
+              (booking, index) =>
+                booking.confirmed &&
+                !booking.cancelled && (
+                  <Grid item key={index}>
                     {cancellingState && cancellingState.loading && (
                       <Chip
                         className={classes.chip}
@@ -64,27 +73,32 @@ function ConfirmedGuest({event, bookings, GQL_refetch, refetchVariables}) {
                           cancellingMutation({
                             variables: {
                               user_id: booking.user._id,
-                              event_id: event._id
+                              event_id: event._id,
                             },
                             refetchQueries: () => [
                               {
                                 query: GQL_refetch,
-                                variables: { id: event._id, ...refetchVariables }
+                                variables: {
+                                  id: event._id,
+                                  ...refetchVariables,
+                                },
                               },
                               {
                                 query: ALL_EVENTS,
                                 variables: {
                                   date: new Date(event.dateStart)
                                     .toISOString()
-                                    .split("T")[0]
-                                }
-                              }
-                            ]
+                                    .split("T")[0],
+                                },
+                              },
+                            ],
                           });
                         }}
                       />
                     )}
-                    {cancellingState && !cancellingState.loading && event &&
+                    {cancellingState &&
+                      !cancellingState.loading &&
+                      event &&
                       !event.areYouAuthor && (
                         <Chip
                           className={classes.chip}
@@ -103,33 +117,35 @@ function ConfirmedGuest({event, bookings, GQL_refetch, refetchVariables}) {
                         />
                       )}
                   </Grid>
-   )}
+                )
+            )}
         </>
       ) : (
         <Grid container>
           <Grid item>
             <AvatarGroup>
-              {bookings && bookings.map((booking, index) => {
-                if (booking.confirmed) {
-                  countGuests++;
-                  if (index <= 4) {
-                    return (
-                      <NavLink
-                        to={`/user/${booking.user._id}`}
-                        className={classes.noBorder}
-                        key={index}
-                      >
-                        <Avatar alt="Remy Sharp" src={booking.user.picture} />
-                      </NavLink>
-                    );
+              {bookings &&
+                bookings.map((booking, index) => {
+                  if (booking.confirmed) {
+                    countGuests++;
+                    if (index <= 4) {
+                      return (
+                        <NavLink
+                          to={`/?user=${booking.user._id}`}
+                          className={classes.noBorder}
+                          key={index}
+                        >
+                          <Avatar alt="Remy Sharp" src={booking.user.picture} />
+                        </NavLink>
+                      );
+                    } else {
+                      overFlowGst = true;
+                      leftoverGst.push(booking.user.name);
+                    }
                   } else {
-                    overFlowGst = true;
-                    leftoverGst.push(booking.user.name);
+                    return null;
                   }
-                } else {
-                  return null;
-                }
-              })}
+                })}
               {overFlowGst && (
                 <Tooltip title={leftoverGst.map(name => `${name} • `)}>
                   <Avatar>+{countGuests - 5}</Avatar>
@@ -145,12 +161,12 @@ function ConfirmedGuest({event, bookings, GQL_refetch, refetchVariables}) {
 
 const useStyles = makeStyles(theme => ({
   mainContainer: {
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   chip: {},
   noBorder: {
-    border: "0px solid black"
-  }
+    border: "0px solid black",
+  },
 }));
 
 export default ConfirmedGuest;

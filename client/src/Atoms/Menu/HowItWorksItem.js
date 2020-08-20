@@ -7,7 +7,7 @@ import { useSpring, animated } from "react-spring";
 import useVisibilitySensor from "@rooks/use-visibility-sensor";
 import { useHistory } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainItem: {
     height: 274,
     padding: 10,
@@ -34,19 +34,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function HowItWorksItem({
-  image,
-  subtitle,
-  text,
-  location,
-  translate,
-}) {
+export default function HowItWorksItem({ image, subtitle, text, location }) {
   const classes = useStyles();
   let history = useHistory();
-  const [expanded, setExpanded] = React.useState(false);
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+
   const rootNode = useRef(null);
 
   const { isVisible, visibilityRect } = useVisibilitySensor(rootNode, {
