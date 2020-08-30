@@ -47,11 +47,10 @@ export const PLAY_EVENTS_QUERY = gql`
         thumbnail
         thumbnailHeight
         thumbnailWidth
-        scaletwidth
         marginLeft
         vwidth
       }
-      bookings{
+      bookings {
         _id
         createdAt
         updatedAt
@@ -63,17 +62,16 @@ export const PLAY_EVENTS_QUERY = gql`
         entered
         seenUser
         seenHost
-        user{
+        user {
           _id
           name
           picture
         }
-        event{
+        event {
           _id
           name
         }
       }
     }
-
   }
 `;

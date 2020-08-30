@@ -38,14 +38,6 @@ export default function PendingBokingCard({ booking }) {
   //   variables: { event_id: booking.event._id },
   // });
 
-  console.log(
-    "Rerender PendingBokingCard: getting EVENT ",
-    { ...booking.event, bookings: [booking] }
-    // loading,
-    // error,
-    // data
-  );
-
   useEffect(() => {
     if (booking.decided) {
       if (booking.confirmed) {
@@ -255,7 +247,7 @@ export default function PendingBokingCard({ booking }) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainItem: {
     // borderRadius: 15,
     // borderBottom: "3px solid white" //#707070

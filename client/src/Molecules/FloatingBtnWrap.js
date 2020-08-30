@@ -12,7 +12,7 @@ function FloatingBtnWrap() {
   console.log("FloatingBtnWrap rerender");
 
   const pathSet = history.location.pathname.split("/");
-  //TODO: redo
+  //TODO: redo, is showing up on '/' after being redirected there
   return (
     <>
       {pathSet[1] !== "play" &&

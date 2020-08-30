@@ -5,10 +5,10 @@ import {
   userLookup,
   singleEvent,
   //transformBooking,
-  transformEvent
+  transformEvent,
 } from "./merge";
 
-export const typeDef = newFunction();
+export const typeDef = getTypeDefs();
 export const resolvers = {
   Query: {
     showRatings: async (_, _args, __) => {
@@ -19,12 +19,12 @@ export const resolvers = {
         } else if (_args.host_id) {
           ratings = await Rating.find({ host: _args.host_id });
         }
-        return ratings.map(rating => {
+        return ratings.map((rating) => {
           return {
             ...rating._doc,
             createdAt: new Date(rating._doc.createdAt).toISOString(),
             updatedAt: new Date(rating._doc.updatedAt).toISOString(),
-            success: true
+            success: true,
           };
         });
         return ratings;
@@ -35,15 +35,18 @@ export const resolvers = {
     showMyRatingOfEvent: async (_, _args, __) => {
       try {
         let ratings;
-        ratings = await Rating.find({ event: _args.event_id, guest: _args.guest_id });
-        console.log("Found some Your RAT:", ratings)
+        ratings = await Rating.find({
+          event: _args.event_id,
+          guest: _args.guest_id,
+        });
+        console.log("Found some Your RAT:", ratings);
 
-        return ratings.map(rating => {
+        return ratings.map((rating) => {
           return {
             ...rating._doc,
             createdAt: new Date(rating._doc.createdAt).toISOString(),
             updatedAt: new Date(rating._doc.updatedAt).toISOString(),
-            success: true
+            success: true,
           };
         });
       } catch (err) {
@@ -58,7 +61,7 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
-    }
+    },
   },
   Mutation: {
     rateEvent: async (_, _args, __) => {
@@ -71,7 +74,7 @@ export const resolvers = {
           guest: _args.guest_id,
           ratingValue: _args.ratingValue,
           message: _args.message,
-          seenHost: false
+          seenHost: false,
         });
         const result = await rating.save();
         if (result) {
@@ -86,8 +89,8 @@ export const resolvers = {
     markRatingSeen: async (_, _args, __) => {
       try {
         const result = await Rating.update(
-          { _id: _args.rating_id},
-          { $set: {seenHost: true}}
+          { _id: _args.rating_id },
+          { $set: { seenHost: true } }
         );
 
         if (result.ok) {
@@ -98,10 +101,10 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
-    }
+    },
   },
   Rating: {
-    event: async a => {
+    event: async (a) => {
       try {
         const eventX = await Event.findById(a.event);
         return transformEvent(eventX);
@@ -117,11 +120,11 @@ export const resolvers = {
       } catch (err) {
         throw err;
       }
-    }
-  }
+    },
+  },
 };
 
-function newFunction() {
+function getTypeDefs() {
   return `
   extend type Query {
     showRatings(event_id: ID, host_id: ID): [Rating]

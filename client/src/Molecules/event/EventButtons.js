@@ -1,9 +1,7 @@
 import React, { useEffect, useContext, useState } from "react";
 import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
 import CloseIcon from "@material-ui/icons/Close";
 import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
-import Chip from "@material-ui/core/Chip";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { useHistory } from "react-router-dom";
@@ -152,6 +150,7 @@ const MemoizedEventBtns = React.memo(function EventButtons({
           event_id: event._id,
         },
         refetchQueries: () => [
+          // TODO: move this into hook??
           {
             query: GET_ONE_EVENT,
             variables: { event_id: event._id },
@@ -195,7 +194,7 @@ const MemoizedEventBtns = React.memo(function EventButtons({
     }
   };
 
-  const cancelEventHandle = () => {
+  const handleCancelOfEvent = () => {
     var r = window.confirm("Are you sure you want to calcel this event?");
     if (r == true) {
       cancelEvent({
@@ -378,7 +377,7 @@ const MemoizedEventBtns = React.memo(function EventButtons({
           color="secondary"
           variant="contained"
           fullWidth
-          onClick={cancelEventHandle}
+          onClick={handleCancelOfEvent}
         >
           CANCEL this event
         </Button>

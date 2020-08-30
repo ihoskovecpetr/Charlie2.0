@@ -4,90 +4,20 @@ import jwt from "jsonwebtoken";
 import { authorsEvents } from "./merge.js";
 import { updateUserYupSchema } from "./Utils/updateUserYupSchema.js";
 import { formatYupError } from "./Utils/formatError.js";
+import EmailModule from "../MailTransportUtils/createSmtpTransport.js";
+
 import {
   duplicate_email_Error,
-  //duplicate_email_social_Error,
   mismatch_login_Error,
   server_Error,
   email_not_confirmed_Error,
 } from "./Utils/errorPile";
 
-const nodemailer = require("nodemailer");
-const path = require("path");
-const { google } = require("googleapis");
-
-export const typeDef = `
-  extend type Query {
-    getOneUser(user_id: ID, limit: Int): User
-    deleteAllUsers: String
-  }
-
-  extend type Mutation {
-    newUser(name: String!, password: String!, socialId: String, email: String!, telephone: String, description: String!, picture: String, typeSocial: Boolean, typeDirect: Boolean): ResponseUser
-    confirmUser(user_id: ID): ResponseUser
-    updateUser(_id: ID, name: String, password: String, socialId: String, email: String, telephone: String, description: String, picture: String, typeSocial: Boolean, typeDirect: Boolean): ResponseUser
-    login(emailOrName: String! password: String!): ResponseUser
-    loginExternal(email: String! id: String!): ResponseUser
-    getLoggedInUser: User
-    custommerEnquiry(email: String! desc: String!): SucsResp
-  }
-
-  type User {
-    _id: ID
-    success: Boolean
-    name: String
-    password: String
-    description: String
-    email: String
-    telephone: String
-    picture: String
-    token: String
-    createdEvents: [Event!]
-    socialId: String
-    typeSocial: Boolean
-    typeDirect: Boolean
-  }
-
-  type ResponseUser {
-    dataOut: User
-    errorOut:[Error]
-  }
-  type SucsResp {
-    success: Boolean
-  }
-`;
-
-const OAuth2 = google.auth.OAuth2;
-
-const oauth2Client = new OAuth2(
-  "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com", // ClientID
-  "w6myevje4fX4ule3Lnr7_zBI", // Client Secret
-  "https://developers.google.com/oauthplayground" // Redirect URL
-);
-
-oauth2Client.setCredentials({
-  refresh_token:
-    "1//04hOsAJbgaDOgCgYIARAAGAQSNwF-L9IrhdZywiV91vSsjiwrJ1mPSBxqzoiTZ6Kg-mMWIPTeB2jZc9qr_dvuG0pwvpdGkdk5Ma4",
-});
-
-const accessToken = oauth2Client.getAccessToken();
-
-const smtpTransport = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    type: "OAuth2",
-    user: "charliehouseparty@gmail.com",
-    clientId:
-      "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com",
-    clientSecret: "w6myevje4fX4ule3Lnr7_zBI",
-    refreshToken:
-      "1//04hOsAJbgaDOgCgYIARAAGAQSNwF-L9IrhdZywiV91vSsjiwrJ1mPSBxqzoiTZ6Kg-mMWIPTeB2jZc9qr_dvuG0pwvpdGkdk5Ma4",
-    accessToken: accessToken,
-  },
-});
+const smtpTransport = EmailModule.getSmtpTransport();
 
 const hbs = require("nodemailer-express-handlebars");
 
+export const typeDef = getTypeDefs();
 export const resolvers = {
   Mutation: {
     newUser: async (_, _args, __) => {
@@ -461,3 +391,46 @@ export const resolvers = {
     },
   },
 };
+
+function getTypeDefs() {
+  return `
+extend type Query {
+  getOneUser(user_id: ID, limit: Int): User
+  deleteAllUsers: String
+}
+
+extend type Mutation {
+  newUser(name: String!, password: String!, socialId: String, email: String!, telephone: String, description: String!, picture: String, typeSocial: Boolean, typeDirect: Boolean): ResponseUser
+  confirmUser(user_id: ID): ResponseUser
+  updateUser(_id: ID, name: String, password: String, socialId: String, email: String, telephone: String, description: String, picture: String, typeSocial: Boolean, typeDirect: Boolean): ResponseUser
+  login(emailOrName: String! password: String!): ResponseUser
+  loginExternal(email: String! id: String!): ResponseUser
+  getLoggedInUser: User
+  custommerEnquiry(email: String! desc: String!): SuccessfulResponse
+}
+
+  type User {
+    _id: ID
+    success: Boolean
+    name: String
+    password: String
+    description: String
+    email: String
+    telephone: String
+    picture: String
+    token: String
+    createdEvents: [Event!]
+    socialId: String
+    typeSocial: Boolean
+    typeDirect: Boolean
+  }
+  
+  type ResponseUser {
+    dataOut: User
+    errorOut:[Error]
+  }
+  type SuccessfulResponse {
+    success: Boolean
+  }
+  `;
+}

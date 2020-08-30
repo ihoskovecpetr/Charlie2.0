@@ -35,11 +35,10 @@ export const GET_ONE_EVENT = gql`
         thumbnail
         thumbnailHeight
         thumbnailWidth
-        scaletwidth
         marginLeft
         vwidth
       }
-      bookings{
+      bookings {
         _id
         createdAt
         updatedAt
@@ -51,17 +50,17 @@ export const GET_ONE_EVENT = gql`
         entered
         seenUser
         seenHost
-        user{
+        user {
           _id
           name
           picture
         }
-        host{
+        host {
           _id
           name
           picture
         }
-        event{
+        event {
           _id
           name
         }

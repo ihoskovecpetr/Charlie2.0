@@ -15,20 +15,20 @@ import LoginFirstBoard from "src/Atoms/LoginFirstBoard";
 import EventCard from "src/Atoms/EventCard";
 
 const USER_NEW_BOOKINGS = gql`
-  mutation newestUserBookings($user_id: ID!) {
-    newestUserBookings(user_id: $user_id) {
+  query showNewestUserBookings($user_id: ID!) {
+    showNewestUserBookings(user_id: $user_id) {
       event {
         _id
         name
         description
         dateStart
+        dateEnd
         imagesArr {
           caption
           src
           thumbnail
           thumbnailHeight
           thumbnailWidth
-          scaletwidth
           marginLeft
           vwidth
         }
@@ -42,39 +42,43 @@ const USER_NEW_BOOKINGS = gql`
   }
 `;
 
-// let Sorted = [];
-
-export default function Screen3(props) {
+export default function Screen3() {
   const classes = useStyles();
   const [sorted, setSorted] = useState([]);
   const { context } = useContext(UserContext);
-  const [newBookingsArr, { loading, error, data }] = useMutation(
-    USER_NEW_BOOKINGS
-  );
 
-  useEffect(() => {
-    if (context.success && context._id && !loading && !data) {
-      newBookingsArr({ variables: { user_id: context._id } });
-    }
-  }, [context]);
+  const { loading, error, data } = useQuery(USER_NEW_BOOKINGS, {
+    variables: { user_id: context._id },
+  });
 
   useEffect(() => {
     let workSorted = [];
 
+    console.log("pre: ", data && data.showNewestUserBookings);
+
     if (data) {
-      console.log("Sorted0: data ", data);
+      workSorted = data.showNewestUserBookings.reduce(
+        (accumulator, currentValue) => {
+          console.log(
+            "Hmm> ",
+            new Date(currentValue.event.dateEnd) >= new Date(),
+            accumulator
+          );
+          if (new Date(currentValue.event.dateEnd) >= new Date()) {
+            return [...accumulator, currentValue.event];
+          }
+          return accumulator;
+        },
+        []
+      );
 
-      workSorted = data.newestUserBookings.filter((item) => {
-        if (item.event) return true;
-        return false;
-      });
-
-      console.log("Sorted1: ", workSorted);
+      console.log("workReduced: ", workSorted);
 
       if (workSorted.length >= 2) {
-        workSorted = data.newestUserBookings.sort(function(a, b) {
-          let aDate = new Date(a.event.dateStart);
-          let bDate = new Date(b.event.dateStart);
+        console.log("Not getting here");
+        workSorted = workSorted.sort(function(a, b) {
+          let aDate = new Date(a.dateEnd);
+          let bDate = new Date(b.dateEnd);
           if (aDate > bDate) {
             return 1;
           }
@@ -83,10 +87,9 @@ export default function Screen3(props) {
           }
         });
       }
-      console.log("To State those sorted: ", workSorted);
+      setSorted(workSorted);
     }
-    setSorted(workSorted);
-  }, [data, data && data.newestUserBookings]);
+  }, [data, data && data.showNewestUserBookings]);
 
   return (
     <div className="section s3">
@@ -113,16 +116,10 @@ export default function Screen3(props) {
             <Grid item>
               {!loading && !data && <LoginFirstBoard />}
               {loading && <Spinner height={100} width={100} />}
-              {sorted.map((booking, index) => {
-                if (new Date(booking.event.dateStart) >= new Date()) {
-                  return <EventCard event={booking.event} key={index} />;
-                } else {
-                  return <p>You dont have an upcomming event</p>;
-                }
-              })}
               {data && sorted.length === 0 && (
                 <Typography> You dont have an upcomming event </Typography>
               )}
+              {sorted.length != 0 && <EventCard event={sorted[0]} />}
             </Grid>
           </Grid>
         </Grid>
@@ -131,7 +128,7 @@ export default function Screen3(props) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container_2: {
     color: "black",
     paddingTop: 80,

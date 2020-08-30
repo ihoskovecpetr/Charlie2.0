@@ -1,14 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
-import Chip from "@material-ui/core/Chip";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import DoneIcon from "@material-ui/icons/Done";
-import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
 import WhatshotIcon from "@material-ui/icons/Whatshot";
 import SendIcon from "@material-ui/icons/Send";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import clsx from "clsx";
@@ -65,14 +62,14 @@ export default function JoinSend({ event, localContext }) {
 
     event &&
       event.bookings &&
-      event.bookings.map((booking) => {
+      event.bookings.map(booking => {
         console.log("DECIFING BOOKING: ", booking.user._id, localContext._id);
         if (booking.user._id === localContext._id) {
           console.log("FOUND BOOKING: ", booking);
           if (booking.decided && booking.confirmed) {
             // attending = true
             // icon = [<DoneIcon fontSize="large" />]
-            setLocalState((prev) => {
+            setLocalState(prev => {
               {
                 return {
                   ...prev,
@@ -104,8 +101,8 @@ export default function JoinSend({ event, localContext }) {
     }
   }
 
-  function sendBooking(params) {
-    setLocalState((prev) => ({
+  function sendBooking() {
+    setLocalState(prev => ({
       ...prev,
       message: "Sending",
       attending: true,
@@ -157,7 +154,9 @@ export default function JoinSend({ event, localContext }) {
   }
 
   if (event.areYouAuthor)
-    return <p className={classes.textAuthor}> You are author of this event </p>;
+    return (
+      <p className={classes.textAuthor}> You are an author of this event </p>
+    );
 
   return (
     <>
@@ -169,7 +168,6 @@ export default function JoinSend({ event, localContext }) {
         color="secondary"
         variant="contained"
         fullWidth
-        className={classes.chipOne}
         onClick={openJoin}
         disabled={checked || localState.attending || localState.pending}
       >
@@ -254,7 +252,7 @@ export default function JoinSend({ event, localContext }) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   sendJoinContainer: {
     backgroundColor: "white",
     height: 0,
@@ -275,13 +273,6 @@ const useStyles = makeStyles((theme) => ({
   },
   displayBlock: {
     display: "block",
-  },
-  chipOne: {
-    // width: "90%",
-    // fontWeight: 500,
-    // fontSize: 22,
-    // padding: 20,
-    // margin: "5%"
   },
   textField: {
     marginBottom: 5,

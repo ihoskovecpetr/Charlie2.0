@@ -12,12 +12,6 @@ import Badge from "@material-ui/core/Badge";
 
 import Collapse from "@material-ui/core/Collapse";
 import Typography from "@material-ui/core/Typography";
-import { red } from "@material-ui/core/colors";
-
-// import countdown from "countdown";
-// import { withRouter, useHistory, NavLink } from "react-router-dom";
-// import { useMutation } from "@apollo/react-hooks";
-// import gql from "graphql-tag";
 
 import { useXsSize } from "../../Hooks/useXsSize";
 import { useCountdown } from "src/Hooks/useCountdown";
@@ -34,31 +28,6 @@ export default function EventCardProfile({ event }) {
   const { xs_size_memo, md_size_memo } = useXsSize();
   const { counteddownDate } = useCountdown(event.dateStart, 1);
   const [expanded, setExpanded] = useState(false);
-  const { context, setContext } = useContext(UserContext);
-
-  const inputDescription = useRef(null);
-
-  useEffect(() => {
-    if (context.expanded_id === event._id) {
-      setExpanded(true);
-    } else {
-      setExpanded(false);
-    }
-  }, [context.expanded_id]);
-
-  const handleExpandClick = () => {
-    console.log("event._id: ", event._id);
-
-    if (context.expanded_id === event._id) {
-      setContext((prev) => {
-        return { ...prev, expanded_id: null };
-      });
-    } else {
-      setContext((prev) => {
-        return { ...prev, expanded_id: event._id };
-      });
-    }
-  };
 
   let bgColor = "transparent";
   if (event.happeningNow) {
@@ -88,7 +57,6 @@ export default function EventCardProfile({ event }) {
   return (
     <Grid
       item
-      className={classes.mainItem}
       style={{
         // boxShadow: expanded ? "4px 3px 5px 0px rgba(0,0,0,0.5)" : "none",
         color: md_size_memo ? "white" : "black",
@@ -100,7 +68,9 @@ export default function EventCardProfile({ event }) {
     >
       <Grid
         container
-        onClick={handleExpandClick}
+        onClick={() => {
+          setExpanded(!expanded);
+        }}
         alignItems="center"
         className={classes.mainSolidLine}
       >
@@ -176,7 +146,9 @@ export default function EventCardProfile({ event }) {
             <IconButton
               aria-label="settings"
               style={{ backgroundColor: "lightGrey", margin: 5 }}
-              onClick={handleExpandClick}
+              onClick={() => {
+                setExpanded(!expanded);
+              }}
             >
               <ExpandLessIcon fontSize="large" />
             </IconButton>
@@ -187,13 +159,7 @@ export default function EventCardProfile({ event }) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
-  mainItem: {
-    // borderRadius: 15,
-    // borderBottom: "3px solid white" //#707070
-    // margin: 10,
-    // padding: 10
-  },
+const useStyles = makeStyles(theme => ({
   mainSolidLine: {
     // marginTop: 10,
     marginBottom: 20,
@@ -225,7 +191,7 @@ const useStyles = makeStyles((theme) => ({
     width: 15,
   },
   userAvatar: {
-    backgroundColor: red[500],
+    backgroundColor: "red",
     height: 80,
     width: 80,
   },

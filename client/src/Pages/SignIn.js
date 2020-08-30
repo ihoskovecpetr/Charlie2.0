@@ -22,7 +22,7 @@ import { useMutation, useQuery, useApolloClient } from "@apollo/react-hooks";
 import { Animated } from "react-animated-css";
 
 import { UserContext } from "src/Contexts/userContext";
-import { useScrollDisable } from "../Hooks/useScrollDisable";
+// import { useScrollDisable } from "../Hooks/useScrollDisable";
 import { useWindowSize } from "../Hooks/useWindowSize";
 
 import ModalLayout from "../Layouts/ModalLayout";

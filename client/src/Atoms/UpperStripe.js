@@ -48,7 +48,6 @@ function UpperStripe({
   console.log("Upper Stripe re render", renderCounter);
 
   const classes = useStyles();
-
   const pathSet = location.pathname.split("/");
 
   return (
