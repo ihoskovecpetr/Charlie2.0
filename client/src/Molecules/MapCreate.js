@@ -1,25 +1,18 @@
-import React, { useContext, useState, useMemo, useCallback } from "react";
-//import GeolocationMarker from 'geolocation-marker'
+import React, { useContext, useMemo, useCallback } from "react";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
-// import { GeolocationMarker } from 'geolocation-marker'
 import GeolocationMarker from "geolocation-marker";
 
 import { UserContext } from "../Contexts/userContext";
 
-import Map from "../Atoms/MapAtom";
+import Map from "src/Atoms/MapAtom";
 
 let LngLatCenter = { lat: 50.068645, lng: 14.457364 };
 
-function MapCreate(props) {
-  //const { latitude, longitude, error } = usePosition();
+function MapCreate({ customMapParam, setCustomMapParam }) {
   const { context } = useContext(UserContext);
-  const [addressTxt, setAddressTxt] = useState("Write address");
   let marker;
-  //let markerGeoLoc = { lat: latitude, lng: longitude };
   let geocoder;
-
-  //console.log("RENDER CREATE MAP: position: ", markerGeoLoc);
 
   if (context.geolocationObj) {
     LngLatCenter = context.geolocationObj;
@@ -37,7 +30,7 @@ function MapCreate(props) {
     };
   }, [LngLatCenter]);
 
-  const onMapMount = useCallback((map) => {
+  const onMapMount = useCallback(map => {
     marker = new window.google.maps.Marker({
       map: map,
       anchorPoint: new window.google.maps.Point(0, -29),
@@ -50,25 +43,24 @@ function MapCreate(props) {
     geocoder = new window.google.maps.Geocoder();
     autocomplete.bindTo("bounds", map);
 
-    if (props.customMapParam) {
+    if (customMapParam) {
       marker.setPosition({
-        lng: props.customMapParam.lng,
-        lat: props.customMapParam.lat,
+        lng: customMapParam.lng,
+        lat: customMapParam.lat,
       });
       map.panTo({
-        lng: props.customMapParam.lng,
-        lat: props.customMapParam.lat,
+        lng: customMapParam.lng,
+        lat: customMapParam.lat,
       });
-      map.setZoom(props.customMapParam.zoom);
-      document.getElementById("input-location").value =
-        props.customMapParam.address;
+      map.setZoom(customMapParam.zoom);
+      document.getElementById("input-location").value = customMapParam.address;
     } else if (LngLatCenter) {
       marker.setPosition(LngLatCenter);
       map.panTo(LngLatCenter);
       geocodeLatLng(geocoder, map, LngLatCenter.lat, LngLatCenter.lng);
     }
     map.addListener("zoom_changed", function() {
-      props.setCustomMapParam((prev) => {
+      setCustomMapParam(prev => {
         return {
           ...prev,
           zoom: map.zoom,
@@ -76,12 +68,11 @@ function MapCreate(props) {
       });
     });
 
-    map.addListener("click", (e) => {
+    map.addListener("click", e => {
       document.getElementById("input-location").value = "";
       marker.setVisible(false);
       marker.setPosition(e.latLng);
       marker.setVisible(true);
-      console.log("Click");
 
       geocodeLatLng(geocoder, map, e.latLng.lat(), e.latLng.lng());
     });
@@ -92,7 +83,7 @@ function MapCreate(props) {
       if (!place.geometry) {
         // User entered the name of a Place that was not suggested and
         // pressed the Enter key, or the Place Details request failed.
-        //window.alert("No details available for input: '" + place.name + "'");
+        window.alert("No details available for input: '" + place.name + "'");
         return;
       }
 
@@ -102,7 +93,6 @@ function MapCreate(props) {
         marker.setPosition(place.geometry.location);
         marker.setVisible(true);
       } else {
-        //console.log("Setting here center: ", place.geometry.location);
         map.setCenter(place.geometry.location);
         map.setZoom(17);
       }
@@ -128,9 +118,7 @@ function MapCreate(props) {
         ].join(" ");
       }
 
-      console.log("Tohle place ma addresu: ", place.address_components);
-
-      props.setCustomMapParam((prev) => {
+      setCustomMapParam(prev => {
         return {
           ...prev,
           lat: place.geometry.location.lat(),
@@ -149,7 +137,6 @@ function MapCreate(props) {
       status,
       error_message
     ) {
-      //console.log("results: ", results, status, error_message);
       var shortAddress;
       if (results) {
         console.log("Agres: ", results);
@@ -161,7 +148,7 @@ function MapCreate(props) {
       }
 
       status &&
-        props.setCustomMapParam((prev) => {
+        setCustomMapParam(prev => {
           return {
             ...prev,
             address: shortAddress,
@@ -173,10 +160,6 @@ function MapCreate(props) {
         });
       if (error_message) {
         window.alert("Geocoder failed due to: " + status);
-        //this.setState({addressOffer: "No address in your location"})
-        // props.setCustomMapParam(prev => {
-        //   return { ...prev, address: "Failed to localize you" };
-        // });
       }
     });
   };
@@ -212,11 +195,11 @@ function MapCreate(props) {
             style={{
               marginBottom: 0,
               display:
-                props.customMapParam && props.customMapParam.uncontrolledAdr
+                customMapParam && customMapParam.uncontrolledAdr
                   ? "block"
                   : "none",
             }}
-            onKeyPress={(e) => {
+            onKeyPress={e => {
               if (e.key === "Enter") e.preventDefault();
             }}
             autoFocus
@@ -228,26 +211,22 @@ function MapCreate(props) {
             fullWidth
             id="input-location-controlled"
             value={
-              props.customMapParam && props.customMapParam.address
-                ? props.customMapParam.address
+              customMapParam && customMapParam.address
+                ? customMapParam.address
                 : "no address yet"
             }
-            //label="Enter a location"
-            //placeholder="Enter a location"
             name="address"
             style={{
               marginBottom: 0,
               display:
-                props.customMapParam &&
-                props.customMapParam.uncontrolledAdr &&
-                "none",
+                customMapParam && customMapParam.uncontrolledAdr && "none",
             }}
             disabled
-            onKeyPress={(e) => {
+            onKeyPress={e => {
               if (e.key === "Enter") e.preventDefault();
             }}
             onClick={() => {
-              props.setCustomMapParam((prev) => {
+              setCustomMapParam(prev => {
                 return {
                   ...prev,
                   uncontrolledAdr: true,

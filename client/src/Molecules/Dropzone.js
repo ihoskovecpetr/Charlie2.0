@@ -1,47 +1,35 @@
 import React, { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import Gallery from "react-grid-gallery";
-import request from "superagent";
+// import request from "superagent";
 import Grid from "@material-ui/core/Grid";
 import WallpaperIcon from "@material-ui/icons/Wallpaper";
 import { makeStyles } from "@material-ui/core/styles";
+import { createUploadOfImage } from "src/Services/functions";
 
-// import Spinner from "src/Atoms/Spinner";
-
-// const CLOUDINARY_UPLOAD_PRESET = "simple-preset-1";
-const CLOUDINARY_UPLOAD_PRESET = "simpl_pst";
-// const CLOUDINARY_UPLOAD_URL =
-//   "https://api.cloudinary.com/v1_1/party-images-app/upload";
-const CLOUDINARY_UPLOAD_URL =
-  "https://api.cloudinary.com/v1_1/dkyt8girl/upload";
 let smallfile;
 
-function MyDropzone({ setFormValue, setCountOfFiles }) {
+function MyDropzone({ formValue, setFormValue, setCountOfFiles }) {
   const classes = useStyles();
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [display, setDisplay] = useState(false);
-  const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-    setIsUploading(true);
-
+  const onDrop = useCallback(acceptedFiles => {
     let count = 0;
-    acceptedFiles.map((file) => {
+    acceptedFiles.map(file => {
       handleImageUpload(file);
       count = count + 1;
     });
     setCountOfFiles(count);
   }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  const handleImageUpload = (file) => {
+  const handleImageUpload = file => {
     const width = 350;
     const height = 350;
     const fileName = file.name;
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = (event) => {
+    reader.onload = event => {
       const img = document.createElement("img");
       img.src = event.target.result;
 
@@ -49,11 +37,12 @@ function MyDropzone({ setFormValue, setCountOfFiles }) {
         const elem = document.createElement("canvas");
         elem.width = width;
         elem.height = height;
+
         const ctx = elem.getContext("2d");
         // img.width and img.height will contain the original dimensions
         ctx.drawImage(img, 0, 0, width, height);
         ctx.canvas.toBlob(
-          (blob) => {
+          blob => {
             smallfile = new File([blob], fileName, {
               type: "image/jpeg",
               lastModified: Date.now(),
@@ -64,57 +53,43 @@ function MyDropzone({ setFormValue, setCountOfFiles }) {
           1
         );
       };
-      reader.onerror = (error) => console.log(error);
+      reader.onerror = error => console.log(error);
     };
   };
 
-  const uploadingOneImg = (imgTumb, imgFull) => {
-    var urlTumb;
+  const uploadingOneImg = async (imgThumb, imgFull) => {
+    try {
+      let upload1 = createUploadOfImage(imgThumb);
+      let upload2 = createUploadOfImage(imgFull);
 
-    //var divider;
-    var upload = request
-      .post(CLOUDINARY_UPLOAD_URL)
-      .field("upload_preset", CLOUDINARY_UPLOAD_PRESET)
-      .field("file", imgTumb);
-    upload.end((err, response) => {
-      if (err) {
-        console.error(err);
-        window.alert("Problem with uploading your picture..");
-      }
+      const [res1, res2] = await Promise.all([upload1, upload2]);
 
-      if (response.body.secure_url !== "") {
-        urlTumb = response.body.secure_url;
-      }
+      // if (res1.body.secure_url !== "") {
+      //   urlTumb = res1.body.secure_url;
+      // }
 
-      var upload2 = request
-        .post(CLOUDINARY_UPLOAD_URL)
-        .field("upload_preset", CLOUDINARY_UPLOAD_PRESET)
-        .field("file", imgFull);
-      upload2.end((err, response) => {
-        if (err) {
-          window.alert("Problem with uploading your picture..");
-        }
-        if (response && response.body && response.body.secure_url !== "") {
-          var uplArr = uploadedFiles;
-          uplArr.push({
-            src: response.body.secure_url,
-            thumbnail: urlTumb,
-            thumbnailWidth: response.body.width,
-            scaletwidth: 100,
-            thumbnailHeight: response.body.height,
-            isSelected: false,
-            caption: "After Rain (Jeshu John - designerspics.com)",
-          });
-
-          setUploadedFiles([...uplArr]);
-          setIsUploading(false);
-          setDisplay(true);
-          setFormValue((prevValues) => {
-            return { ...prevValues, ImagesArr: uplArr };
-          });
-        }
+      setFormValue(prevValues => {
+        return {
+          ...prevValues,
+          ImagesArr: [
+            ...prevValues.ImagesArr,
+            {
+              caption: "No description",
+              isSelected: false,
+              src: res2.body.secure_url,
+              thumbnail: res1.body.secure_url,
+              thumbnailHeight: res2.body.height,
+              thumbnailWidth: res2.body.width,
+            },
+          ],
+        };
       });
-    });
+
+      setDisplay(true);
+    } catch (err) {
+      console.error(err);
+      window.alert("Problem with uploading your picture..");
+    }
   };
 
   return (
@@ -154,7 +129,7 @@ function MyDropzone({ setFormValue, setCountOfFiles }) {
         {display ? (
           <div className={classes.wrap_gallery}>
             <Gallery
-              images={uploadedFiles}
+              images={formValue.ImagesArr}
               rowHeight={100}
               display={display}
               backdropClosesModal={true}
@@ -168,7 +143,7 @@ function MyDropzone({ setFormValue, setCountOfFiles }) {
         ) : (
           <div className={classes.wrap_gallery}>
             <Gallery
-              images={uploadedFiles}
+              images={formValue.ImagesArr}
               rowHeight={100}
               display={display}
               backdropClosesModal={true}
@@ -180,7 +155,7 @@ function MyDropzone({ setFormValue, setCountOfFiles }) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   uploadIcon: {
     margin: 20,
     "&:hover": {

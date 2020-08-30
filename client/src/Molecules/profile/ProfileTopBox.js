@@ -53,7 +53,7 @@ export default function ProfileTopBox({ errorQuery, showRatings }) {
     }
   }, [dataOut]);
 
-  const onSubmitHandler = e => {
+  const handleSaveChanges = e => {
     e.preventDefault();
     let load = {
       _id: context._id,
@@ -66,8 +66,6 @@ export default function ProfileTopBox({ errorQuery, showRatings }) {
     let empty = findEmpty(load);
     empty = empty.map(item => `${item} is Empty`);
     if (load.password != load.password2) empty.push("Not matching passwords");
-
-    console.log("Empty ones: ", empty);
 
     if (empty.length == 0) {
       updateUser({
@@ -245,9 +243,7 @@ export default function ProfileTopBox({ errorQuery, showRatings }) {
                   variant="contained"
                   color="primary"
                   className={classes.saveButton}
-                  onClick={e => {
-                    onSubmitHandler(e);
-                  }}
+                  onClick={handleSaveChanges}
                 >
                   SAVE
                 </Button>

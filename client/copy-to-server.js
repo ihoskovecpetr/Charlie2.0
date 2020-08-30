@@ -1,5 +1,3 @@
-// const APP_NAME = require("./package.json").name;
-
 const fs = require("fs-extra");
 fs.removeSync(`../build`);
 fs.copySync(`./build`, `../build`);

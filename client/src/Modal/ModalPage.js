@@ -9,13 +9,13 @@ import AcceptPage from "src/Pages/AcceptPage";
 import UserModal from "src/Pages/UserModal";
 
 import { UserContext } from "src/Contexts/userContext";
-import { useScrollDisable } from "src/Hooks/useScrollDisable";
+// import { useScrollDisable } from "src/Hooks/useScrollDisable";
 
 function Layout(props) {
   let history = useHistory();
   const { context, setContext } = useContext(UserContext);
 
-  useScrollDisable();
+  // useScrollDisable();
 
   useEffect(() => {
     const isAnyModalOn =

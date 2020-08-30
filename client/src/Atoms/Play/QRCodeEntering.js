@@ -1,9 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import CropFreeIcon from "@material-ui/icons/CropFree";
-import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { UserContext } from "src/Contexts/userContext";
@@ -39,7 +36,7 @@ const QRCodeEntering = ({ bookings }) => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   thisLine: {
     height: "1px",
     width: "80%",

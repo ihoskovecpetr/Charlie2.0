@@ -109,11 +109,12 @@ function Create() {
   useEffect(() => {
     if (dataOut) {
       setDialogOpen(true);
-      // setTimeout(() => {
-      //   history.push(`/?event=${dataOut._id}`);
-      // }, 200);
     }
   }, [dataOut]);
+
+  useEffect(() => {
+    console.log({ formValue });
+  }, [formValue]);
 
   const inputName = useRef(null);
   const inputTime = useRef(null);
@@ -147,6 +148,8 @@ function Create() {
     };
 
     const empty = findEmpty(load);
+
+    console.log("Load:: ", load);
     if (empty.length == 0) {
       createEvent({
         variables: load,
@@ -176,6 +179,8 @@ function Create() {
       setFeErrors(empty);
     }
   };
+
+  console.log("New form Value: ");
 
   const handleDateChange = date => {
     setFormValue(prev => {

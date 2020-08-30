@@ -15,13 +15,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useMutation } from "@apollo/react-hooks";
 import { useHistory, NavLink } from "react-router-dom";
 import { useWindowSize } from "../Hooks/useWindowSize";
-import { useScrollDisable } from "../Hooks/useScrollDisable";
+// import { useScrollDisable } from "../Hooks/useScrollDisable";
 import { findEmpty } from "../Services/functions";
 import { UserContext } from "src/Contexts/userContext";
 
 import ModalLayout from "../Layouts/ModalLayout";
 import Copyright from "../Atoms/copyright";
-import Spinner from "../Atoms/Spinner";
 import DropzoneSignup from "../Molecules/DropzoneSignup";
 import { NEW_USER } from "src/Services/GQL/NEW_USER";
 
@@ -42,7 +41,7 @@ function SignUp() {
   const { dataOut } = data ? data.newUser : { dataOut: undefined };
   const { errorOut } = data ? data.newUser : { errorOut: undefined };
 
-  useScrollDisable();
+  // useScrollDisable();
   const inputDescRef = useRef(null);
 
   useEffect(() => {
@@ -117,16 +116,6 @@ function SignUp() {
       </ModalLayout>
     );
   }
-
-  // if (loading) {
-  //   return (
-  //     <ModalLayout>
-  //       <Paper className={classes.paper}>
-  //       <Spinner height={40} width={40} />
-  //       </Paper>
-  //     </ModalLayout>
-  //   );
-  // }
 
   if (error) {
     return (

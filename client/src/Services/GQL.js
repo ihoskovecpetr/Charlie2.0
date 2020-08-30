@@ -34,7 +34,6 @@ export const ALL_EVENTS = gql`
         thumbnail
         thumbnailHeight
         thumbnailWidth
-        scaletwidth
         marginLeft
         vwidth
       }

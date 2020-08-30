@@ -34,7 +34,6 @@ export const PROFILE_DATA = gql`
         thumbnail
         thumbnailHeight
         thumbnailWidth
-        scaletwidth
         marginLeft
         vwidth
       }
@@ -121,7 +120,6 @@ export const PROFILE_DATA = gql`
           thumbnail
           thumbnailHeight
           thumbnailWidth
-          scaletwidth
           marginLeft
           vwidth
         }
@@ -190,7 +188,6 @@ export const PROFILE_DATA = gql`
           thumbnail
           thumbnailHeight
           thumbnailWidth
-          scaletwidth
           marginLeft
           vwidth
         }

@@ -1,4 +1,6 @@
-export const findEmpty = (obj) => {
+import request from "superagent";
+
+export const findEmpty = obj => {
   const empty = [];
 
   for (const [key, value] of Object.entries(obj)) {
@@ -27,4 +29,13 @@ export const sortByDate = (array, sortKey, dirrection) => {
   });
 
   return Sorted;
+};
+
+export const createUploadOfImage = image => {
+  let upload = request
+    .post(process.env.CLOUDINARY_UPLOAD_URL)
+    .field("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET)
+    .field("file", image);
+
+  return upload;
 };

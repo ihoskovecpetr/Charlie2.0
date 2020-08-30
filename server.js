@@ -1,23 +1,23 @@
-//const express = require("express");
 import express from "express";
 const http = require("http");
 var path = require("path");
 var serveIndex = require("serve-index");
 const mongoose = require("mongoose");
-const { ApolloServer, gql } = require("apollo-server-express");
+const { ApolloServer } = require("apollo-server-express");
 const { PubSub } = require("apollo-server");
-const authMid = require("./Middleware/auth.js");
-//const { resolvers } = require("./resolvers/index");
+
+const authMiddleware = require("./Middleware/auth.js");
+const cronMiddleware = require("./Cron/cron.js");
 import { typeDefs, resolvers } from "./schema.js";
-//const resolvers = require("./resolvers.js");
+
 const app = express();
 
-// Set coz of deprec warning when doing findAndModify
-mongoose.set("useFindAndModify", false);
+// Set because of deprecated warning when doing findAndModify
+// mongoose.set("useFindAndModify", false);
 
 app.use(express.static(path.join(__dirname, "build")));
 
-app.get("/", function(req, res, next) {
+app.get("/", function (req, res, next) {
   res.sendFile(path.join(__dirname, "build/index.html"));
 });
 
@@ -45,26 +45,6 @@ app.get("/play/:id", (req, res, next) => {
   res.sendFile(path.join(__dirname, "build/index.html"));
 });
 
-// app.get("/event/:id", (req, res, next) => {
-//   res.sendFile(path.join(__dirname, "build/index.html"));
-// });
-
-// app.get("/accept/:event_id/:user_id", (req, res, next) => {
-//   res.sendFile(path.join(__dirname, "build/index.html"));
-// });
-
-// app.get("/confirm/:user_id", (req, res, next) => {
-//   res.sendFile(path.join(__dirname, "build/index.html"));
-// });
-
-// app.get("/signup", (req, res, next) => {
-//   res.sendFile(path.join(__dirname, "build/index.html"));
-// });
-
-// app.get("/signin", (req, res, next) => {
-//   res.sendFile(path.join(__dirname, "build/index.html"));
-// });
-
 app.get("/profile", (req, res, next) => {
   res.sendFile(path.join(__dirname, "build/index.html"));
 });
@@ -83,7 +63,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(authMid);
+app.use(authMiddleware);
+// app.use(cronMiddleware);
+cronMiddleware();
+
 app.use(
   "/.well-known",
   express.static(".well-known"),
@@ -94,7 +77,7 @@ app.use(
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: req => ({ /* pubsub, */ reqO: req }),
+  context: (req) => ({ /* pubsub, */ reqO: req }),
   subscriptions: "/subs",
   playground: true,
   introspection: true,
@@ -102,11 +85,11 @@ const server = new ApolloServer({
   engine: false,
 });
 
+const httpServer = http.createServer(app);
+
 server.applyMiddleware({
   app,
 });
-
-const httpServer = http.createServer(app);
 
 server.installSubscriptionHandlers(httpServer);
 //`mongodb+srv://${process.env.MONGO_user}:${process.env.MONGO_password}@cluster0-il454.mongodb.net/${process.env.MONGO_DB_NAME}?retryWrites=true&w=majority`,
@@ -123,7 +106,7 @@ mongoose
       );
     });
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 

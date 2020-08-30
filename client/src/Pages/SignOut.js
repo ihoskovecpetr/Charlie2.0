@@ -18,7 +18,7 @@ import gql from "graphql-tag";
 import { Redirect, useHistory } from "react-router-dom";
 
 import { UserContext } from "../Contexts/userContext";
-import { useScrollDisable } from "../Hooks/useScrollDisable";
+// import { useScrollDisable } from "../Hooks/useScrollDisable";
 
 import ModalLayout from "../Layouts/ModalLayout";
 import Spinner from "../Atoms/Spinner";
@@ -26,7 +26,7 @@ import Copyright from "../Atoms/copyright";
 
 function SignIn(props) {
   const classes = useStyles();
-  useScrollDisable();
+  // useScrollDisable();
   const { context } = useContext(UserContext);
   let history = useHistory();
 
@@ -65,7 +65,7 @@ function SignIn(props) {
           variant="contained"
           color="primary"
           className={classes.submit}
-          onClick={(e) => {
+          onClick={e => {
             e.preventDefault();
             Out();
           }}
@@ -80,7 +80,7 @@ function SignIn(props) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   "@global": {
     body: {
       backgroundColor: theme.palette.common.white,

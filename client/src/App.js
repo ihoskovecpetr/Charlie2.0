@@ -1,7 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import ReactDOM from "react-dom";
 import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
-import PropTypes from "prop-types";
 import { useMutation } from "@apollo/react-hooks";
 
 import "./App.css";
@@ -77,10 +75,7 @@ function App({ location, container }) {
     email: null,
     picture: null,
     description: null,
-    // TODO: move out
-    geolocationObj: null,
-    declinedGeolocation: false,
-    curPositionAddress: null,
+
     //
     freezScroll: false,
     getLoggedInUser: () => getLoggedInUser(),
@@ -93,7 +88,13 @@ function App({ location, container }) {
 
     showAlertAdviseEmail: false, //move this one to local?
     rememberSignIn: false,
-    expanded_id: null,
+
+    // own context
+    geolocationObj: null,
+    declinedGeolocation: false,
+    curPositionAddress: null,
+
+    //own context
     playFilterObj: {
       filterOn: false,
       geolocationPlay: { lng: 14.40076, lat: 50.08804 },
@@ -448,12 +449,12 @@ function App({ location, container }) {
               </>
             </Route>
 
-            <Route exact path={`/event/:id`}>
+            {/* <Route exact path={`/event/:id`}>
               <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Event />
               </main>
-            </Route>
+            </Route> */}
 
             <Route exact path={`/confirm/:user_id`}>
               <>
@@ -518,16 +519,6 @@ function App({ location, container }) {
     </ThemeProvider>
   );
 }
-
-App.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  container: PropTypes.instanceOf(
-    typeof Element === "undefined" ? Object : Element
-  ),
-};
 
 function AppWrap() {
   return (

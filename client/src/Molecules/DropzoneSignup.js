@@ -1,44 +1,31 @@
 import React, { useState, useCallback } from "react";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
-
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import CropFreeIcon from '@material-ui/icons/CropFree';
-
-import { useDropzone } from "react-dropzone";
-import Gallery from "react-grid-gallery";
-import request from "superagent";
-import WallpaperIcon from "@material-ui/icons/Wallpaper";
-
+import CropFreeIcon from "@material-ui/icons/CropFree";
 import Spinner from "../Atoms/Spinner";
 
-const CLOUDINARY_UPLOAD_PRESET = "simple-preset-1";
-const CLOUDINARY_UPLOAD_URL =
-  "https://api.cloudinary.com/v1_1/party-images-app/upload";
-let smallfile;
-var urlTumb;
+import { makeStyles } from "@material-ui/core/styles";
+import { useDropzone } from "react-dropzone";
 
-function MyDropzone({formValue, setFormValue}) {
+import { createUploadOfImage } from "src/Services/functions";
+
+function ProfileDropzone({ formValue, setFormValue }) {
+  const classes = useStyles();
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [display, setDisplay] = useState(false);
-  const onDrop = useCallback(acceptedFiles => {
-    // Do something with the files
 
+  const onDrop = useCallback(acceptedFiles => {
     setIsUploading(true);
 
     acceptedFiles.map(file => {
       handleImageUpload(file);
     });
   }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const handleImageUpload = file => {
-    const width = 200;
-    const height = 100;
     const fileName = file.name;
-
     const reader = new FileReader();
+
     reader.readAsDataURL(file);
     reader.onload = event => {
       const img = document.createElement("img");
@@ -69,11 +56,11 @@ function MyDropzone({formValue, setFormValue}) {
         ctx.drawImage(img, 0, 0, TumbWidth, TumbHeight);
         ctx.canvas.toBlob(
           blob => {
-            smallfile = new File([blob], fileName, {
+            const smallfile = new File([blob], fileName, {
               type: "image/jpeg",
-              lastModified: Date.now()
+              lastModified: Date.now(),
             });
-            uploadingOneImg(smallfile, file);
+            uploadingOneImg(smallfile);
           },
           "image/jpeg",
           1
@@ -83,83 +70,82 @@ function MyDropzone({formValue, setFormValue}) {
     };
   };
 
-  const uploadingOneImg = (imgTumb, imgFull) => {
-    //var divider;
-    var upload = request
-      .post(CLOUDINARY_UPLOAD_URL)
-      .field("upload_preset", CLOUDINARY_UPLOAD_PRESET)
-      .field("file", imgTumb);
-    upload.end((err, response) => {
-      if (err) {
-        console.error(err);
-        window.alert("Problem with uploading your picture..");
+  const uploadingOneImg = async imgThumb => {
+    try {
+      let urlThumb;
+      let upload1 = createUploadOfImage(imgThumb);
+      const res1 = await upload1;
+
+      if (res1.body.secure_url !== "") {
+        urlThumb = res1.body.secure_url;
       }
 
-      if (response.body.secure_url !== "") {
-        urlTumb = response.body.secure_url;
-      }
+      setFormValue(prevValues => ({
+        ...prevValues,
+        picture: urlThumb,
+      }));
 
-      var upload2 = request
-        .post(CLOUDINARY_UPLOAD_URL)
-        .field("upload_preset", CLOUDINARY_UPLOAD_PRESET)
-        .field("file", imgFull);
-      upload2.end((err, response) => {
-        if (err) {
-          window.alert("Problem with uploading your picture..");
-        }
-        if (response.body.secure_url !== "") {
-          var uplArr = uploadedFiles;
-          uplArr.push({
-            src: response.body.secure_url,
-            thumbnail: urlTumb,
-            thumbnailWidth: response.body.width,
-            scaletwidth: 100,
-            thumbnailHeight: response.body.height,
-            isSelected: false,
-            caption: "After Rain (Jeshu John - designerspics.com)"
-          });
-
-          setUploadedFiles([...uplArr]);
-          setIsUploading(false);
-          setDisplay(true);
-          setFormValue(prevValues => {
-            return { ...prevValues, ImagesArr: uplArr, picture: urlTumb };
-          });
-        }
-      });
-    });
+      setIsUploading(false);
+    } catch (err) {
+      console.error(err);
+      window.alert("Problem with uploading your picture..");
+    }
   };
 
   return (
-    <>
-      <div {...getRootProps()} style={{ padding: "5px", border: "2px dashed grey", cursor: "pointer"}}>
-        <input {...getInputProps()} />
-        {urlTumb && !isUploading ? (
-          // <Avatar style={{ background: "green" }}>
-          //   <CheckCircleOutlineIcon />
-          // </Avatar>
-          <Avatar
-            alt="Remy Sharp"
-            src={formValue.picture}
-            style={{ height: 100, width: 100 }}
-          ></Avatar>
-        ) : null}
-        {!urlTumb && !isUploading ? (
-          <Grid container justify='center' alignItems='center' style={{ background: "lightgrey", height: 100, width: 100, borderRadius: 5 }}>
-            <Grid item>
-              {formValue.picture ? <Avatar
-                alt="Remy Sharp"
+    <div {...getRootProps()} className={classes.dropzoneWrap}>
+      <input {...getInputProps()} />
+      {!isUploading ? (
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          className={classes.mainGrid}
+        >
+          <Grid item>
+            {formValue.picture ? (
+              <Avatar
+                alt="Profile picture"
                 src={formValue.picture}
-                style={{ height: 100, width: 100 }}
+                className={classes.profileAvatar}
               ></Avatar>
-              : <CropFreeIcon fontSize="large" />} 
-            </Grid>
+            ) : (
+              <CropFreeIcon fontSize="large" />
+            )}
           </Grid>
-        ) : null}
-        {isUploading ? <Spinner height={100} width={100} /> : null}
-      </div>
-    </>
+        </Grid>
+      ) : (
+        <Spinner height={100} width={100} />
+      )}
+    </div>
   );
 }
 
-export default MyDropzone;
+const useStyles = makeStyles(theme => ({
+  dropzoneWrap: {
+    padding: "5px",
+    border: "2px dashed grey",
+    cursor: "pointer",
+  },
+  mainGrid: {
+    background: "transparent",
+    height: 100,
+    width: 100,
+    borderRadius: 5,
+  },
+  profileAvatar: {
+    height: 100,
+    width: 100,
+  },
+  uploadIcon: {
+    margin: 20,
+    "&:hover": {
+      cursor: "pointer",
+    },
+  },
+  wrap_gallery: {
+    width: "100%",
+  },
+}));
+
+export default ProfileDropzone;

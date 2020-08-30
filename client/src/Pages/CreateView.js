@@ -315,25 +315,6 @@ function CreateView({
                     }}
                   />
                 </MuiPickersUtilsProvider>
-                {/* <TextField
-                  id="time"
-                  // label="Alarm clock"
-                  type="time"
-                  // defaultValue="07:30"
-                  value={`${new Date(
-                    formValue.startDate
-                  ).getHours()}:${new Date(formValue.startDate).getMinutes()}`}
-                  className={classes.dateField}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  inputProps={{
-                    step: 300, // 5 min
-                  }}
-                  // onChange={(e) => {
-                  //   console.log("Time Changes: ", e, e.value, e.target.value);
-                  // }}
-                /> */}
               </Grid>
             </Grid>
             <Grid item xs={2}>
@@ -545,6 +526,7 @@ function CreateView({
           >
             <Grid item xs={12}>
               <Dropzone
+                formValue={formValue}
                 setFormValue={setFormValue}
                 setCountOfFiles={setCountOfFiles}
               />

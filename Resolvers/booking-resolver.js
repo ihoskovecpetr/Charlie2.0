@@ -1,3 +1,10 @@
+// const Promise = require("bluebird");
+const path = require("path");
+const hbs = require("nodemailer-express-handlebars");
+const PDFDocument = require("pdfkit");
+var fs = require("fs");
+import QRCode from "qrcode";
+
 import Event from "../Models-Mongo/Event.js";
 import User from "../Models-Mongo/User.js";
 import Booking from "../Models-Mongo/Booking.js";
@@ -14,65 +21,12 @@ import {
   not_found_Error,
   server_Error,
 } from "./Utils/errorPile";
+import EmailModule from "../MailTransportUtils/createSmtpTransport.js";
 
-import QRCode from "qrcode";
+const smtpTransport0 = EmailModule.getSmtpTransport();
+const smtpTransport1 = EmailModule.getSmtpTransport();
 
-const Promise = require("bluebird");
-var base64Img = require("base64-img");
-const nodemailer = require("nodemailer");
-const path = require("path");
-const { google } = require("googleapis");
-const hbs = require("nodemailer-express-handlebars");
-// var pdf = require("pdf-creator-node");
-// const pdf = Promise.promisifyAll(require("html-pdf"));
-const PDFDocument = require("pdfkit");
-var fs = require("fs");
-
-const OAuth2 = google.auth.OAuth2;
-
-const oauth2Client = new OAuth2(
-  "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com", // ClientID
-  "w6myevje4fX4ule3Lnr7_zBI", // Client Secret
-  "https://developers.google.com/oauthplayground" // Redirect URL
-);
-
-oauth2Client.setCredentials({
-  refresh_token:
-    "1//04hOsAJbgaDOgCgYIARAAGAQSNwF-L9IrhdZywiV91vSsjiwrJ1mPSBxqzoiTZ6Kg-mMWIPTeB2jZc9qr_dvuG0pwvpdGkdk5Ma4",
-});
-
-const accessToken = oauth2Client.getAccessToken();
-
-const smtpTransport0 = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    type: "OAuth2",
-    user: "charliehouseparty@gmail.com",
-    clientId:
-      "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com",
-    clientSecret: "w6myevje4fX4ule3Lnr7_zBI",
-    refreshToken:
-      "1//04hOsAJbgaDOgCgYIARAAGAQSNwF-L9IrhdZywiV91vSsjiwrJ1mPSBxqzoiTZ6Kg-mMWIPTeB2jZc9qr_dvuG0pwvpdGkdk5Ma4",
-    accessToken: accessToken,
-  },
-});
-
-const smtpTransport1 = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    type: "OAuth2",
-    user: "charliehouseparty@gmail.com",
-    clientId:
-      "240102983847-4rl6l3igfraucda0hf4onpesq4ns8hjr.apps.googleusercontent.com",
-    clientSecret: "w6myevje4fX4ule3Lnr7_zBI",
-    refreshToken:
-      "1//04hOsAJbgaDOgCgYIARAAGAQSNwF-L9IrhdZywiV91vSsjiwrJ1mPSBxqzoiTZ6Kg-mMWIPTeB2jZc9qr_dvuG0pwvpdGkdk5Ma4",
-    accessToken: accessToken,
-    // accessToken: "ya29.a0AfH6SMCegn8JH9GTLnDbjLoxkrLcs-YS02QiGLwSjJZj8ReenO_ucdznv8SP3R-vqHCFNl-wNqpDpfJg2Ebl53uC0hGnSXKKi55gI-b2XCeetc5aqQ1kmXg6kFy8Tfw3vA_00EeRG_GxbaV2_tR7BRkszbj4lTSVKbA"
-  },
-});
-
-export const typeDef = newFunction();
+export const typeDef = getTypeDefs();
 export const resolvers = {
   Query: {
     showBookings: async (_, _args, __) => {
@@ -156,6 +110,20 @@ export const resolvers = {
         throw err;
       }
     },
+    showNewestUserBookings: async (_, _args, __) => {
+      try {
+        let bookings = await Booking.find({
+          user: _args.user_id,
+          confirmed: true,
+          decided: true,
+          cancelled: false,
+        });
+
+        return bookings;
+      } catch (err) {
+        throw err;
+      }
+    },
   },
   Mutation: {
     bookEvent: async (_, _args, __) => {
@@ -200,36 +168,11 @@ export const resolvers = {
         throw err;
       }
     },
-    newestUserBookings: async (_, _args, __) => {
-      try {
-        //let bookings = await Booking.count();
-        let bookings = await Booking.find({
-          user: _args.user_id,
-          confirmed: true,
-        }).sort("-dateStart");
-        console.log("Bookings count: ", bookings);
-        // return {
-        //   ...bookings,
-        //   createdAt: new Date(bookings.createdAt)
-        // };
-        return bookings.map(async (booking, index) => {
-          return {
-            ...booking._doc,
-            createdAt: new Date(booking._doc.createdAt).toISOString(),
-          };
-        });
-
-        //return bookings[0];
-      } catch (err) {
-        throw err;
-      }
-    },
     requestBookEvent: async (_, _args, __) => {
       try {
-        console.log("Hitting requestBookEvent");
         let event = await Event.findById(_args.event_id);
         let author = await User.findById(event.author);
-        //poslat mail a udelat booking with confirmed false
+        // poslat mail a udelat booking with confirmed false
         let existingBooking = await Booking.find({
           event: _args.event_id,
           user: _args.guest_id,
@@ -393,69 +336,6 @@ export const resolvers = {
             .split("T");
           const timeString = dateString[1].split(":");
 
-          // let html = createEmailBody({
-          //   QRCode: QRKod,
-          //   message: _args.response,
-          //   event_name: event[0].name,
-          //   event_address: event[0].address,
-          //   event_dateStart:
-          //     dateString[0] + " " + timeString[0] + ":" + timeString[1],
-          //   event_description: event[0].description,
-          //   guest_name: guest[0].name,
-          // });
-
-          var html = fs.readFileSync(
-            path.join(__dirname, "../htmlTemplates/ticket.html"),
-            "utf8"
-          );
-
-          // var options = {
-          //   format: "A3",
-          //   orientation: "portrait",
-          //   border: "10mm",
-          //   header: {
-          //     height: "45mm",
-          //     contents:
-          //       '<div style="text-align: center;">Author: Shyam Hajare</div>',
-          //   },
-          //   footer: {
-          //     height: "28mm",
-          //     contents: {
-          //       first: "Cover page",
-          //       2: "Second page", // Any page number is working. 1-based index
-          //       default:
-          //         '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
-          //       last: "Last Page",
-          //     },
-          //   },
-          // };
-
-          // var users = [
-          //   {
-          //     name: "Shyam",
-          //     age: "26",
-          //   },
-          //   {
-          //     name: "Navjot",
-          //     age: "26",
-          //   },
-          // ];
-
-          // var document = {
-          //   html: html,
-          //   data: {
-          //     users: users,
-          //   },
-          //   path: `./PDFNEW/${event[0].name}-${guest[0].name}.pdf`,
-          // };
-          // const pdfResult = await pdf.create(document, options);
-
-          // const pdfResult = await pdf.createAsync(html, {
-          //   format: "A4",
-          //   phantomPath: "./node_modules/phantomjs-prebuilt/bin/phantomjs", // PhantomJS binary which should get downloaded automatically
-          //   filename: `PDF/${guest[0].name} - ${event[0].name}.pdf`,
-          // });
-
           const doc = new PDFDocument();
 
           doc.pipe(fs.createWriteStream(`ticket.pdf`));
@@ -564,7 +444,7 @@ export const resolvers = {
     },
   },
   Booking: {
-    event: async a => {
+    event: async (a) => {
       try {
         const event = await Event.findById(a.event);
         return transformEvent(event);
@@ -572,7 +452,7 @@ export const resolvers = {
         throw err;
       }
     },
-    user: async a => {
+    user: async (a) => {
       try {
         const user = await User.findById(a.user);
         return user;
@@ -580,7 +460,7 @@ export const resolvers = {
         throw err;
       }
     },
-    host: async a => {
+    host: async (a) => {
       try {
         const user = await User.findById(a.user);
         return user;
@@ -601,13 +481,14 @@ export const resolvers = {
   // }
 };
 
-function newFunction() {
+function getTypeDefs() {
   return `
   extend type Query {
     showBookings(event_id: ID!): [Booking]
     acceptShowBooking(event_id: ID!, user_id: ID!): ResponseAcceptBooking
     showUserBookings(user_id: ID!): [Booking]
     showHostBookings(host_id: ID!): [Booking]
+    showNewestUserBookings(user_id: ID!): [Booking]
   }
 
   extend type Mutation {
@@ -618,7 +499,6 @@ function newFunction() {
     confirmBooking(event_id: ID!, user_id: ID!, host_id: ID, response: String, decision: Boolean): Hlaska!
     markBookingSeen(booking_id: ID!, user: Boolean): Hlaska
     markEntered(event_id: ID!, user_id: ID!): Hlaska
-    newestUserBookings(user_id: ID!): [Booking]
   }
 
   type Hlaska { 

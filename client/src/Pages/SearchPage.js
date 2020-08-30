@@ -49,7 +49,6 @@ const SEARCH = gql`
           thumbnail
           thumbnailHeight
           thumbnailWidth
-          scaletwidth
           marginLeft
           vwidth
         }

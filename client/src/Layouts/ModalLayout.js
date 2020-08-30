@@ -11,7 +11,7 @@ import { UserContext } from "src/Contexts/userContext";
 import { useHistory } from "react-router-dom";
 import { useSpring, animated } from "react-spring";
 
-import { useScrollDisable } from "../Hooks/useScrollDisable";
+// import { useScrollDisable } from "../Hooks/useScrollDisable";
 
 function Layout(props) {
   const classes = useStyles();
@@ -23,7 +23,7 @@ function Layout(props) {
     opacity: 1,
     from: { opacity: 0, transform: "scale(0.8)" },
   });
-  useScrollDisable();
+  // useScrollDisable();
 
   useEffect(() => {
     setWindowHeight(window.innerHeight);
@@ -96,7 +96,7 @@ function Layout(props) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   modalBackdrop: {
     // flexGrow: 1,
     background: "rgba(96,3,40,0.4)",

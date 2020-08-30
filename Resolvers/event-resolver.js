@@ -6,33 +6,19 @@ import { eventYupSchema } from "./Utils/eventYupSchema.js";
 import { formatYupError } from "./Utils/formatError.js";
 import { duplicate_name_Error, server_Error } from "./Utils/errorPile";
 
-export const typeDef = newFunction();
+export const typeDef = getTypeDefs();
 export const resolvers = {
   Query: {
     getOneEvent: async (_, _args, context) => {
-      console.log("Her")
       try {
-        if (true) { //context.reqO.req.isAuth
-          let oneEvent = await Event.findOne({ _id: _args.event_id });
-          if (oneEvent) {
-            let areYouAuthor = oneEvent.author == context.reqO.req.userId;
-            return transformEvent(oneEvent, areYouAuthor) 
-            {
-              // ...oneEvent._doc,
-              // dateStart: new Date(oneEvent._doc.dateStart).toISOString(),
-              // success: true,
-              // areYouAuthor: areYouAuthor
-            };
-          } else {
-            return {
-              success: false,
-              message: "This event is worhere to be seen, check url and repeat"
-            };
-          }
+        let oneEvent = await Event.findOne({ _id: _args.event_id });
+        if (oneEvent) {
+          let areYouAuthor = oneEvent.author == context.reqO.req.userId;
+          return transformEvent(oneEvent, areYouAuthor);
         } else {
           return {
             success: false,
-            message: "You are not authorised, login first to continue"
+            message: "This event is worhere to be seen, check url and repeat",
           };
         }
       } catch (err) {
@@ -47,9 +33,9 @@ export const resolvers = {
         //let isoDen = den.toISOString().split("T")[0];
         const allEvents = await Event.find({
           dateStart: { $gte: startD, $lte: nextD },
-          hide: false
+          hide: false,
         });
-        return allEvents.map(event => {
+        return allEvents.map((event) => {
           return transformEvent(event);
         });
       } catch (err) {
@@ -59,10 +45,10 @@ export const resolvers = {
     userEvents: async (_, _args, context) => {
       try {
         const userEvents = await Event.find({ author: _args.user_id }).sort({
-          "dateStart": -1
+          dateStart: -1,
         });
         if (userEvents) {
-          return userEvents.map(event => {
+          return userEvents.map((event) => {
             let areYouAuthor = event.author == context.reqO.req.userId;
             return transformEvent(event, areYouAuthor);
           });
@@ -75,60 +61,59 @@ export const resolvers = {
     },
     getJoinEvents: async (_, _args, context) => {
       try {
-        console.log("getJoinEvents: ")
         if (context.reqO.req.isAuth) {
-          console.log("getJoinEvents: 2")
           let nowD = new Date(); // end of duration
           let nextD = new Date().toISOString().split("T")[0];
-          nextD = new Date(nextD)
+          nextD = new Date(nextD);
           nextD.setDate(nextD.getDate() + _args.playInput.plusDays + 1);
-  
+
           let playEvents = await Event.find({
             dateEnd: { $gte: nowD },
-            dateStart: { $lte: nextD }, 
-            geometry:{
+            dateStart: { $lte: nextD },
+            geometry: {
               $near: {
-                    $geometry: {
-                                type: "Point",
-                                coordinates: [ _args.playInput.lng, _args.playInput.lat]
-                            },
-                            $maxDistance: _args.playInput.radius * 1000
-                        } }
-            
-          })
-          .sort(
-            "dateStart"
-          )
+                $geometry: {
+                  type: "Point",
+                  coordinates: [_args.playInput.lng, _args.playInput.lat],
+                },
+                $maxDistance: _args.playInput.radius * 1000,
+              },
+            },
+          }).sort("dateStart");
           if (playEvents) {
-            let filtered // = playEvents.filter((item) => item.dateStart > new Date()) 
-  
+            let filtered; // = playEvents.filter((item) => item.dateStart > new Date())
+
             filtered = playEvents.filter((item) => {
-              if(_args.playInput.shownEvents){
-                return !_args.playInput.shownEvents.includes(item._id.toString())
-              }else{
-                return true
+              if (_args.playInput.shownEvents) {
+                return !_args.playInput.shownEvents.includes(
+                  item._id.toString()
+                );
+              } else {
+                return true;
               }
-            }) 
-            let FILTD = await Promise.all(filtered.map(async event => {
-              return await transformEvent(event, event.author == context.reqO.req.userId);
-            }));
-            return FILTD
-  
+            });
+            let FILTD = await Promise.all(
+              filtered.map(async (event) => {
+                return await transformEvent(
+                  event,
+                  event.author == context.reqO.req.userId
+                );
+              })
+            );
+            return FILTD;
           } else {
             return {
               success: false,
-              message: "This event is worhere to be seen, check url and repeat"
+              message: "This event is worhere to be seen, check url and repeat",
             };
           }
         } else {
-          console.log("You are no authorised XX")
           return {
             success: false,
-            message: "You are not authorised, login first to continue"
+            message: "You are not authorised, login first to continue",
           };
         }
-      } 
-      catch (err) {
+      } catch (err) {
         throw err;
       }
     },
@@ -148,12 +133,15 @@ export const resolvers = {
           console.log("Duplicate of EVENT NAME");
           return duplicate_name_Error;
         } else {
-          const dateEnd = new Date(_args.eventInput.dateStart).setHours(new Date(_args.eventInput.dateStart).getHours() + _args.eventInput.duration)
+          const dateEnd = new Date(_args.eventInput.dateStart).setHours(
+            new Date(_args.eventInput.dateStart).getHours() +
+              _args.eventInput.duration
+          );
           let newEvent = new Event({
             name: _args.eventInput.name,
             author: _args.eventInput.author,
             geometry: {
-              coordinates: [_args.eventInput.lng, _args.eventInput.lat]
+              coordinates: [_args.eventInput.lng, _args.eventInput.lat],
             },
             address: _args.eventInput.address,
             eventType: _args.eventInput.eventType,
@@ -172,7 +160,7 @@ export const resolvers = {
             description: _args.eventInput.description,
             confirmed: true,
             hide: false,
-            seen: false
+            seen: false,
           });
           const result = await newEvent.save();
           console.log("Saved: ", result);
@@ -186,7 +174,10 @@ export const resolvers = {
     cancelEvent: async (_, _args, __) => {
       console.log("DEL One Event", _args);
       try {
-        let result = await Event.findOneAndUpdate({ _id: _args.event_id }, {hide: true});
+        let result = await Event.findOneAndUpdate(
+          { _id: _args.event_id },
+          { hide: true }
+        );
         // let result = await Event.deleteOne({ _id: _args.delete_id });
         console.log("findOneAndUpdate", result);
 
@@ -204,40 +195,43 @@ export const resolvers = {
         if (context.reqO.req.isAuth) {
           let nowD = new Date(); // end of duration
           let nextD = new Date().toISOString().split("T")[0];
-          nextD = new Date(nextD)
+          nextD = new Date(nextD);
           nextD.setDate(nextD.getDate() + _args.playInput.plusDays + 1);
 
           let playEvents = await Event.find({
             dateEnd: { $gte: nowD },
-            dateStart: { $lte: nextD }, 
-            geometry:{
+            dateStart: { $lte: nextD },
+            geometry: {
               $near: {
-                    $geometry: {
-                                type: "Point",
-                                coordinates: [ _args.playInput.lng, _args.playInput.lat]
-                            },
-                            $maxDistance: _args.playInput.radius * 1000
-                        } }
-            
-          })
-          .sort(
-            "dateStart"
-          )
+                $geometry: {
+                  type: "Point",
+                  coordinates: [_args.playInput.lng, _args.playInput.lat],
+                },
+                $maxDistance: _args.playInput.radius * 1000,
+              },
+            },
+          }).sort("dateStart");
           if (playEvents) {
-            let filtered // = playEvents.filter((item) => item.dateStart > new Date()) 
+            let filtered; // = playEvents.filter((item) => item.dateStart > new Date())
 
             filtered = playEvents.filter((item) => {
-              if(_args.playInput.shownEvents){
-                return !_args.playInput.shownEvents.includes(item._id.toString())
-              }else{
-                return true
+              if (_args.playInput.shownEvents) {
+                return !_args.playInput.shownEvents.includes(
+                  item._id.toString()
+                );
+              } else {
+                return true;
               }
-            }) 
-            let FILTD = await Promise.all(filtered.map(async event => {
-              return await transformEvent(event, event.author == context.reqO.req.userId);
-            }));
-            return FILTD
-
+            });
+            let FILTD = await Promise.all(
+              filtered.map(async (event) => {
+                return await transformEvent(
+                  event,
+                  event.author == context.reqO.req.userId
+                );
+              })
+            );
+            return FILTD;
 
             // return {
             //   ...oneEvent._doc,
@@ -248,40 +242,23 @@ export const resolvers = {
           } else {
             return {
               success: false,
-              message: "This event is worhere to be seen, check url and repeat"
+              message: "This event is worhere to be seen, check url and repeat",
             };
           }
         } else {
-          console.log("You are no authorised XX")
+          console.log("You are no authorised XX");
           return {
             success: false,
-            message: "You are not authorised, login first to continue"
+            message: "You are not authorised, login first to continue",
           };
         }
-      } 
-      catch (err) {
+      } catch (err) {
         throw err;
       }
     },
-    markEventSeen: async (_, _args, __) => {
-      console.log("DEL One Event", _args);
-      // try {
-      //   let result = await Event.findOneAndUpdate({ _id: _args.delete_id }, {hide: true});
-      //   // let result = await Event.deleteOne({ _id: _args.delete_id });
-      //   console.log("findOneAndUpdate", result);
-
-      //   if (result.ok) {
-      //     return { success: true };
-      //   } else {
-      //     return { success: false };
-      //   }
-      // } catch (err) {
-      //   throw err;
-      // }
-    },
   },
   Event: {
-    author: async a => {
+    author: async (a) => {
       try {
         const author = await User.findById(a.author);
         return author;
@@ -289,17 +266,18 @@ export const resolvers = {
         throw err;
       }
     },
-    bookings: async a => {
+    bookings: async (a) => {
       try {
         const bookingsArr = await Booking.find({ event: a });
         return bookingsArr;
       } catch (err) {
         throw err;
       }
-    }
-  }
+    },
+  },
 };
-function newFunction() {
+
+function getTypeDefs() {
   return `
   extend type Query {
     events(name: String ): [Event]
@@ -313,7 +291,6 @@ function newFunction() {
     createEvent(eventInput: EventInput!): ResponseEvent
     cancelEvent(event_id: ID!): Hlaska
     getPlayEvents(playInput: PlayInput): [Event]
-    markEventSeen(event_id: ID!): Hlaska
   }
 
   type ResponseEvent {
@@ -359,6 +336,7 @@ function newFunction() {
     thumbnail: String
     thumbnailHeight: Int
     thumbnailWidth:Int
+    scaledWidth: Int
     scaletwidth: Int
     marginLeft: Int
     vwidth: Int
@@ -419,6 +397,7 @@ function newFunction() {
     thumbnail: String
     thumbnailHeight: Int
     thumbnailWidth:Int
+    scaledWidth: Int
     scaletwidth: Int
     marginLeft: Int
     vwidth: Int
