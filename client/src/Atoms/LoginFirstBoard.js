@@ -104,11 +104,6 @@ const useStyles = makeStyles(theme => ({
   fingerItem: {
     height: "40%",
   },
-  // fingerPng: {
-  //   transform: "rotate(180deg)",
-  //   width: theme.spacing(6),
-  //   height: theme.spacing(6)
-  // },
   arrowIcon: {
     height: 50,
     width: 50,

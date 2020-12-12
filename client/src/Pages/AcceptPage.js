@@ -105,8 +105,6 @@ function AcceptPage(props) {
     context.getLoggedInUser();
   };
 
-  console.log("markEnteredStates: ", markEnteredStates);
-
   return (
     <ModalLayout>
       <Grid container justify="center">

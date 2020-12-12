@@ -112,9 +112,8 @@ function App({ location, container }) {
   });
 
   renderCounter = renderCounter + 1;
-  console.log("App re render", renderCounter);
 
-  //Overriding default styles in Material UI
+  //Overwriting default styles in Material UI
   const theme = createMuiTheme({
     overrides: {
       MuiTab: {
@@ -183,7 +182,6 @@ function App({ location, container }) {
   const classes = useStyles();
 
   const addUserToContext = userObj => {
-    console.log("addUserToContext: ", userObj);
     if (userObj) {
       setContx(prev => {
         return {
@@ -222,15 +220,7 @@ function App({ location, container }) {
   }, [data]);
 
   useEffect(() => {
-    console.log("UseEffect App.js geolocation");
     if (latitude && longitude && !contx.geolocationObj) {
-      console.log(
-        "Context. setting Geolocation Obj: ",
-        latitude,
-        longitude,
-        geoError,
-        geoError ? "ano" : "ne"
-      );
       setContx(prev => {
         return {
           ...prev,
@@ -391,7 +381,6 @@ function App({ location, container }) {
           <WindowEventSnackbar />
 
           <Switch>
-            {/* location={prevLocation} */}
             <Route exact path={`/map`}>
               <>
                 <UpperStripe
@@ -400,7 +389,6 @@ function App({ location, container }) {
                   ListOfNames={ListOfNames}
                   ListOfUrls={ListOfUrls}
                   handleDrawerToggle={handleDrawerToggle}
-                  // drawerWidth={drawerWidth}
                 />
                 <main className={classes.content}>
                   <div className={classes.toolbar} />
@@ -424,7 +412,6 @@ function App({ location, container }) {
                   ListOfNames={ListOfNames}
                   ListOfUrls={ListOfUrls}
                   handleDrawerToggle={handleDrawerToggle}
-                  // drawerWidth={drawerWidth}
                 />
                 <main className={classes.content}>
                   <div className={classes.toolbar} />

@@ -32,27 +32,9 @@ export default function Menu(props) {
 
   const { context, setContext } = useContext(UserContext);
   const { xs_size_memo } = useXsSize();
-  const [windowHeight, setWindowHeight] = useState(0);
-
-  // const [newBookingsArr, { loading, error, data }] = useMutation(
-  //   USER_NEW_BOOKINGS,
-  //   {
-  //     variables: { user_id: context._id }
-  //   }
-  // );
 
   useEffect(() => {
-    console.log("Scroll TOP");
     window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    console.log(
-      "UseEffect Find out if document has property onclick ",
-      "onclick" in document.createElement("div") ? "Joo" : "Noo"
-    );
-
-    setWindowHeight(window.innerHeight);
   }, []);
 
   useEffect(() => {
@@ -78,7 +60,7 @@ export default function Menu(props) {
   }, [context.rememberSignIn]);
 
   const handleCloseAlert = () => {
-    setContext((prev) => {
+    setContext(prev => {
       return {
         ...prev,
         showAlertAdviseEmail: false,
@@ -144,7 +126,7 @@ export default function Menu(props) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   menuWrap: {
     top: 0,
     width: "100%",

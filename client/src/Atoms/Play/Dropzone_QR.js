@@ -12,10 +12,10 @@ function Dropzone_QR({ setQrCodeData }) {
   const classes = useStyles();
   const [isUploading, setIsUploading] = useState(false);
   const [loadedImage, setLoadedImage] = useState(null);
-  const onDrop = useCallback((acceptedFiles) => {
+  const onDrop = useCallback(acceptedFiles => {
     setIsUploading(true);
 
-    acceptedFiles.map((file) => {
+    acceptedFiles.map(file => {
       console.log("DROP FILE: ", file);
       var reader = new FileReader();
       reader.onload = function(input) {
@@ -110,15 +110,6 @@ function Dropzone_QR({ setQrCodeData }) {
         <input {...getInputProps()} />
         <Grid container justify="center">
           <Grid item>
-            {/* {isDragActive ? (
-            <>
-              <WallpaperIcon fontSize="large" className={classes.uploadIcon} />
-            </>
-          ) : (
-            <>
-              <WallpaperIcon fontSize="large" className={classes.uploadIcon} />
-            </>
-          )} */}
             {isUploading ? (
               <Spinner height={100} width={100} />
             ) : loadedImage ? (
@@ -144,7 +135,7 @@ function Dropzone_QR({ setQrCodeData }) {
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   uploadIcon: {
     margin: 20,
     "&:hover": {

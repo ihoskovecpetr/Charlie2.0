@@ -20,6 +20,7 @@
     "date-fns": "^2.7.0",
     "dateformat": "^3.0.3",
     "geolocation-marker": "^2.0.5",
+    "immer": "^8.0.0",
     "jsqr": "^1.2.0",
     "prop-types": "^15.7.2",
     "qrcode": "^1.4.4",
