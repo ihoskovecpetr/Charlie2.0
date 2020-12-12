@@ -7,12 +7,9 @@ import WallpaperIcon from "@material-ui/icons/Wallpaper";
 import { makeStyles } from "@material-ui/core/styles";
 import { createUploadOfImage } from "src/Services/functions";
 
-let smallfile;
-
 function MyDropzone({ formValue, setFormValue, setCountOfFiles }) {
   const classes = useStyles();
   const [display, setDisplay] = useState(false);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const onDrop = useCallback(acceptedFiles => {
     let count = 0;
@@ -23,39 +20,7 @@ function MyDropzone({ formValue, setFormValue, setCountOfFiles }) {
     setCountOfFiles(count);
   }, []);
 
-  const handleImageUpload = file => {
-    const width = 350;
-    const height = 350;
-    const fileName = file.name;
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = event => {
-      const img = document.createElement("img");
-      img.src = event.target.result;
-
-      img.onload = () => {
-        const elem = document.createElement("canvas");
-        elem.width = width;
-        elem.height = height;
-
-        const ctx = elem.getContext("2d");
-        // img.width and img.height will contain the original dimensions
-        ctx.drawImage(img, 0, 0, width, height);
-        ctx.canvas.toBlob(
-          blob => {
-            smallfile = new File([blob], fileName, {
-              type: "image/jpeg",
-              lastModified: Date.now(),
-            });
-            uploadingOneImg(smallfile, file);
-          },
-          "image/jpeg",
-          1
-        );
-      };
-      reader.onerror = error => console.log(error);
-    };
-  };
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const uploadingOneImg = async (imgThumb, imgFull) => {
     try {
@@ -92,6 +57,40 @@ function MyDropzone({ formValue, setFormValue, setCountOfFiles }) {
     }
   };
 
+  const handleImageUpload = file => {
+    const width = 350;
+    const height = 350;
+    const fileName = file.name;
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = event => {
+      const img = document.createElement("img");
+      img.src = event.target.result;
+
+      img.onload = () => {
+        const elem = document.createElement("canvas");
+        elem.width = width;
+        elem.height = height;
+
+        const ctx = elem.getContext("2d");
+        // img.width and img.height will contain the original dimensions
+        ctx.drawImage(img, 0, 0, width, height);
+        ctx.canvas.toBlob(
+          blob => {
+            const smallfile = new File([blob], fileName, {
+              type: "image/jpeg",
+              lastModified: Date.now(),
+            });
+            uploadingOneImg(smallfile, file);
+          },
+          "image/jpeg",
+          1
+        );
+      };
+      reader.onerror = error => console.log(error);
+    };
+  };
+
   return (
     <>
       <div
@@ -122,10 +121,6 @@ function MyDropzone({ formValue, setFormValue, setCountOfFiles }) {
             )}
           </Grid>
         </Grid>
-        {/* <p>Place HERE your pictures</p> */}
-
-        {/* {isUploading ? <Spinner height={100} width={100} /> : null} */}
-
         {display ? (
           <div className={classes.wrap_gallery}>
             <Gallery

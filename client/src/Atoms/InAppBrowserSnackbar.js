@@ -122,22 +122,4 @@ export default function WindowEventSnackbar() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
-  spinnerWrap: {
-    display: "flex",
-    "& > * + *": {
-      marginLeft: theme.spacing(2),
-    },
-    copyLink: {
-      margin: 10,
-      color: "white !important",
-      backgroundColor: "white !important",
-      padding: 20,
-      fontSize: "24px",
-    },
-    test: {
-      margin: 10,
-      color: "red !important",
-    },
-  },
-}));
+const useStyles = makeStyles(theme => ({}));

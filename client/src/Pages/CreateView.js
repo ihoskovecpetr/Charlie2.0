@@ -617,12 +617,8 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     height: "100%",
     width: "100%",
-    // position: "absolute",
-    // background:
-    //   "linear-gradient(180deg, rgba(0,0,255,0.5) 30%, rgba(255,0,100,0.5) 100%)"
   },
   paper1: {
-    marginTop: 66,
     padding: 10,
     paddingTop: 50,
     paddingBottom: 0,

@@ -71,6 +71,7 @@ function ProfileDropzone({ formValue, setFormValue }) {
   };
 
   const uploadingOneImg = async imgThumb => {
+    console.log("uploadingOneImg ", imgThumb, process.env);
     try {
       let urlThumb;
       let upload1 = createUploadOfImage(imgThumb);

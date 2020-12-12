@@ -1,17 +1,17 @@
 import React, { useState, useContext, useEffect } from "react";
+import { produce } from "immer";
 
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import { makeStyles } from "@material-ui/core/styles";
+import { useQuery } from "@apollo/react-hooks";
 
-import { useHistory, NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { UserContext } from "src/Contexts/userContext";
-import { PLAY_EVENTS } from "src/Services/GQL/PLAY_EVENTS";
 import { PLAY_EVENTS_QUERY } from "src/Services/GQL/PLAY_EVENTS_QUERY";
 import { useXsSize } from "src/Hooks/useXsSize";
 
@@ -50,47 +50,32 @@ const MemoizedPlay = React.memo(function Play() {
     },
   });
 
-  console.log("Play renderr : loading, error, data: ", loading, error, data);
-
-  useEffect(() => {
-    console.log("Play full rerender");
-  }, []);
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [context.playFilterObj]);
 
   useEffect(() => {
-    return () => {
-      console.log("Going out of Play");
-      setContext(prev => {
-        return {
-          ...prev,
-          playFilterObj: {
-            ...prev.playFilterObj,
-            shownEvents: [],
-          },
-        };
-      });
+    const cleanupCount = () => {
+      setContext(prev =>
+        produce(prev, draft => {
+          draft.playFilterObj.shownEvents = [];
+        })
+      );
     };
+    return () => cleanupCount();
   }, []);
 
   useEffect(() => {
-    if (data && data.getJoinEvents) {
-      if (context.playFilterObj.shownEvents.length === 0) {
-        // context.playEventsCount === null
-        console.log("Pass if null");
-        //inactive to try less rerenders
-        setContext(prev => {
-          return {
-            ...prev,
-            playFilterObj: {
-              ...prev.playFilterObj,
-              playEventsCount: data.getJoinEvents.length,
-            },
-          };
-        });
-      }
+    if (
+      data &&
+      data.getJoinEvents &&
+      !context.playFilterObj.shownEvents.length
+    ) {
+      setContext(prev =>
+        produce(prev, draft => {
+          draft.playFilterObj.playEventsCount = data.getJoinEvents.length;
+        })
+      );
     }
   }, [data]);
 
@@ -103,20 +88,13 @@ const MemoizedPlay = React.memo(function Play() {
 
   function discoverPlay() {
     setLoadingPlay(true);
+
     setTimeout(() => {
-      // setDiscovered(discovered + 1)
-      setContext(prev => {
-        return {
-          ...prev,
-          playFilterObj: {
-            ...prev.playFilterObj,
-            shownEvents: [
-              ...prev.playFilterObj.shownEvents,
-              data.getJoinEvents[0]._id,
-            ],
-          },
-        };
-      });
+      setContext(prev =>
+        produce(prev, draft => {
+          draft.playFilterObj.shownEvents.push(data.getJoinEvents[0]._id);
+        })
+      );
       window.scrollTo(0, 0);
       setLoadingPlay(false);
     }, 500);
@@ -131,9 +109,7 @@ const MemoizedPlay = React.memo(function Play() {
       }}
     >
       <Container maxWidth="xs">
-        <SettingsPanel2 //getPlayEventsMutation={getPlayEventsMutation}
-          loading={loading}
-        />
+        <SettingsPanel2 loading={loading} />
       </Container>
 
       <Container maxWidth="sm" className={classes.playContainer}>
@@ -211,7 +187,6 @@ const MemoizedPlay = React.memo(function Play() {
               >
                 <Grid item xs={12}>
                   <EventButtons event={data.getJoinEvents[0]} name="PlayPage" />
-                  {/* name is here just ot dabug */}
                 </Grid>
               </Grid>
               <PlayPageMap

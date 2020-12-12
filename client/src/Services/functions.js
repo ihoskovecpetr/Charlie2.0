@@ -32,9 +32,14 @@ export const sortByDate = (array, sortKey, dirrection) => {
 };
 
 export const createUploadOfImage = image => {
+  console.log(
+    "createUploadOfImage: ",
+    process.env.REACT_APP_CLOUDINARY_UPLOAD_URL,
+    process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
+  );
   let upload = request
-    .post(process.env.CLOUDINARY_UPLOAD_URL)
-    .field("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET)
+    .post(process.env.REACT_APP_CLOUDINARY_UPLOAD_URL)
+    .field("upload_preset", process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET)
     .field("file", image);
 
   return upload;

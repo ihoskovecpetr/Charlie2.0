@@ -149,7 +149,6 @@ function Create() {
 
     const empty = findEmpty(load);
 
-    console.log("Load:: ", load);
     if (empty.length == 0) {
       createEvent({
         variables: load,
@@ -172,7 +171,6 @@ function Create() {
               shownEvents: context.playFilterObj.shownEvents,
             },
           },
-          // here refetch play data and event data
         ],
       });
     } else {
@@ -180,24 +178,16 @@ function Create() {
     }
   };
 
-  console.log("New form Value: ");
-
   const handleDateChange = date => {
-    setFormValue(prev => {
-      return { ...prev, startDate: date };
-    });
+    setFormValue(prev => ({ ...prev, startDate: date }));
   };
 
   const handleChangeCurrency = event => {
-    setFormValue(prev => {
-      return { ...prev, currency: event.target.value };
-    });
+    setFormValue(prev => ({ ...prev, currency: event.target.value }));
   };
 
   const handleChangeBYO = () => {
-    setFormValue(prev => {
-      return { ...prev, BYO: !formValue.BYO };
-    });
+    setFormValue(prev => ({ ...prev, BYO: !formValue.BYO }));
   };
 
   const handleDialogClose = () => {
