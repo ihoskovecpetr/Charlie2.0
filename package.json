@@ -18,7 +18,7 @@
     "brew": "0.0.8",
     "dateformat": "^3.0.3",
     "esm": "^3.2.25",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "googleapis": "^45.0.0",
     "graphql-tools": "^4.0.6",
     "jsonwebtoken": "^8.5.1",
